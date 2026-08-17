@@ -1,0 +1,18 @@
+{
+  "name": "Solar Consumer Research",
+  "short_name": "Solar Research",
+  "description": "Verified public resources and research guides for residential solar consumers.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f6f4ed",
+  "theme_color": "#214f3b",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}
+
