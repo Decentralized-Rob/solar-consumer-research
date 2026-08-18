@@ -37,6 +37,12 @@ export async function POST(request: NextRequest) {
     .single();
 
   if (error) return Response.json({ error: "Question could not be submitted." }, { status: 500 });
-  return Response.json({ data }, { status: 201 });
+  return Response.json({
+    data,
+    workflow: {
+      status: "submitted",
+      automatedAnalysis: false,
+      nextStep: "Human review for relevant public sources and official channels.",
+    },
+  }, { status: 201 });
 }
-

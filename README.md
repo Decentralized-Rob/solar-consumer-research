@@ -6,13 +6,13 @@ Massachusetts is the first supported state. The data model and publishing workfl
 
 ## What the application does
 
-- Searches published resources, guides, and updates from one interface
+- Displays published resources, guides, and updates in one interface; search is marked as coming soon
 - Keeps federal information visible alongside state-specific material
 - Shows the publisher, source link, and verification date for public content
 - Gives signed-in users a private place to submit and track research questions
 - Falls back to a reviewed local content snapshot if the database is unavailable
 
-The application does not provide legal advice, interpret individual contracts, recommend professionals, or publish user questions.
+Submitted questions are stored with a `submitted` status for human review. The application does not generate automatic legal analysis, provide legal advice, interpret individual contracts, recommend professionals, or publish user questions.
 
 ## Source and publishing standards
 

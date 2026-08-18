@@ -27,7 +27,7 @@ export default function MethodologyPage() {
       </section>
       <section className="info-section">
         <h2>Boundaries</h2>
-        <p>The site does not evaluate personal claims, interpret contracts, calculate damages, recommend allegations, or draft individualized legal documents.</p>
+        <p>The site reports and organizes public information. It does not evaluate personal claims, interpret contracts, calculate damages, recommend allegations, determine that conduct was unlawful, or predict what an agency or court may decide.</p>
       </section>
     </InfoPage>
   );

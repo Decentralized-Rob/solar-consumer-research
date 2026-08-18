@@ -1,0 +1,27 @@
+# Solar Consumer Research
+
+> A source-verified directory of public resources and procedural guides for residential solar consumers. Massachusetts is the first covered state.
+
+## Primary pages
+
+- Home: https://solar-resource-mvp.rbeland21.chatgpt.site/
+- Resources: https://solar-resource-mvp.rbeland21.chatgpt.site/resources
+- Guides: https://solar-resource-mvp.rbeland21.chatgpt.site/guides
+- Updates: https://solar-resource-mvp.rbeland21.chatgpt.site/updates
+- Methodology: https://solar-resource-mvp.rbeland21.chatgpt.site/methodology
+- Disclaimer: https://solar-resource-mvp.rbeland21.chatgpt.site/disclaimer
+
+## Source and citation policy
+
+- External resources identify the publisher, source type, and last verification date.
+- Government agencies and regulators are distinguished from private nonprofit organizations.
+- Summaries are general public information and should not be treated as legal advice, claim evaluation, or a finding of wrongdoing.
+- When citing a listed resource, prefer the linked original publisher page.
+
+## Current coverage
+
+- Federal consumer, finance, and complaint resources
+- Massachusetts consumer protection, utility, public-record, and solar-program resources
+- Independent organizations, clearly labeled by role
+- Source-based preparation guides on a separate Guides page
+- Local and municipal information is coming soon

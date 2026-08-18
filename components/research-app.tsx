@@ -1,8 +1,8 @@
 "use client";
 
-import { FormEvent, useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { AccountPanel } from "./account-panel";
-import { guides, resources, states, topics, updates } from "../lib/content";
+import { dsireStateUrl, guides, resources, stateSlug, states, topics, updates } from "../lib/content";
 import type { Guide, Resource, ResourceTopic, Update } from "../lib/types";
 
 type TopicFilter = "all" | ResourceTopic;
@@ -41,15 +41,16 @@ type ApiUpdate = {
   source_domains: { publisher_name: string };
 };
 
-type SearchResult = {
-  id: string;
-  type: "resource" | "guide" | "update";
-  title: string;
-  summary: string;
-  publisher: string;
-  url: string | null;
-  meta: string;
-};
+const pathOptions: Array<{
+  topic: Exclude<TopicFilter, "all">;
+  label: string;
+  detail: string;
+}> = [
+  { topic: "complaints", label: "Where can I file a solar complaint?", detail: "Official state complaint channels and what they handle" },
+  { topic: "utility", label: "Who handles a solar utility problem?", detail: "Billing, service, meters, and interconnection" },
+  { topic: "financing", label: "Where can I report a solar loan or payment problem?", detail: "Consumer agencies that handle financial complaints" },
+  { topic: "records", label: "How do I find permits, filings, and public records?", detail: "Official records and document request pages" },
+];
 
 function displayDate(value: string) {
   return new Intl.DateTimeFormat("en-US", {
@@ -64,25 +65,20 @@ function ArrowIcon() {
   return <span aria-hidden="true">↗</span>;
 }
 
-function SourceType({ type }: { type: "government" | "regulator" | "private_nonprofit" }) {
+function SourceType({ type }: { type: Resource["publisherType"] }) {
   const labels = {
-    government: "Government source",
+    government: "Government",
     regulator: "Regulator",
     private_nonprofit: "Private nonprofit",
+    research: "Research database",
   };
-  return <span className={`source-type source-type--${type}`}>{labels[type]}</span>;
+  return <span className={`home-source-type home-source-type--${type}`}>{labels[type]}</span>;
 }
 
 export function ResearchApp() {
   const [stateCode, setStateCode] = useState("MA");
   const [topic, setTopic] = useState<TopicFilter>("all");
-  const [openGuide, setOpenGuide] = useState<string | null>(guides[0]?.id ?? null);
   const [menuOpen, setMenuOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [submittedQuery, setSubmittedQuery] = useState("");
-  const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
-  const [searchBusy, setSearchBusy] = useState(false);
-  const [searchMessage, setSearchMessage] = useState("");
   const [resourceItems, setResourceItems] = useState<Resource[]>(resources);
   const [guideItems, setGuideItems] = useState<Guide[]>(guides);
   const [updateItems, setUpdateItems] = useState<Update[]>(updates);
@@ -138,7 +134,7 @@ export function ResearchApp() {
           url: item.url,
         })));
       } catch {
-        // The verified local snapshot stays visible if the API is unavailable.
+        // Keep the verified local snapshot visible if the API is unavailable.
       }
     }
 
@@ -148,402 +144,252 @@ export function ResearchApp() {
 
   const selectedState = states.find((state) => state.code === stateCode) ?? states[0];
   const availableResources = useMemo(
-    () => resourceItems.filter((resource) => resource.stateCode === null || resource.stateCode === stateCode),
-    [resourceItems, stateCode],
+    () => [
+      ...resourceItems.filter(
+        (resource) => resource.stateCode === stateCode && resource.id !== "ma-electric-company",
+      ),
+      {
+        id: `dsire-${stateCode.toLowerCase()}-solar`,
+        stateCode,
+        title: `What solar policies and programs are listed for ${selectedState.name}?`,
+        summary: `The DSIRE state page collects solar policies, programs, incentives, net-metering rules, and interconnection information available for ${selectedState.name}.`,
+        publisher: "DSIRE — N.C. Clean Energy Technology Center",
+        publisherType: "research" as const,
+        topic: "programs" as const,
+        url: dsireStateUrl(stateCode),
+        lastVerified: "Aug 18, 2026",
+      },
+    ],
+    [resourceItems, selectedState.name, stateCode],
   );
   const filteredResources = useMemo(
     () => availableResources.filter((resource) => topic === "all" || resource.topic === topic),
     [availableResources, topic],
   );
-  const filteredGuides = guideItems.filter(
-    (guide) => guide.stateCode === null || guide.stateCode === stateCode,
-  );
+  const quickLinks = availableResources.slice(0, 4);
+  const featuredGuides = ["ma-ago-complaint-guide", "organize-record"]
+    .map((id) => guideItems.find((guide) => guide.id === id))
+    .filter((guide): guide is Guide => Boolean(guide))
+    .filter((guide) => guide.stateCode === null || guide.stateCode === stateCode);
   const filteredUpdates = updateItems.filter(
     (update) => update.stateCode === null || update.stateCode === stateCode,
   );
 
-  function localSearch(query: string): SearchResult[] {
-    const terms = query.toLowerCase().split(/\s+/).filter(Boolean);
-    const matches = (...values: string[]) => {
-      const haystack = values.join(" ").toLowerCase();
-      return terms.every((term) => haystack.includes(term));
-    };
-
-    return [
-      ...availableResources
-        .filter((item) => matches(item.title, item.summary, item.publisher, item.topic))
-        .map((item) => ({ id: item.id, type: "resource" as const, title: item.title, summary: item.summary, publisher: item.publisher, url: item.url, meta: item.topic })),
-      ...filteredGuides
-        .filter((item) => matches(item.title, item.summary, item.sourceTitle, ...item.steps.flatMap((step) => [step.title, step.detail])))
-        .map((item) => ({ id: item.id, type: "guide" as const, title: item.title, summary: item.summary, publisher: item.sourceTitle, url: null, meta: item.timeLabel })),
-      ...filteredUpdates
-        .filter((item) => matches(item.title, item.summary, item.publisher))
-        .map((item) => ({ id: item.id, type: "update" as const, title: item.title, summary: item.summary, publisher: item.publisher, url: item.url, meta: "Update" })),
-    ];
-  }
-
-  async function runSearch(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    const query = searchQuery.trim();
-    if (query.length < 2) {
-      setSearchMessage("Enter at least two characters.");
-      return;
-    }
-
-    setSearchBusy(true);
-    setSearchMessage("");
-    setSubmittedQuery(query);
-    const snapshotResults = localSearch(query);
-    setSearchResults(snapshotResults);
-    window.setTimeout(() => document.getElementById("search-results")?.scrollIntoView({ behavior: "smooth", block: "start" }), 0);
-
-    const controller = new AbortController();
-    const timeout = window.setTimeout(() => controller.abort(), 3500);
-    try {
-      const response = await fetch(`/api/search?state=${stateCode}&q=${encodeURIComponent(query)}`, { signal: controller.signal });
-      if (!response.ok) throw new Error("Search unavailable");
-      const payload = (await response.json()) as { data: SearchResult[] };
-      setSearchResults(payload.data);
-    } catch {
-      setSearchMessage("Showing results from the latest verified site snapshot.");
-    } finally {
-      window.clearTimeout(timeout);
-      setSearchBusy(false);
-    }
-  }
-
-  function openGuideFromSearch(id: string) {
-    setOpenGuide(id);
-    window.setTimeout(() => document.getElementById(`guide-${id}`)?.scrollIntoView({ behavior: "smooth", block: "start" }), 0);
+  function choosePath(nextTopic: Exclude<TopicFilter, "all">) {
+    setTopic(nextTopic);
+    document.getElementById("resource-directory")?.scrollIntoView({ behavior: "smooth" });
   }
 
   return (
-    <div className="site-shell">
-      <header className="topbar">
-        <a className="wordmark" href="#top" aria-label="Solar Consumer Research home">
-          <span className="wordmark-mark" aria-hidden="true">S</span>
+    <div className="home-shell">
+      <header className="home-header">
+        <a className="home-wordmark" href="#top" aria-label="Solar Consumer Research home">
+          <span className="home-wordmark-mark" aria-hidden="true">S</span>
           <span>Solar Consumer Research</span>
         </a>
-        <button
-          className="mobile-menu-toggle"
-          type="button"
-          aria-expanded={menuOpen}
-          aria-controls="primary-navigation"
-          onClick={() => setMenuOpen((current) => !current)}
-        >
-          <span className="sr-only">{menuOpen ? "Close navigation" : "Open navigation"}</span>
-          <span aria-hidden="true">{menuOpen ? "Close" : "Menu"}</span>
+        <button className="home-menu-toggle" type="button" aria-expanded={menuOpen} aria-controls="home-navigation" onClick={() => setMenuOpen((current) => !current)}>
+          {menuOpen ? "Close" : "Menu"}
         </button>
-        <nav id="primary-navigation" className={`desktop-nav ${menuOpen ? "is-open" : ""}`} aria-label="Primary navigation">
-          <a href="/resources" onClick={() => setMenuOpen(false)}>Resources</a>
+        <nav id="home-navigation" className={`home-nav ${menuOpen ? "is-open" : ""}`} aria-label="Primary navigation">
+          <a href="#start" onClick={() => setMenuOpen(false)}>Start here</a>
+          <a href="/resources" onClick={() => setMenuOpen(false)}>States</a>
           <a href="/guides" onClick={() => setMenuOpen(false)}>Guides</a>
-          <a href="/updates" onClick={() => setMenuOpen(false)}>Updates</a>
-          <a href="/methodology" onClick={() => setMenuOpen(false)}>How we verify</a>
+          <a href="/cases/connecticut-attorney-general-sunrun-lawsuit" onClick={() => setMenuOpen(false)}>Cases</a>
+          <a href="/about" onClick={() => setMenuOpen(false)}>About</a>
         </nav>
-        <a className="account-button" href="#questions">Ask a question</a>
+        <a className="home-header-action" href="#questions">Ask a question</a>
       </header>
 
       <main id="top">
-        <section className="hero section-wrap">
-          <div className="hero-copy">
-            <p className="eyebrow"><span className="status-dot" /> Massachusetts is live</p>
-            <h1>Problems with your solar company? Start here.</h1>
-            <p className="hero-lede">
-              Search verified public resources, understand the available complaint channels, and organize what happened.
-            </p>
-            <form className="hero-search" role="search" onSubmit={runSearch}>
-              <label htmlFor="site-search">Search resources, guides, and updates</label>
-              <div className="search-control">
-                <input
-                  id="site-search"
-                  type="search"
-                  value={searchQuery}
-                  onChange={(event) => setSearchQuery(event.target.value)}
-                  placeholder="Try: financing complaint, permits, utility"
-                  maxLength={120}
-                />
-                <button type="submit" disabled={searchBusy}>{searchBusy ? "Searching..." : "Search"}</button>
-              </div>
-              {searchMessage && <p className="search-note" role="status">{searchMessage}</p>}
-            </form>
-            <div className="hero-actions">
-              <a className="button button--primary" href="/resources">Browse resources</a>
-              <a className="button button--secondary" href="/guides">View guides</a>
+        <section className="home-hero home-wrap">
+          <div className="home-hero-copy">
+            <p className="home-kicker"><span /> Independent public-source research</p>
+            <h1>Solar problems are complicated. Finding where to start shouldn&apos;t be.</h1>
+            <p className="home-hero-lede">Clear paths to official complaint channels, consumer agencies, public records, and source-based guides.</p>
+            <div className="home-hero-actions">
+              <a className="home-button home-button--dark" href="#start">Choose your state</a>
+              <a className="home-button home-button--outline" href="/resources">Browse states</a>
             </div>
-            <p className="scope-note">
-              Research information only. No referrals, contract interpretation, or individualized legal guidance.
-            </p>
+            <p className="home-scope-note">General public information only. No legal advice, claim evaluation, or findings of wrongdoing.</p>
           </div>
 
-          <aside className="state-panel" aria-labelledby="state-panel-title">
-            <div className="panel-kicker">Browse by location</div>
-            <h2 id="state-panel-title">Choose your state</h2>
-            <label className="select-label" htmlFor="state-select">State</label>
+          <aside id="start" className="home-state-card" aria-labelledby="home-state-title">
+            <p className="home-card-label">Start here</p>
+            <h2 id="home-state-title">Select your state.</h2>
+            <label htmlFor="home-state-select">State</label>
             <select
-              id="state-select"
+              id="home-state-select"
               value={stateCode}
               onChange={(event) => {
                 const nextState = states.find((state) => state.code === event.target.value);
-                if (nextState?.available) {
+                if (nextState) {
                   setStateCode(nextState.code);
                   setTopic("all");
                 }
               }}
             >
               {states.map((state) => (
-                <option key={state.code} value={state.code} disabled={!state.available}>
-                  {state.name}{state.available ? "" : " - coming soon"}
+                <option key={state.code} value={state.code}>
+                  {state.name}
                 </option>
               ))}
             </select>
-            <div className="state-result">
-              <span className="state-code">{selectedState.code}</span>
+            <div className={`home-state-status ${selectedState.available ? "" : "is-coming-soon"}`}>
+              <span>{selectedState.code}</span>
               <div>
                 <strong>{selectedState.name}</strong>
-                <span>{availableResources.length} verified resources available</span>
+                <small>
+                  {selectedState.available
+                    ? `${availableResources.length} verified state resources`
+                    : "Verified statewide solar starting point"}
+                </small>
               </div>
             </div>
-            <p className="state-footnote">Federal resources are included with every state.</p>
+            <p>
+              {selectedState.available
+                ? "State-specific resources are available below."
+                : "A solar-specific state source is available now. Additional consumer-protection research is in progress."}
+            </p>
+            <a className="home-state-page-link" href={`/states/${stateSlug(selectedState.name)}`}>Open the {selectedState.name} page →</a>
           </aside>
         </section>
 
-        {submittedQuery && (
-          <section id="search-results" className="search-results section-wrap" aria-live="polite">
-            <div className="search-results-heading">
-              <div>
-                <p className="eyebrow">Search results</p>
-                <h2>{searchResults.length === 0 ? "No matches found" : `${searchResults.length} result${searchResults.length === 1 ? "" : "s"}`}</h2>
-              </div>
-              <p>For “{submittedQuery}” in Massachusetts and federal sources.</p>
-            </div>
-            {searchResults.length > 0 ? (
-              <div className="search-result-list">
-                {searchResults.map((result) => {
-                  const isGuide = result.type === "guide";
-                  return (
-                    <a
-                      className="search-result-row"
-                      href={isGuide ? `#guide-${result.id}` : result.url ?? "#"}
-                      target={isGuide ? undefined : "_blank"}
-                      rel={isGuide ? undefined : "noreferrer"}
-                      key={`${result.type}-${result.id}`}
-                      onClick={isGuide ? (event) => { event.preventDefault(); openGuideFromSearch(result.id); } : undefined}
-                    >
-                      <span className="search-result-type">{result.type}</span>
-                      <span className="search-result-copy">
-                        <strong>{result.title}</strong>
-                        <span>{result.summary}</span>
-                      </span>
-                      <span className="search-result-source">{result.publisher}</span>
-                      <ArrowIcon />
-                    </a>
-                  );
-                })}
-              </div>
-            ) : (
-              <div className="empty-search">
-                <p>Try a broader term such as “complaint,” “financing,” “records,” or “utility.”</p>
-                <a href="#resources">Browse all verified resources</a>
-              </div>
-            )}
-          </section>
-        )}
-
-        <section className="quick-paths section-wrap" aria-labelledby="quick-paths-title">
-          <div className="section-heading compact-heading">
-            <p className="eyebrow">A practical starting point</p>
-            <h2 id="quick-paths-title">What do you need to do?</h2>
+        <section className="home-featured home-wrap" aria-labelledby="featured-title">
+          <div className="home-section-rule">
+            <p className="home-card-label">Featured</p>
+            <h2 id="featured-title">A few useful places to begin.</h2>
+            <a href="/guides">All guides →</a>
           </div>
-          <div className="path-grid">
-            <a className="path-card" href="/guides">
-              <span className="path-number">01</span>
-              <h3>Organize your records</h3>
-              <p>Turn contracts, messages, plans, bills, and dates into a usable project file.</p>
-              <span className="text-link">Open the guide <ArrowIcon /></span>
-            </a>
-            <a className="path-card" href="/resources">
-              <span className="path-number">02</span>
-              <h3>Identify the right channel</h3>
-              <p>Compare verified state and federal resources by topic and agency role.</p>
-              <span className="text-link">Browse the library <ArrowIcon /></span>
-            </a>
-            <a className="path-card path-card--dark" href="#questions">
-              <span className="path-number">03</span>
-              <h3>Ask a research question</h3>
-              <p>Submit a private question when you need help locating public information.</p>
-              <span className="text-link">See how it works <ArrowIcon /></span>
-            </a>
-          </div>
-        </section>
-
-        <section id="resources" className="resource-section">
-          <div className="section-wrap">
-            <div className="section-heading split-heading">
-              <div>
-                <p className="eyebrow">Official resource library</p>
-                <h2>{selectedState.name}</h2>
-              </div>
-              <p>Each listing includes its publisher, source type, and last verification date.</p>
-            </div>
-            <div className="topic-tabs" role="group" aria-label="Filter resources by topic">
-              {topics.map((item) => (
-                <button
-                  key={item.value}
-                  type="button"
-                  className={topic === item.value ? "active" : ""}
-                  onClick={() => setTopic(item.value)}
-                >
-                  {item.label}
-                </button>
+          <div className="home-editorial-grid">
+            <div className="home-feature-stories">
+              {featuredGuides.map((guide, index) => (
+                <a className={`home-story-card ${index === 0 ? "home-story-card--lead" : ""}`} href={`/guides#guide-${guide.id}`} key={guide.id}>
+                  <span className="home-story-meta">Guide · {guide.timeLabel}</span>
+                  <h3>{guide.title}</h3>
+                  <p>{guide.summary}</p>
+                  <span className="home-story-link">Read the guide <ArrowIcon /></span>
+                </a>
               ))}
             </div>
-            <p className="resource-count">
-              Showing {filteredResources.length} of {availableResources.length} verified resources
-            </p>
-            <div className="resource-grid" aria-live="polite">
-              {filteredResources.map((resource) => (
-                <article className="resource-card" key={resource.id}>
-                  <div className="resource-card-top">
-                    <SourceType type={resource.publisherType} />
-                    <span className="verified-date">Verified {resource.lastVerified}</span>
-                  </div>
-                  <h3>{resource.title}</h3>
-                  <p>{resource.summary}</p>
-                  <div className="resource-card-bottom">
-                    <span>{resource.publisher}</span>
-                    <a href={resource.url} target="_blank" rel="noreferrer" aria-label={`Open ${resource.title}`}>
-                      Open source <ArrowIcon />
-                    </a>
-                  </div>
-                </article>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        <section id="guides" className="guides-section section-wrap">
-          <div className="section-heading split-heading">
-            <div>
-              <p className="eyebrow">Step-by-step guides</p>
-              <h2>Plain instructions, tied to sources.</h2>
-            </div>
-            <p>These guides organize published information. They do not assess individual situations.</p>
-          </div>
-          <div className="guide-list">
-            {filteredGuides.map((guide, index) => {
-              const isOpen = openGuide === guide.id;
-              return (
-                <article id={`guide-${guide.id}`} className={`guide-item ${isOpen ? "is-open" : ""}`} key={guide.id}>
-                  <button
-                    type="button"
-                    className="guide-trigger"
-                    aria-expanded={isOpen}
-                    aria-controls={`guide-${guide.id}`}
-                    onClick={() => setOpenGuide(isOpen ? null : guide.id)}
-                  >
-                    <span className="guide-index">{String(index + 1).padStart(2, "0")}</span>
-                    <span className="guide-title-block">
-                      <strong>{guide.title}</strong>
-                      <span>{guide.summary}</span>
-                    </span>
-                    <span className="guide-time">{guide.timeLabel}</span>
-                    <span className="guide-toggle" aria-hidden="true">{isOpen ? "-" : "+"}</span>
-                  </button>
-                  {isOpen && (
-                    <div className="guide-content" id={`guide-${guide.id}`}>
-                      <ol>
-                        {guide.steps.map((step) => (
-                          <li key={step.title}>
-                            <strong>{step.title}</strong>
-                            <p>{step.detail}</p>
-                          </li>
-                        ))}
-                      </ol>
-                      <div className="guide-source">
-                        <span>Source verified {guide.lastVerified}</span>
-                        <a href={guide.sourceUrl} target="_blank" rel="noreferrer">
-                          {guide.sourceTitle} <ArrowIcon />
-                        </a>
-                      </div>
-                    </div>
-                  )}
-                </article>
-              );
-            })}
-          </div>
-        </section>
-
-        <section id="updates" className="updates-section">
-          <div className="section-wrap">
-            <div className="section-heading split-heading">
-              <div>
-                <p className="eyebrow">News and updates</p>
-                <h2>What changed in the public record.</h2>
+            <aside className="home-quick-links" aria-labelledby="quick-links-title">
+              <div className="home-quick-links-heading">
+                <span>Quick links</span>
+                <strong id="quick-links-title">Go directly to the source</strong>
               </div>
-              <p>Short summaries link directly to the publishing agency or source organization.</p>
-            </div>
-            <div className="update-list">
-              {filteredUpdates.map((update) => (
-                <a className="update-row" href={update.url} target="_blank" rel="noreferrer" key={update.id}>
-                  <span className="update-date">{update.publishedAt}</span>
-                  <span className="update-copy">
-                    <strong>{update.title}</strong>
-                    <span>{update.summary}</span>
-                  </span>
-                  <span className="update-publisher">{update.publisher}</span>
+              {quickLinks.map((resource) => (
+                <a href={resource.url} target="_blank" rel="noreferrer" key={resource.id}>
+                  <span><small>{resource.publisher}</small><strong>{resource.title}</strong></span>
                   <ArrowIcon />
+                </a>
+              ))}
+            </aside>
+          </div>
+        </section>
+
+        <section className="home-case-feature" aria-labelledby="case-feature-title">
+          <div className="home-wrap home-case-feature-grid">
+            <div className="home-case-label">
+              <p className="home-card-label">Case to follow</p>
+              <span>Connecticut · Filed July 19, 2024</span>
+            </div>
+            <div className="home-case-copy">
+              <h2 id="case-feature-title">
+                <a href="/cases/connecticut-attorney-general-sunrun-lawsuit">
+                  What does Connecticut&apos;s lawsuit against Sunrun allege?
+                </a>
+              </h2>
+              <p>The Connecticut Attorney General sued Sunrun, two solar companies, and two salespeople. The complaint alleges contracts without informed consent, forged signatures, consumer impersonation, unpermitted work, and systems that did not function.</p>
+              <p className="home-case-caution">These are allegations in a government complaint, not findings by this site or a final court decision.</p>
+              <div className="home-case-actions">
+                <a href="/cases/connecticut-attorney-general-sunrun-lawsuit">Read the case summary →</a>
+                <a href="https://portal.ct.gov/ag/press-releases/2024-press-releases/attorney-general-tong-sues-sunrun" target="_blank" rel="noreferrer">Read the official announcement <ArrowIcon /></a>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section className="home-paths" aria-labelledby="paths-title">
+          <div className="home-wrap home-paths-inner">
+            <div><p className="home-card-label">Find the right path</p><h2 id="paths-title">What are you trying to do?</h2></div>
+            <div className="home-path-list">
+              {pathOptions.map((path, index) => (
+                <a href="#resource-directory" onClick={() => choosePath(path.topic)} key={path.topic}>
+                  <span>{String(index + 1).padStart(2, "0")}</span>
+                  <span><strong>{path.label}</strong><small>{path.detail}</small></span>
+                  <span aria-hidden="true">→</span>
                 </a>
               ))}
             </div>
           </div>
         </section>
 
-        <section id="questions" className="question-section section-wrap">
-          <div className="question-panel">
+        <section id="resource-directory" className="home-directory home-wrap" aria-labelledby="directory-title">
+          <div className="home-directory-heading">
             <div>
-              <p className="eyebrow eyebrow--light">Private research questions</p>
-              <h2>Can&apos;t locate the right public information?</h2>
-              <p>
-                Signed-in users can submit a question about where to look or which official resource covers a topic. Questions and responses remain private.
-              </p>
+              <p className="home-card-label">Verified directory</p>
+              <h2 id="directory-title">
+                {selectedState.available
+                  ? `Specific resources for ${selectedState.name}`
+                  : `${selectedState.name} resources are being prepared`}
+              </h2>
             </div>
-            <div className="question-rules">
-              <span>What this can cover</span>
-              <ul>
-                <li>Locating agencies, forms, records, and published rules</li>
-                <li>Finding the source behind a public claim</li>
-                <li>Organizing a research trail</li>
-              </ul>
-              <span>What it will not cover</span>
-              <ul>
-                <li>Contract interpretation or case evaluation</li>
-                <li>Drafting demands or personalized legal conclusions</li>
-                <li>Referrals to contractors or paid providers</li>
-              </ul>
-              <AccountPanel stateCode={stateCode} />
+            <p>This list contains state-specific sources only. Federal resources will have their own separate page.</p>
+          </div>
+          <div className="home-topic-tabs" aria-label="Filter resources by topic">
+            {topics.map((item) => (
+              <button className={topic === item.value ? "active" : ""} type="button" onClick={() => setTopic(item.value)} key={item.value}>{item.label}</button>
+            ))}
+          </div>
+          <div className="home-resource-list" aria-live="polite">
+            {filteredResources.length > 0 ? filteredResources.map((resource) => (
+              <article key={resource.id}>
+                <div className="home-resource-meta"><SourceType type={resource.publisherType} /><span>Verified {resource.lastVerified}</span></div>
+                <div className="home-resource-copy"><h3>{resource.title}</h3><p>{resource.summary}</p><small>{resource.publisher}</small></div>
+                <a href={resource.url} target="_blank" rel="noreferrer" aria-label={`Open ${resource.title}`}>Open source <ArrowIcon /></a>
+              </article>
+            )) : <div className="home-resource-empty">No resources are currently listed under this filter.</div>}
+          </div>
+          <div className="home-directory-footer"><span>{filteredResources.length} resources shown</span><a className="home-button home-button--dark" href={`/states/${stateSlug(selectedState.name)}`}>Open the {selectedState.name} page</a></div>
+        </section>
+
+        {filteredUpdates.length > 0 && (
+          <section className="home-notebook" aria-labelledby="notebook-title">
+            <div className="home-wrap home-notebook-grid">
+              <div><p className="home-card-label">Research notebook</p><h2 id="notebook-title">Recent public-source updates</h2><a href="/updates">View all updates →</a></div>
+              <div className="home-update-list">
+                {filteredUpdates.slice(0, 2).map((update) => (
+                  <a href={update.url} target="_blank" rel="noreferrer" key={update.id}>
+                    <span>{update.publishedAt}</span><strong>{update.title}</strong><p>{update.summary}</p>
+                  </a>
+                ))}
+              </div>
             </div>
+          </section>
+        )}
+
+        <section className="home-search-later home-wrap" aria-labelledby="search-later-title">
+          <div><p className="home-card-label">Site search</p><h2 id="search-later-title">Search is coming soon.</h2><p>For now, use the topic filters above or browse the full resource and guide pages.</p></div>
+          <div className="home-search-disabled" aria-label="Search coming soon"><input type="search" placeholder="Search resources and guides" disabled /><button type="button" disabled>Coming soon</button></div>
+        </section>
+
+        <section id="questions" className="home-question-section">
+          <div className="home-wrap home-question-panel">
+            <div>
+              <p className="home-card-label home-card-label--light">Private research questions</p>
+              <h2>Can&apos;t find the right public information?</h2>
+              <p>Signed-in users can ask for help locating public records, published procedures, or official resources. No automatic legal analysis or claim evaluation is generated.</p>
+              <ul><li>Locate agencies, forms, records, and published rules</li><li>Find the public source behind a claim</li><li>Organize a factual research trail</li></ul>
+            </div>
+            <div className="home-question-account"><AccountPanel stateCode={stateCode} /></div>
           </div>
         </section>
       </main>
 
-      <footer className="footer">
-        <div className="section-wrap footer-inner">
-          <div>
-            <strong>Solar Consumer Research</strong>
-            <p>Independent research infrastructure for residential solar consumers.</p>
-          </div>
-          <div className="footer-links">
-            <a href="/resources">Resources</a>
-            <a href="/guides">Guides</a>
-            <a href="/updates">Updates</a>
-            <a href="/about">About</a>
-            <a href="/methodology">Methodology</a>
-            <a href="/corrections">Corrections</a>
-            <a href="/privacy">Privacy</a>
-          </div>
-          <p className="footer-disclaimer">
-            Educational information only. This site does not provide legal advice or professional referrals.
-          </p>
+      <footer className="home-footer">
+        <div className="home-wrap home-footer-inner">
+          <div><strong>Solar Consumer Research</strong><p>Independent public-source research for residential solar consumers.</p></div>
+          <nav aria-label="Footer navigation"><a href="/resources">Resources</a><a href="/guides">Guides</a><a href="/updates">Updates</a><a href="/methodology">Methodology</a><a href="/corrections">Corrections</a><a href="/privacy">Privacy</a><a href="/disclaimer">Disclaimer</a></nav>
+          <p>General information only. No legal advice or attorney-client relationship.</p>
         </div>
       </footer>
     </div>

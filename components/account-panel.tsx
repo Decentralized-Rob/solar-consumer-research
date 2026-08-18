@@ -3,6 +3,7 @@
 import { FormEvent, useEffect, useState } from "react";
 import type { Session } from "@supabase/supabase-js";
 import { getSupabaseBrowserClient } from "../lib/supabase/client";
+import { hasSupabasePublicConfig } from "../lib/supabase/config";
 
 type QuestionRecord = {
   id: string;
@@ -13,6 +14,7 @@ type QuestionRecord = {
 };
 
 export function AccountPanel({ stateCode }: { stateCode: string }) {
+  const authAvailable = hasSupabasePublicConfig();
   const [session, setSession] = useState<Session | null>(null);
   const [email, setEmail] = useState("");
   const [question, setQuestion] = useState("");
@@ -21,11 +23,12 @@ export function AccountPanel({ stateCode }: { stateCode: string }) {
   const [busy, setBusy] = useState(false);
 
   useEffect(() => {
+    if (!authAvailable) return;
     const supabase = getSupabaseBrowserClient();
     void supabase.auth.getSession().then(({ data }) => setSession(data.session));
     const { data: subscription } = supabase.auth.onAuthStateChange((_event, nextSession) => setSession(nextSession));
     return () => subscription.subscription.unsubscribe();
-  }, []);
+  }, [authAvailable]);
 
   useEffect(() => {
     if (!session) return;
@@ -55,6 +58,7 @@ export function AccountPanel({ stateCode }: { stateCode: string }) {
 
   async function requestSignIn(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    if (!authAvailable) return;
     setBusy(true);
     setMessage("");
     const { error } = await getSupabaseBrowserClient().auth.signInWithOtp({
@@ -81,23 +85,40 @@ export function AccountPanel({ stateCode }: { stateCode: string }) {
       },
       body: JSON.stringify({ stateCode, question }),
     });
-    const payload = (await response.json()) as { error?: string };
+    const payload = (await response.json()) as {
+      error?: string;
+      workflow?: { status: string; automatedAnalysis: boolean; nextStep: string };
+    };
     setBusy(false);
     if (!response.ok) {
       setMessage(payload.error ?? "The question could not be submitted.");
       return;
     }
     setQuestion("");
-    setMessage("Your question was submitted privately.");
+    setMessage(
+      payload.workflow?.automatedAnalysis === false
+        ? "Saved privately as Submitted. No automated legal analysis was performed. A human-reviewed, source-based response will appear here when complete."
+        : "Your question was submitted privately.",
+    );
     await loadQuestions(session);
   }
 
   async function signOut() {
+    if (!authAvailable) return;
     setBusy(true);
     await getSupabaseBrowserClient().auth.signOut();
     setQuestions([]);
     setMessage("");
     setBusy(false);
+  }
+
+  if (!authAvailable) {
+    return (
+      <div className="account-unavailable" role="status">
+        <strong>Private questions are temporarily unavailable.</strong>
+        <p>Public resources and guides remain available while this feature is being prepared.</p>
+      </div>
+    );
   }
 
   if (!session) {
@@ -139,7 +160,7 @@ export function AccountPanel({ stateCode }: { stateCode: string }) {
           placeholder="What public record, agency, form, or published rule are you trying to locate?"
           required
         />
-        <p className="form-note">Do not include account numbers, financial details, or other sensitive personal information.</p>
+        <p className="form-note">Your wording is stored as your description of the issue, not as a verified finding. Do not include account numbers, financial details, or other sensitive personal information.</p>
         <button className="button button--sun" type="submit" disabled={busy}>
           {busy ? "Submitting..." : "Submit privately"}
         </button>
@@ -165,4 +186,3 @@ export function AccountPanel({ stateCode }: { stateCode: string }) {
     </div>
   );
 }
-

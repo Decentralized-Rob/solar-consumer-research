@@ -17,7 +17,8 @@ export async function GET(request: NextRequest) {
   let query = supabase
     .from("resources")
     .select("id,slug,state_code,title,summary,topic,url,last_verified_at,sort_order,source_domains!inner(publisher_name,publisher_type)")
-    .or(`state_code.is.null,state_code.eq.${state}`)
+    .eq("state_code", state)
+    .eq("status", "published")
     .order("sort_order", { ascending: true });
 
   if (topic) query = query.eq("topic", topic as "complaints" | "utility" | "financing" | "records" | "programs");
@@ -26,4 +27,3 @@ export async function GET(request: NextRequest) {
   if (error) return Response.json({ error: "Resources are temporarily unavailable." }, { status: 503 });
   return Response.json({ data });
 }
-

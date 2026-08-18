@@ -38,7 +38,7 @@ export default async function GuidesPage() {
     <InfoPage
       eyebrow="Step-by-step guides"
       title="Plain instructions, tied to sources."
-      lede="These guides organize published procedures. They do not assess individual situations or recommend claims."
+      lede="These guides summarize published procedures. They do not assess individual situations, recommend claims, or predict outcomes."
     >
       <div className="guide-page-list">
         {items.map((guide, index) => (

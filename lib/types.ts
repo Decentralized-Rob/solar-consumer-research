@@ -13,7 +13,7 @@ export type Resource = {
   title: string;
   summary: string;
   publisher: string;
-  publisherType: "government" | "regulator" | "private_nonprofit";
+  publisherType: "government" | "regulator" | "private_nonprofit" | "research";
   topic: ResourceTopic;
   url: string;
   lastVerified: string;
@@ -45,4 +45,3 @@ export type Update = {
   publishedAt: string;
   url: string;
 };
-

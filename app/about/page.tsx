@@ -15,7 +15,7 @@ export default function AboutPage() {
       </section>
       <section className="info-section">
         <h2>What it is independent from</h2>
-        <p>The project is not a solar company, government agency, law firm, contractor directory, or paid referral network. Companies cannot pay for placement or a preferred position.</p>
+        <p>The project is not a solar company, government agency, law firm, contractor directory, or paid referral network. It does not represent consumers or decide whether a person or company acted unlawfully. Companies cannot pay for placement or a preferred position.</p>
       </section>
       <section className="info-section">
         <h2>Current coverage</h2>

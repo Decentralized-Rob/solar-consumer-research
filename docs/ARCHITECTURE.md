@@ -43,7 +43,7 @@ Next route handlers          Supabase Auth
 3. Anonymous visitors can read only published content.
 4. Signed-in users can read and update only their own profile and questions.
 5. Content creation and publishing are admin-only.
-6. Questions are never public and are not answered automatically.
+6. Questions are never public and are not answered automatically. User wording is stored as the user's description, not as a verified factual or legal finding.
 7. Database row-level security is the final authorization boundary.
 
 ## Application layers
@@ -122,7 +122,7 @@ Published resources, guides, and updates carry generated weighted `tsvector` col
 ## UI architecture
 
 - Sticky responsive navigation with dedicated resource, guide, update, and methodology routes.
-- Homepage search across published resources, guides, and updates, with a verified snapshot fallback.
+- Disabled homepage search preview marked as coming soon; published content remains browsable by section and route.
 - State selector that scopes state-specific content while retaining federal resources.
 - Topic filters for complaints, utility, financing, records, and programs.
 - Source cards that expose publisher type and verification date before sending a visitor off-site.
@@ -149,5 +149,5 @@ Published resources, guides, and updates carry generated weighted `tsvector` col
 | GET | `/api/updates?state=MA` | Public | Published source-backed updates |
 | GET | `/api/search?state=MA&q=financing` | Public | Full-text search across published content |
 | PUT | `/api/profile` | Signed in | Save the current user's state |
-| POST | `/api/questions` | Signed in | Submit a private research question |
+| POST | `/api/questions` | Signed in | Store a private question as `submitted` and return the human-review workflow state |
 | GET | `/api/questions` | Signed in | Retrieve the current user's questions |

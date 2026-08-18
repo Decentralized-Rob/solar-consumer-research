@@ -1,16 +1,65 @@
 import type { Guide, Resource, ResourceTopic, Update } from "./types";
 
 export const states = [
-  { code: "MA", name: "Massachusetts", available: true },
-  { code: "CT", name: "Connecticut", available: false },
-  { code: "RI", name: "Rhode Island", available: false },
-  { code: "NY", name: "New York", available: false },
-  { code: "NJ", name: "New Jersey", available: false },
-  { code: "PA", name: "Pennsylvania", available: false },
+  { code: "AL", name: "Alabama", available: false },
+  { code: "AK", name: "Alaska", available: false },
+  { code: "AZ", name: "Arizona", available: false },
+  { code: "AR", name: "Arkansas", available: false },
   { code: "CA", name: "California", available: false },
-  { code: "TX", name: "Texas", available: false },
+  { code: "CO", name: "Colorado", available: false },
+  { code: "CT", name: "Connecticut", available: false },
+  { code: "DE", name: "Delaware", available: false },
   { code: "FL", name: "Florida", available: false },
+  { code: "GA", name: "Georgia", available: false },
+  { code: "HI", name: "Hawaii", available: false },
+  { code: "ID", name: "Idaho", available: false },
+  { code: "IL", name: "Illinois", available: false },
+  { code: "IN", name: "Indiana", available: false },
+  { code: "IA", name: "Iowa", available: false },
+  { code: "KS", name: "Kansas", available: false },
+  { code: "KY", name: "Kentucky", available: false },
+  { code: "LA", name: "Louisiana", available: false },
+  { code: "ME", name: "Maine", available: false },
+  { code: "MD", name: "Maryland", available: false },
+  { code: "MA", name: "Massachusetts", available: true },
+  { code: "MI", name: "Michigan", available: false },
+  { code: "MN", name: "Minnesota", available: false },
+  { code: "MS", name: "Mississippi", available: false },
+  { code: "MO", name: "Missouri", available: false },
+  { code: "MT", name: "Montana", available: false },
+  { code: "NE", name: "Nebraska", available: false },
+  { code: "NV", name: "Nevada", available: false },
+  { code: "NH", name: "New Hampshire", available: false },
+  { code: "NJ", name: "New Jersey", available: false },
+  { code: "NM", name: "New Mexico", available: false },
+  { code: "NY", name: "New York", available: false },
+  { code: "NC", name: "North Carolina", available: false },
+  { code: "ND", name: "North Dakota", available: false },
+  { code: "OH", name: "Ohio", available: false },
+  { code: "OK", name: "Oklahoma", available: false },
+  { code: "OR", name: "Oregon", available: false },
+  { code: "PA", name: "Pennsylvania", available: false },
+  { code: "RI", name: "Rhode Island", available: false },
+  { code: "SC", name: "South Carolina", available: false },
+  { code: "SD", name: "South Dakota", available: false },
+  { code: "TN", name: "Tennessee", available: false },
+  { code: "TX", name: "Texas", available: false },
+  { code: "UT", name: "Utah", available: false },
+  { code: "VT", name: "Vermont", available: false },
+  { code: "VA", name: "Virginia", available: false },
+  { code: "WA", name: "Washington", available: false },
+  { code: "WV", name: "West Virginia", available: false },
+  { code: "WI", name: "Wisconsin", available: false },
+  { code: "WY", name: "Wyoming", available: false },
 ];
+
+export function stateSlug(name: string) {
+  return name.toLowerCase().replace(/\s+/g, "-");
+}
+
+export function dsireStateUrl(code: string) {
+  return `https://programs.dsireusa.org/system/program/${code.toLowerCase()}/solar`;
+}
 
 export const topics: { value: "all" | ResourceTopic; label: string }[] = [
   { value: "all", label: "All resources" },
@@ -199,4 +248,3 @@ export const updates: Update[] = [
     url: "https://www.mass.gov/info-details/massachusetts-law-about-consumer-protection",
   },
 ];
-
