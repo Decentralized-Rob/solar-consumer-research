@@ -180,6 +180,10 @@ export function ResearchApp() {
     document.getElementById("resource-directory")?.scrollIntoView({ behavior: "smooth" });
   }
 
+  function openQuestionForm() {
+    document.getElementById("questions")?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
   return (
     <div className="home-shell">
       <header className="home-header">
@@ -197,7 +201,7 @@ export function ResearchApp() {
           <a href="/cases/connecticut-attorney-general-sunrun-lawsuit" onClick={() => setMenuOpen(false)}>Cases</a>
           <a href="/about" onClick={() => setMenuOpen(false)}>About</a>
         </nav>
-        <a className="home-header-action" href="#questions">Ask a question</a>
+        <button className="home-header-action" type="button" onClick={openQuestionForm}>Ask a question</button>
       </header>
 
       <main id="top">
