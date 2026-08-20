@@ -233,6 +233,7 @@ export type Database = {
       questions: {
         Row: {
           body: string
+          city: string
           created_at: string
           id: string
           state_code: string
@@ -242,6 +243,7 @@ export type Database = {
         }
         Insert: {
           body: string
+          city: string
           created_at?: string
           id?: string
           state_code: string
@@ -251,6 +253,7 @@ export type Database = {
         }
         Update: {
           body?: string
+          city?: string
           created_at?: string
           id?: string
           state_code?: string

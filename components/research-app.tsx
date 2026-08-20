@@ -180,6 +180,10 @@ export function ResearchApp() {
     document.getElementById("resource-directory")?.scrollIntoView({ behavior: "smooth" });
   }
 
+  function openQuestionForm() {
+    document.getElementById("questions")?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
   return (
     <div className="home-shell">
       <header className="home-header">
@@ -197,7 +201,7 @@ export function ResearchApp() {
           <a href="/cases/connecticut-attorney-general-sunrun-lawsuit" onClick={() => setMenuOpen(false)}>Cases</a>
           <a href="/about" onClick={() => setMenuOpen(false)}>About</a>
         </nav>
-        <a className="home-header-action" href="#questions">Ask a question</a>
+        <button className="home-header-action" type="button" onClick={openQuestionForm}>Ask a question</button>
       </header>
 
       <main id="top">
@@ -375,12 +379,21 @@ export function ResearchApp() {
         <section id="questions" className="home-question-section">
           <div className="home-wrap home-question-panel">
             <div>
-              <p className="home-card-label home-card-label--light">Private research questions</p>
-              <h2>Can&apos;t find the right public information?</h2>
-              <p>Signed-in users can ask for help locating public records, published procedures, or official resources. No automatic legal analysis or claim evaluation is generated.</p>
-              <ul><li>Locate agencies, forms, records, and published rules</li><li>Find the public source behind a claim</li><li>Organize a factual research trail</li></ul>
+              <p className="home-card-label home-card-label--light">Questions and research requests</p>
+              <h2>Need help finding an official solar resource?</h2>
+              <p>
+                Send a brief question and we&apos;ll help point you toward the public records, state agencies,
+                local departments, or official procedures relevant to your situation.
+              </p>
+              <ul>
+                <li>State and local complaint or licensing information</li>
+                <li>Public records, permit, and utility resources</li>
+                <li>The official source behind a claim or process</li>
+              </ul>
             </div>
-            <div className="home-question-account"><AccountPanel stateCode={stateCode} /></div>
+            <div className="home-question-account">
+              <AccountPanel stateCode={stateCode} />
+            </div>
           </div>
         </section>
       </main>
