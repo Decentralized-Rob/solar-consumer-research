@@ -181,14 +181,14 @@ export function AccountPanel({ stateCode }: { stateCode: string }) {
       </select>
       <label htmlFor="question-city">City or town</label>
       <input id="question-city" type="text" value={city} onChange={(event) => setCity(event.target.value)} maxLength={100} autoComplete="address-level2" required />
-      <label htmlFor="research-question">Briefly describe your situation</label>
+      <label htmlFor="research-question">Briefly describe your situation or question</label>
       <textarea
         id="research-question"
         value={question}
         onChange={(event) => setQuestion(event.target.value)}
         minLength={20}
         maxLength={4000}
-        placeholder="What happened, and what public record, agency, or process are you trying to find?"
+        placeholder={'Example: “My installer changed the system design after I signed. I’m trying to find the correct state agency and any public contractor records.”'}
         required
       />
     </>

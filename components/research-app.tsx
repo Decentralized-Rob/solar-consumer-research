@@ -382,8 +382,8 @@ export function ResearchApp() {
               <p className="home-card-label home-card-label--light">Questions and research requests</p>
               <h2>Need help finding an official solar resource?</h2>
               <p>
-                Send a brief question and we&apos;ll help point you toward the public records, state agencies,
-                local departments, or official procedures relevant to your situation.
+                Tell us what happened and what you are trying to find out. We&apos;ll use the details you provide to
+                identify relevant official resources, public records, agencies, and procedures in your area.
               </p>
               <ul>
                 <li>State and local complaint or licensing information</li>
