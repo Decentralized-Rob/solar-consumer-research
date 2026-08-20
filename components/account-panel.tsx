@@ -89,7 +89,7 @@ export function AccountPanel({ stateCode }: { stateCode: string }) {
         sessionStorage.removeItem(PENDING_QUESTION_KEY);
         setCity("");
         setQuestion("");
-        setMessage("Your question was submitted privately.");
+        setMessage("Your question was submitted privately. We will use it to identify relevant public resources, agencies, records, and published procedures.");
         await loadQuestions(session);
       } catch (error) {
         setMessage(error instanceof Error ? error.message : "Your question could not be submitted.");
@@ -155,7 +155,7 @@ export function AccountPanel({ stateCode }: { stateCode: string }) {
       await submitQuestionPayload(session, payload);
       setCity("");
       setQuestion("");
-      setMessage("Your question was submitted privately.");
+      setMessage("Your question was submitted privately. We will use it to identify relevant public resources, agencies, records, and published procedures.");
       await loadQuestions(session);
     } catch (error) {
       setMessage(error instanceof Error ? error.message : "The question could not be submitted.");
@@ -181,14 +181,14 @@ export function AccountPanel({ stateCode }: { stateCode: string }) {
       </select>
       <label htmlFor="question-city">City or town</label>
       <input id="question-city" type="text" value={city} onChange={(event) => setCity(event.target.value)} maxLength={100} autoComplete="address-level2" required />
-      <label htmlFor="research-question">Question or concern</label>
+      <label htmlFor="research-question">Briefly describe your situation</label>
       <textarea
         id="research-question"
         value={question}
         onChange={(event) => setQuestion(event.target.value)}
         minLength={20}
         maxLength={4000}
-        placeholder="Briefly describe the public record or official resource you are trying to find."
+        placeholder="What happened, and what public record, agency, or process are you trying to find?"
         required
       />
     </>
