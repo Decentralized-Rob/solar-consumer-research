@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { InfoPage } from "./info-page";
-import { dsireStateUrl, resources, stateSlug } from "../lib/content";
+import { resources, stateSlug } from "../lib/content";
 import { consumerProtectionByState, getStateSolarCase } from "../lib/state-research";
 
 export function StateResourcePage({ state }: { state: { code: string; name: string; available: boolean } }) {
@@ -11,7 +11,6 @@ export function StateResourcePage({ state }: { state: { code: string; name: stri
       && item.id !== "ma-electric-company"
       && item.url !== consumerProtection?.url,
   );
-  const dsireUrl = dsireStateUrl(state.code);
   const pageSchema = {
     "@context": "https://schema.org",
     "@type": "CollectionPage",
@@ -67,7 +66,6 @@ export function StateResourcePage({ state }: { state: { code: string; name: stri
       <nav className="state-question-nav" aria-label={`${state.name} solar resource questions`}>
         <a href="#consumer-protection">Where can I file a solar company complaint in {state.name}?</a>
         <a href="#solar-case">What residential solar lawsuit or enforcement action is relevant?</a>
-        <a href="#solar-policies">Where are {state.name} solar policies and programs listed?</a>
       </nav>
 
       <section id="consumer-protection" className="state-source-lead" aria-labelledby="consumer-protection-title">
@@ -87,13 +85,6 @@ export function StateResourcePage({ state }: { state: { code: string; name: stri
           <a href={solarCase.url} target="_blank" rel="noreferrer">Read the source and case details ↗</a>
         </section>
       )}
-
-      <section id="solar-policies" className="state-policy-source" aria-labelledby="solar-policies-title">
-        <div className="state-source-meta"><span>Research database</span><span>Lower-priority reference</span></div>
-        <h2 id="solar-policies-title">{state.name} solar policies and programs</h2>
-        <p>DSIRE collects state incentives, net-metering rules, interconnection information, and related programs. It is a research database, not a consumer-protection agency or complaint channel.</p>
-        <a href={dsireUrl} target="_blank" rel="noreferrer">Open the {state.name} page on DSIRE ↗</a>
-      </section>
 
       {stateResources.length > 0 ? (
         <section id="state-sources" className="state-source-section" aria-labelledby="state-sources-title">
