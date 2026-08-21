@@ -59,10 +59,6 @@ export function stateSlug(name: string) {
   return name.toLowerCase().replace(/\s+/g, "-");
 }
 
-export function dsireStateUrl(code: string) {
-  return `https://programs.dsireusa.org/system/program/${code.toLowerCase()}/solar`;
-}
-
 export const topics: { value: "all" | ResourceTopic; label: string }[] = [
   { value: "all", label: "All resources" },
   { value: "complaints", label: "Complaints" },
