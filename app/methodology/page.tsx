@@ -28,7 +28,7 @@ export default function MethodologyPage() {
       </section>
       <section className="info-section">
         <h2>How AI is used</h2>
-        <p>AI may help locate and organize public records or prepare a draft. Before anything is published, the editor opens the original source, checks the description against it, and decides whether the record meets the site's standards. AI output is never used as evidence.</p>
+        <p>AI may help locate and organize public records or prepare a draft. Before anything is published, the editor opens the original source, checks the description against it, and decides whether the record meets the site’s standards. AI output is never used as evidence.</p>
       </section>
       <section className="info-section">
         <h2>What “verified” means</h2>
