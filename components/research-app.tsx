@@ -3,7 +3,8 @@
 import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import { AccountPanel } from "./account-panel";
-import { dsireStateUrl, guides, resources, stateSlug, states, topics, updates } from "../lib/content";
+import { guides, resources, stateSlug, states, topics, updates } from "../lib/content";
+import { consumerProtectionByState, getStateSolarCase } from "../lib/state-research";
 import type { Guide, Resource, ResourceTopic, Update } from "../lib/types";
 
 type TopicFilter = "all" | ResourceTopic;
@@ -144,25 +145,47 @@ export function ResearchApp() {
   }, [stateCode]);
 
   const selectedState = states.find((state) => state.code === stateCode) ?? states[0];
-  const availableResources = useMemo(
-    () => [
-      ...resourceItems.filter(
-        (resource) => resource.stateCode === stateCode && resource.id !== "ma-electric-company",
-      ),
-      {
-        id: `dsire-${stateCode.toLowerCase()}-solar`,
+  const availableResources = useMemo(() => {
+    const consumerProtection = consumerProtectionByState[stateCode];
+    const solarCase = getStateSolarCase(stateCode);
+    const primaryResources: Resource[] = [];
+
+    if (consumerProtection) {
+      primaryResources.push({
+        id: `${stateCode.toLowerCase()}-consumer-protection`,
         stateCode,
-        title: `What solar policies and programs are listed for ${selectedState.name}?`,
-        summary: `The DSIRE state page collects solar policies, programs, incentives, net-metering rules, and interconnection information available for ${selectedState.name}.`,
-        publisher: "DSIRE — N.C. Clean Energy Technology Center",
-        publisherType: "research" as const,
-        topic: "programs" as const,
-        url: dsireStateUrl(stateCode),
-        lastVerified: "Aug 18, 2026",
-      },
-    ],
-    [resourceItems, selectedState.name, stateCode],
-  );
+        title: consumerProtection.title,
+        summary: consumerProtection.summary,
+        publisher: consumerProtection.publisher,
+        publisherType: "government",
+        topic: "complaints",
+        url: consumerProtection.url,
+        lastVerified: consumerProtection.lastVerified,
+      });
+    }
+
+    if (solarCase) {
+      primaryResources.push({
+        id: `${stateCode.toLowerCase()}-${solarCase.id}`,
+        stateCode,
+        title: solarCase.title,
+        summary: solarCase.summary,
+        publisher: solarCase.publisher,
+        publisherType: solarCase.publisher === "GBH News" ? "private_nonprofit" : "government",
+        topic: "complaints",
+        url: solarCase.url,
+        lastVerified: "Aug 21, 2026",
+      });
+    }
+
+    const additionalResources = resourceItems.filter(
+      (resource) => resource.stateCode === stateCode
+        && resource.id !== "ma-electric-company"
+        && resource.url !== consumerProtection?.url,
+    );
+
+    return [...primaryResources, ...additionalResources];
+  }, [resourceItems, stateCode]);
   const filteredResources = useMemo(
     () => availableResources.filter((resource) => topic === "all" || resource.topic === topic),
     [availableResources, topic],
