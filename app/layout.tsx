@@ -15,19 +15,27 @@ export const metadata: Metadata = {
     "solar financing complaint",
     "solar public records",
   ],
-  alternates: { canonical: "/" },
   openGraph: {
     title: "Solar Consumer Research",
     description: "Verified public resources and source-based guides for residential solar consumers.",
-    url: "/",
+    url: "https://solarcomplaint.com",
     siteName: "Solar Consumer Research",
     type: "website",
     locale: "en_US",
+    images: [
+      {
+        url: "https://solarcomplaint.com/og.png",
+        width: 1200,
+        height: 630,
+        alt: "Solar Consumer Research",
+      },
+    ],
   },
   twitter: {
-    card: "summary",
+    card: "summary_large_image",
     title: "Solar Consumer Research",
     description: "Verified public resources and source-based guides for residential solar consumers.",
+    images: ["https://solarcomplaint.com/og.png"],
   },
   robots: {
     index: true,
@@ -63,11 +71,25 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{
             __html: JSON.stringify({
               "@context": "https://schema.org",
-              "@type": "WebSite",
-              name: "Solar Consumer Research",
-              url: "https://solarcomplaint.com",
-              description: "Verified public resources and source-based guides for residential solar consumers.",
-              inLanguage: "en-US",
+              "@graph": [
+                {
+                  "@type": "WebSite",
+                  "@id": "https://solarcomplaint.com/#website",
+                  name: "Solar Consumer Research",
+                  url: "https://solarcomplaint.com",
+                  description: "Verified public resources and source-based guides for residential solar consumers.",
+                  inLanguage: "en-US",
+                  publisher: { "@id": "https://solarcomplaint.com/#publisher" },
+                },
+                {
+                  "@type": "Organization",
+                  "@id": "https://solarcomplaint.com/#publisher",
+                  name: "Solar Consumer Research",
+                  url: "https://solarcomplaint.com",
+                  publishingPrinciples: "https://solarcomplaint.com/methodology",
+                  ethicsPolicy: "https://solarcomplaint.com/corrections",
+                },
+              ],
             }),
           }}
         />

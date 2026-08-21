@@ -1,6 +1,11 @@
 import { InfoPage } from "../../components/info-page";
 
-export const metadata = { title: "About | Solar Consumer Research" };
+export const metadata = {
+  title: "About | Solar Consumer Research",
+  description: "How Solar Consumer Research organizes verified public information for residential solar consumers.",
+  alternates: { canonical: "/about" },
+  openGraph: { url: "/about" },
+};
 
 export default function AboutPage() {
   return (
@@ -20,6 +25,10 @@ export default function AboutPage() {
       <section className="info-section">
         <h2>Current coverage</h2>
         <p>Massachusetts is the first active state. Federal resources are included when they apply nationally. Additional states will be added after their source records have been reviewed.</p>
+      </section>
+      <section className="info-section">
+        <h2>Editorial responsibility</h2>
+        <p>Solar Consumer Research is independently operated. A human editor is responsible for what is published, checks summaries against the cited source, and maintains the methodology and corrections process.</p>
       </section>
     </InfoPage>
   );

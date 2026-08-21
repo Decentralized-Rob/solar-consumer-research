@@ -1,6 +1,11 @@
 import { InfoPage } from "../../components/info-page";
 
-export const metadata = { title: "Methodology | Solar Consumer Research" };
+export const metadata = {
+  title: "Methodology | Solar Consumer Research",
+  description: "How Solar Consumer Research selects, verifies, labels, and maintains public-source information.",
+  alternates: { canonical: "/methodology" },
+  openGraph: { url: "/methodology" },
+};
 
 export default function MethodologyPage() {
   return (
@@ -20,6 +25,10 @@ export default function MethodologyPage() {
       <section className="info-section">
         <h2>Publication controls</h2>
         <p>Content moves through draft, review, and published states. A record must include its original URL, publisher, source type, state coverage, and last verification date before publication.</p>
+      </section>
+      <section className="info-section">
+        <h2>How AI is used</h2>
+        <p>AI may assist with finding, organizing, and drafting public-source research. A human editor reviews the original source, checks the published description against it, and decides whether the record is ready to publish. Unverified AI output is not treated as a source.</p>
       </section>
       <section className="info-section">
         <h2>What “verified” means</h2>
