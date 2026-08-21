@@ -92,12 +92,26 @@ test("renders complaint first and litigation second on state pages", async () =>
   const html = await response.text();
   const complaintIndex = html.indexOf('id="consumer-protection"');
   const lawsuitIndex = html.indexOf('id="solar-case"');
-  const dsireIndex = html.indexOf('id="solar-policies"');
 
   assert.ok(complaintIndex >= 0);
   assert.ok(lawsuitIndex > complaintIndex);
-  assert.ok(dsireIndex > lawsuitIndex);
+  assert.doesNotMatch(html, /DSIRE/i);
   assert.match(html, /Texas Solar Complaints &amp; Lawsuits/i);
+});
+
+test("uses state complaint and case research in the home directory", async () => {
+  const worker = await loadWorker();
+  const response = await worker.fetch(
+    new Request("http://localhost/", { headers: { accept: "text/html" } }),
+    env,
+    ctx,
+  );
+
+  assert.equal(response.status, 200);
+  const html = await response.text();
+  assert.match(html, /File a Massachusetts consumer complaint/i);
+  assert.match(html, /Massachusetts homeowners allege Sunrun forged signatures/i);
+  assert.doesNotMatch(html, /DSIRE/i);
 });
 
 test("serves the federal resource page", async () => {
