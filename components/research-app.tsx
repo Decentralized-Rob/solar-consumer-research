@@ -21,6 +21,7 @@ type ApiResource = {
 
 type ApiGuide = {
   id: string;
+  slug: string;
   state_code: string | null;
   title: string;
   summary: string;
@@ -113,7 +114,8 @@ export function ResearchApp() {
           lastVerified: displayDate(item.last_verified_at),
         })));
         setGuideItems(guidePayload.data.map((item) => ({
-          id: item.id,
+          // The database ID is a UUID; homepage guide selection uses stable slugs.
+          id: item.slug,
           stateCode: item.state_code,
           title: item.title,
           summary: item.summary,
