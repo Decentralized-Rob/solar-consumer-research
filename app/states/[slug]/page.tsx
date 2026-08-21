@@ -15,6 +15,10 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     title: `${state.name} Residential Solar Consumer Resources`,
     description: `Verified solar policies, programs, and consumer resources for residential solar customers in ${state.name}.`,
     alternates: { canonical: `/states/${slug}` },
+    openGraph: { url: `/states/${slug}` },
+    robots: state.available
+      ? { index: true, follow: true }
+      : { index: false, follow: true },
   };
 }
 

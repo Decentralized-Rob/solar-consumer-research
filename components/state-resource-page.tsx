@@ -66,6 +66,7 @@ export function StateResourcePage({ state }: { state: { code: string; name: stri
 
       <div className="state-page-links">
         <Link href="/resources">Choose another state →</Link>
+        <Link href="/federal-resources">Browse federal resources →</Link>
         <Link href="/guides">Browse consumer guides →</Link>
       </div>
     </InfoPage>

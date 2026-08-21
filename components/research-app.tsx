@@ -197,6 +197,7 @@ export function ResearchApp() {
         <nav id="home-navigation" className={`home-nav ${menuOpen ? "is-open" : ""}`} aria-label="Primary navigation">
           <a href="#start" onClick={() => setMenuOpen(false)}>Start here</a>
           <a href="/resources" onClick={() => setMenuOpen(false)}>States</a>
+          <a href="/federal-resources" onClick={() => setMenuOpen(false)}>Federal</a>
           <a href="/guides" onClick={() => setMenuOpen(false)}>Guides</a>
           <a href="/cases/connecticut-attorney-general-sunrun-lawsuit" onClick={() => setMenuOpen(false)}>Cases</a>
           <a href="/about" onClick={() => setMenuOpen(false)}>About</a>
@@ -401,7 +402,7 @@ export function ResearchApp() {
       <footer className="home-footer">
         <div className="home-wrap home-footer-inner">
           <div><strong>Solar Consumer Research</strong><p>Independent public-source research for residential solar consumers.</p></div>
-          <nav aria-label="Footer navigation"><a href="/resources">Resources</a><a href="/guides">Guides</a><a href="/updates">Updates</a><a href="/methodology">Methodology</a><a href="/corrections">Corrections</a><a href="/privacy">Privacy</a><a href="/disclaimer">Disclaimer</a></nav>
+          <nav aria-label="Footer navigation"><a href="/resources">Resources</a><a href="/federal-resources">Federal</a><a href="/guides">Guides</a><a href="/updates">Updates</a><a href="/methodology">Methodology</a><a href="/corrections">Corrections</a><a href="/privacy">Privacy</a><a href="/disclaimer">Disclaimer</a></nav>
           <p>General information only. No legal advice or attorney-client relationship.</p>
         </div>
       </footer>
