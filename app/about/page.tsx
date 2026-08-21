@@ -28,7 +28,7 @@ export default function AboutPage() {
       </section>
       <section className="info-section">
         <h2>Editorial responsibility</h2>
-        <p>Solar Consumer Research is independently operated. A human editor is responsible for what is published, checks summaries against the cited source, and maintains the methodology and corrections process.</p>
+        <p>Solar Consumer Research is independently operated. Before publication, the editor compares each summary with its cited material and maintains the site's methodology and correction record.</p>
       </section>
     </InfoPage>
   );
