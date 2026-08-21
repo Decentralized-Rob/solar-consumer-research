@@ -4,8 +4,8 @@
   "description": "Verified public resources and research guides for residential solar consumers.",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#f6f4ed",
-  "theme_color": "#214f3b",
+  "background_color": "#f4f0e6",
+  "theme_color": "#171717",
   "icons": [
     {
       "src": "/favicon.svg",
@@ -15,4 +15,3 @@
     }
   ]
 }
-
