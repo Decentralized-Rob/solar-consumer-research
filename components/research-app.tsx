@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import Image from "next/image";
 import { AccountPanel } from "./account-panel";
 import { dsireStateUrl, guides, resources, stateSlug, states, topics, updates } from "../lib/content";
 import type { Guide, Resource, ResourceTopic, Update } from "../lib/types";
@@ -188,8 +189,7 @@ export function ResearchApp() {
     <div className="home-shell">
       <header className="home-header">
         <a className="home-wordmark" href="#top" aria-label="Solar Consumer Research home">
-          <span className="home-wordmark-mark" aria-hidden="true">S</span>
-          <span>Solar Consumer Research</span>
+          <Image className="brand-logo" src="/brand/solar-consumer-research.svg" alt="" width={690} height={104} priority unoptimized />
         </a>
         <button className="home-menu-toggle" type="button" aria-expanded={menuOpen} aria-controls="home-navigation" onClick={() => setMenuOpen((current) => !current)}>
           {menuOpen ? "Close" : "Menu"}
