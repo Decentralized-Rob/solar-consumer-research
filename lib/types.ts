@@ -45,3 +45,29 @@ export type Update = {
   publishedAt: string;
   url: string;
 };
+
+export type StateConsumerProtection = {
+  stateCode: string;
+  title: string;
+  summary: string;
+  publisher: string;
+  url: string;
+  lastVerified: string;
+};
+
+export type StateSolarCase = {
+  id: string;
+  title: string;
+  summary: string;
+  publisher: string;
+  url: string;
+  publishedAt: string;
+  datePublished: string;
+  caseType: "lawsuit" | "settlement" | "investigation" | "enforcement" | "reported litigation";
+  location: string;
+};
+
+export type StateSolarCasePlacement = {
+  caseId: string;
+  relevance: string;
+};

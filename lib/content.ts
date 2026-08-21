@@ -1,6 +1,6 @@
 import type { Guide, Resource, ResourceTopic, Update } from "./types";
 
-export const states = [
+const stateDirectory = [
   { code: "AL", name: "Alabama", available: false },
   { code: "AK", name: "Alaska", available: false },
   { code: "AZ", name: "Arizona", available: false },
@@ -52,6 +52,8 @@ export const states = [
   { code: "WI", name: "Wisconsin", available: false },
   { code: "WY", name: "Wyoming", available: false },
 ];
+
+export const states = stateDirectory.map((state) => ({ ...state, available: true }));
 
 export function stateSlug(name: string) {
   return name.toLowerCase().replace(/\s+/g, "-");
