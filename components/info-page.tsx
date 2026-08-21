@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import Link from "next/link";
+import Image from "next/image";
 
 export function InfoPage({
   eyebrow,
@@ -20,8 +21,7 @@ export function InfoPage({
     <div className={`info-page ${className}`.trim()}>
       <header className="info-header">
         <Link className="wordmark" href="/" aria-label="Solar Consumer Research home">
-          <span className="wordmark-mark" aria-hidden="true">S</span>
-          <span>Solar Consumer Research</span>
+          <Image className="brand-logo" src="/brand/solar-consumer-research.svg" alt="" width={690} height={104} unoptimized />
         </Link>
         <Link className="info-back" href="/">Back to the library</Link>
       </header>
