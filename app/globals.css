@@ -1097,7 +1097,13 @@ button, select { font: inherit; }
 .state-source-meta { display: flex; justify-content: space-between; gap: 20px; color: #6d746d; font-size: 9px; font-weight: 900; letter-spacing: .08em; text-transform: uppercase; }
 .state-source-lead h2 { max-width: 800px; margin: 34px 0 16px; font-family: Georgia, serif; font-size: clamp(32px, 4vw, 48px); font-weight: 500; line-height: 1.08; }
 .state-source-lead p { max-width: 800px; color: #596159; font-size: 14px; line-height: 1.75; }
+.state-source-lead .state-source-note { margin-top: 16px; padding-left: 16px; border-left: 3px solid var(--sun); color: #465047; }
 .state-source-lead > a { display: inline-block; margin-top: 20px; color: var(--green); font-size: 12px; font-weight: 900; }
+.state-case-feature { margin-top: 18px; padding: 38px; border: 1px solid var(--line); background: #f0f1eb; }
+.state-case-feature h2 { max-width: 820px; margin: 34px 0 16px; font-family: Georgia, serif; font-size: clamp(30px, 3.6vw, 44px); font-weight: 500; line-height: 1.08; }
+.state-case-feature p { max-width: 820px; color: #596159; font-size: 14px; line-height: 1.75; }
+.state-case-feature small { display: block; margin-top: 18px; color: #727872; font-size: 9px; }
+.state-case-feature > a { display: inline-block; margin-top: 22px; color: var(--green); font-size: 12px; font-weight: 900; }
 .state-source-section { margin-top: 76px; }
 .state-source-section-heading { display: grid; grid-template-columns: 180px 1fr; gap: 28px; align-items: baseline; padding-top: 20px; border-top: 2px solid var(--ink); }
 .state-source-section-heading > span { color: #6b726b; font-size: 10px; font-weight: 900; text-transform: uppercase; }
@@ -1304,6 +1310,7 @@ button, select { font: inherit; }
   .state-index-grid { grid-template-columns: 1fr; }
   .state-index-grid > a:nth-child(even) { border-left: 0; }
   .state-source-lead { padding: 24px; }
+  .state-case-feature { padding: 24px; }
   .state-source-grid { grid-template-columns: 1fr; }
   .state-source-section-heading { grid-template-columns: 1fr; gap: 8px; }
 }
