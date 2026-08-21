@@ -6,7 +6,7 @@ const baseUrl = "https://solarcomplaint.com";
 export default function sitemap(): MetadataRoute.Sitemap {
   const statePages = states.filter((state) => state.available).map((state) => ({
     url: `${baseUrl}/states/${stateSlug(state.name)}`,
-    lastModified: new Date("2026-08-18"),
+    lastModified: new Date("2026-08-21"),
     changeFrequency: "monthly" as const,
     priority: 0.8,
   }));

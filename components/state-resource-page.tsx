@@ -1,48 +1,104 @@
 import Link from "next/link";
 import { InfoPage } from "./info-page";
 import { dsireStateUrl, resources, stateSlug } from "../lib/content";
+import { consumerProtectionByState, getStateSolarCase } from "../lib/state-research";
 
 export function StateResourcePage({ state }: { state: { code: string; name: string; available: boolean } }) {
+  const consumerProtection = consumerProtectionByState[state.code];
+  const solarCase = getStateSolarCase(state.code);
   const stateResources = resources.filter(
-    (item) => item.stateCode === state.code && item.id !== "ma-electric-company",
+    (item) => item.stateCode === state.code
+      && item.id !== "ma-electric-company"
+      && item.url !== consumerProtection?.url,
   );
   const dsireUrl = dsireStateUrl(state.code);
   const pageSchema = {
     "@context": "https://schema.org",
     "@type": "CollectionPage",
     name: `${state.name} residential solar consumer resources`,
-    description: `Verified solar policies, programs, and consumer resources for ${state.name}.`,
+    description: `Official consumer complaint resources and verified residential solar litigation relevant to ${state.name}.`,
     url: `https://solarcomplaint.com/states/${stateSlug(state.name)}`,
+    dateModified: "2026-08-21",
     spatialCoverage: { "@type": "AdministrativeArea", name: state.name },
+    about: [
+      { "@type": "Thing", name: "Residential solar consumer protection" },
+      { "@type": "Thing", name: "Solar company complaints" },
+      { "@type": "Thing", name: "Residential solar litigation" },
+    ],
+    mainEntity: {
+      "@type": "ItemList",
+      itemListElement: [
+        consumerProtection && {
+          "@type": "ListItem",
+          position: 1,
+          item: {
+            "@type": "GovernmentService",
+            name: consumerProtection.title,
+            description: consumerProtection.summary,
+            provider: { "@type": "GovernmentOrganization", name: consumerProtection.publisher },
+            url: consumerProtection.url,
+          },
+        },
+        solarCase && {
+          "@type": "ListItem",
+          position: 2,
+          item: {
+            "@type": "NewsArticle",
+            headline: solarCase.title,
+            description: solarCase.summary,
+            datePublished: solarCase.datePublished,
+            publisher: { "@type": "Organization", name: solarCase.publisher },
+            url: solarCase.url,
+          },
+        },
+      ].filter(Boolean),
+    },
   };
 
   return (
     <InfoPage
       className="state-resource-page"
-      eyebrow={`${state.name} solar resource guide`}
-      title={`${state.name} residential solar resources.`}
-      lede={state.available
-        ? `Verified state sources for understanding, documenting, or addressing a residential solar problem in ${state.name}.`
-        : `A verified solar-specific starting point for ${state.name}. Additional state consumer-protection and complaint sources are being reviewed.`}
+      eyebrow={`${state.name} solar complaints and consumer protection`}
+      title={`${state.name} solar complaint resources.`}
+      lede={`Start with ${state.name}'s official consumer-protection complaint route, then review a documented residential-solar case or enforcement action relevant to homeowners in the state.`}
     >
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(pageSchema) }} />
 
       <nav className="state-question-nav" aria-label={`${state.name} solar resource questions`}>
-        <a href="#solar-policies">What solar policies and programs are listed for {state.name}?</a>
-        {stateResources.length > 0 && <a href="#state-sources">Which {state.name} agencies handle solar-related problems?</a>}
+        <a href="#consumer-protection">Where can I file a solar company complaint in {state.name}?</a>
+        <a href="#solar-case">What residential solar lawsuit or enforcement action is relevant?</a>
+        <a href="#solar-policies">Where are {state.name} solar policies and programs listed?</a>
       </nav>
 
-      <section id="solar-policies" className="state-source-lead" aria-labelledby="solar-policies-title">
-        <div className="state-source-meta"><span>Research database</span><span>Verified Aug 18, 2026</span></div>
-        <h2 id="solar-policies-title">What solar policies and programs are listed for {state.name}?</h2>
-        <p>DSIRE collects state solar policies, programs, incentives, net-metering rules, and interconnection information. The database is operated by the N.C. Clean Energy Technology Center at N.C. State University.</p>
-        <a href={dsireUrl} target="_blank" rel="noreferrer">Open the {state.name} solar page on DSIRE ↗</a>
+      <section id="consumer-protection" className="state-source-lead" aria-labelledby="consumer-protection-title">
+        <div className="state-source-meta"><span>Official complaint route</span><span>Verified {consumerProtection.lastVerified}</span></div>
+        <h2 id="consumer-protection-title">{consumerProtection.title}</h2>
+        <p>{consumerProtection.summary}</p>
+        <p className="state-source-note">For a residential-solar complaint, keep the sales proposal, signed or electronic contract, financing or lease documents, utility bills, production records, permits, inspection records, cancellation attempts, and company correspondence.</p>
+        <a href={consumerProtection.url} target="_blank" rel="noreferrer">Open the official {state.name} complaint page ↗</a>
+      </section>
+
+      {solarCase && (
+        <section id="solar-case" className="state-case-feature" aria-labelledby="solar-case-title">
+          <div className="state-source-meta"><span>{solarCase.relevance}</span><span>{solarCase.caseType} · {solarCase.publishedAt}</span></div>
+          <h2 id="solar-case-title">{solarCase.title}</h2>
+          <p>{solarCase.summary}</p>
+          <small>{solarCase.publisher} · Verified Aug 21, 2026</small>
+          <a href={solarCase.url} target="_blank" rel="noreferrer">Read the source and case details ↗</a>
+        </section>
+      )}
+
+      <section id="solar-policies" className="state-policy-source" aria-labelledby="solar-policies-title">
+        <div className="state-source-meta"><span>Research database</span><span>Lower-priority reference</span></div>
+        <h2 id="solar-policies-title">{state.name} solar policies and programs</h2>
+        <p>DSIRE collects state incentives, net-metering rules, interconnection information, and related programs. It is a research database, not a consumer-protection agency or complaint channel.</p>
+        <a href={dsireUrl} target="_blank" rel="noreferrer">Open the {state.name} page on DSIRE ↗</a>
       </section>
 
       {stateResources.length > 0 ? (
         <section id="state-sources" className="state-source-section" aria-labelledby="state-sources-title">
           <div className="state-source-section-heading">
-            <span>{String(stateResources.length + 1).padStart(2, "0")} verified sources</span>
+            <span>{String(stateResources.length).padStart(2, "0")} additional sources</span>
             <h2 id="state-sources-title">Additional {state.name} sources</h2>
           </div>
           <div className="state-source-grid">
@@ -57,12 +113,7 @@ export function StateResourcePage({ state }: { state: { code: string; name: stri
             ))}
           </div>
         </section>
-      ) : (
-        <section className="state-research-status">
-          <strong>Additional state research in progress</strong>
-          <p>Solar-specific complaint routes, licensing records, court materials, enforcement actions, and state consumer guidance will be added after each source is reviewed.</p>
-        </section>
-      )}
+      ) : null}
 
       <div className="state-page-links">
         <Link href="/resources">Choose another state →</Link>

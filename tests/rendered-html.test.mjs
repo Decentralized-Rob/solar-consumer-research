@@ -60,11 +60,11 @@ test("serves canonical robots and sitemap files", async () => {
   assert.match(sitemap, /<loc>https:\/\/solarcomplaint\.com<\/loc>/);
   assert.match(sitemap, /<loc>https:\/\/solarcomplaint\.com\/states\/massachusetts<\/loc>/);
   assert.match(sitemap, /<loc>https:\/\/solarcomplaint\.com\/federal-resources<\/loc>/);
-  assert.doesNotMatch(sitemap, /<loc>https:\/\/solarcomplaint\.com\/states\/new-york<\/loc>/);
+  assert.match(sitemap, /<loc>https:\/\/solarcomplaint\.com\/states\/new-york<\/loc>/);
   assert.doesNotMatch(`${robots}\n${sitemap}`, /solar-resource-mvp\.rbeland21\.chatgpt\.site/);
 });
 
-test("keeps unfinished state pages out of search", async () => {
+test("indexes verified state complaint and litigation pages", async () => {
   const worker = await loadWorker();
   const response = await worker.fetch(
     new Request("http://localhost/states/new-york", { headers: { accept: "text/html" } }),
@@ -74,7 +74,30 @@ test("keeps unfinished state pages out of search", async () => {
 
   assert.equal(response.status, 200);
   const html = await response.text();
-  assert.match(html, /<meta name="robots" content="noindex, follow"\/>/i);
+  assert.doesNotMatch(html, /noindex/i);
+  assert.match(html, /File a New York goods or services complaint/i);
+  assert.match(html, /New York sues Attyx and solar lenders/i);
+  assert.match(html, /application\/ld\+json/i);
+});
+
+test("renders complaint first and litigation second on state pages", async () => {
+  const worker = await loadWorker();
+  const response = await worker.fetch(
+    new Request("http://localhost/states/texas", { headers: { accept: "text/html" } }),
+    env,
+    ctx,
+  );
+
+  assert.equal(response.status, 200);
+  const html = await response.text();
+  const complaintIndex = html.indexOf('id="consumer-protection"');
+  const lawsuitIndex = html.indexOf('id="solar-case"');
+  const dsireIndex = html.indexOf('id="solar-policies"');
+
+  assert.ok(complaintIndex >= 0);
+  assert.ok(lawsuitIndex > complaintIndex);
+  assert.ok(dsireIndex > lawsuitIndex);
+  assert.match(html, /Texas Solar Complaints &amp; Lawsuits/i);
 });
 
 test("serves the federal resource page", async () => {

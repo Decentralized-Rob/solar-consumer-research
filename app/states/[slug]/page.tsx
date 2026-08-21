@@ -11,14 +11,34 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const { slug } = await params;
   const state = states.find((item) => stateSlug(item.name) === slug);
   if (!state) return {};
+  const title = `${state.name} Solar Complaints & Lawsuits`;
+  const description = `Official ${state.name} solar complaint contacts plus verified residential solar lawsuits, settlements, investigations, and enforcement actions for homeowners.`;
   return {
-    title: `${state.name} Residential Solar Consumer Resources`,
-    description: `Verified solar policies, programs, and consumer resources for residential solar customers in ${state.name}.`,
+    title,
+    description,
+    keywords: [
+      `${state.name} solar complaint`,
+      `${state.name} solar company complaints`,
+      `${state.name} solar lawsuit`,
+      `${state.name} consumer protection`,
+      "Sunrun complaint",
+      "residential solar consumer rights",
+    ],
     alternates: { canonical: `/states/${slug}` },
-    openGraph: { url: `/states/${slug}` },
-    robots: state.available
-      ? { index: true, follow: true }
-      : { index: false, follow: true },
+    openGraph: {
+      title,
+      description,
+      url: `/states/${slug}`,
+      type: "article",
+      images: [],
+    },
+    twitter: {
+      card: "summary",
+      title,
+      description,
+      images: [],
+    },
+    robots: { index: true, follow: true },
   };
 }
 

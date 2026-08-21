@@ -1,15 +1,17 @@
 # Solar Consumer Research
 
-> A source-verified directory of public resources and procedural guides for residential solar consumers. Massachusetts is the first covered state.
+> A source-verified directory of official complaint routes, residential-solar lawsuits and enforcement actions, and practical resources for consumers in all 50 U.S. states.
 
 ## Primary pages
 
-- Home: https://solar-resource-mvp.rbeland21.chatgpt.site/
-- Resources: https://solar-resource-mvp.rbeland21.chatgpt.site/resources
-- Guides: https://solar-resource-mvp.rbeland21.chatgpt.site/guides
-- Updates: https://solar-resource-mvp.rbeland21.chatgpt.site/updates
-- Methodology: https://solar-resource-mvp.rbeland21.chatgpt.site/methodology
-- Disclaimer: https://solar-resource-mvp.rbeland21.chatgpt.site/disclaimer
+- Home: https://solarcomplaint.com/
+- Resources: https://solarcomplaint.com/resources
+- Guides: https://solarcomplaint.com/guides
+- Updates: https://solarcomplaint.com/updates
+- Methodology: https://solarcomplaint.com/methodology
+- Disclaimer: https://solarcomplaint.com/disclaimer
+- State directory: https://solarcomplaint.com/resources
+- State pages: https://solarcomplaint.com/states/{state-name}
 
 ## Source and citation policy
 
@@ -20,8 +22,22 @@
 
 ## Current coverage
 
+- Official consumer-protection complaint routes for all 50 states
+- A verified state or regional residential-solar lawsuit, settlement, investigation, or enforcement item on each state page
 - Federal consumer, finance, and complaint resources
-- Massachusetts consumer protection, utility, public-record, and solar-program resources
+- Expanded Massachusetts consumer protection, utility, public-record, and solar-program resources
 - Independent organizations, clearly labeled by role
 - Source-based preparation guides on a separate Guides page
-- Local and municipal information is coming soon
+
+## State-page order
+
+1. Official state consumer-protection complaint route
+2. Relevant residential-solar lawsuit, settlement, investigation, or enforcement action
+3. Additional state sources when available
+4. DSIRE policy and incentive database reference
+
+## Accuracy notes
+
+- Lawsuit allegations are described as allegations unless a court or settlement established an outcome.
+- Lawsuits, settlements, investigations, enforcement actions, and reported private litigation are labeled separately.
+- A nearby or regional case is identified as such when no suitable in-state consumer case is listed.
