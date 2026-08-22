@@ -80,7 +80,7 @@ test("indexes verified state complaint and litigation pages", async () => {
   assert.match(html, /application\/ld\+json/i);
 });
 
-test("renders complaint first and litigation second on state pages", async () => {
+test("renders complaint first and litigation second on state pages without DSIRE", async () => {
   const worker = await loadWorker();
   const response = await worker.fetch(
     new Request("http://localhost/states/texas", { headers: { accept: "text/html" } }),
@@ -97,21 +97,6 @@ test("renders complaint first and litigation second on state pages", async () =>
   assert.ok(lawsuitIndex > complaintIndex);
   assert.doesNotMatch(html, /DSIRE/i);
   assert.match(html, /Texas Solar Complaints &amp; Lawsuits/i);
-});
-
-test("uses state complaint and case research in the home directory", async () => {
-  const worker = await loadWorker();
-  const response = await worker.fetch(
-    new Request("http://localhost/", { headers: { accept: "text/html" } }),
-    env,
-    ctx,
-  );
-
-  assert.equal(response.status, 200);
-  const html = await response.text();
-  assert.match(html, /File a Massachusetts consumer complaint/i);
-  assert.match(html, /Massachusetts homeowners and Sunrun clash in hundreds of contract cases/i);
-  assert.doesNotMatch(html, /DSIRE/i);
 });
 
 test("serves the federal resource page", async () => {

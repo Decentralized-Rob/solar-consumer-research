@@ -4,7 +4,12 @@ import { createSupabaseServerClient } from "../../lib/supabase/server";
 import type { Guide } from "../../lib/types";
 
 export const dynamic = "force-dynamic";
-export const metadata = { title: "Guides | Solar Consumer Research" };
+export const metadata = {
+  title: "Guides | Solar Consumer Research",
+  description: "Source-based guides for organizing solar records and using published consumer complaint procedures.",
+  alternates: { canonical: "/guides" },
+  openGraph: { url: "/guides" },
+};
 
 async function loadGuides(): Promise<Guide[]> {
   try {

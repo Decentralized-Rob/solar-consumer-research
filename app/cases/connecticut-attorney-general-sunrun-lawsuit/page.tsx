@@ -20,6 +20,13 @@ export const metadata: Metadata = {
     description: "A source-based summary of the Connecticut Attorney General's allegations involving residential solar contracts, signatures, permits, and non-functioning systems.",
     url: "/cases/connecticut-attorney-general-sunrun-lawsuit",
     type: "article",
+    images: [],
+  },
+  twitter: {
+    card: "summary",
+    title: "What does Connecticut's lawsuit against Sunrun allege?",
+    description: "A source-based summary of the Connecticut Attorney General's allegations involving residential solar contracts, signatures, permits, and non-functioning systems.",
+    images: [],
   },
 };
 

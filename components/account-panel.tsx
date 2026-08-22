@@ -1,50 +1,85 @@
 "use client";
 
-import { FormEvent, useEffect, useRef, useState } from "react";
+import { FormEvent, useCallback, useEffect, useRef, useState } from "react";
 import type { Session } from "@supabase/supabase-js";
 import { states } from "../lib/content";
 import { getSupabaseBrowserClient } from "../lib/supabase/client";
-import { hasSupabasePublicConfig } from "../lib/supabase/config";
+import { getPublicFeatureConfig, hasSupabasePublicConfig } from "../lib/supabase/config";
+import { TurnstileWidget } from "./turnstile-widget";
 
 type QuestionRecord = {
   id: string;
   state_code: string;
-  city: string;
+  city: string | null;
   body: string;
   status: string;
   created_at: string;
   question_responses: Array<{ id: string; body: string; created_at: string }>;
 };
 
-type PendingQuestion = {
+type QuestionPayload = {
   stateCode: string;
   city: string;
   question: string;
 };
 
-const PENDING_QUESTION_KEY = "solar-consumer-research:pending-question";
+type PendingUpdateAction = {
+  stateCode: string;
+  updatesOptIn: true;
+};
 
-export function AccountPanel({ stateCode, onStateChange }: { stateCode: string; onStateChange: (stateCode: string) => void }) {
+const PENDING_UPDATE_KEY = "solar-consumer-research:pending-update";
+
+export function AccountPanel({ stateCode }: { stateCode: string }) {
   const authAvailable = hasSupabasePublicConfig();
+  const { emailAuthEnabled, googleAuthEnabled, turnstileSiteKey } = getPublicFeatureConfig();
   const [session, setSession] = useState<Session | null>(null);
   const [email, setEmail] = useState("");
+  const [selectedState, setSelectedState] = useState(stateCode);
   const [city, setCity] = useState("");
   const [question, setQuestion] = useState("");
   const [questions, setQuestions] = useState<QuestionRecord[]>([]);
+  const [updatesOptIn, setUpdatesOptIn] = useState(false);
+  const [captchaToken, setCaptchaToken] = useState("");
+  const [captchaResetKey, setCaptchaResetKey] = useState(0);
   const [message, setMessage] = useState("");
   const [busy, setBusy] = useState(false);
-  const pendingProcessed = useRef(false);
+  const processingPending = useRef(false);
 
-  async function loadQuestions(activeSession: Session) {
+  const loadQuestions = useCallback(async (activeSession: Session) => {
     const response = await fetch("/api/questions", {
       headers: { authorization: `Bearer ${activeSession.access_token}` },
     });
     if (!response.ok) return;
     const payload = (await response.json()) as { data?: QuestionRecord[] };
     setQuestions(payload.data ?? []);
-  }
+  }, []);
 
-  async function submitQuestionPayload(activeSession: Session, payload: PendingQuestion) {
+  const saveProfile = useCallback(async (
+    activeSession: Session,
+    activeState: string,
+    nextUpdatesOptIn?: boolean,
+  ) => {
+    const response = await fetch("/api/profile", {
+      method: "PUT",
+      headers: {
+        "content-type": "application/json",
+        authorization: `Bearer ${activeSession.access_token}`,
+      },
+      body: JSON.stringify({ stateCode: activeState, updatesOptIn: nextUpdatesOptIn }),
+    });
+    if (!response.ok) return false;
+    const payload = (await response.json()) as { data?: { updatesOptIn?: boolean } };
+    if (typeof payload.data?.updatesOptIn === "boolean") {
+      setUpdatesOptIn(payload.data.updatesOptIn);
+    }
+    return true;
+  }, []);
+
+  const submitQuestionPayload = useCallback(async (
+    activeSession: Session,
+    payload: QuestionPayload | { claimPending: true },
+  ) => {
     const response = await fetch("/api/questions", {
       method: "POST",
       headers: {
@@ -53,9 +88,15 @@ export function AccountPanel({ stateCode, onStateChange }: { stateCode: string; 
       },
       body: JSON.stringify(payload),
     });
-    const result = (await response.json()) as { error?: string };
+    const result = (await response.json()) as {
+      data?: { state_code?: string } | null;
+      error?: string;
+      claimed?: boolean;
+      updatesOptIn?: boolean;
+    };
     if (!response.ok) throw new Error(result.error ?? "The question could not be submitted.");
-  }
+    return result;
+  }, []);
 
   useEffect(() => {
     if (!authAvailable) return;
@@ -68,34 +109,49 @@ export function AccountPanel({ stateCode, onStateChange }: { stateCode: string; 
   }, [authAvailable]);
 
   useEffect(() => {
-    if (!session) return;
+    if (!session) {
+      processingPending.current = false;
+      return;
+    }
+    if (processingPending.current) return;
+    processingPending.current = true;
 
     void (async () => {
-      await loadQuestions(session);
-      if (pendingProcessed.current) return;
-      pendingProcessed.current = true;
-
-      const raw = sessionStorage.getItem(PENDING_QUESTION_KEY);
-      if (!raw) return;
-
       try {
-        const pending = JSON.parse(raw) as PendingQuestion;
-        await submitQuestionPayload(session, pending);
-        sessionStorage.removeItem(PENDING_QUESTION_KEY);
-        setCity("");
-        setQuestion("");
-        setMessage("Your question was submitted privately. We will use it to identify relevant public resources, agencies, records, and published procedures.");
+        const rawPendingUpdate = sessionStorage.getItem(PENDING_UPDATE_KEY);
+        const pendingUpdate = rawPendingUpdate ? JSON.parse(rawPendingUpdate) as PendingUpdateAction : null;
+        await saveProfile(session, pendingUpdate?.stateCode ?? stateCode, pendingUpdate?.updatesOptIn);
+
+        if (pendingUpdate) {
+          sessionStorage.removeItem(PENDING_UPDATE_KEY);
+          setMessage("Your email is verified. You will only receive occasional research and site updates.");
+        }
+
+        const result = await submitQuestionPayload(session, { claimPending: true });
+        if (result.claimed) {
+          if (result.updatesOptIn) await saveProfile(session, result.data?.state_code ?? stateCode, true);
+          setCity("");
+          setQuestion("");
+          setMessage("Your question was submitted privately. You can return here to view its status and any source-based response.");
+        }
         await loadQuestions(session);
       } catch (error) {
-        setMessage(error instanceof Error ? error.message : "Your question could not be submitted.");
+        setMessage(error instanceof Error ? error.message : "Your request could not be completed.");
+      } finally {
+        processingPending.current = false;
       }
     })();
-  }, [session]);
+  }, [loadQuestions, saveProfile, session, stateCode, submitQuestionPayload]);
 
-  function currentPayload(): PendingQuestion | null {
+  function resetCaptcha() {
+    setCaptchaToken("");
+    setCaptchaResetKey((value) => value + 1);
+  }
+
+  function currentQuestionPayload(): QuestionPayload | null {
     const cleanCity = city.trim();
     const cleanQuestion = question.trim();
-    if (!/^[A-Z]{2}$/.test(stateCode)) {
+    if (!/^[A-Z]{2}$/.test(selectedState)) {
       setMessage("Choose a state.");
       return null;
     }
@@ -107,56 +163,126 @@ export function AccountPanel({ stateCode, onStateChange }: { stateCode: string; 
       setMessage("Questions must be between 20 and 4,000 characters.");
       return null;
     }
-    return { stateCode, city: cleanCity, question: cleanQuestion };
+    return { stateCode: selectedState, city: cleanCity, question: cleanQuestion };
   }
 
-  async function requestEmailVerification(event: FormEvent<HTMLFormElement>) {
+  async function requestUpdates(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (!authAvailable) return;
+    if (!authAvailable || !emailAuthEnabled) return;
+    if (turnstileSiteKey && !captchaToken) {
+      setMessage("Complete the bot check first.");
+      return;
+    }
 
-    const payload = currentPayload();
+    setBusy(true);
+    setMessage("");
+    sessionStorage.setItem(PENDING_UPDATE_KEY, JSON.stringify({ stateCode, updatesOptIn: true } satisfies PendingUpdateAction));
+    const { error } = await getSupabaseBrowserClient().auth.signInWithOtp({
+      email: email.trim(),
+      options: {
+        shouldCreateUser: true,
+        emailRedirectTo: `${window.location.origin}/#questions`,
+        ...(captchaToken ? { captchaToken } : {}),
+      },
+    });
+    setBusy(false);
+    resetCaptcha();
+
+    if (error) {
+      sessionStorage.removeItem(PENDING_UPDATE_KEY);
+      setMessage(error.message);
+      return;
+    }
+    setMessage("Check your email and use the secure link to finish.");
+  }
+
+  async function requestQuestion(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (!authAvailable || !emailAuthEnabled) return;
+    if (turnstileSiteKey && !captchaToken) {
+      setMessage("Complete the bot check first.");
+      return;
+    }
+    const payload = currentQuestionPayload();
     if (!payload) return;
 
     setBusy(true);
     setMessage("");
-    sessionStorage.setItem(PENDING_QUESTION_KEY, JSON.stringify(payload));
+    const pendingResponse = await fetch("/api/questions/pending", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ email: email.trim(), ...payload, updatesOptIn }),
+    });
+    const pendingResult = (await pendingResponse.json()) as { prepared?: boolean; error?: string };
+    if (!pendingResponse.ok || !pendingResult.prepared) {
+      setBusy(false);
+      resetCaptcha();
+      setMessage(pendingResult.error ?? "The question could not be prepared for verification.");
+      return;
+    }
 
     const { error } = await getSupabaseBrowserClient().auth.signInWithOtp({
       email: email.trim(),
       options: {
         shouldCreateUser: true,
         emailRedirectTo: `${window.location.origin}/#questions`,
+        ...(captchaToken ? { captchaToken } : {}),
       },
     });
-
     setBusy(false);
+    resetCaptcha();
+
     if (error) {
-      sessionStorage.removeItem(PENDING_QUESTION_KEY);
       setMessage(error.message);
       return;
     }
     setMessage("Check your email and use the secure link to submit your question.");
   }
 
+  async function signInWithGoogle() {
+    if (!authAvailable || !googleAuthEnabled) return;
+    setBusy(true);
+    setMessage("");
+    const { error } = await getSupabaseBrowserClient().auth.signInWithOAuth({
+      provider: "google",
+      options: { redirectTo: `${window.location.origin}/#questions` },
+    });
+    if (error) {
+      setBusy(false);
+      setMessage(error.message);
+    }
+  }
+
   async function submitQuestion(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (!session) return;
-    const payload = currentPayload();
+    const payload = currentQuestionPayload();
     if (!payload) return;
-
     setBusy(true);
     setMessage("");
     try {
       await submitQuestionPayload(session, payload);
       setCity("");
       setQuestion("");
-      setMessage("Your question was submitted privately. We will use it to identify relevant public resources, agencies, records, and published procedures.");
+      setMessage("Your question was submitted privately.");
       await loadQuestions(session);
     } catch (error) {
       setMessage(error instanceof Error ? error.message : "The question could not be submitted.");
     } finally {
       setBusy(false);
     }
+  }
+
+  async function changeUpdatesPreference(nextValue: boolean) {
+    if (!session) return;
+    setBusy(true);
+    const saved = await saveProfile(session, selectedState, nextValue);
+    setMessage(saved
+      ? nextValue
+        ? "Research and site updates are on."
+        : "Research and site updates are off."
+      : "Your email preference could not be changed.");
+    setBusy(false);
   }
 
   async function signOut() {
@@ -168,14 +294,22 @@ export function AccountPanel({ stateCode, onStateChange }: { stateCode: string; 
     setBusy(false);
   }
 
-  const fields = (
+  const questionFields = (
     <>
       <label htmlFor="question-state">State</label>
-      <select id="question-state" value={stateCode} onChange={(event) => onStateChange(event.target.value)} required>
+      <select id="question-state" value={selectedState} onChange={(event) => setSelectedState(event.target.value)} required>
         {states.map((state) => <option key={state.code} value={state.code}>{state.name}</option>)}
       </select>
       <label htmlFor="question-city">City or town</label>
-      <input id="question-city" type="text" value={city} onChange={(event) => setCity(event.target.value)} maxLength={100} autoComplete="address-level2" required />
+      <input
+        id="question-city"
+        type="text"
+        value={city}
+        onChange={(event) => setCity(event.target.value)}
+        maxLength={100}
+        autoComplete="address-level2"
+        required
+      />
       <label htmlFor="research-question">Briefly describe your situation or question</label>
       <textarea
         id="research-question"
@@ -183,7 +317,7 @@ export function AccountPanel({ stateCode, onStateChange }: { stateCode: string; 
         onChange={(event) => setQuestion(event.target.value)}
         minLength={20}
         maxLength={4000}
-        placeholder={'Example: “My installer changed the system design after I signed. I’m trying to find the correct state agency and any public contractor records.”'}
+        placeholder="Example: “My installer changed the system design after I signed. I’m trying to find the correct state agency and any public contractor records.”"
         required
       />
     </>
@@ -200,14 +334,78 @@ export function AccountPanel({ stateCode, onStateChange }: { stateCode: string; 
 
   if (!session) {
     return (
-      <form className="question-form question-form--public" onSubmit={requestEmailVerification}>
-        <label htmlFor="question-email">Email address</label>
-        <input id="question-email" type="email" value={email} onChange={(event) => setEmail(event.target.value)} placeholder="you@example.com" autoComplete="email" required />
-        {fields}
-        <p className="form-note">We verify your email before storing a question. Do not include account numbers, financial details, or confidential documents.</p>
-        <button className="button button--sun" type="submit" disabled={busy}>{busy ? "Sending..." : "Verify email and submit"}</button>
+      <div className="contact-options">
+        {emailAuthEnabled ? (
+          <>
+            <form className="account-form account-form--first" onSubmit={requestUpdates}>
+              <div className="form-heading">
+                <strong>Get important updates</strong>
+                <span>Only occasional alerts about meaningful research or site changes.</span>
+              </div>
+              <label htmlFor="updates-email">Email address</label>
+              <input
+                id="updates-email"
+                type="email"
+                value={email}
+                onChange={(event) => setEmail(event.target.value)}
+                placeholder="you@example.com"
+                autoComplete="email"
+                required
+              />
+              <button className="button button--sun" type="submit" disabled={busy}>
+                {busy ? "Sending..." : "Verify my email"}
+              </button>
+            </form>
+
+            <div className="form-divider"><span>or ask a question</span></div>
+
+            <form className="question-form question-form--public" onSubmit={requestQuestion}>
+              <label htmlFor="question-email">Your email</label>
+              <input
+                id="question-email"
+                type="email"
+                value={email}
+                onChange={(event) => setEmail(event.target.value)}
+                placeholder="you@example.com"
+                autoComplete="email"
+                required
+              />
+              {questionFields}
+              <label className="form-checkbox">
+                <input
+                  type="checkbox"
+                  checked={updatesOptIn}
+                  onChange={(event) => setUpdatesOptIn(event.target.checked)}
+                />
+                <span>Also send me occasional research and site updates.</span>
+              </label>
+              <p className="form-note">We hold your question for up to one hour and submit it only after you verify your email. Do not include account numbers, financial details, or confidential documents.</p>
+              <button className="button button--sun" type="submit" disabled={busy}>
+                {busy ? "Sending..." : "Verify email and submit"}
+              </button>
+            </form>
+          </>
+        ) : (
+          <div className="account-unavailable" role="status">
+            <strong>Email contact is almost ready.</strong>
+            <p>The private delivery and bot-protection settings still need to be connected.</p>
+          </div>
+        )}
+
+        {googleAuthEnabled && (
+          <button className="google-auth-button" type="button" onClick={signInWithGoogle} disabled={busy}>
+            <span aria-hidden="true">G</span> Continue with Google
+          </button>
+        )}
+        {emailAuthEnabled && turnstileSiteKey && (
+          <TurnstileWidget
+            siteKey={turnstileSiteKey}
+            onToken={setCaptchaToken}
+            resetKey={captchaResetKey}
+          />
+        )}
         {message && <p className="form-message" role="status">{message}</p>}
-      </form>
+      </div>
     );
   }
 
@@ -217,10 +415,18 @@ export function AccountPanel({ stateCode, onStateChange }: { stateCode: string; 
         <span>Signed in as {session.user.email}</span>
         <button type="button" onClick={signOut} disabled={busy}>Sign out</button>
       </div>
+      <div className="updates-preference">
+        <span>Occasional research and site updates: <strong>{updatesOptIn ? "On" : "Off"}</strong></span>
+        <button type="button" onClick={() => changeUpdatesPreference(!updatesOptIn)} disabled={busy}>
+          Turn {updatesOptIn ? "off" : "on"}
+        </button>
+      </div>
       <form className="question-form" onSubmit={submitQuestion}>
-        {fields}
-        <p className="form-note">General information only. We do not provide legal advice, evaluate claims, or interpret private contracts.</p>
-        <button className="button button--sun" type="submit" disabled={busy}>{busy ? "Submitting..." : "Submit privately"}</button>
+        {questionFields}
+        <p className="form-note">Do not include account numbers, Social Security numbers, financial details, or confidential documents.</p>
+        <button className="button button--sun" type="submit" disabled={busy}>
+          {busy ? "Submitting..." : "Submit privately"}
+        </button>
         {message && <p className="form-message" role="status">{message}</p>}
       </form>
       {questions.length > 0 && (
@@ -228,9 +434,14 @@ export function AccountPanel({ stateCode, onStateChange }: { stateCode: string; 
           <strong>Your questions</strong>
           {questions.map((item) => (
             <article key={item.id}>
-              <span>{item.status} · {item.city}, {item.state_code}</span>
+              <span>{item.status} · {item.city ? `${item.city}, ` : ""}{item.state_code}</span>
               <p>{item.body}</p>
-              {item.question_responses?.map((response) => <div className="research-response" key={response.id}><strong>Research response</strong><p>{response.body}</p></div>)}
+              {item.question_responses?.map((response) => (
+                <div className="research-response" key={response.id}>
+                  <strong>Research response</strong>
+                  <p>{response.body}</p>
+                </div>
+              ))}
             </article>
           ))}
         </div>

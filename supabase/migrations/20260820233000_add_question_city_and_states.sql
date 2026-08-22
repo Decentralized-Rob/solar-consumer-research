@@ -1,9 +1,9 @@
 alter table public.questions
-  add column if not exists city text not null default '';
+  add column if not exists city text;
 
 alter table public.questions
   add constraint questions_city_length_check
-  check (char_length(city) between 2 and 100) not valid;
+  check (city is null or char_length(city) between 2 and 100) not valid;
 
 alter table public.questions
   validate constraint questions_city_length_check;

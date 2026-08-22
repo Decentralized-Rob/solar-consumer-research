@@ -1,6 +1,11 @@
 import { InfoPage } from "../../components/info-page";
 
-export const metadata = { title: "Disclaimer | Solar Consumer Research" };
+export const metadata = {
+  title: "Disclaimer | Solar Consumer Research",
+  description: "General-information limits for Solar Consumer Research and its public-source summaries.",
+  alternates: { canonical: "/disclaimer" },
+  openGraph: { url: "/disclaimer" },
+};
 
 export default function DisclaimerPage() {
   return (
