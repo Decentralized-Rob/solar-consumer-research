@@ -58,7 +58,7 @@ export default function ConnecticutSunrunCasePage() {
 
         <section id="allegations" className="info-section">
           <h2>What does the complaint allege?</h2>
-          <p>The Attorney General's announcement says the lawsuit alleges deceptive, unfair, and otherwise unlawful residential solar sales. The allegations include contracts entered without full and informed consent, impersonation of consumers, forged signatures, work performed without required permits, and systems that were installed but did not function.</p>
+          <p>The Attorney General&apos;s announcement says the lawsuit alleges deceptive, unfair, and otherwise unlawful residential solar sales. The allegations include contracts entered without full and informed consent, impersonation of consumers, forged signatures, work performed without required permits, and systems that were installed but did not function.</p>
         </section>
 
         <section id="named" className="info-section">
@@ -73,8 +73,8 @@ export default function ConnecticutSunrunCasePage() {
 
         <section id="source" className="info-section">
           <h2>Where can I read the official source?</h2>
-          <p><a href={officialSource} target="_blank" rel="noreferrer">Read the Connecticut Attorney General's lawsuit announcement and access the complaint →</a></p>
-          <p>Publisher: Connecticut Attorney General's Office. Published July 19, 2024. Source last reviewed by this site August 18, 2026.</p>
+          <p><a href={officialSource} target="_blank" rel="noreferrer">Read the Connecticut Attorney General&apos;s lawsuit announcement and access the complaint →</a></p>
+          <p>Publisher: Connecticut Attorney General&apos;s Office. Published July 19, 2024. Source last reviewed by this site August 18, 2026.</p>
         </section>
 
         <section className="info-section">

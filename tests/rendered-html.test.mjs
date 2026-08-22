@@ -110,7 +110,7 @@ test("uses state complaint and case research in the home directory", async () =>
   assert.equal(response.status, 200);
   const html = await response.text();
   assert.match(html, /File a Massachusetts consumer complaint/i);
-  assert.match(html, /Massachusetts homeowners allege Sunrun forged signatures/i);
+  assert.match(html, /Massachusetts homeowners and Sunrun clash in hundreds of contract cases/i);
   assert.doesNotMatch(html, /DSIRE/i);
 });
 

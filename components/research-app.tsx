@@ -418,7 +418,7 @@ export function ResearchApp() {
               </ul>
             </div>
             <div className="home-question-account">
-              <AccountPanel stateCode={stateCode} />
+              <AccountPanel stateCode={stateCode} onStateChange={(nextState) => { setStateCode(nextState); setTopic("all"); }} />
             </div>
           </div>
         </section>
