@@ -24,21 +24,16 @@ type PendingQuestion = {
 
 const PENDING_QUESTION_KEY = "solar-consumer-research:pending-question";
 
-export function AccountPanel({ stateCode }: { stateCode: string }) {
+export function AccountPanel({ stateCode, onStateChange }: { stateCode: string; onStateChange: (stateCode: string) => void }) {
   const authAvailable = hasSupabasePublicConfig();
   const [session, setSession] = useState<Session | null>(null);
   const [email, setEmail] = useState("");
-  const [selectedState, setSelectedState] = useState(stateCode);
   const [city, setCity] = useState("");
   const [question, setQuestion] = useState("");
   const [questions, setQuestions] = useState<QuestionRecord[]>([]);
   const [message, setMessage] = useState("");
   const [busy, setBusy] = useState(false);
   const pendingProcessed = useRef(false);
-
-  useEffect(() => {
-    setSelectedState(stateCode);
-  }, [stateCode]);
 
   async function loadQuestions(activeSession: Session) {
     const response = await fetch("/api/questions", {
@@ -100,7 +95,7 @@ export function AccountPanel({ stateCode }: { stateCode: string }) {
   function currentPayload(): PendingQuestion | null {
     const cleanCity = city.trim();
     const cleanQuestion = question.trim();
-    if (!/^[A-Z]{2}$/.test(selectedState)) {
+    if (!/^[A-Z]{2}$/.test(stateCode)) {
       setMessage("Choose a state.");
       return null;
     }
@@ -112,7 +107,7 @@ export function AccountPanel({ stateCode }: { stateCode: string }) {
       setMessage("Questions must be between 20 and 4,000 characters.");
       return null;
     }
-    return { stateCode: selectedState, city: cleanCity, question: cleanQuestion };
+    return { stateCode, city: cleanCity, question: cleanQuestion };
   }
 
   async function requestEmailVerification(event: FormEvent<HTMLFormElement>) {
@@ -176,7 +171,7 @@ export function AccountPanel({ stateCode }: { stateCode: string }) {
   const fields = (
     <>
       <label htmlFor="question-state">State</label>
-      <select id="question-state" value={selectedState} onChange={(event) => setSelectedState(event.target.value)} required>
+      <select id="question-state" value={stateCode} onChange={(event) => onStateChange(event.target.value)} required>
         {states.map((state) => <option key={state.code} value={state.code}>{state.name}</option>)}
       </select>
       <label htmlFor="question-city">City or town</label>
