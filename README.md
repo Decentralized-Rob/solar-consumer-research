@@ -1,16 +1,14 @@
 # Solar Consumer Research
 
-Solar Consumer Research is a source-backed research tool for residential solar customers. It brings official resources, practical research guides, verified updates, and private user questions into one place.
-
-Massachusetts is the first supported state. The data model and publishing workflow are designed to add more states without rebuilding the product.
+Solar Consumer Research is a public research tool for residential solar customers. It organizes official complaint routes, consumer resources, documented cases, practical guides, and private research requests by state.
 
 ## What the application does
 
-- Displays published resources, guides, and updates in one interface; search is marked as coming soon
-- Keeps federal information visible alongside state-specific material
+- Provides an official consumer-protection starting point and a documented solar case or enforcement item for every state
+- Separates state resources from federal complaint resources
 - Shows the publisher, source link, and verification date for public content
-- Gives signed-in users a private place to submit and track research questions
-- Falls back to a reviewed local content snapshot if the database is unavailable
+- Lets verified users submit a private research request
+- Uses a reviewed local content snapshot if the content API is unavailable
 
 Submitted questions are stored with a `submitted` status for human review. The application does not generate automatic legal analysis, provide legal advice, interpret individual contracts, recommend professionals, or publish user questions.
 
@@ -60,10 +58,10 @@ npm test
 
 Migrations live in `supabase/migrations/` and should be applied in timestamp order. The current schema includes public research content, private accounts and questions, administrative controls, audit records, source-domain enforcement, and indexed full-text search.
 
-## Development model
+## AI-assisted development
 
-Product direction, research standards, scope, and acceptance decisions are human-owned. Coding agents are used as implementation tools under explicit requirements. Their output is reviewed, tested, and committed as ordinary project work.
+AI tools assist with implementation and updates. Source selection, editorial standards, scope, review, and publication decisions remain human-owned.
 
 ## Status
 
-The current release is a working private MVP. Massachusetts content and the core research workflow are in place; broader public release and additional states remain future phases.
+The public site is live at [solarcomplaint.com](https://solarcomplaint.com). State pages, federal resources, public guides, and the private research-request flow are active. Site search remains intentionally unavailable while the underlying content and update process are refined.
