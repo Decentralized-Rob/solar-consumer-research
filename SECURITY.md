@@ -8,7 +8,7 @@ Security fixes are made against the current `main` branch and the current produc
 
 Do **not** open a public issue, pull request, or discussion for a suspected vulnerability.
 
-Use the private form at [solarcomplaint.com](https://solarcomplaint.com/#questions) and begin the message with **“Security report.”** Include:
+Use GitHub's [private vulnerability reporting form](https://github.com/Decentralized-Rob/solar-consumer-research/security/advisories/new). Include:
 
 - A concise description of the issue
 - The affected page, endpoint, or component
