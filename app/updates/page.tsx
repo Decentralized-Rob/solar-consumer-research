@@ -4,7 +4,12 @@ import { createSupabaseServerClient } from "../../lib/supabase/server";
 import type { Update } from "../../lib/types";
 
 export const dynamic = "force-dynamic";
-export const metadata = { title: "Updates | Solar Consumer Research" };
+export const metadata = {
+  title: "Updates | Solar Consumer Research",
+  description: "Verified updates on solar programs, consumer alerts, enforcement actions, and public procedures.",
+  alternates: { canonical: "/updates" },
+  openGraph: { url: "/updates" },
+};
 
 async function loadUpdates(): Promise<Update[]> {
   try {

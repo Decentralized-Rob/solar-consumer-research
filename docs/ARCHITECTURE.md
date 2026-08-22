@@ -50,7 +50,7 @@ Next route handlers          Supabase Auth
 
 - `app/`: routes, page composition, and HTTP API handlers.
 - `components/`: reusable client-side product UI.
-- `lib/content.ts`: verified fallback content used when the API is unavailable.
+- `lib/content.ts`: reviewed fallback content and the state directory used when the API is unavailable.
 - `lib/supabase/`: browser and server Supabase clients.
 - `supabase/`: reproducible PostgreSQL schema and seed data.
 - `docs/`: architecture and operating decisions.
@@ -89,6 +89,7 @@ lib/
   supabase/config.ts
   supabase/server.ts
   content.ts
+  state-research.ts
   database.types.ts
   types.ts
 supabase/
@@ -133,7 +134,7 @@ Published resources, guides, and updates carry generated weighted `tsvector` col
 
 ## Scale path
 
-- Add states without changing the data model.
+- Update state sources and documented case records through a reviewed publishing workflow.
 - Move editorial work into an authenticated admin interface without changing public APIs.
 - Add result ranking and synonyms to PostgreSQL search before introducing a separate search service.
 - Add moderation queues and source-check automation without allowing automated publishing.

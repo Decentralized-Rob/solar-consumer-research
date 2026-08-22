@@ -1,7 +1,12 @@
 import { InfoPage } from "../../components/info-page";
 import Link from "next/link";
 
-export const metadata = { title: "Corrections | Solar Consumer Research" };
+export const metadata = {
+  title: "Corrections | Solar Consumer Research",
+  description: "How to report an outdated link, inaccurate description, or newer official source.",
+  alternates: { canonical: "/corrections" },
+  openGraph: { url: "/corrections" },
+};
 
 export default function CorrectionsPage() {
   return (

@@ -167,6 +167,8 @@ export type Database = {
         Row: {
           created_at: string
           email: string
+          research_updates_opt_in: boolean
+          research_updates_opted_in_at: string | null
           state_code: string
           updated_at: string
           user_id: string
@@ -174,6 +176,8 @@ export type Database = {
         Insert: {
           created_at?: string
           email: string
+          research_updates_opt_in?: boolean
+          research_updates_opted_in_at?: string | null
           state_code: string
           updated_at?: string
           user_id: string
@@ -181,6 +185,8 @@ export type Database = {
         Update: {
           created_at?: string
           email?: string
+          research_updates_opt_in?: boolean
+          research_updates_opted_in_at?: string | null
           state_code?: string
           updated_at?: string
           user_id?: string
@@ -233,7 +239,6 @@ export type Database = {
       questions: {
         Row: {
           body: string
-          city: string
           created_at: string
           id: string
           state_code: string
@@ -243,7 +248,6 @@ export type Database = {
         }
         Insert: {
           body: string
-          city: string
           created_at?: string
           id?: string
           state_code: string
@@ -253,7 +257,6 @@ export type Database = {
         }
         Update: {
           body?: string
-          city?: string
           created_at?: string
           id?: string
           state_code?: string
