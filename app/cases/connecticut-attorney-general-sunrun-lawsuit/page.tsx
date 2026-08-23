@@ -7,26 +7,17 @@ const officialSource = "https://portal.ct.gov/ag/press-releases/2024-press-relea
 export const metadata: Metadata = {
   title: "Connecticut Sunrun Lawsuit: What the Attorney General Alleges",
   description: "A plain-language summary of Connecticut's lawsuit against Sunrun and other solar companies, based on the Attorney General's official complaint announcement.",
-  keywords: [
-    "Sunrun lawsuit",
-    "Connecticut Sunrun lawsuit",
-    "solar contract forged signature",
-    "solar consumer lawsuit",
-    "residential solar complaint",
-  ],
   alternates: { canonical: "/cases/connecticut-attorney-general-sunrun-lawsuit" },
   openGraph: {
     title: "What does Connecticut's lawsuit against Sunrun allege?",
     description: "A source-based summary of the Connecticut Attorney General's allegations involving residential solar contracts, signatures, permits, and non-functioning systems.",
     url: "/cases/connecticut-attorney-general-sunrun-lawsuit",
     type: "article",
-    images: [],
   },
   twitter: {
     card: "summary",
     title: "What does Connecticut's lawsuit against Sunrun allege?",
     description: "A source-based summary of the Connecticut Attorney General's allegations involving residential solar contracts, signatures, permits, and non-functioning systems.",
-    images: [],
   },
 };
 
