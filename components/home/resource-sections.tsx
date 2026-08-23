@@ -50,7 +50,7 @@ export function ResourceDirectory({
           <article key={resource.id}>
             <div className="home-resource-meta">
               <SourceType type={resource.publisherType} />
-              <span>Verified {resource.lastVerified}</span>
+              <span>{resource.lastVerified ? `Verified ${resource.lastVerified}` : resource.sourceDate ? `Source dated ${resource.sourceDate}` : "Official source"}</span>
             </div>
             <div className="home-resource-copy">
               <h3>{resource.title}</h3>
@@ -124,25 +124,47 @@ export function SearchPlaceholder() {
   );
 }
 
-export function QuestionsSection({ stateCode }: { stateCode: string }) {
+export function QuestionsSection() {
   return (
     <section id="questions" className="home-question-section">
       <div className="home-wrap home-question-panel">
         <div>
-          <p className="home-card-label home-card-label--light">Questions and research requests</p>
-          <h2>Need help finding an official solar resource?</h2>
-          <p>
-            Tell us what happened and what you are trying to find out. We&apos;ll use the details you provide to
-            identify relevant official resources, public records, agencies, and procedures in your area.
+          <p className="home-card-label home-card-label--light">Start with self-help</p>
+          <h2>Use the free help already available.</h2>
+          <p className="home-question-intro">
+            Before paying for help, gather your records and use the public complaint, consumer, and regulatory
+            channels that apply to your situation. They can create a clear paper trail and point you to the next step.
           </p>
-          <ul>
-            <li>Locate agencies, forms, records, and published rules</li>
-            <li>Find the public source behind a claim</li>
-            <li>Organize a factual research trail</li>
-          </ul>
+          <div className="home-self-help-steps">
+            <article>
+              <span>01</span>
+              <div>
+                <h3>Save the details</h3>
+                <p>Keep your agreement, messages, invoices, photos, and a dated record of what happened.</p>
+              </div>
+            </article>
+            <article>
+              <span>02</span>
+              <div>
+                <h3>Use every relevant free channel</h3>
+                <p>Submit the complaint forms, requests, or reports that fit the issue, and save confirmation numbers.</p>
+              </div>
+            </article>
+            <article>
+              <span>03</span>
+              <div>
+                <h3>Keep the paper trail going</h3>
+                <p>Record responses and deadlines so you can follow up with clear, complete information.</p>
+              </div>
+            </article>
+          </div>
+          <p className="home-question-boundary">
+            This site provides research help, not legal advice. Use the form if you need help finding the public
+            resources that may fit your situation.
+          </p>
         </div>
         <div className="home-question-account">
-          <AccountPanel stateCode={stateCode} />
+          <AccountPanel />
         </div>
       </div>
     </section>
