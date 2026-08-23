@@ -31,7 +31,7 @@ This Code applies to repository issues, pull requests, discussions, reviews, and
 
 Maintainers may remove, edit, reject, or close content that does not meet these standards. Depending on the conduct, they may issue a warning, limit participation, or ban an account from project spaces.
 
-To report a concern privately, use the private form at [solarcomplaint.com](https://solarcomplaint.com) and begin the message with **“Code of Conduct report.”** Do not post a report publicly. Reports will be handled as privately as the circumstances allow.
+To report a concern privately, email [contact@solarcomplaint.com](mailto:contact@solarcomplaint.com?subject=Code%20of%20Conduct%20report) with the subject **“Code of Conduct report.”** Do not post a report publicly. Reports will be handled as privately as the circumstances allow.
 
 ## Attribution
 
