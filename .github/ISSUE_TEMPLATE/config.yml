@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Private research request
+    url: https://solarcomplaint.com/#questions
+    about: Use the private site form for an individual solar situation. Do not post personal details on GitHub.
+  - name: Private security report
+    url: https://github.com/Decentralized-Rob/solar-consumer-research/security/advisories/new
+    about: Report a suspected vulnerability privately. Do not open a public issue.
