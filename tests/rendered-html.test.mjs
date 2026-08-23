@@ -77,10 +77,12 @@ test("indexes verified state complaint and litigation pages", async () => {
   assert.doesNotMatch(html, /noindex/i);
   assert.match(html, /File a New York goods or services complaint/i);
   assert.match(html, /New York sues Attyx and solar lenders/i);
+  assert.match(html, /Source dated[\s\S]*Mar 17, 2026/i);
+  assert.doesNotMatch(html, /Verified Aug 21, 2026/i);
   assert.match(html, /application\/ld\+json/i);
 });
 
-test("renders complaint first and litigation second on state pages without DSIRE", async () => {
+test("renders a source-led state starting directory without DSIRE", async () => {
   const worker = await loadWorker();
   const response = await worker.fetch(
     new Request("http://localhost/states/texas", { headers: { accept: "text/html" } }),
@@ -96,7 +98,8 @@ test("renders complaint first and litigation second on state pages without DSIRE
   assert.ok(complaintIndex >= 0);
   assert.ok(lawsuitIndex > complaintIndex);
   assert.doesNotMatch(html, /DSIRE/i);
-  assert.match(html, /Texas Solar Complaints &amp; Lawsuits/i);
+  assert.match(html, /File a Texas consumer complaint/i);
+  assert.match(html, /This page is a starting directory/i);
 });
 
 test("serves the federal resource page", async () => {
