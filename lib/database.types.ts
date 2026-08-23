@@ -89,6 +89,36 @@ export type Database = {
         }
         Relationships: []
       }
+      source_submissions: {
+        Row: {
+          created_at: string
+          email: string | null
+          id: string
+          note: string
+          status: string
+          title: string | null
+          url: string
+        }
+        Insert: {
+          created_at?: string
+          email?: string | null
+          id: string
+          note: string
+          status?: string
+          title?: string | null
+          url: string
+        }
+        Update: {
+          created_at?: string
+          email?: string | null
+          id?: string
+          note?: string
+          status?: string
+          title?: string | null
+          url?: string
+        }
+        Relationships: []
+      }
       guide_steps: {
         Row: {
           detail: string

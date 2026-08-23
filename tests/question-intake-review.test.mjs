@@ -18,12 +18,26 @@ test("direct contact intake records the request and notifies the research team",
 
   assert.match(accountPanel, /fetch\("\/api\/contact"/);
   assert.doesNotMatch(accountPanel, /signInWithOtp/);
-  assert.doesNotMatch(accountPanel, /Turnstile/);
+  assert.match(accountPanel, /TurnstileWidget/);
   assert.match(accountPanel, /Question received/);
-  assert.match(contactRoute, /\.from\("contact_requests"\)/);
+  assert.match(contactRoute, /verifyTurnstile/);
+  assert.match(contactRoute, /createSupabaseAdminClient/);
   assert.match(contactRoute, /formsubmit\.co\/ajax\/rbeland21@gmail\.com/);
   assert.match(contactRoute, /_captcha: "false"/);
   assert.match(contactRoute, /emailResult\?\.success === true \|\| emailResult\?\.success === "true"/);
+});
+
+test("public forms require server-side Turnstile verification", async () => {
+  const contactRoute = await read("app/api/contact/route.ts");
+  const sourceRoute = await read("app/api/source-submissions/route.ts");
+  const sourceForm = await read("components/link-submission-form.tsx");
+  const migration = await read("supabase/migrations/20260823190000_secure_public_intake.sql");
+
+  assert.match(contactRoute, /verifyTurnstile/);
+  assert.match(sourceRoute, /verifyTurnstile/);
+  assert.match(sourceForm, /TurnstileWidget/);
+  assert.match(migration, /revoke all on table public\.contact_requests from anon, authenticated/);
+  assert.match(migration, /create table public\.source_submissions/);
 });
 
 test("featured guides keep their stable slug after the API loads", async () => {

@@ -17,3 +17,12 @@ export function createSupabaseServerClient(accessToken?: string) {
   });
 }
 
+export function createSupabaseAdminClient() {
+  const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  if (!serviceRoleKey) throw new Error("Supabase server credentials are missing.");
+
+  const { url } = getSupabaseConfig();
+  return createClient<Database>(url, serviceRoleKey, {
+    auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false },
+  });
+}
