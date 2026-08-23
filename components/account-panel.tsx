@@ -44,7 +44,7 @@ export function AccountPanel() {
         <p>Question received</p>
         <h3>Thank you.</h3>
         <span>Your request has been recorded and sent to the research team.</span>
-        <small>We’ll reply to {submittedEmail} from <strong>contact@solarcomplaint.com</strong>. Check your spam or junk folder if you do not see a reply.</small>
+        <small>We’ll reply to {submittedEmail} by email. Check your spam or junk folder if you do not see a reply.</small>
         <button type="button" onClick={() => setSubmittedEmail("")}>Send another question</button>
       </div>
     );
@@ -65,7 +65,7 @@ export function AccountPanel() {
       <textarea id="research-question" value={question} onChange={(event) => setQuestion(event.target.value)} minLength={20} maxLength={4000} placeholder="Example: “My installer changed the system design after I signed. I’m trying to find the correct public resources for my situation.”" required />
       <p className="form-note">Do not include account numbers, financial details, Social Security numbers, or confidential documents.</p>
       <button className="button button--sun" type="submit" disabled={busy}>{busy ? "Sending..." : "Send question"}</button>
-      <p className="form-note">We’ll reply from <strong>contact@solarcomplaint.com</strong>. Check your spam or junk folder if you do not see a reply.</p>
+      <p className="form-note">We’ll reply by email. Check your spam or junk folder if you do not see a reply.</p>
       {message && <p className="form-message" role="alert">{message}</p>}
     </form>
   );
