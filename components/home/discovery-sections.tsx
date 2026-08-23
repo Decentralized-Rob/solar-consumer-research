@@ -51,7 +51,7 @@ export function HeroSection({
         </p>
         <div className="home-hero-actions">
           <a className="home-button home-button--dark" href="#start">Choose your state</a>
-          <a className="home-button home-button--outline" href="/resources">Browse states</a>
+          <a className="home-button home-button--outline" href="/file-a-complaint-against-sunrun">File a Sunrun complaint</a>
         </div>
         <p className="home-scope-note">
           General public information only. No legal advice, claim evaluation, or findings of wrongdoing.
