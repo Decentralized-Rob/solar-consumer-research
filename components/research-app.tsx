@@ -42,7 +42,6 @@ export function ResearchApp() {
         publisherType: "government",
         topic: "complaints",
         url: consumerProtection.url,
-        lastVerified: consumerProtection.lastVerified,
       });
     }
 
@@ -56,7 +55,7 @@ export function ResearchApp() {
         publisherType: solarCase.publisher === "GBH News" ? "private_nonprofit" : "government",
         topic: "complaints",
         url: solarCase.url,
-        lastVerified: "Aug 21, 2026",
+        sourceDate: solarCase.publishedAt,
       });
     }
 
@@ -100,7 +99,7 @@ export function ResearchApp() {
         <ResourceDirectory selectedState={selectedState} topic={topic} resources={filteredResources} onTopicChange={setTopic} />
         <UpdatesSection updates={filteredUpdates} />
         <SearchPlaceholder />
-        <QuestionsSection stateCode={stateCode} />
+        <QuestionsSection />
       </main>
       <HomeFooter />
     </div>

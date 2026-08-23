@@ -16,7 +16,8 @@ export type Resource = {
   publisherType: "government" | "regulator" | "private_nonprofit" | "research";
   topic: ResourceTopic;
   url: string;
-  lastVerified: string;
+  lastVerified?: string;
+  sourceDate?: string;
 };
 
 export type GuideStep = {
@@ -52,7 +53,6 @@ export type StateConsumerProtection = {
   summary: string;
   publisher: string;
   url: string;
-  lastVerified: string;
 };
 
 export type StateSolarCase = {

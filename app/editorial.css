@@ -566,8 +566,13 @@
 .home-question-panel { display: grid; grid-template-columns: 1fr 0.8fr; gap: 90px; align-items: start; }
 .home-card-label--light { color: #b7c8bb; }
 .home-question-panel h2 { max-width: 600px; margin-top: 12px; }
-.home-question-panel > div:first-child > p:not(.home-card-label) { max-width: 590px; margin: 23px 0 0; color: #d0dad2; font-size: 14px; line-height: 1.7; }
-.home-question-panel ul { margin: 22px 0 0; padding-left: 18px; color: #dce4de; font-size: 12px; line-height: 1.8; }
+.home-question-intro { max-width: 640px; margin: 25px 0 0; color: #dce4de; font-size: 18px; line-height: 1.62; }
+.home-self-help-steps { display: grid; gap: 0; max-width: 650px; margin-top: 30px; border-top: 1px solid #526056; }
+.home-self-help-steps article { display: grid; grid-template-columns: 42px 1fr; gap: 15px; padding: 17px 0; border-bottom: 1px solid #526056; }
+.home-self-help-steps span { padding-top: 2px; color: #b7c8bb; font-size: 12px; font-weight: 900; letter-spacing: 0.08em; }
+.home-self-help-steps h3 { margin: 0; color: white; font-size: 18px; line-height: 1.25; }
+.home-self-help-steps p { max-width: 550px; margin: 5px 0 0; color: #d0dad2; font-size: 15px; line-height: 1.55; }
+.home-question-boundary { max-width: 620px; margin: 26px 0 0; color: #d0dad2; font-size: 15px; line-height: 1.55; }
 .home-question-account { padding: 27px; border: 1px solid #48554b; background: #29352c; }
 .account-unavailable { padding: 8px 2px; }
 .account-unavailable strong { display: block; font-family: Georgia, serif; font-size: 20px; font-weight: 500; }
@@ -637,6 +642,11 @@
   .home-search-disabled button { min-height: 44px; }
   .home-question-section { padding: 70px 0; }
   .home-question-panel h2 { font-size: 40px; }
+  .home-question-intro { font-size: 17px; }
+  .home-self-help-steps article { grid-template-columns: 36px 1fr; gap: 12px; }
+  .home-self-help-steps h3 { font-size: 17px; }
+  .home-self-help-steps p,
+  .home-question-boundary { font-size: 15px; }
   .home-question-account { padding: 21px; }
   .state-index-grid { grid-template-columns: 1fr; }
   .state-index-grid > a:nth-child(even) { border-left: 0; }

@@ -172,11 +172,19 @@ button, select { font: inherit; }
 .question-rules ul { margin: 10px 0 22px; padding-left: 19px; color: #e2e9e3; font-size: 13px; line-height: 1.7; }
 .account-form, .question-form { display: flex; flex-direction: column; gap: 9px; margin-top: 25px; padding-top: 22px; border-top: 1px solid rgba(255, 255, 255, 0.16); }
 .account-form label, .question-form label { color: white; font-size: 12px; font-weight: 800; }
-.account-form input, .question-form input[type="email"], .question-form textarea { width: 100%; border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 10px; background: white; color: var(--ink); }
+.account-form input, .question-form input[type="email"], .question-form select, .question-form textarea { width: 100%; border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 10px; background: white; color: var(--ink); }
 .account-form input, .question-form input[type="email"] { height: 48px; padding: 0 14px; }
+.question-form select { height: 48px; padding: 0 14px; }
+.question-form select option { background: white; color: var(--ink); }
 .question-form textarea { min-height: 140px; padding: 13px 14px; resize: vertical; line-height: 1.5; }
 .form-note { margin: 0; color: #c8d4ca; font-size: 11px; line-height: 1.5; }
 .form-message { margin: 2px 0 0; color: #fff0c9; font-size: 12px; line-height: 1.5; }
+.contact-confirmation { display: grid; gap: 11px; padding: 24px; border: 1px solid #66786a; background: rgba(255, 255, 255, 0.08); }
+.contact-confirmation > p { margin: 0; color: var(--sun); font-size: 11px; font-weight: 900; letter-spacing: 0.08em; text-transform: uppercase; }
+.contact-confirmation h3 { margin: 0; color: white; font-family: Georgia, serif; font-size: 24px; font-weight: 500; }
+.contact-confirmation > span, .contact-confirmation small { color: #d5dfd7; font-size: 13px; line-height: 1.6; }
+.contact-confirmation small { color: #b9c8bc; }
+.contact-confirmation button { width: fit-content; padding: 0; border: 0; background: transparent; color: var(--sun); font-size: 12px; font-weight: 800; text-decoration: underline; text-underline-offset: 4px; cursor: pointer; }
 .form-heading { display: grid; gap: 5px; margin-bottom: 5px; }
 .form-heading strong { color: white; font-family: Georgia, serif; font-size: 20px; font-weight: 500; }
 .form-heading span { color: #c8d4ca; font-size: 11px; line-height: 1.5; }
