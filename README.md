@@ -4,9 +4,10 @@ Solar Consumer Research is a public research tool for residential solar customer
 
 ## What the application does
 
-- Provides an official consumer-protection starting point and a documented solar case or enforcement item for every state
+- Provides an official consumer-protection starting point and a documented solar reference for every state
+- Labels expanded source coverage separately from state starting directories
 - Separates state resources from federal complaint resources
-- Shows the publisher, source link, and verification date for public content
+- Shows the publisher and source link for public content, with verification dates where an individual review date is recorded
 - Lets verified users submit a private research request
 - Uses a reviewed local content snapshot if the content API is unavailable
 
@@ -22,6 +23,10 @@ Public content must meet four requirements:
 4. Only published records are available to anonymous visitors.
 
 Database row-level security controls access to profiles, questions, responses, administrative records, and unpublished content. The database also rejects public source URLs that do not match the selected approved domain.
+
+## Contributing and corrections
+
+Public-source corrections and focused website improvements are welcome. Read [CONTRIBUTING.md](CONTRIBUTING.md) before opening an issue or pull request. Individual solar situations belong in the private request flow at [solarcomplaint.com](https://solarcomplaint.com), not in GitHub.
 
 ## Technical overview
 
