@@ -50,7 +50,7 @@ export function ResourceDirectory({
           <article key={resource.id}>
             <div className="home-resource-meta">
               <SourceType type={resource.publisherType} />
-              <span>Verified {resource.lastVerified}</span>
+              <span>{resource.lastVerified ? `Verified ${resource.lastVerified}` : resource.sourceDate ? `Source dated ${resource.sourceDate}` : "Official source"}</span>
             </div>
             <div className="home-resource-copy">
               <h3>{resource.title}</h3>
