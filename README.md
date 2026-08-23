@@ -23,6 +23,10 @@ Public content must meet four requirements:
 
 Database row-level security controls access to profiles, questions, responses, administrative records, and unpublished content. The database also rejects public source URLs that do not match the selected approved domain.
 
+## Contributing and corrections
+
+Public-source corrections and focused website improvements are welcome. Read [CONTRIBUTING.md](CONTRIBUTING.md) before opening an issue or pull request. Individual solar situations belong in the private request flow at [solarcomplaint.com](https://solarcomplaint.com), not in GitHub.
+
 ## Technical overview
 
 - React 19 with Next-compatible routing through Vinext
