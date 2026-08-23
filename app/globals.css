@@ -222,6 +222,31 @@ button, select { font: inherit; }
 .info-section ul { margin: 0; padding-left: 21px; }
 .info-section a { color: var(--green); font-weight: 800; text-decoration: underline; text-underline-offset: 4px; }
 .info-section ul { list-style: disc; }
+.complaint-guide-answer { margin: 0 0 50px; padding: 30px; border: 1px solid #c8c6bc; border-top: 4px solid var(--sun); background: var(--white); }
+.complaint-guide-answer > p, .complaint-guide-section-heading > span, .complaint-guide-sources > div > p { margin: 0; color: #687068; font-size: 10px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; }
+.complaint-guide-answer h2 { max-width: 760px; margin: 14px 0 24px; font-family: Georgia, serif; font-size: clamp(30px, 4vw, 43px); font-weight: 500; line-height: 1.08; letter-spacing: -0.025em; }
+.complaint-guide-answer > div { display: flex; flex-wrap: wrap; gap: 10px; }
+.complaint-guide-checklist { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px 28px; margin-top: 24px; }
+.complaint-guide-checklist li { padding-left: 4px; }
+.complaint-guide-routes { padding: 42px 0 60px; border-top: 2px solid var(--ink); }
+.complaint-guide-section-heading { display: grid; grid-template-columns: 180px minmax(0, 1fr); gap: 24px; align-items: baseline; margin-bottom: 28px; }
+.complaint-guide-section-heading h2, .complaint-guide-sources h2 { margin: 0; font-family: Georgia, serif; font-size: clamp(32px, 4vw, 46px); font-weight: 500; line-height: 1.05; letter-spacing: -0.03em; }
+.complaint-guide-route-list { border-top: 1px solid #bfc2ba; }
+.complaint-guide-route-list article { display: grid; grid-template-columns: 58px minmax(0, 1fr); gap: 20px; padding: 26px 0; border-bottom: 1px solid #bfc2ba; }
+.complaint-guide-route-list article > span { padding-top: 3px; color: #6a736b; font-size: 11px; font-weight: 800; letter-spacing: 0.1em; }
+.complaint-guide-route-list h3 { margin: 0; font-family: Georgia, serif; font-size: 25px; font-weight: 500; line-height: 1.16; }
+.complaint-guide-route-list strong { display: block; margin-top: 10px; color: var(--green); font-size: 13px; }
+.complaint-guide-route-list p { max-width: 700px; margin: 8px 0 0; color: var(--muted); font-size: 14px; line-height: 1.65; }
+.complaint-guide-sources { display: grid; grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr); gap: 42px; margin: 50px 0; padding: 34px; background: #1d2820; color: white; }
+.complaint-guide-sources > div > p { color: #b8c7ba; }
+.complaint-guide-sources h2 { margin-top: 13px; }
+.complaint-guide-source-links { display: grid; gap: 1px; background: #455147; }
+.complaint-guide-source-links a { display: block; padding: 20px; background: #253026; }
+.complaint-guide-source-links a:hover strong { text-decoration: underline; text-underline-offset: 4px; }
+.complaint-guide-source-links strong, .complaint-guide-source-links span { display: block; }
+.complaint-guide-source-links strong { color: var(--sun); font-size: 13px; }
+.complaint-guide-source-links span { margin-top: 8px; color: #d3ddd5; font-size: 12px; line-height: 1.55; }
+.complaint-guide-footer-links { margin-top: 8px; }
 .legal-notice { margin-top: 54px; padding: 22px 24px; border: 1px solid #c8c6bc; border-radius: 12px; background: #eeece4; }
 .legal-notice strong { display: block; color: var(--ink); font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; }
 .legal-notice p { margin: 8px 0 0; color: #596159; font-size: 13px; line-height: 1.65; }
@@ -638,6 +663,11 @@ button, select { font: inherit; }
   .question-panel { padding: 30px 22px; border-radius: 20px; }
   .footer-links { flex-wrap: wrap; }
   .info-main { width: min(100% - 28px, 760px); padding-top: 64px; }
+  .complaint-guide-answer { padding: 24px 20px; }
+  .complaint-guide-checklist { grid-template-columns: 1fr; gap: 8px; }
+  .complaint-guide-section-heading { grid-template-columns: 1fr; gap: 10px; }
+  .complaint-guide-route-list article { grid-template-columns: 1fr; gap: 8px; }
+  .complaint-guide-sources { grid-template-columns: 1fr; gap: 28px; padding: 25px 20px; }
   .resources-editorial-page .info-header { padding-right: 14px; padding-left: 14px; }
   .resources-editorial-page .info-main { width: min(100% - 28px, 1160px); padding-top: 52px; }
   .resources-editorial-page .info-main > h1 { font-size: 54px; }
