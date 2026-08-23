@@ -16,27 +16,17 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   return {
     title,
     description,
-    keywords: [
-      `${state.name} solar complaint`,
-      `${state.name} solar company complaints`,
-      `${state.name} solar lawsuit`,
-      `${state.name} consumer protection`,
-      "Sunrun complaint",
-      "residential solar consumer rights",
-    ],
     alternates: { canonical: `/states/${slug}` },
     openGraph: {
       title,
       description,
       url: `/states/${slug}`,
       type: "article",
-      images: [],
     },
     twitter: {
       card: "summary",
       title,
       description,
-      images: [],
     },
     robots: { index: true, follow: true },
   };
