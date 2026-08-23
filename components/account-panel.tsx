@@ -1,7 +1,9 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import { FormEvent, useCallback, useState } from "react";
 import { states } from "../lib/content";
+import { getPublicFeatureConfig } from "../lib/supabase/config";
+import { TurnstileWidget } from "./turnstile-widget";
 
 export function AccountPanel() {
   const [email, setEmail] = useState("");
@@ -11,18 +13,26 @@ export function AccountPanel() {
   const [message, setMessage] = useState("");
   const [submittedEmail, setSubmittedEmail] = useState("");
   const [busy, setBusy] = useState(false);
+  const [turnstileToken, setTurnstileToken] = useState("");
+  const [turnstileResetKey, setTurnstileResetKey] = useState(0);
+  const turnstileSiteKey = getPublicFeatureConfig().turnstileSiteKey;
+  const receiveTurnstileToken = useCallback((token: string) => setTurnstileToken(token), []);
 
   async function submitQuestion(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setMessage("");
     setSubmittedEmail("");
+    if (!turnstileToken) {
+      setMessage("Complete the verification check before sending your question.");
+      return;
+    }
     setBusy(true);
 
     try {
       const response = await fetch("/api/contact", {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ email: email.trim(), stateCode: selectedState, city: city.trim(), question: question.trim() }),
+        body: JSON.stringify({ email: email.trim(), stateCode: selectedState, city: city.trim(), question: question.trim(), turnstileToken, website: "" }),
       });
       const result = (await response.json()) as { error?: string; received?: boolean };
       if (!response.ok || !result.received) throw new Error(result.error ?? "Your question could not be sent. Please try again.");
@@ -31,6 +41,8 @@ export function AccountPanel() {
       setSelectedState("");
       setCity("");
       setQuestion("");
+      setTurnstileToken("");
+      setTurnstileResetKey((value) => value + 1);
     } catch (error) {
       setMessage(error instanceof Error ? error.message : "Your question could not be sent. Please try again.");
     } finally {
@@ -64,7 +76,8 @@ export function AccountPanel() {
       <label htmlFor="research-question">Briefly describe your situation or question</label>
       <textarea id="research-question" value={question} onChange={(event) => setQuestion(event.target.value)} minLength={20} maxLength={4000} placeholder="Example: “My installer changed the system design after I signed. I’m trying to find the correct public resources for my situation.”" required />
       <p className="form-note">Do not include account numbers, financial details, Social Security numbers, or confidential documents.</p>
-      <button className="button button--sun" type="submit" disabled={busy}>{busy ? "Sending..." : "Send question"}</button>
+      {turnstileSiteKey ? <TurnstileWidget siteKey={turnstileSiteKey} onToken={receiveTurnstileToken} resetKey={turnstileResetKey} /> : <p className="form-message" role="alert">This form is temporarily unavailable.</p>}
+      <button className="button button--sun" type="submit" disabled={busy || !turnstileSiteKey}>{busy ? "Sending..." : "Send question"}</button>
       <p className="form-note">We’ll reply by email. Check your spam or junk folder if you do not see a reply.</p>
       {message && <p className="form-message" role="alert">{message}</p>}
     </form>
