@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { StateResourcePage } from "../../../components/state-resource-page";
 import { stateSlug, states } from "../../../lib/content";
+import { consumerProtectionByState, getStateSolarCase } from "../../../lib/state-research";
 
 export function generateStaticParams() {
   return states.map((state) => ({ slug: stateSlug(state.name) }));
@@ -11,32 +12,26 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const { slug } = await params;
   const state = states.find((item) => stateSlug(item.name) === slug);
   if (!state) return {};
-  const title = `${state.name} Solar Complaints & Lawsuits`;
-  const description = `Official ${state.name} solar complaint contacts plus verified residential solar lawsuits, settlements, investigations, and enforcement actions for homeowners.`;
+  const complaintRoute = consumerProtectionByState[state.code];
+  const caseReference = getStateSolarCase(state.code);
+  const title = `${complaintRoute.title} | Solar Consumer Research`;
+  const description = caseReference
+    ? `${complaintRoute.summary} This starting directory also links to a documented ${caseReference.caseType} reference.`
+    : complaintRoute.summary;
   return {
     title,
     description,
-    keywords: [
-      `${state.name} solar complaint`,
-      `${state.name} solar company complaints`,
-      `${state.name} solar lawsuit`,
-      `${state.name} consumer protection`,
-      "Sunrun complaint",
-      "residential solar consumer rights",
-    ],
     alternates: { canonical: `/states/${slug}` },
     openGraph: {
       title,
       description,
       url: `/states/${slug}`,
-      type: "article",
-      images: [],
+      type: "website",
     },
     twitter: {
       card: "summary",
       title,
       description,
-      images: [],
     },
     robots: { index: true, follow: true },
   };
