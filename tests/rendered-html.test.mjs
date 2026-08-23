@@ -60,6 +60,7 @@ test("serves canonical robots and sitemap files", async () => {
   assert.match(sitemap, /<loc>https:\/\/solarcomplaint\.com<\/loc>/);
   assert.match(sitemap, /<loc>https:\/\/solarcomplaint\.com\/states\/massachusetts<\/loc>/);
   assert.match(sitemap, /<loc>https:\/\/solarcomplaint\.com\/federal-resources<\/loc>/);
+  assert.match(sitemap, /<loc>https:\/\/solarcomplaint\.com\/file-a-complaint-against-sunrun<\/loc>/);
   assert.match(sitemap, /<loc>https:\/\/solarcomplaint\.com\/states\/new-york<\/loc>/);
   assert.doesNotMatch(`${robots}\n${sitemap}`, /solar-resource-mvp\.rbeland21\.chatgpt\.site/);
 });
@@ -112,4 +113,24 @@ test("serves the federal resource page", async () => {
   assert.match(html, /<title>Federal Solar Complaint and Consumer Resources<\/title>/i);
   assert.match(html, /Consumer Financial Protection Bureau/i);
   assert.match(html, /Federal Trade Commission/i);
+});
+
+test("serves the Sunrun complaint guide with canonical metadata and visible official routes", async () => {
+  const worker = await loadWorker();
+  const response = await worker.fetch(
+    new Request("http://localhost/file-a-complaint-against-sunrun", {
+      headers: { accept: "text/html" },
+    }),
+    env,
+    ctx,
+  );
+
+  assert.equal(response.status, 200);
+  const html = await response.text();
+  assert.match(html, /<title>How to File a Complaint Against Sunrun<\/title>/i);
+  assert.match(html, /rel="canonical" href="https:\/\/solarcomplaint\.com\/file-a-complaint-against-sunrun"/i);
+  assert.match(html, /Choose your state, identify the problem, and use the matching official complaint channel/i);
+  assert.match(html, /Consumer Financial Protection Bureau/i);
+  assert.match(html, /Federal Trade Commission/i);
+  assert.match(html, /BreadcrumbList/i);
 });
