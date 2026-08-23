@@ -4,12 +4,12 @@ import { InfoPage } from "../../components/info-page";
 import { stateSlug, states } from "../../lib/content";
 
 export const metadata: Metadata = {
-  title: "Solar Complaints and Consumer Protection by State",
-  description: "Find official solar complaint routes and verified residential solar lawsuits, settlements, investigations, and enforcement actions for all 50 states.",
+  title: "Official Solar Complaint Starting Points by State",
+  description: "Browse an official consumer complaint starting point and a documented solar reference for each state. Coverage depth is clearly labeled and varies by state.",
   alternates: { canonical: "/resources" },
   openGraph: {
-    title: "Solar Complaints and Consumer Protection by State",
-    description: "Official complaint routes and verified residential-solar litigation and enforcement research for all 50 states.",
+    title: "Official Solar Complaint Starting Points by State",
+    description: "Official state complaint starting points and documented solar references, with expanded sources clearly labeled.",
     url: "/resources",
   },
 };
@@ -18,12 +18,12 @@ export default function ResourcesPage() {
   const directorySchema = {
     "@context": "https://schema.org",
     "@type": "ItemList",
-    name: "Residential solar complaint resources by state",
+    name: "Official solar complaint starting points by state",
     numberOfItems: states.length,
     itemListElement: states.map((state, index) => ({
       "@type": "ListItem",
       position: index + 1,
-      name: `${state.name} solar complaints and consumer protection`,
+      name: `${state.name} official solar complaint route`,
       url: `https://solarcomplaint.com/states/${stateSlug(state.name)}`,
     })),
   };
@@ -32,8 +32,8 @@ export default function ResourcesPage() {
     <InfoPage
       className="state-index-page"
       eyebrow="State resource directory"
-      title="Solar complaint resources for every state."
-      lede="Every state page now leads with the official consumer-protection complaint route and a verified residential-solar lawsuit, settlement, investigation, or enforcement action."
+      title="Official solar complaint starting points by state."
+      lede="Each state page begins with an official consumer-protection route and a documented solar reference. Source depth is not uniform: Massachusetts has expanded resources, while other pages are clearly marked as starting directories until additional sources are individually reviewed."
     >
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(directorySchema) }} />
       <section className="info-section">
@@ -45,7 +45,7 @@ export default function ResourcesPage() {
           <Link href={`/states/${stateSlug(state.name)}`} key={state.code}>
             <span>{state.code}</span>
             <strong>{state.name}</strong>
-            <small>Complaint route + case research</small>
+            <small>Official route + documented reference</small>
             <b aria-hidden="true">→</b>
           </Link>
         ))}
