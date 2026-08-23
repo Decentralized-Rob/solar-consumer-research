@@ -59,6 +59,36 @@ export type Database = {
         }
         Relationships: []
       }
+      contact_requests: {
+        Row: {
+          body: string
+          city: string
+          created_at: string
+          email: string
+          id: string
+          state_code: string
+          status: string
+        }
+        Insert: {
+          body: string
+          city: string
+          created_at?: string
+          email: string
+          id: string
+          state_code: string
+          status?: string
+        }
+        Update: {
+          body?: string
+          city?: string
+          created_at?: string
+          email?: string
+          id?: string
+          state_code?: string
+          status?: string
+        }
+        Relationships: []
+      }
       guide_steps: {
         Row: {
           detail: string
