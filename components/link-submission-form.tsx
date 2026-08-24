@@ -25,7 +25,9 @@ export function LinkSubmissionForm() {
       return;
     }
     setBusy(true);
+    let attemptedSubmission = false;
     try {
+      attemptedSubmission = true;
       const response = await fetch("/api/source-submissions", {
         method: "POST",
         headers: { "content-type": "application/json" },
@@ -34,10 +36,14 @@ export function LinkSubmissionForm() {
       const result = (await response.json()) as { error?: string; received?: boolean };
       if (!response.ok || !result.received) throw new Error(result.error ?? "Your link could not be submitted. Please try again.");
       setSubmitted(true);
-      setUrl(""); setTitle(""); setNote(""); setEmail(""); setToken(""); setResetKey((value) => value + 1);
+      setUrl(""); setTitle(""); setNote(""); setEmail("");
     } catch (error) {
       setMessage(error instanceof Error ? error.message : "Your link could not be submitted. Please try again.");
     } finally {
+      if (attemptedSubmission) {
+        setToken("");
+        setResetKey((value) => value + 1);
+      }
       setBusy(false);
     }
   }
