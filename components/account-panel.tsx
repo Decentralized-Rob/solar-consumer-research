@@ -12,6 +12,7 @@ export function AccountPanel() {
   const [question, setQuestion] = useState("");
   const [message, setMessage] = useState("");
   const [submittedEmail, setSubmittedEmail] = useState("");
+  const [notificationSent, setNotificationSent] = useState(true);
   const [busy, setBusy] = useState(false);
   const [turnstileToken, setTurnstileToken] = useState("");
   const [turnstileResetKey, setTurnstileResetKey] = useState(0);
@@ -22,30 +23,36 @@ export function AccountPanel() {
     event.preventDefault();
     setMessage("");
     setSubmittedEmail("");
+    setNotificationSent(true);
     if (!turnstileToken) {
       setMessage("Complete the verification check before sending your question.");
       return;
     }
     setBusy(true);
+    let attemptedSubmission = false;
 
     try {
+      attemptedSubmission = true;
       const response = await fetch("/api/contact", {
         method: "POST",
         headers: { "content-type": "application/json" },
         body: JSON.stringify({ email: email.trim(), stateCode: selectedState, city: city.trim(), question: question.trim(), turnstileToken, website: "" }),
       });
-      const result = (await response.json()) as { error?: string; received?: boolean };
+      const result = (await response.json()) as { error?: string; received?: boolean; notificationSent?: boolean };
       if (!response.ok || !result.received) throw new Error(result.error ?? "Your question could not be sent. Please try again.");
 
       setSubmittedEmail(email.trim());
+      setNotificationSent(result.notificationSent !== false);
       setSelectedState("");
       setCity("");
       setQuestion("");
-      setTurnstileToken("");
-      setTurnstileResetKey((value) => value + 1);
     } catch (error) {
       setMessage(error instanceof Error ? error.message : "Your question could not be sent. Please try again.");
     } finally {
+      if (attemptedSubmission) {
+        setTurnstileToken("");
+        setTurnstileResetKey((value) => value + 1);
+      }
       setBusy(false);
     }
   }
@@ -55,8 +62,8 @@ export function AccountPanel() {
       <div className="contact-confirmation" role="status">
         <p>Question received</p>
         <h3>Thank you.</h3>
-        <span>Your request has been recorded and sent to the research team.</span>
-        <small>We’ll reply to {submittedEmail} by email. Check your spam or junk folder if you do not see a reply.</small>
+        <span>{notificationSent ? "Your request has been recorded and sent to the research team." : "Your request has been recorded, but we could not send an immediate team notification."}</span>
+        <small>{notificationSent ? <>We’ll reply to {submittedEmail} by email. Check your spam or junk folder if you do not see a reply.</> : <>Please try again later if you need a prompt response.</>}</small>
         <button type="button" onClick={() => setSubmittedEmail("")}>Send another question</button>
       </div>
     );
