@@ -23,6 +23,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${baseUrl}/corrections`, lastModified: new Date("2026-08-16"), changeFrequency: "yearly", priority: 0.3 },
     { url: `${baseUrl}/privacy`, lastModified: new Date("2026-08-16"), changeFrequency: "yearly", priority: 0.2 },
     { url: `${baseUrl}/disclaimer`, lastModified: new Date("2026-08-16"), changeFrequency: "yearly", priority: 0.2 },
+    { url: `${baseUrl}/cases/titan-solar-power`, lastModified: new Date("2026-08-26"), changeFrequency: "weekly", priority: 0.9 },
+    { url: `${baseUrl}/cases/titan-solar-power/customer-help`, lastModified: new Date("2026-08-26"), changeFrequency: "monthly", priority: 0.8 },
     { url: `${baseUrl}/cases/connecticut-attorney-general-sunrun-lawsuit`, lastModified: new Date("2026-08-18"), changeFrequency: "monthly", priority: 0.8 },
     ...statePages,
   ];

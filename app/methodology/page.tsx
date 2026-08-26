@@ -40,7 +40,7 @@ export default function MethodologyPage() {
       </section>
       <section className="info-section">
         <h2>Public source corrections</h2>
-        <p>Public-source corrections and focused website improvements can be proposed through the <a href="https://github.com/Decentralized-Rob/solar-consumer-research/blob/main/CONTRIBUTING.md">public contribution process on GitHub</a>. Individual situations belong in the private question form, not in a public issue or pull request.</p>
+        <p>Public-source corrections and focused website improvements can be proposed through the <a href="https://github.com/Decentralized-Rob/solar-consumer-research/blob/main/CONTRIBUTING.md" target="_blank" rel="noreferrer">public contribution process on GitHub</a>. Individual situations belong in the private question form, not in a public issue or pull request.</p>
       </section>
     </InfoPage>
   );
