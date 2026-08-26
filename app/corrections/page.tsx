@@ -30,7 +30,7 @@ export default function CorrectionsPage() {
       </section>
       <section className="info-section">
         <h2>Submit a correction</h2>
-        <p>Use the <Link href="/#questions">private question form</Link> and begin the message with “Correction request.” Include the page title and the original source supporting the correction. Do not include sensitive personal information.</p>
+        <p>For a public-source correction or website issue, read the <a href="https://github.com/Decentralized-Rob/solar-consumer-research/blob/main/CONTRIBUTING.md">public contribution process on GitHub</a>. For an individual situation, use the <Link href="/#questions">private question form</Link> and begin the message with “Correction request.” Include the page title and the original source supporting the correction. Do not include sensitive personal information.</p>
       </section>
     </InfoPage>
   );

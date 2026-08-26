@@ -1,0 +1,52 @@
+name: Website bug report
+description: Report a reproducible problem with solarcomplaint.com or this repository.
+title: "[Bug]: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Do not include account details, personal information, credentials, or security vulnerabilities. Use the private vulnerability reporting form for a security issue.
+  - type: input
+    id: page
+    attributes:
+      label: Affected page or repository area
+      description: Paste the page URL or name the repository file or feature.
+      placeholder: https://solarcomplaint.com/
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Go to ...
+        2. Select ...
+        3. See ...
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected result
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual result
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: Browser and device
+      placeholder: Chrome 140 on Windows 11
+    validations:
+      required: true
+  - type: checkboxes
+    id: privacy
+    attributes:
+      label: Privacy check
+      options:
+        - label: This report contains no personal information, credentials, or security-vulnerability details.
+          required: true

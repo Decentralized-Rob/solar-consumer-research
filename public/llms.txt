@@ -1,6 +1,6 @@
 # Solar Consumer Research
 
-> A source-verified directory of official complaint routes, residential-solar lawsuits and enforcement actions, and practical resources for consumers in all 50 U.S. states.
+> A directory of official state consumer-complaint starting points, documented residential-solar references, and practical public resources.
 
 ## Primary pages
 
@@ -15,28 +15,27 @@
 
 ## Source and citation policy
 
-- External resources identify the publisher, source type, and last verification date.
+- Every listing identifies its publisher and direct source. Expanded resource cards show a verification date when an individual review date is recorded; case references show the source date.
 - Government agencies and regulators are distinguished from private nonprofit organizations.
 - Summaries are general public information and should not be treated as legal advice, claim evaluation, or a finding of wrongdoing.
 - When citing a listed resource, prefer the linked original publisher page.
 
 ## Current coverage
 
-- Official consumer-protection complaint routes for all 50 states
-- A verified state or regional residential-solar lawsuit, settlement, investigation, or enforcement item on each state page
+- An official consumer-protection complaint starting point for all 50 states
+- One documented state, regional, or national residential-solar case, settlement, investigation, or enforcement reference on each state page
 - Federal consumer, finance, and complaint resources
 - Expanded Massachusetts consumer protection, utility, public-record, and solar-program resources
-- Independent organizations, clearly labeled by role
-- Source-based preparation guides on a separate Guides page
+- State-page depth varies. Pages without an expanded source section are starting directories, not complete state research files.
 
 ## State-page order
 
 1. Official state consumer-protection complaint route
-2. Relevant residential-solar lawsuit, settlement, investigation, or enforcement action
-3. Additional state sources when available
+2. Documented residential-solar case, settlement, investigation, or enforcement reference
+3. Additional state sources when individually reviewed
 
 ## Accuracy notes
 
 - Lawsuit allegations are described as allegations unless a court or settlement established an outcome.
 - Lawsuits, settlements, investigations, enforcement actions, and reported private litigation are labeled separately.
-- A nearby or regional case is identified as such when no suitable in-state consumer case is listed.
+- A nearby, regional, or national reference is identified as such when no suitable in-state item is listed.

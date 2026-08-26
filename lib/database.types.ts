@@ -59,6 +59,66 @@ export type Database = {
         }
         Relationships: []
       }
+      contact_requests: {
+        Row: {
+          body: string
+          city: string
+          created_at: string
+          email: string
+          id: string
+          state_code: string
+          status: string
+        }
+        Insert: {
+          body: string
+          city: string
+          created_at?: string
+          email: string
+          id: string
+          state_code: string
+          status?: string
+        }
+        Update: {
+          body?: string
+          city?: string
+          created_at?: string
+          email?: string
+          id?: string
+          state_code?: string
+          status?: string
+        }
+        Relationships: []
+      }
+      source_submissions: {
+        Row: {
+          created_at: string
+          email: string | null
+          id: string
+          note: string
+          status: string
+          title: string | null
+          url: string
+        }
+        Insert: {
+          created_at?: string
+          email?: string | null
+          id: string
+          note: string
+          status?: string
+          title?: string | null
+          url: string
+        }
+        Update: {
+          created_at?: string
+          email?: string | null
+          id?: string
+          note?: string
+          status?: string
+          title?: string | null
+          url?: string
+        }
+        Relationships: []
+      }
       guide_steps: {
         Row: {
           detail: string
