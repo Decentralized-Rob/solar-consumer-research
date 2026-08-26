@@ -13,20 +13,21 @@ export default function PrivacyPage() {
     <InfoPage
       eyebrow="Privacy"
       title="Public research. Private questions."
-      lede="The public site can be browsed without an account. Personal information is requested only when someone asks for email updates, signs in, or submits a private question."
+      lede="The public site can be browsed without an account. Personal information is requested only when someone chooses to submit a private question."
     >
       <section className="info-section">
         <h2>Information collected</h2>
         <ul>
-          <li>Email address used for verification, account access, responses, or separately requested updates</li>
+          <li>Email address used to respond to a submitted question</li>
           <li>Selected state</li>
           <li>Questions intentionally submitted by the user</li>
+          <li>Optional email address and explanation provided with a suggested public source</li>
           <li>Basic technical records needed to operate and protect the service</li>
         </ul>
       </section>
       <section className="info-section">
         <h2>How it is used</h2>
-        <p>Email addresses are used to verify requests, provide account access, and respond to questions. Research and site updates are sent only when separately requested and can be turned off. State information helps route content. Questions and responses remain private to the signed-in user and authorized site administrators.</p>
+        <p>Email addresses are used to respond to submitted questions or to follow up about a suggested source. State and city information helps identify relevant public resources. Submitted questions and source suggestions are available only to authorized site administrators and service providers needed to deliver the submission notification.</p>
       </section>
       <section className="info-section">
         <h2>What is not done</h2>
@@ -34,7 +35,7 @@ export default function PrivacyPage() {
       </section>
       <section className="info-section">
         <h2>Service providers and requests</h2>
-        <p>Supabase provides authentication and database services. Google may provide optional sign-in. Cloudflare may perform bot checks. Hosting infrastructure processes normal web requests. To request access, correction, or deletion of account information, use the <Link href="/#questions">private question form</Link> and identify the message as a privacy request.</p>
+        <p>Supabase stores submitted questions and source suggestions. FormSubmit delivers the notification email to the site team. Cloudflare hosts the site, processes normal web requests, and provides form verification. To request access, correction, or deletion of submitted information, use the <Link href="/#questions">private question form</Link> and identify the message as a privacy request.</p>
       </section>
     </InfoPage>
   );

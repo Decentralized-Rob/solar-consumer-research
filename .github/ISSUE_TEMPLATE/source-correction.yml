@@ -1,0 +1,61 @@
+name: Source correction
+description: Report a broken link, inaccurate description, or newer official public source.
+title: "[Source correction]: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this form only for public-source corrections. Do not include personal information, contracts, screenshots, private correspondence, or unverified accusations.
+  - type: input
+    id: affected-page
+    attributes:
+      label: Affected page or state
+      description: Link the page or name the state and section that needs correction.
+      placeholder: https://solarcomplaint.com/states/example
+    validations:
+      required: true
+  - type: textarea
+    id: correction
+    attributes:
+      label: What needs correction?
+      description: Quote or describe the specific link, statement, publisher, source type, state label, or verification date.
+    validations:
+      required: true
+  - type: input
+    id: source-url
+    attributes:
+      label: Direct public source URL
+      description: Use the original agency, court, regulator, utility, or company source whenever available.
+      placeholder: https://
+    validations:
+      required: true
+  - type: input
+    id: publisher
+    attributes:
+      label: Publisher or issuing body
+      placeholder: State attorney general, court, utility commission, or company
+    validations:
+      required: true
+  - type: input
+    id: source-date
+    attributes:
+      label: Publication, decision, or retrieval date
+      description: Enter the date if shown by the source; otherwise say "not shown."
+    validations:
+      required: true
+  - type: textarea
+    id: explanation
+    attributes:
+      label: How does this source support the correction?
+      description: Keep this factual. Do not ask for legal conclusions or make unsupported allegations.
+    validations:
+      required: true
+  - type: checkboxes
+    id: public-material
+    attributes:
+      label: Public-source and privacy check
+      options:
+        - label: I am providing only public material and have removed personal information.
+          required: true
+        - label: I understand that a complaint, lawsuit, or consumer report is not by itself a finding of fact.
+          required: true

@@ -12,20 +12,32 @@ test("city migration accepts historical rows without a city", async () => {
   assert.doesNotMatch(migration, /city text not null default ''/);
 });
 
-test("email verification handoff uses a server-held pending intake", async () => {
+test("direct contact intake records the request and notifies the research team", async () => {
   const accountPanel = await read("components/account-panel.tsx");
-  const pendingRoute = await read("app/api/questions/pending/route.ts");
-  const claimRoute = await read("app/api/questions/route.ts");
+  const contactRoute = await read("app/api/contact/route.ts");
 
-  assert.doesNotMatch(accountPanel, /pending-question/);
-  assert.match(accountPanel, /fetch\("\/api\/questions\/pending"/);
-  assert.match(accountPanel, /submitQuestionPayload\(session, \{ claimPending: true \}\)/);
-  assert.match(accountPanel, /emailRedirectTo: `\$\{window\.location\.origin\}\/\#questions`/);
-  assert.match(pendingRoute, /email_hash: await sha256\(email\)/);
-  assert.match(pendingRoute, /updates_opt_in: updatesOptIn/);
-  assert.match(claimRoute, /\.from\("pending_questions"\)/);
-  assert.match(claimRoute, /payload\?\.claimPending === true/);
-  assert.match(claimRoute, /pending_question_id: pending\.id/);
+  assert.match(accountPanel, /fetch\("\/api\/contact"/);
+  assert.doesNotMatch(accountPanel, /signInWithOtp/);
+  assert.match(accountPanel, /TurnstileWidget/);
+  assert.match(accountPanel, /Question received/);
+  assert.match(contactRoute, /verifyTurnstile/);
+  assert.match(contactRoute, /createSupabaseAdminClient/);
+  assert.match(contactRoute, /formsubmit\.co\/ajax\/rbeland21@gmail\.com/);
+  assert.match(contactRoute, /_captcha: "false"/);
+  assert.match(contactRoute, /emailResult\?\.success === true \|\| emailResult\?\.success === "true"/);
+});
+
+test("public forms require server-side Turnstile verification", async () => {
+  const contactRoute = await read("app/api/contact/route.ts");
+  const sourceRoute = await read("app/api/source-submissions/route.ts");
+  const sourceForm = await read("components/link-submission-form.tsx");
+  const migration = await read("supabase/migrations/20260823190000_secure_public_intake.sql");
+
+  assert.match(contactRoute, /verifyTurnstile/);
+  assert.match(sourceRoute, /verifyTurnstile/);
+  assert.match(sourceForm, /TurnstileWidget/);
+  assert.match(migration, /revoke all on table public\.contact_requests from anon, authenticated/);
+  assert.match(migration, /create table public\.source_submissions/);
 });
 
 test("featured guides keep their stable slug after the API loads", async () => {

@@ -54,6 +54,7 @@ export function HomeFooter() {
           <a href="/guides">Guides</a>
           <a href="/updates">Updates</a>
           <a href="/methodology">Methodology</a>
+          <a href="/technology">Technology</a>
           <a href="/corrections">Corrections</a>
           <a href="/privacy">Privacy</a>
           <a href="/disclaimer">Disclaimer</a>

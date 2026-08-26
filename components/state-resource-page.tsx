@@ -11,18 +11,18 @@ export function StateResourcePage({ state }: { state: { code: string; name: stri
       && item.id !== "ma-electric-company"
       && item.url !== consumerProtection?.url,
   );
+  const hasExpandedSources = stateResources.length > 0;
   const pageSchema = {
     "@context": "https://schema.org",
     "@type": "CollectionPage",
-    name: `${state.name} residential solar consumer resources`,
-    description: `Official consumer complaint resources and verified residential solar litigation relevant to ${state.name}.`,
+    name: consumerProtection.title,
+    description: `${consumerProtection.summary} ${hasExpandedSources ? "Additional source-reviewed state resources are included." : "This page is a starting directory with one documented solar reference, not a complete state research file."}`,
     url: `https://solarcomplaint.com/states/${stateSlug(state.name)}`,
     dateModified: "2026-08-21",
     spatialCoverage: { "@type": "AdministrativeArea", name: state.name },
     about: [
+      { "@type": "Thing", name: `${state.name} consumer complaint route` },
       { "@type": "Thing", name: "Residential solar consumer protection" },
-      { "@type": "Thing", name: "Solar company complaints" },
-      { "@type": "Thing", name: "Residential solar litigation" },
     ],
     mainEntity: {
       "@type": "ItemList",
@@ -42,11 +42,10 @@ export function StateResourcePage({ state }: { state: { code: string; name: stri
           "@type": "ListItem",
           position: 2,
           item: {
-            "@type": "NewsArticle",
-            headline: solarCase.title,
+            "@type": "WebPage",
+            name: solarCase.title,
             description: solarCase.summary,
             datePublished: solarCase.datePublished,
-            publisher: { "@type": "Organization", name: solarCase.publisher },
             url: solarCase.url,
           },
         },
@@ -57,19 +56,19 @@ export function StateResourcePage({ state }: { state: { code: string; name: stri
   return (
     <InfoPage
       className="state-resource-page"
-      eyebrow={`${state.name} solar complaints and consumer protection`}
-      title={`${state.name} solar complaint resources.`}
-      lede={`Start with ${state.name}'s official consumer-protection complaint route, then review a documented residential-solar case or enforcement action relevant to homeowners in the state.`}
+      eyebrow={`${state.name} official complaint route`}
+      title={consumerProtection.title}
+      lede={consumerProtection.summary}
     >
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(pageSchema) }} />
 
       <nav className="state-question-nav" aria-label={`${state.name} solar resource questions`}>
-        <a href="#consumer-protection">Where can I file a solar company complaint in {state.name}?</a>
-        <a href="#solar-case">What residential solar lawsuit or enforcement action is relevant?</a>
+        <a href="#consumer-protection">Official {state.name} complaint route</a>
+        {solarCase && <a href="#solar-case">Documented {solarCase.caseType} reference</a>}
       </nav>
 
       <section id="consumer-protection" className="state-source-lead" aria-labelledby="consumer-protection-title">
-        <div className="state-source-meta"><span>Official complaint route</span><span>Verified {consumerProtection.lastVerified}</span></div>
+        <div className="state-source-meta"><span>Official complaint route</span><span>State government source</span></div>
         <h2 id="consumer-protection-title">{consumerProtection.title}</h2>
         <p>{consumerProtection.summary}</p>
         <p className="state-source-note">For a residential-solar complaint, keep the sales proposal, signed or electronic contract, financing or lease documents, utility bills, production records, permits, inspection records, cancellation attempts, and company correspondence.</p>
@@ -81,7 +80,7 @@ export function StateResourcePage({ state }: { state: { code: string; name: stri
           <div className="state-source-meta"><span>{solarCase.relevance}</span><span>{solarCase.caseType} · {solarCase.publishedAt}</span></div>
           <h2 id="solar-case-title">{solarCase.title}</h2>
           <p>{solarCase.summary}</p>
-          <small>{solarCase.publisher} · Verified Aug 21, 2026</small>
+          <small>{solarCase.publisher} · Source dated {solarCase.publishedAt}</small>
           <a href={solarCase.url} target="_blank" rel="noreferrer">Read the source and case details ↗</a>
         </section>
       )}
@@ -105,6 +104,13 @@ export function StateResourcePage({ state }: { state: { code: string; name: stri
           </div>
         </section>
       ) : null}
+
+      {!hasExpandedSources && (
+        <section className="info-section">
+          <h2>Current state-page coverage</h2>
+          <p>This page is a starting directory: one official complaint route and one documented solar reference. Additional state-specific sources are added only after individual review.</p>
+        </section>
+      )}
 
       <div className="state-page-links">
         <Link href="/resources">Choose another state →</Link>

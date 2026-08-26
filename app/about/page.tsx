@@ -24,7 +24,7 @@ export default function AboutPage() {
       </section>
       <section className="info-section">
         <h2>Current coverage</h2>
-        <p>Massachusetts is the first active state. Federal resources are included when they apply nationally. Additional states will be added after their source records have been reviewed.</p>
+        <p>Every state has an official consumer-complaint starting point and a documented residential-solar reference. Massachusetts currently has the broadest expanded source set. Other state pages are starting directories, not complete state research files; additional sources are added only after individual review.</p>
       </section>
       <section className="info-section">
         <h2>Editorial responsibility</h2>
