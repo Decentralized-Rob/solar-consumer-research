@@ -75,7 +75,7 @@ export default function TitanSolarPowerPage() {
           <a href="#tt-updates">Updates</a>
           <a href="#tt-resources">Resources</a>
           <a href="#tt-community">Community</a>
-          <a className="tt-header-cta" href="#tt-subscribe">Get alerts</a>
+          <Link className="tt-header-cta" href="/cases/titan-solar-power/customer-help">Customer help</Link>
         </nav>
       </header>
 
@@ -87,7 +87,7 @@ export default function TitanSolarPowerPage() {
               <div className="tt-status-pill"><span /> Closed · Chapter 7</div>
               <h1>Titan Solar Power is gone. The systems, loans and questions are not.</h1>
               <p className="tt-deck">A sourced tracker for former Titan customers looking for court records, service information, reporting and community updates.</p>
-              <div className="tt-actions"><a className="tt-button tt-button-primary" href="#tt-resources">Find customer resources</a><a className="tt-button tt-button-secondary" href="#tt-updates">Read the timeline</a></div>
+              <div className="tt-actions"><Link className="tt-button tt-button-primary" href="/cases/titan-solar-power/customer-help">Find the right research path</Link><a className="tt-button tt-button-secondary" href="#tt-updates">Read the timeline</a></div>
             </div>
             <aside className="tt-status-card" aria-label="Current company status">
               <p>Current status</p>
@@ -109,6 +109,11 @@ export default function TitanSolarPowerPage() {
             <i>{String(index + 1).padStart(2, "0")}</i>
             <div><time>{item.date}</time><h3>{item.title}</h3><p>{item.copy}</p><ExternalLink href={item.href}>{item.source} ↗</ExternalLink></div>
           </article>)}</div>
+        </section>
+
+        <section className="tt-section" aria-label="Customer research help">
+          <div className="tt-section-heading"><div><p>Customer research help</p><h2>Different problem, different next step.</h2></div><span>Service and repair, a home sale, and a contract or financing concern each require different records.</span></div>
+          <Link className="tt-button tt-button-primary" href="/cases/titan-solar-power/customer-help">Choose a Titan research path</Link>
         </section>
 
         <section className="tt-section tt-muted" id="tt-resources">
