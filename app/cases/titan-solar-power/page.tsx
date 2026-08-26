@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Image from "next/image";
+import Link from "next/link";
 import SubscribeForm from "./SubscribeForm";
 import "./titan-tracker.css";
 
@@ -67,9 +68,9 @@ export default function TitanSolarPowerPage() {
   return (
     <div className="tt-shell">
       <header className="tt-header">
-        <a href="/" aria-label="Solar Consumer Research home">
+        <Link href="/" aria-label="Solar Consumer Research home">
           <Image src="/brand/solar-consumer-research.svg" alt="" width={690} height={104} priority unoptimized />
-        </a>
+        </Link>
         <nav aria-label="Page navigation">
           <a href="#tt-updates">Updates</a>
           <a href="#tt-resources">Resources</a>
