@@ -65,6 +65,7 @@ test("serves canonical robots and sitemap files", async () => {
   assert.match(sitemap, /<loc>https:\/\/solarcomplaint\.com\/states\/massachusetts<\/loc>/);
   assert.match(sitemap, /<loc>https:\/\/solarcomplaint\.com\/federal-resources<\/loc>/);
   assert.match(sitemap, /<loc>https:\/\/solarcomplaint\.com\/states\/new-york<\/loc>/);
+  assert.match(sitemap, /<loc>https:\/\/solarcomplaint\.com\/resources<\/loc>[\s\S]*?<lastmod>2026-08-21/i);
   assert.doesNotMatch(`${robots}\n${sitemap}`, /solar-resource-mvp\.rbeland21\.chatgpt\.site/);
 });
 
@@ -129,6 +130,10 @@ test("renders the featured research article with canonical metadata, article sch
   assert.match(html, /Michigan Attorney General complaint against Climax Solar/i);
   assert.match(html, /Texas Attorney General residential solar investigation involving Sunrun/i);
   assert.match(html, /Arizona stipulated consent agreement with Sunrun and Vivint Solar/i);
+  assert.match(html, /1,689 Climax-originated/i);
+  assert.match(html, /\$81\.26 million/i);
+  assert.match(html, /\$600,000 to civil penalties/i);
+  assert.match(html, /response within two business days/i);
   assert.match(html, /href=["']\/states\/michigan["']/i);
   assert.match(html, /href=["']\/states\/texas["']/i);
   assert.match(html, /href=["']\/states\/arizona["']/i);
