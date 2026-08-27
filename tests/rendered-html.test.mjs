@@ -3,7 +3,7 @@ import test from "node:test";
 
 const productTitle = /<title>Solar Complaints and Consumer Resources \| Solar Consumer Research<\/title>/i;
 const productDescription =
-  /<meta(?=[^>]*\bname=["']description["'])(?=[^>]*\bcontent=["']Find official solar complaint channels, consumer agencies, public records, and source-verified resources by state\.["'])[^>]*>/i;
+  /<meta(?=[^>]*\bname=["']description["'])(?=[^>]*\bcontent=["']Find official solar complaint channels, source-backed research, lawsuits, investigations, public records, and consumer resources by state\.["'])[^>]*>/i;
 const featuredResearchTitle = /Solar Sales, Financing and What Happens After a Complaint/i;
 
 async function loadWorker() {
