@@ -1,41 +1,66 @@
 # Solar Consumer Research
 
-> A directory of official state consumer-complaint starting points, documented residential-solar references, and practical public resources.
+> A public-source research site for residential solar consumers, including official complaint routes, original source-backed research, documented enforcement actions, case trackers, and practical resources.
 
 ## Primary pages
 
 - Home: https://solarcomplaint.com/
-- Resources: https://solarcomplaint.com/resources
+- Research hub: https://solarcomplaint.com/research
+- Resources and state directory: https://solarcomplaint.com/resources
 - Guides: https://solarcomplaint.com/guides
 - Updates: https://solarcomplaint.com/updates
 - Methodology: https://solarcomplaint.com/methodology
+- Corrections: https://solarcomplaint.com/corrections
 - Disclaimer: https://solarcomplaint.com/disclaimer
-- State directory: https://solarcomplaint.com/resources
 - State pages: https://solarcomplaint.com/states/{state-name}
+
+## Featured research
+
+- Solar Sales, Financing and What Happens After a Complaint: https://solarcomplaint.com/research/solar-sales-financing-after-complaint
+  - Connects three separate state records without treating them as one case.
+  - Michigan: July 15, 2026 complaint against Climax Solar and finance defendants.
+  - Texas: April 3, 2026 residential-solar investigation involving Sunrun and other companies.
+  - Arizona: May 22, 2025 stipulated consent agreement with Sunrun and Vivint Solar.
+  - The article links directly to the primary government records and to the Michigan, Texas, and Arizona state pages.
+
+## Company research
+
+- Sunrun investigations, enforcement, settlements, and documented cases: https://solarcomplaint.com/companies/sunrun
+- Connecticut Attorney General lawsuit involving Sunrun: https://solarcomplaint.com/cases/connecticut-attorney-general-sunrun-lawsuit
+- Titan Solar Power closure and bankruptcy tracker: https://solarcomplaint.com/cases/titan-solar-power
 
 ## Source and citation policy
 
-- Every listing identifies its publisher and direct source. Expanded resource cards show a verification date when an individual review date is recorded; case references show the source date.
-- Government agencies and regulators are distinguished from private nonprofit organizations.
-- Summaries are general public information and should not be treated as legal advice, claim evaluation, or a finding of wrongdoing.
-- When citing a listed resource, prefer the linked original publisher page.
+- Research stories identify and link to the primary records supporting material claims.
+- State pages preserve direct links to government complaint routes and enforcement records.
+- Government agencies and regulators are distinguished from private organizations and reporting sources.
+- Lawsuits, settlements, investigations, enforcement actions, and reported private litigation are labeled separately.
+- Allegations are described as allegations unless a court, regulator, or settlement establishes an outcome.
+- An investigation is not presented as a finding of wrongdoing.
+- A settlement is not described as an admission when the agreement says otherwise.
+- When citing a government action listed by this site, prefer the linked original government record as the evidentiary source. The SolarComplaint.com research page can be cited for its synthesis, organization, and cross-source analysis.
+
+## Internal research relationships
+
+- Featured story -> relevant state pages -> primary government sources.
+- Michigan page -> Michigan enforcement source + related featured research.
+- Texas page -> Texas Sunrun investigation source + related featured research.
+- Arizona page -> Arizona Sunrun consent agreement + related featured research.
+- Sunrun company page -> Texas investigation + Arizona settlement + Connecticut lawsuit + related research.
 
 ## Current coverage
 
-- An official consumer-protection complaint starting point for all 50 states
-- One documented state, regional, or national residential-solar case, settlement, investigation, or enforcement reference on each state page
-- Federal consumer, finance, and complaint resources
-- Expanded Massachusetts consumer protection, utility, public-record, and solar-program resources
+- An official consumer-protection complaint starting point for all 50 states.
+- Documented residential-solar lawsuits, settlements, investigations, enforcement items, or other clearly labeled references on state pages.
+- Original source-backed research that connects related records without collapsing their procedural differences.
+- Federal consumer, finance, and complaint resources.
+- Company and case tracking where a sufficient public-source record exists.
+- Expanded Massachusetts consumer protection, utility, public-record, and solar-program resources.
 - State-page depth varies. Pages without an expanded source section are starting directories, not complete state research files.
 
-## State-page order
+## Accuracy and editorial boundaries
 
-1. Official state consumer-protection complaint route
-2. Documented residential-solar case, settlement, investigation, or enforcement reference
-3. Additional state sources when individually reviewed
-
-## Accuracy notes
-
-- Lawsuit allegations are described as allegations unless a court or settlement established an outcome.
-- Lawsuits, settlements, investigations, enforcement actions, and reported private litigation are labeled separately.
-- A nearby, regional, or national reference is identified as such when no suitable in-state item is listed.
+- Solar Consumer Research provides general public information, not legal advice or claim evaluation.
+- Primary records control if a summary and an original source differ.
+- Material corrections are handled through https://solarcomplaint.com/corrections.
+- Research methods and source hierarchy are described at https://solarcomplaint.com/methodology.

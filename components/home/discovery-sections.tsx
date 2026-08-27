@@ -1,4 +1,5 @@
 import { stateSlug, states } from "../../lib/content";
+import { featuredResearchStory } from "../../lib/research-stories";
 import type { Guide, Resource } from "../../lib/types";
 import { ArrowIcon, type State, type TopicFilter } from "./shared";
 
@@ -99,7 +100,7 @@ export function FeaturedSection({ guides, resources }: { guides: Guide[]; resour
   return (
     <section className="home-featured home-wrap" aria-labelledby="featured-title">
       <div className="home-section-rule">
-        <p className="home-card-label">Featured</p>
+        <p className="home-card-label">Guides &amp; sources</p>
         <h2 id="featured-title">A few useful places to begin.</h2>
         <a href="/guides">All guides →</a>
       </div>
@@ -140,32 +141,20 @@ export function CaseFeature() {
     <section className="home-case-feature" aria-labelledby="case-feature-title">
       <div className="home-wrap home-case-feature-grid">
         <div className="home-case-label">
-          <p className="home-card-label">Case to follow</p>
-          <span>Connecticut · Filed July 19, 2024</span>
+          <p className="home-card-label">Featured Research</p>
+          <span>Michigan · Texas · Arizona · {featuredResearchStory.publishedAt}</span>
         </div>
         <div className="home-case-copy">
           <h2 id="case-feature-title">
-            <a href="/cases/connecticut-attorney-general-sunrun-lawsuit">
-              What does Connecticut&apos;s lawsuit against Sunrun allege?
-            </a>
+            <a href={featuredResearchStory.href}>{featuredResearchStory.title}</a>
           </h2>
-          <p>
-            The Connecticut Attorney General sued Sunrun, two solar companies, and two salespeople.
-            The complaint alleges contracts without informed consent, forged signatures, consumer
-            impersonation, unpermitted work, and systems that did not function.
-          </p>
+          <p>{featuredResearchStory.deck}</p>
           <p className="home-case-caution">
-            These are allegations in a government complaint, not findings by this site or a final court decision.
+            Three separate state actions with different facts and procedural status, connected only where the primary records support the comparison.
           </p>
           <div className="home-case-actions">
-            <a href="/cases/connecticut-attorney-general-sunrun-lawsuit">Read the case summary →</a>
-            <a
-              href="https://portal.ct.gov/ag/press-releases/2024-press-releases/attorney-general-tong-sues-sunrun"
-              target="_blank"
-              rel="noreferrer"
-            >
-              Read the official announcement <ArrowIcon />
-            </a>
+            <a href={featuredResearchStory.href}>Read the source-backed breakdown →</a>
+            <a href="/research">Browse research <ArrowIcon /></a>
           </div>
         </div>
       </div>

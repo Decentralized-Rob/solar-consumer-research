@@ -29,10 +29,10 @@ export function HomeHeader({
         aria-label="Primary navigation"
       >
         <a href="#start" onClick={onMenuClose}>Start here</a>
+        <a href="/research" onClick={onMenuClose}>Research</a>
         <a href="/resources" onClick={onMenuClose}>States</a>
         <a href="/federal-resources" onClick={onMenuClose}>Federal</a>
         <a href="/guides" onClick={onMenuClose}>Guides</a>
-        <a href="/cases/connecticut-attorney-general-sunrun-lawsuit" onClick={onMenuClose}>Cases</a>
         <a href="/about" onClick={onMenuClose}>About</a>
       </nav>
       <a className="home-header-action" href="#questions">Ask a question</a>
@@ -49,6 +49,7 @@ export function HomeFooter() {
           <p>Independent public-source research for residential solar consumers.</p>
         </div>
         <nav aria-label="Footer navigation">
+          <a href="/research">Research</a>
           <a href="/resources">Resources</a>
           <a href="/federal-resources">Federal</a>
           <a href="/guides">Guides</a>
