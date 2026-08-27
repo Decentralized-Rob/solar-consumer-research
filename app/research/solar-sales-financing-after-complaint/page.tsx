@@ -128,7 +128,7 @@ export default function SolarSalesFinancingResearchPage() {
         <nav className="case-question-links" aria-label="Breadcrumb">
           <Link href="/">Home</Link>
           <Link href="/research">Research</Link>
-          <span aria-current="page">Current story</span>
+          <span aria-current="page">{featuredResearchStory.title}</span>
         </nav>
 
         <nav className="case-question-links" aria-label="Article navigation">
