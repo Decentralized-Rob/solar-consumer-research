@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { states } from "../lib/content";
+import { featuredStateSources } from "../lib/featured-state-sources";
 import { consumerProtectionByState, getStateSolarCase } from "../lib/state-research";
 import type { Resource } from "../lib/types";
 import {
@@ -30,6 +31,7 @@ export function ResearchApp() {
   const availableResources = useMemo(() => {
     const consumerProtection = consumerProtectionByState[stateCode];
     const solarCase = getStateSolarCase(stateCode);
+    const currentEnforcementSources = featuredStateSources[stateCode] ?? [];
     const primaryResources: Resource[] = [];
 
     if (consumerProtection) {
@@ -44,6 +46,21 @@ export function ResearchApp() {
         url: consumerProtection.url,
       });
     }
+
+    currentEnforcementSources.forEach((source) => {
+      if (source.url === solarCase?.url) return;
+      primaryResources.push({
+        id: source.id,
+        stateCode,
+        title: source.title,
+        summary: source.summary,
+        publisher: source.publisher,
+        publisherType: "government",
+        topic: "complaints",
+        url: source.url,
+        sourceDate: source.publishedAt,
+      });
+    });
 
     if (solarCase) {
       primaryResources.push({
@@ -62,7 +79,7 @@ export function ResearchApp() {
     const additionalResources = resourceItems.filter(
       (resource) => resource.stateCode === stateCode
         && resource.id !== "ma-electric-company"
-        && resource.url !== consumerProtection?.url,
+        && !primaryResources.some((primary) => primary.url === resource.url),
     );
 
     return [...primaryResources, ...additionalResources];
