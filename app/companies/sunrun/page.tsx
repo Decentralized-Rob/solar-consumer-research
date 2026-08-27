@@ -120,6 +120,12 @@ export default function SunrunCompanyPage() {
         title="Sunrun investigations, enforcement and documented cases"
         lede="A source-based index of state actions involving Sunrun, with the procedural status of each matter kept separate and direct links to the government record."
       >
+        <nav className="case-question-links" aria-label="Breadcrumb">
+          <Link href="/">Home</Link>
+          <Link href="/research">Research</Link>
+          <span aria-current="page">Sunrun</span>
+        </nav>
+
         <section className="info-section case-notice">
           <strong>Status matters</strong>
           <p>
