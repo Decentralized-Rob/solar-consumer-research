@@ -58,6 +58,7 @@ export default function SolarSalesFinancingResearchPage() {
         "@id": `${canonicalUrl}#article`,
         headline: featuredResearchStory.title,
         description: featuredResearchStory.deck,
+        image: ["https://solarcomplaint.com/og.png"],
         datePublished: featuredResearchStory.datePublished,
         dateModified: featuredResearchStory.dateModified,
         inLanguage: "en-US",
@@ -124,6 +125,12 @@ export default function SolarSalesFinancingResearchPage() {
         title={featuredResearchStory.title}
         lede={featuredResearchStory.deck}
       >
+        <nav className="case-question-links" aria-label="Breadcrumb">
+          <Link href="/">Home</Link>
+          <Link href="/research">Research</Link>
+          <span aria-current="page">Current story</span>
+        </nav>
+
         <nav className="case-question-links" aria-label="Article navigation">
           <a href="#michigan">Michigan lawsuit</a>
           <a href="#texas">Texas investigation</a>
@@ -167,6 +174,13 @@ export default function SolarSalesFinancingResearchPage() {
             Michigan alleges that Climax made representations about electric-bill savings, tax credits, and quick
             installation, then arranged financing while consumers signed documents during the sales process. The
             complaint says projects later stalled, failed, underperformed, lacked permission to operate, or were abandoned.
+          </p>
+          <p>
+            The scale alleged in the complaint is substantial. Records produced to date identify 1,689 Climax-originated
+            Michigan loans totaling approximately $81.26 million in financed purchase amounts. The complaint says those
+            loans included approximately $22.14 million in finance charges that it characterizes as hidden dealer, platform,
+            or similar fees embedded in the financed price. Those figures are allegations and calculations presented by
+            Michigan in the complaint; they have not been adjudicated as findings by the court.
           </p>
           <p>
             The complaint goes further than the sales pitch. Michigan alleges that finance companies continued
@@ -231,9 +245,15 @@ export default function SolarSalesFinancingResearchPage() {
             deceptive solar sales practices. The court approved the stipulated consent agreement on May 22, 2025.
           </p>
           <p>
-            Arizona says eligible consumers may qualify for forms of relief that can include restitution, repairs, or
-            changes to service contracts. The agreement also includes complaint-handling requirements, including tracking
-            complaints and maintaining staffing intended to provide a prompt response.
+            The agreement allocates $600,000 to civil penalties, $50,000 to the State for attorney&apos;s fees and costs,
+            and $600,000 to consumer restitution. It also establishes a process for eligible complaints and permits forms
+            of consumer relief that can include payments, credits, rate reductions, contract changes, cancellations,
+            repairs, or other remedies under the agreement.
+          </p>
+          <p>
+            The agreement also addresses what happens after an Arizona consumer raises a problem. It requires a unique
+            complaint number for tracking and requires commercially reasonable staffing efforts sufficient to provide a
+            response within two business days. Read receipts and generic automated replies do not count as a response.
           </p>
           <p>
             Sunrun and Vivint Solar denied the allegations. The agreement states that it resolves disputed claims and is
