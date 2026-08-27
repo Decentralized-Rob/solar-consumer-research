@@ -4,12 +4,12 @@ import { ResearchApp } from "../components/research-app";
 export const metadata: Metadata = {
   title: "Solar Complaints and Consumer Resources | Solar Consumer Research",
   description:
-    "Find official solar complaint channels, consumer agencies, public records, and source-verified resources by state.",
+    "Find official solar complaint channels, source-backed research, lawsuits, investigations, public records, and consumer resources by state.",
   alternates: { canonical: "/" },
   openGraph: {
     title: "Solar Complaints and Consumer Resources | Solar Consumer Research",
     description:
-      "Official complaint channels, public records, and source-verified resources for residential solar consumers.",
+      "Official solar complaint channels, source-backed research, lawsuits, investigations, public records, and consumer resources by state.",
     url: "/",
     images: [
       {
@@ -24,7 +24,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Solar Complaints and Consumer Resources | Solar Consumer Research",
     description:
-      "Official complaint channels, public records, and source-verified resources for residential solar consumers.",
+      "Official solar complaint channels, source-backed research, lawsuits, investigations, public records, and consumer resources by state.",
     images: ["https://solarcomplaint.com/og.png"],
   },
 };
