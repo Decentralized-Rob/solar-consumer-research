@@ -25,7 +25,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${baseUrl}/research`, lastModified: new Date("2026-08-27"), changeFrequency: "weekly", priority: 0.95 },
     ...researchPages,
     { url: `${baseUrl}/companies/sunrun`, lastModified: new Date("2026-08-27"), changeFrequency: "weekly", priority: 0.9 },
-    { url: `${baseUrl}/resources`, lastModified: new Date("2026-08-27"), changeFrequency: "weekly", priority: 0.9 },
+    { url: `${baseUrl}/resources`, lastModified: new Date("2026-08-21"), changeFrequency: "weekly", priority: 0.9 },
     { url: `${baseUrl}/federal-resources`, lastModified: new Date("2026-08-21"), changeFrequency: "monthly", priority: 0.9 },
     { url: `${baseUrl}/guides`, lastModified: new Date("2026-08-16"), changeFrequency: "monthly", priority: 0.8 },
     { url: `${baseUrl}/updates`, lastModified: new Date("2026-08-16"), changeFrequency: "weekly", priority: 0.7 },
