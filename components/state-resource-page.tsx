@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { InfoPage } from "./info-page";
 import { resources, stateSlug } from "../lib/content";
+import { featuredStateSources } from "../lib/featured-state-sources";
 import { consumerProtectionByState, getStateSolarCase } from "../lib/state-research";
 
 export function StateResourcePage({ state }: { state: { code: string; name: string; available: boolean } }) {
@@ -11,14 +12,20 @@ export function StateResourcePage({ state }: { state: { code: string; name: stri
       && item.id !== "ma-electric-company"
       && item.url !== consumerProtection?.url,
   );
-  const hasExpandedSources = stateResources.length > 0;
+  const currentEnforcementSources = (featuredStateSources[state.code] ?? []).filter(
+    (item) => item.url !== solarCase?.url && !stateResources.some((resource) => resource.url === item.url),
+  );
+  const displayedSolarCase = solarCase && (solarCase.location === state.name || currentEnforcementSources.length === 0)
+    ? solarCase
+    : undefined;
+  const hasExpandedSources = stateResources.length > 0 || currentEnforcementSources.length > 0;
   const pageSchema = {
     "@context": "https://schema.org",
     "@type": "CollectionPage",
     name: consumerProtection.title,
     description: `${consumerProtection.summary} ${hasExpandedSources ? "Additional source-reviewed state resources are included." : "This page is a starting directory with one documented solar reference, not a complete state research file."}`,
     url: `https://solarcomplaint.com/states/${stateSlug(state.name)}`,
-    dateModified: "2026-08-21",
+    dateModified: "2026-08-27",
     spatialCoverage: { "@type": "AdministrativeArea", name: state.name },
     about: [
       { "@type": "Thing", name: `${state.name} consumer complaint route` },
@@ -38,15 +45,26 @@ export function StateResourcePage({ state }: { state: { code: string; name: stri
             url: consumerProtection.url,
           },
         },
-        solarCase && {
+        ...currentEnforcementSources.map((source, index) => ({
           "@type": "ListItem",
-          position: 2,
+          position: index + 2,
           item: {
             "@type": "WebPage",
-            name: solarCase.title,
-            description: solarCase.summary,
-            datePublished: solarCase.datePublished,
-            url: solarCase.url,
+            name: source.title,
+            description: source.summary,
+            datePublished: source.datePublished,
+            url: source.url,
+          },
+        })),
+        displayedSolarCase && {
+          "@type": "ListItem",
+          position: currentEnforcementSources.length + 2,
+          item: {
+            "@type": "WebPage",
+            name: displayedSolarCase.title,
+            description: displayedSolarCase.summary,
+            datePublished: displayedSolarCase.datePublished,
+            url: displayedSolarCase.url,
           },
         },
       ].filter(Boolean),
@@ -64,7 +82,8 @@ export function StateResourcePage({ state }: { state: { code: string; name: stri
 
       <nav className="state-question-nav" aria-label={`${state.name} solar resource questions`}>
         <a href="#consumer-protection">Official {state.name} complaint route</a>
-        {solarCase && <a href="#solar-case">Documented {solarCase.caseType} reference</a>}
+        {currentEnforcementSources.length > 0 && <a href="#current-enforcement-sources">Current enforcement sources</a>}
+        {displayedSolarCase && <a href="#solar-case">Documented {displayedSolarCase.caseType} reference</a>}
       </nav>
 
       <section id="consumer-protection" className="state-source-lead" aria-labelledby="consumer-protection-title">
@@ -75,13 +94,33 @@ export function StateResourcePage({ state }: { state: { code: string; name: stri
         <a href={consumerProtection.url} target="_blank" rel="noreferrer">Open the official {state.name} complaint page ↗</a>
       </section>
 
-      {solarCase && (
+      {currentEnforcementSources.length > 0 && (
+        <section id="current-enforcement-sources" className="state-source-section" aria-labelledby="current-enforcement-sources-title">
+          <div className="state-source-section-heading">
+            <span>{String(currentEnforcementSources.length).padStart(2, "0")} current source{currentEnforcementSources.length === 1 ? "" : "s"}</span>
+            <h2 id="current-enforcement-sources-title">Current enforcement sources</h2>
+          </div>
+          <div className="state-source-grid">
+            {currentEnforcementSources.map((item) => (
+              <article key={item.id}>
+                <span>Official {item.sourceType}</span>
+                <h3>{item.title}</h3>
+                <p>{item.summary}</p>
+                <small>{item.publisher} · Source dated {item.publishedAt}</small>
+                <a href={item.url} target="_blank" rel="noreferrer">Open official source ↗</a>
+              </article>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {displayedSolarCase && (
         <section id="solar-case" className="state-case-feature" aria-labelledby="solar-case-title">
-          <div className="state-source-meta"><span>{solarCase.relevance}</span><span>{solarCase.caseType} · {solarCase.publishedAt}</span></div>
-          <h2 id="solar-case-title">{solarCase.title}</h2>
-          <p>{solarCase.summary}</p>
-          <small>{solarCase.publisher} · Source dated {solarCase.publishedAt}</small>
-          <a href={solarCase.url} target="_blank" rel="noreferrer">Read the source and case details ↗</a>
+          <div className="state-source-meta"><span>{displayedSolarCase.relevance}</span><span>{displayedSolarCase.caseType} · {displayedSolarCase.publishedAt}</span></div>
+          <h2 id="solar-case-title">{displayedSolarCase.title}</h2>
+          <p>{displayedSolarCase.summary}</p>
+          <small>{displayedSolarCase.publisher} · Source dated {displayedSolarCase.publishedAt}</small>
+          <a href={displayedSolarCase.url} target="_blank" rel="noreferrer">Read the source and case details ↗</a>
         </section>
       )}
 

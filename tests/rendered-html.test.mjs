@@ -82,7 +82,7 @@ test("indexes verified state complaint and litigation pages", async () => {
   assert.match(html, /application\/ld\+json/i);
 });
 
-test("renders a source-led state starting directory without DSIRE", async () => {
+test("renders a source-led Texas directory without DSIRE", async () => {
   const worker = await loadWorker();
   const response = await worker.fetch(
     new Request("http://localhost/states/texas", { headers: { accept: "text/html" } }),
@@ -93,22 +93,20 @@ test("renders a source-led state starting directory without DSIRE", async () => 
   assert.equal(response.status, 200);
   const html = await response.text();
   const complaintIndex = html.indexOf('id="consumer-protection"');
+  const enforcementIndex = html.indexOf('id="current-enforcement-sources"');
   const lawsuitIndex = html.indexOf('id="solar-case"');
 
   assert.ok(complaintIndex >= 0);
-  assert.ok(lawsuitIndex > complaintIndex);
+  assert.ok(enforcementIndex > complaintIndex);
+  assert.ok(lawsuitIndex > enforcementIndex);
   assert.doesNotMatch(html, /DSIRE/i);
   assert.match(html, /File a Texas consumer complaint/i);
-  assert.match(html, /This page is a starting directory/i);
+  assert.match(html, /Texas Attorney General residential solar investigation involving Sunrun/i);
 });
 
 test("serves the federal resource page", async () => {
   const worker = await loadWorker();
-  const response = await worker.fetch(
-    new Request("http://localhost/federal-resources", { headers: { accept: "text/html" } }),
-    env,
-    ctx,
-  );
+  const response = await worker.fetch(new Request("http://localhost/federal-resources", { headers: { accept: "text/html" } }), env, ctx);
 
   assert.equal(response.status, 200);
   const html = await response.text();
