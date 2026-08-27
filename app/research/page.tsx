@@ -79,6 +79,11 @@ export default function ResearchPage() {
         title="Source-backed research on residential solar"
         lede="Original reporting, document analysis, enforcement tracking, and company-specific research built around primary government records."
       >
+        <nav className="case-question-links" aria-label="Breadcrumb">
+          <Link href="/">Home</Link>
+          <span aria-current="page">Research</span>
+        </nav>
+
         <section className="info-section case-notice">
           <strong>How this section works</strong>
           <p>
