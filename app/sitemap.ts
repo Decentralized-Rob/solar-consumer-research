@@ -1,19 +1,31 @@
 import type { MetadataRoute } from "next";
 import { stateSlug, states } from "../lib/content";
+import { researchStories } from "../lib/research-stories";
 
 const baseUrl = "https://solarcomplaint.com";
+const recentlyUpdatedStates = new Set(["MI", "TX", "AZ"]);
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const statePages = states.filter((state) => state.available).map((state) => ({
     url: `${baseUrl}/states/${stateSlug(state.name)}`,
-    lastModified: new Date("2026-08-21"),
+    lastModified: new Date(recentlyUpdatedStates.has(state.code) ? "2026-08-27" : "2026-08-21"),
     changeFrequency: "monthly" as const,
     priority: 0.8,
   }));
 
+  const researchPages = researchStories.map((story) => ({
+    url: `${baseUrl}${story.href}`,
+    lastModified: new Date(story.dateModified),
+    changeFrequency: "weekly" as const,
+    priority: 0.95,
+  }));
+
   return [
-    { url: baseUrl, lastModified: new Date("2026-08-21"), changeFrequency: "weekly", priority: 1 },
-    { url: `${baseUrl}/resources`, lastModified: new Date("2026-08-21"), changeFrequency: "weekly", priority: 0.9 },
+    { url: baseUrl, lastModified: new Date("2026-08-27"), changeFrequency: "weekly", priority: 1 },
+    { url: `${baseUrl}/research`, lastModified: new Date("2026-08-27"), changeFrequency: "weekly", priority: 0.95 },
+    ...researchPages,
+    { url: `${baseUrl}/companies/sunrun`, lastModified: new Date("2026-08-27"), changeFrequency: "weekly", priority: 0.9 },
+    { url: `${baseUrl}/resources`, lastModified: new Date("2026-08-27"), changeFrequency: "weekly", priority: 0.9 },
     { url: `${baseUrl}/federal-resources`, lastModified: new Date("2026-08-21"), changeFrequency: "monthly", priority: 0.9 },
     { url: `${baseUrl}/guides`, lastModified: new Date("2026-08-16"), changeFrequency: "monthly", priority: 0.8 },
     { url: `${baseUrl}/updates`, lastModified: new Date("2026-08-16"), changeFrequency: "weekly", priority: 0.7 },
