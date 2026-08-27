@@ -15,6 +15,9 @@ export function StateResourcePage({ state }: { state: { code: string; name: stri
   const currentEnforcementSources = (featuredStateSources[state.code] ?? []).filter(
     (item) => item.url !== solarCase?.url && !stateResources.some((resource) => resource.url === item.url),
   );
+  const displayedSolarCase = solarCase && (solarCase.location === state.name || currentEnforcementSources.length === 0)
+    ? solarCase
+    : undefined;
   const hasExpandedSources = stateResources.length > 0 || currentEnforcementSources.length > 0;
   const pageSchema = {
     "@context": "https://schema.org",
@@ -42,20 +45,9 @@ export function StateResourcePage({ state }: { state: { code: string; name: stri
             url: consumerProtection.url,
           },
         },
-        solarCase && {
-          "@type": "ListItem",
-          position: 2,
-          item: {
-            "@type": "WebPage",
-            name: solarCase.title,
-            description: solarCase.summary,
-            datePublished: solarCase.datePublished,
-            url: solarCase.url,
-          },
-        },
         ...currentEnforcementSources.map((source, index) => ({
           "@type": "ListItem",
-          position: index + (solarCase ? 3 : 2),
+          position: index + 2,
           item: {
             "@type": "WebPage",
             name: source.title,
@@ -64,6 +56,17 @@ export function StateResourcePage({ state }: { state: { code: string; name: stri
             url: source.url,
           },
         })),
+        displayedSolarCase && {
+          "@type": "ListItem",
+          position: currentEnforcementSources.length + 2,
+          item: {
+            "@type": "WebPage",
+            name: displayedSolarCase.title,
+            description: displayedSolarCase.summary,
+            datePublished: displayedSolarCase.datePublished,
+            url: displayedSolarCase.url,
+          },
+        },
       ].filter(Boolean),
     },
   };
@@ -79,8 +82,8 @@ export function StateResourcePage({ state }: { state: { code: string; name: stri
 
       <nav className="state-question-nav" aria-label={`${state.name} solar resource questions`}>
         <a href="#consumer-protection">Official {state.name} complaint route</a>
-        {solarCase && <a href="#solar-case">Documented {solarCase.caseType} reference</a>}
         {currentEnforcementSources.length > 0 && <a href="#current-enforcement-sources">Current enforcement sources</a>}
+        {displayedSolarCase && <a href="#solar-case">Documented {displayedSolarCase.caseType} reference</a>}
       </nav>
 
       <section id="consumer-protection" className="state-source-lead" aria-labelledby="consumer-protection-title">
@@ -90,16 +93,6 @@ export function StateResourcePage({ state }: { state: { code: string; name: stri
         <p className="state-source-note">For a residential-solar complaint, keep the sales proposal, signed or electronic contract, financing or lease documents, utility bills, production records, permits, inspection records, cancellation attempts, and company correspondence.</p>
         <a href={consumerProtection.url} target="_blank" rel="noreferrer">Open the official {state.name} complaint page ↗</a>
       </section>
-
-      {solarCase && (
-        <section id="solar-case" className="state-case-feature" aria-labelledby="solar-case-title">
-          <div className="state-source-meta"><span>{solarCase.relevance}</span><span>{solarCase.caseType} · {solarCase.publishedAt}</span></div>
-          <h2 id="solar-case-title">{solarCase.title}</h2>
-          <p>{solarCase.summary}</p>
-          <small>{solarCase.publisher} · Source dated {solarCase.publishedAt}</small>
-          <a href={solarCase.url} target="_blank" rel="noreferrer">Read the source and case details ↗</a>
-        </section>
-      )}
 
       {currentEnforcementSources.length > 0 && (
         <section id="current-enforcement-sources" className="state-source-section" aria-labelledby="current-enforcement-sources-title">
@@ -118,6 +111,16 @@ export function StateResourcePage({ state }: { state: { code: string; name: stri
               </article>
             ))}
           </div>
+        </section>
+      )}
+
+      {displayedSolarCase && (
+        <section id="solar-case" className="state-case-feature" aria-labelledby="solar-case-title">
+          <div className="state-source-meta"><span>{displayedSolarCase.relevance}</span><span>{displayedSolarCase.caseType} · {displayedSolarCase.publishedAt}</span></div>
+          <h2 id="solar-case-title">{displayedSolarCase.title}</h2>
+          <p>{displayedSolarCase.summary}</p>
+          <small>{displayedSolarCase.publisher} · Source dated {displayedSolarCase.publishedAt}</small>
+          <a href={displayedSolarCase.url} target="_blank" rel="noreferrer">Read the source and case details ↗</a>
         </section>
       )}
 
