@@ -2,11 +2,13 @@ import Link from "next/link";
 import { InfoPage } from "./info-page";
 import { resources, stateSlug } from "../lib/content";
 import { featuredStateSources } from "../lib/featured-state-sources";
+import { getResearchStoriesForState } from "../lib/research-stories";
 import { consumerProtectionByState, getStateSolarCase } from "../lib/state-research";
 
 export function StateResourcePage({ state }: { state: { code: string; name: string; available: boolean } }) {
   const consumerProtection = consumerProtectionByState[state.code];
   const solarCase = getStateSolarCase(state.code);
+  const relatedResearch = getResearchStoriesForState(state.code);
   const stateResources = resources.filter(
     (item) => item.stateCode === state.code
       && item.id !== "ma-electric-company"
@@ -25,12 +27,13 @@ export function StateResourcePage({ state }: { state: { code: string; name: stri
     name: consumerProtection.title,
     description: `${consumerProtection.summary} ${hasExpandedSources ? "Additional source-reviewed state resources are included." : "This page is a starting directory with one documented solar reference, not a complete state research file."}`,
     url: `https://solarcomplaint.com/states/${stateSlug(state.name)}`,
-    dateModified: "2026-08-27",
+    dateModified: relatedResearch.length > 0 ? "2026-08-27" : "2026-08-21",
     spatialCoverage: { "@type": "AdministrativeArea", name: state.name },
     about: [
       { "@type": "Thing", name: `${state.name} consumer complaint route` },
       { "@type": "Thing", name: "Residential solar consumer protection" },
     ],
+    relatedLink: relatedResearch.map((story) => `https://solarcomplaint.com${story.href}`),
     mainEntity: {
       "@type": "ItemList",
       itemListElement: [
@@ -83,6 +86,7 @@ export function StateResourcePage({ state }: { state: { code: string; name: stri
       <nav className="state-question-nav" aria-label={`${state.name} solar resource questions`}>
         <a href="#consumer-protection">Official {state.name} complaint route</a>
         {currentEnforcementSources.length > 0 && <a href="#current-enforcement-sources">Current enforcement sources</a>}
+        {relatedResearch.length > 0 && <a href="#related-research">Related research</a>}
         {displayedSolarCase && <a href="#solar-case">Documented {displayedSolarCase.caseType} reference</a>}
       </nav>
 
@@ -108,6 +112,26 @@ export function StateResourcePage({ state }: { state: { code: string; name: stri
                 <p>{item.summary}</p>
                 <small>{item.publisher} · Source dated {item.publishedAt}</small>
                 <a href={item.url} target="_blank" rel="noreferrer">Open official source ↗</a>
+              </article>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {relatedResearch.length > 0 && (
+        <section id="related-research" className="state-source-section" aria-labelledby="related-research-title">
+          <div className="state-source-section-heading">
+            <span>{String(relatedResearch.length).padStart(2, "0")} related stor{relatedResearch.length === 1 ? "y" : "ies"}</span>
+            <h2 id="related-research-title">Related research</h2>
+          </div>
+          <div className="state-source-grid">
+            {relatedResearch.map((story) => (
+              <article key={story.id}>
+                <span>Solar Consumer Research</span>
+                <h3><Link href={story.href}>{story.title}</Link></h3>
+                <p>{story.deck}</p>
+                <small>Published {story.publishedAt}</small>
+                <Link href={story.href}>Read the source-backed breakdown →</Link>
               </article>
             ))}
           </div>
@@ -152,6 +176,7 @@ export function StateResourcePage({ state }: { state: { code: string; name: stri
       )}
 
       <div className="state-page-links">
+        <Link href="/research">Browse featured research →</Link>
         <Link href="/resources">Choose another state →</Link>
         <Link href="/federal-resources">Browse federal resources →</Link>
         <Link href="/guides">Browse consumer guides →</Link>
