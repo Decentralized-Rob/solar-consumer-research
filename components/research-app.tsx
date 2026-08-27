@@ -93,8 +93,8 @@ export function ResearchApp() {
       <HomeHeader menuOpen={menuOpen} onMenuToggle={() => setMenuOpen((current) => !current)} onMenuClose={() => setMenuOpen(false)} />
       <main id="top">
         <HeroSection stateCode={stateCode} selectedState={selectedState} resourceCount={availableResources.length} onStateChange={changeState} />
-        <FeaturedSection guides={featuredGuides} resources={availableResources.slice(0, 4)} />
         <CaseFeature />
+        <FeaturedSection guides={featuredGuides} resources={availableResources.slice(0, 4)} />
         <PathSection onChoosePath={choosePath} />
         <ResourceDirectory selectedState={selectedState} topic={topic} resources={filteredResources} onTopicChange={setTopic} />
         <UpdatesSection updates={filteredUpdates} />
