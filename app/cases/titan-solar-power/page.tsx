@@ -6,7 +6,7 @@ import "./titan-tracker.css";
 
 export const metadata: Metadata = {
   title: "Titan Solar Power Closure: Customer Resources & Updates",
-  description: "Court records, warranty information, service resources, reporting, and updates for former Titan Solar Power customers.",
+  description: "Court records, service information, reporting, and updates for former Titan Solar Power customers.",
   alternates: { canonical: "/cases/titan-solar-power" },
   openGraph: {
     title: "Titan Solar Power Closure: Customer Resources & Updates",
@@ -81,12 +81,12 @@ export default function TitanSolarPowerPage() {
 
       <main>
         <section className="tt-hero">
-          <div className="tt-kicker"><span>Company tracker</span><i /><span>Last reviewed August 28, 2026</span></div>
+          <div className="tt-kicker"><span>Company tracker</span><i /><span>Last reviewed August 26, 2026</span></div>
           <div className="tt-hero-grid">
             <div>
               <div className="tt-status-pill"><span /> Closed · Chapter 7</div>
               <h1>Titan Solar Power is gone. The systems, loans and questions are not.</h1>
-              <p className="tt-deck">A sourced tracker for former Titan customers looking for court records, warranty information, service resources, reporting and community updates.</p>
+              <p className="tt-deck">A sourced tracker for former Titan customers looking for court records, service information, reporting and community updates.</p>
               <div className="tt-actions"><Link className="tt-button tt-button-primary" href="/cases/titan-solar-power/customer-help">Find the right research path</Link><a className="tt-button tt-button-secondary" href="#tt-updates">Read the timeline</a></div>
             </div>
             <aside className="tt-status-card" aria-label="Current company status">
@@ -113,10 +113,7 @@ export default function TitanSolarPowerPage() {
 
         <section className="tt-section" aria-label="Customer research help">
           <div className="tt-section-heading"><div><p>Customer research help</p><h2>Different problem, different next step.</h2></div><span>Service and repair, a home sale, and a contract or financing concern each require different records.</span></div>
-          <div className="tt-actions">
-            <Link className="tt-button tt-button-primary" href="/cases/titan-solar-power/customer-help">Choose a Titan research path</Link>
-            <Link className="tt-button tt-button-secondary" href="/cases/titan-solar-power/warranty-after-bankruptcy">Check Titan warranty coverage</Link>
-          </div>
+          <Link className="tt-button tt-button-primary" href="/cases/titan-solar-power/customer-help">Choose a Titan research path</Link>
         </section>
 
         <section className="tt-section tt-muted" id="tt-resources">
