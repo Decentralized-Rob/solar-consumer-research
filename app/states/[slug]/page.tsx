@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { StateResourcePage } from "../../../components/state-resource-page";
 import { stateSlug, states } from "../../../lib/content";
 import { consumerProtectionByState, getStateSolarCase } from "../../../lib/state-research";
+import { getTitanStateBankruptcy } from "../../../lib/titan-state-research";
 
 export function generateStaticParams() {
   return states.map((state) => ({ slug: stateSlug(state.name) }));
@@ -14,10 +15,13 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   if (!state) return {};
   const complaintRoute = consumerProtectionByState[state.code];
   const caseReference = getStateSolarCase(state.code);
+  const titanReference = getTitanStateBankruptcy(state.code);
   const title = `${complaintRoute.title} | Solar Consumer Research`;
-  const description = caseReference
-    ? `${complaintRoute.summary} This starting directory also links to a documented ${caseReference.caseType} reference.`
-    : complaintRoute.summary;
+  const description = [
+    complaintRoute.summary,
+    caseReference ? `This directory also links to a documented ${caseReference.caseType} reference.` : "",
+    titanReference ? `Titan Solar Power bankruptcy and warranty resources are included for ${state.name}.` : "",
+  ].filter(Boolean).join(" ");
   return {
     title,
     description,
