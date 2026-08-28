@@ -28,11 +28,6 @@
 - Sunrun investigations, enforcement, settlements, and documented cases: https://solarcomplaint.com/companies/sunrun
 - Connecticut Attorney General lawsuit involving Sunrun: https://solarcomplaint.com/cases/connecticut-attorney-general-sunrun-lawsuit
 - Titan Solar Power closure and bankruptcy tracker: https://solarcomplaint.com/cases/titan-solar-power
-- Titan Solar Power customer research paths: https://solarcomplaint.com/cases/titan-solar-power/customer-help
-- Titan Solar Power warranty after bankruptcy: https://solarcomplaint.com/cases/titan-solar-power/warranty-after-bankruptcy
-  - Separates Titan workmanship/service obligations from manufacturer warranty coverage.
-  - Links directly to the U.S. Bankruptcy Court for the District of Arizona, SolarEdge, Enphase, and EnergyAid source pages.
-  - Links to state consumer-resource pages for the 22 state-named Titan affiliates listed by the bankruptcy court.
 
 ## Source and citation policy
 
@@ -52,8 +47,6 @@
 - Texas page -> Texas Sunrun investigation source + related featured research.
 - Arizona page -> Arizona Sunrun consent agreement + related featured research.
 - Sunrun company page -> Texas investigation + Arizona settlement + Connecticut lawsuit + related research.
-- Titan state pages -> exact state-named Titan bankruptcy debtor/case reference -> official bankruptcy court hub -> Titan warranty and customer research pages.
-- Titan warranty page -> manufacturer sources + relevant Titan state pages.
 
 ## Current coverage
 
