@@ -4,13 +4,11 @@ import { resources, stateSlug } from "../lib/content";
 import { featuredStateSources } from "../lib/featured-state-sources";
 import { getResearchStoriesForState } from "../lib/research-stories";
 import { consumerProtectionByState, getStateSolarCase } from "../lib/state-research";
-import { getTitanStateBankruptcy, titanBankruptcyCourtUrl } from "../lib/titan-state-research";
 
 export function StateResourcePage({ state }: { state: { code: string; name: string; available: boolean } }) {
   const consumerProtection = consumerProtectionByState[state.code];
   const solarCase = getStateSolarCase(state.code);
   const relatedResearch = getResearchStoriesForState(state.code);
-  const titanBankruptcy = getTitanStateBankruptcy(state.code);
   const stateResources = resources.filter(
     (item) => item.stateCode === state.code
       && item.id !== "ma-electric-company"
@@ -22,27 +20,20 @@ export function StateResourcePage({ state }: { state: { code: string; name: stri
   const displayedSolarCase = solarCase && (solarCase.location === state.name || currentEnforcementSources.length === 0)
     ? solarCase
     : undefined;
-  const hasExpandedSources = stateResources.length > 0 || currentEnforcementSources.length > 0 || Boolean(titanBankruptcy);
+  const hasExpandedSources = stateResources.length > 0 || currentEnforcementSources.length > 0;
   const pageSchema = {
     "@context": "https://schema.org",
     "@type": "CollectionPage",
     name: consumerProtection.title,
     description: `${consumerProtection.summary} ${hasExpandedSources ? "Additional source-reviewed state resources are included." : "This page is a starting directory with one documented solar reference, not a complete state research file."}`,
     url: `https://solarcomplaint.com/states/${stateSlug(state.name)}`,
-    dateModified: titanBankruptcy ? "2026-08-28" : relatedResearch.length > 0 ? "2026-08-27" : "2026-08-21",
+    dateModified: relatedResearch.length > 0 ? "2026-08-27" : "2026-08-21",
     spatialCoverage: { "@type": "AdministrativeArea", name: state.name },
     about: [
       { "@type": "Thing", name: `${state.name} consumer complaint route` },
       { "@type": "Thing", name: "Residential solar consumer protection" },
-      titanBankruptcy && { "@type": "Thing", name: `Titan Solar Power ${state.name}` },
-    ].filter(Boolean),
-    relatedLink: [
-      ...relatedResearch.map((story) => `https://solarcomplaint.com${story.href}`),
-      ...(titanBankruptcy ? [
-        "https://solarcomplaint.com/cases/titan-solar-power",
-        "https://solarcomplaint.com/cases/titan-solar-power/warranty-after-bankruptcy",
-      ] : []),
     ],
+    relatedLink: relatedResearch.map((story) => `https://solarcomplaint.com${story.href}`),
     mainEntity: {
       "@type": "ItemList",
       itemListElement: [
@@ -79,17 +70,6 @@ export function StateResourcePage({ state }: { state: { code: string; name: stri
             url: displayedSolarCase.url,
           },
         },
-        titanBankruptcy && {
-          "@type": "ListItem",
-          position: currentEnforcementSources.length + (displayedSolarCase ? 3 : 2),
-          item: {
-            "@type": "WebPage",
-            name: `${titanBankruptcy.debtorName} bankruptcy case reference`,
-            description: `The bankruptcy court lists ${titanBankruptcy.debtorName} as an associated Chapter 7 debtor under case ${titanBankruptcy.caseNumber}.`,
-            provider: { "@type": "GovernmentOrganization", name: "U.S. Bankruptcy Court for the District of Arizona" },
-            url: titanBankruptcyCourtUrl,
-          },
-        },
       ].filter(Boolean),
     },
   };
@@ -107,7 +87,6 @@ export function StateResourcePage({ state }: { state: { code: string; name: stri
         <a href="#consumer-protection">Official {state.name} complaint route</a>
         {currentEnforcementSources.length > 0 && <a href="#current-enforcement-sources">Current enforcement sources</a>}
         {relatedResearch.length > 0 && <a href="#related-research">Related research</a>}
-        {titanBankruptcy && <a href="#titan-solar-power">Titan Solar Power resources</a>}
         {displayedSolarCase && <a href="#solar-case">Documented {displayedSolarCase.caseType} reference</a>}
       </nav>
 
@@ -156,18 +135,6 @@ export function StateResourcePage({ state }: { state: { code: string; name: stri
               </article>
             ))}
           </div>
-        </section>
-      )}
-
-      {titanBankruptcy && (
-        <section id="titan-solar-power" className="state-case-feature" aria-labelledby="titan-solar-power-title">
-          <div className="state-source-meta"><span>Official bankruptcy source</span><span>Chapter 7 · June 2024</span></div>
-          <h2 id="titan-solar-power-title">Titan Solar Power resources for {state.name}</h2>
-          <p>The U.S. Bankruptcy Court for the District of Arizona lists <strong>{titanBankruptcy.debtorName}</strong> as an associated Titan debtor under case <strong>{titanBankruptcy.caseNumber}</strong>. The listing identifies the state-named debtor; it does not determine the status of any individual customer&apos;s contract, loan, warranty, or bankruptcy claim.</p>
-          <small>U.S. Bankruptcy Court for the District of Arizona</small>
-          <a href={titanBankruptcyCourtUrl} target="_blank" rel="noreferrer">View the official Titan bankruptcy case hub ↗</a>
-          <Link href="/cases/titan-solar-power/warranty-after-bankruptcy">Titan Solar Power warranty after bankruptcy →</Link>
-          <Link href="/cases/titan-solar-power">Titan Solar Power closure and bankruptcy tracker →</Link>
         </section>
       )}
 
