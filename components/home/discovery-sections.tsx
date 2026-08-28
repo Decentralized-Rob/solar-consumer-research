@@ -37,7 +37,7 @@ export function HeroSection({
   onStateChange,
 }: {
   stateCode: string;
-  selectedState: State;
+  selectedState?: State;
   resourceCount: number;
   onStateChange: (stateCode: string) => void;
 }) {
@@ -68,29 +68,36 @@ export function HeroSection({
           value={stateCode}
           onChange={(event) => onStateChange(event.target.value)}
         >
+          <option value="" disabled>Choose a state</option>
           {states.map((state) => (
             <option key={state.code} value={state.code}>{state.name}</option>
           ))}
         </select>
-        <div className={`home-state-status ${selectedState.available ? "" : "is-coming-soon"}`}>
-          <span>{selectedState.code}</span>
-          <div>
-            <strong>{selectedState.name}</strong>
-            <small>
+        {selectedState ? (
+          <>
+            <div className={`home-state-status ${selectedState.available ? "" : "is-coming-soon"}`}>
+              <span>{selectedState.code}</span>
+              <div>
+                <strong>{selectedState.name}</strong>
+                <small>
+                  {selectedState.available
+                    ? `${resourceCount} verified state resources`
+                    : "Verified statewide solar starting point"}
+                </small>
+              </div>
+            </div>
+            <p>
               {selectedState.available
-                ? `${resourceCount} verified state resources`
-                : "Verified statewide solar starting point"}
-            </small>
-          </div>
-        </div>
-        <p>
-          {selectedState.available
-            ? "State-specific resources are available below."
-            : "A solar-specific state source is available now. Additional consumer-protection research is in progress."}
-        </p>
-        <a className="home-state-page-link" href={`/states/${stateSlug(selectedState.name)}`}>
-          Open the {selectedState.name} page →
-        </a>
+                ? "State-specific resources are available below."
+                : "A solar-specific state source is available now. Additional consumer-protection research is in progress."}
+            </p>
+            <a className="home-state-page-link" href={`/states/${stateSlug(selectedState.name)}`}>
+              Open the {selectedState.name} page →
+            </a>
+          </>
+        ) : (
+          <p>Choose a state to see complaint channels, consumer agencies, public records, and state-specific resources.</p>
+        )}
       </aside>
     </section>
   );
