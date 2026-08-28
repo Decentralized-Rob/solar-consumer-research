@@ -59,6 +59,7 @@ export function HomeFooter() {
           <a href="/corrections">Corrections</a>
           <a href="/privacy">Privacy</a>
           <a href="/disclaimer">Disclaimer</a>
+          <a href="https://www.facebook.com/SolarComplaint/" target="_blank" rel="noreferrer">Facebook</a>
         </nav>
         <p>General information only. No legal advice or attorney-client relationship.</p>
       </div>
