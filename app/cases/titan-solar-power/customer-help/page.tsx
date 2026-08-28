@@ -5,7 +5,7 @@ import "./customer-help.css";
 
 export const metadata: Metadata = {
   title: "Titan Solar Power Customer Help: Service, Home Sales & Financing Research",
-  description: "Research paths for former Titan Solar Power customers with service, warranty, home-sale, contract, or financing questions.",
+  description: "Research paths for former Titan Solar Power customers with service, home-sale, contract, or financing questions.",
   alternates: { canonical: "/cases/titan-solar-power/customer-help" },
 };
 
@@ -35,7 +35,7 @@ export default function TitanCustomerHelpPage() {
     <div className="th-shell">
       <header className="th-header">
         <Link href="/" aria-label="Solar Consumer Research home"><Image src="/brand/solar-consumer-research.svg" alt="" width={690} height={104} priority unoptimized /></Link>
-        <nav aria-label="Page navigation"><Link href="/cases/titan-solar-power">Titan updates</Link><a href="#paths">Research paths</a><Link href="/cases/titan-solar-power/warranty-after-bankruptcy">Warranty</Link></nav>
+        <nav aria-label="Page navigation"><Link href="/cases/titan-solar-power">Titan updates</Link><a href="#paths">Research paths</a><a href="#energyaid">EnergyAid</a></nav>
       </header>
       <main className="th-main">
         <section className="th-hero">
@@ -46,10 +46,6 @@ export default function TitanCustomerHelpPage() {
         <section className="th-section" id="paths">
           <div className="th-section-head"><div><p className="th-eyebrow">Choose a research path</p><h2>Three common situations</h2></div><p>This is general research help, not a legal eligibility test or advice about whether to make a payment, settle a debt, or file bankruptcy.</p></div>
           <div className="th-paths">{paths.map((path) => <article className="th-path" key={path.number}><b>{path.number}</b><h3>{path.title}</h3><p>{path.copy}</p><ul>{path.records.map((record) => <li key={record}>{record}</li>)}</ul></article>)}</div>
-        </section>
-        <section className="th-note">
-          <div><p className="th-eyebrow">Warranty question</p><h2>Titan is gone. Some equipment coverage may remain.</h2></div>
-          <div><p>Manufacturer warranties are separate from Titan&apos;s own workmanship or service obligations. SolarEdge and Enphase both publish guidance for homeowners whose installer went out of business.</p><Link href="/cases/titan-solar-power/warranty-after-bankruptcy">Check Titan Solar Power warranty coverage →</Link></div>
         </section>
         <section className="th-note" id="energyaid">
           <div><p className="th-eyebrow">EnergyAid’s role</p><h2>Service option, not Titan’s replacement.</h2></div>
