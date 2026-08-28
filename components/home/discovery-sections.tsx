@@ -37,7 +37,7 @@ export function HeroSection({
   onStateChange,
 }: {
   stateCode: string;
-  selectedState?: State;
+  selectedState: State | undefined;
   resourceCount: number;
   onStateChange: (stateCode: string) => void;
 }) {
