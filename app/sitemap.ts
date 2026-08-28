@@ -1,18 +1,14 @@
 import type { MetadataRoute } from "next";
 import { stateSlug, states } from "../lib/content";
 import { researchStories } from "../lib/research-stories";
-import { titanStateBankruptcyByCode } from "../lib/titan-state-research";
 
 const baseUrl = "https://solarcomplaint.com";
-const stateLastModifiedByCode: Record<string, string> = {
-  MI: "2026-08-27",
-  ...Object.fromEntries(Object.keys(titanStateBankruptcyByCode).map((code) => [code, "2026-08-28"])),
-};
+const recentlyUpdatedStates = new Set(["MI", "TX", "AZ"]);
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const statePages = states.filter((state) => state.available).map((state) => ({
     url: `${baseUrl}/states/${stateSlug(state.name)}`,
-    lastModified: new Date(stateLastModifiedByCode[state.code] ?? "2026-08-21"),
+    lastModified: new Date(recentlyUpdatedStates.has(state.code) ? "2026-08-27" : "2026-08-21"),
     changeFrequency: "monthly" as const,
     priority: 0.8,
   }));
@@ -39,9 +35,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${baseUrl}/corrections`, lastModified: new Date("2026-08-16"), changeFrequency: "yearly", priority: 0.3 },
     { url: `${baseUrl}/privacy`, lastModified: new Date("2026-08-16"), changeFrequency: "yearly", priority: 0.2 },
     { url: `${baseUrl}/disclaimer`, lastModified: new Date("2026-08-16"), changeFrequency: "yearly", priority: 0.2 },
-    { url: `${baseUrl}/cases/titan-solar-power`, lastModified: new Date("2026-08-28"), changeFrequency: "weekly", priority: 0.9 },
-    { url: `${baseUrl}/cases/titan-solar-power/customer-help`, lastModified: new Date("2026-08-28"), changeFrequency: "monthly", priority: 0.8 },
-    { url: `${baseUrl}/cases/titan-solar-power/warranty-after-bankruptcy`, lastModified: new Date("2026-08-28"), changeFrequency: "monthly", priority: 0.85 },
+    { url: `${baseUrl}/cases/titan-solar-power`, lastModified: new Date("2026-08-26"), changeFrequency: "weekly", priority: 0.9 },
+    { url: `${baseUrl}/cases/titan-solar-power/customer-help`, lastModified: new Date("2026-08-26"), changeFrequency: "monthly", priority: 0.8 },
     { url: `${baseUrl}/cases/connecticut-attorney-general-sunrun-lawsuit`, lastModified: new Date("2026-08-18"), changeFrequency: "monthly", priority: 0.8 },
     ...statePages,
   ];
