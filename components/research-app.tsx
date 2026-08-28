@@ -22,12 +22,12 @@ import type { TopicFilter } from "./home/shared";
 import { useResearchContent } from "./home/use-research-content";
 
 export function ResearchApp() {
-  const [stateCode, setStateCode] = useState("MA");
+  const [stateCode, setStateCode] = useState("");
   const [topic, setTopic] = useState<TopicFilter>("all");
   const [menuOpen, setMenuOpen] = useState(false);
   const { resourceItems, guideItems, updateItems } = useResearchContent(stateCode);
 
-  const selectedState = states.find((state) => state.code === stateCode) ?? states[0];
+  const selectedState = states.find((state) => state.code === stateCode);
   const availableResources = useMemo(() => {
     const consumerProtection = consumerProtectionByState[stateCode];
     const solarCase = getStateSolarCase(stateCode);
@@ -102,7 +102,7 @@ export function ResearchApp() {
 
   function choosePath(nextTopic: Exclude<TopicFilter, "all">) {
     setTopic(nextTopic);
-    document.getElementById("resource-directory")?.scrollIntoView({ behavior: "smooth" });
+    document.getElementById(selectedState ? "resource-directory" : "start")?.scrollIntoView({ behavior: "smooth" });
   }
 
   return (
@@ -113,7 +113,9 @@ export function ResearchApp() {
         <CaseFeature />
         <FeaturedSection guides={featuredGuides} resources={availableResources.slice(0, 4)} />
         <PathSection onChoosePath={choosePath} />
-        <ResourceDirectory selectedState={selectedState} topic={topic} resources={filteredResources} onTopicChange={setTopic} />
+        {selectedState ? (
+          <ResourceDirectory selectedState={selectedState} topic={topic} resources={filteredResources} onTopicChange={setTopic} />
+        ) : null}
         <UpdatesSection updates={filteredUpdates} />
         <SearchPlaceholder />
         <QuestionsSection />

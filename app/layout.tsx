@@ -86,6 +86,7 @@ export default function RootLayout({
                   "@id": "https://solarcomplaint.com/#publisher",
                   name: "Solar Consumer Research",
                   url: "https://solarcomplaint.com",
+                  sameAs: ["https://www.facebook.com/SolarComplaint/"],
                   publishingPrinciples: "https://solarcomplaint.com/methodology",
                   ethicsPolicy: "https://solarcomplaint.com/corrections",
                 },
