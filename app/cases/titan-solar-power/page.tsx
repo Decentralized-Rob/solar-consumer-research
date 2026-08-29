@@ -117,6 +117,7 @@ export default function TitanSolarPowerPage() {
             <Link className="tt-button tt-button-primary" href="/cases/titan-solar-power/customer-help">Choose a Titan research path</Link>
             <Link className="tt-button tt-button-secondary" href="/cases/titan-solar-power/warranty-after-bankruptcy">Check Titan warranty coverage</Link>
           </div>
+          <p>In Arizona, the state resource page also covers contractor complaints, Attorney General complaints and utility issues: <Link href="/states/arizona">Arizona solar complaint and consumer resources →</Link></p>
         </section>
 
         <section className="tt-section tt-muted" id="tt-resources">
