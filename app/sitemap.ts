@@ -7,6 +7,7 @@ const baseUrl = "https://solarcomplaint.com";
 const stateLastModifiedByCode: Record<string, string> = {
   MI: "2026-08-27",
   ...Object.fromEntries(Object.keys(titanStateBankruptcyByCode).map((code) => [code, "2026-08-28"])),
+  AZ: "2026-08-29",
 };
 
 export default function sitemap(): MetadataRoute.Sitemap {

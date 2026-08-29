@@ -13,6 +13,7 @@
 - Corrections: https://solarcomplaint.com/corrections
 - Disclaimer: https://solarcomplaint.com/disclaimer
 - State pages: https://solarcomplaint.com/states/{state-name}
+- Arizona solar consumer hub: https://solarcomplaint.com/states/arizona
 
 ## Featured research
 
@@ -34,6 +35,14 @@
   - Links directly to the U.S. Bankruptcy Court for the District of Arizona, SolarEdge, Enphase, and EnergyAid source pages.
   - Links to state consumer-resource pages for the 22 state-named Titan affiliates listed by the bankruptcy court.
 
+## Arizona source hub
+
+- Arizona solar complaints and consumer rights: https://solarcomplaint.com/states/arizona
+  - Separates solar-company complaints, contractor/workmanship complaints, and regulated-utility disputes.
+  - Summarizes Arizona-specific contract disclosures under A.R.S. § 44-1763, warranty and installation rules under A.R.S. § 44-1762, and interconnection requirements under A.R.S. § 44-1764.
+  - Provides a detailed source-backed breakdown of the May 22, 2025 Sunrun/Vivint Solar consent agreement, including complaint tracking, response and status-update requirements, restitution categories, roof-work provisions, and home-sale/lease-transfer provisions.
+  - Links directly to the Arizona Attorney General, Arizona Legislature, Arizona Registrar of Contractors, Arizona Corporation Commission, and U.S. Bankruptcy Court sources.
+
 ## Source and citation policy
 
 - Research stories identify and link to the primary records supporting material claims.
@@ -50,7 +59,7 @@
 - Featured story -> relevant state pages -> primary government sources.
 - Michigan page -> Michigan enforcement source + related featured research.
 - Texas page -> Texas Sunrun investigation source + related featured research.
-- Arizona page -> Arizona Sunrun consent agreement + related featured research.
+- Arizona page -> Sunrun consent agreement + Arizona solar statutes + Attorney General complaint route + contractor and utility complaint routes + related featured research.
 - Sunrun company page -> Texas investigation + Arizona settlement + Connecticut lawsuit + related research.
 - Titan state pages -> exact state-named Titan bankruptcy debtor/case reference -> official bankruptcy court hub -> Titan warranty and customer research pages.
 - Titan warranty page -> manufacturer sources + relevant Titan state pages.
@@ -62,6 +71,7 @@
 - Original source-backed research that connects related records without collapsing their procedural differences.
 - Federal consumer, finance, and complaint resources.
 - Company and case tracking where a sufficient public-source record exists.
+- Expanded Arizona solar consumer, contract, contractor, utility, Sunrun settlement, and current rooftop-solar resources.
 - Expanded Massachusetts consumer protection, utility, public-record, and solar-program resources.
 - State-page depth varies. Pages without an expanded source section are starting directories, not complete state research files.
 
