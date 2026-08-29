@@ -80,18 +80,18 @@ export function ArizonaResourcePage() {
         "@type": "CollectionPage",
         "@id": `${canonicalUrl}#page`,
         url: canonicalUrl,
-        name: "Arizona Solar Complaints, Sunrun Settlement & Consumer Rights",
+        name: "Arizona Solar Complaints: Sunrun Settlement, State Rules and Where to File",
         description:
-          "Arizona solar consumer resources covering Sunrun settlement relief, Attorney General complaints, contractor complaints, solar contract disclosures, warranties, interconnection, and utility disputes.",
+          "Arizona solar complaint routes, Sunrun and Vivint Solar settlement terms, contractor complaints, contract disclosures, warranties, interconnection and official state sources.",
         dateModified: "2026-08-29",
         inLanguage: "en-US",
         spatialCoverage: { "@type": "AdministrativeArea", name: "Arizona" },
         isPartOf: { "@id": "https://solarcomplaint.com/#website" },
         about: [
           { "@type": "Thing", name: "Arizona solar complaints" },
-          { "@type": "Thing", name: "Arizona residential solar consumer protection" },
           { "@type": "Thing", name: "Sunrun Arizona settlement" },
           { "@type": "Thing", name: "Arizona solar contracts" },
+          { "@type": "Thing", name: "Arizona solar contractor complaints" },
         ],
         mainEntity: {
           "@type": "ItemList",
@@ -122,9 +122,9 @@ export function ArizonaResourcePage() {
   return (
     <InfoPage
       className="state-resource-page arizona-resource-page"
-      eyebrow="Arizona solar consumer guide · reviewed August 29, 2026"
-      title="Arizona Solar Complaints, Sunrun Settlement & Consumer Rights"
-      lede="Start here if you have a residential solar problem in Arizona. This page separates complaints against a solar company from contractor and utility disputes, then explains the Arizona-specific contract rules and the court-approved Sunrun settlement."
+      eyebrow="Arizona solar consumer resources · reviewed August 29, 2026"
+      title="Arizona Solar Complaints: Sunrun Settlement, State Rules and Where to File"
+      lede="Arizona has different complaint routes depending on the problem. Start with the Sunrun settlement if it applies to you, or use the Attorney General, Registrar of Contractors or Corporation Commission route that fits the issue."
     >
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }} />
 
@@ -136,155 +136,157 @@ export function ArizonaResourcePage() {
 
       <nav className="state-question-nav" aria-label="Arizona solar consumer questions">
         <a href="#sunrun-settlement">Sunrun or Vivint Solar complaint?</a>
-        <a href="#where-to-complain">Where should I file an Arizona solar complaint?</a>
+        <a href="#where-to-complain">Where should I file?</a>
         <a href="#contract-rules">What does Arizona require in a solar contract?</a>
-        <a href="#warranty-installation">What does Arizona say about warranties and installation?</a>
-        <a href="#utility-interconnection">Is the problem with the solar company or my utility?</a>
-        <a href="#sales-red-flags">What sales claims should I document?</a>
-        <a href="#current-arizona">What else is happening with Arizona rooftop solar?</a>
-        <a href="#sources">Open the primary sources</a>
+        <a href="#warranty-installation">What rules apply to installation and warranties?</a>
+        <a href="#utility-interconnection">Is this a solar-company problem or a utility problem?</a>
+        <a href="#sales-red-flags">What sales claims should I save?</a>
+        <a href="#other-arizona-records">Other Arizona solar records</a>
+        <a href="#sources">Primary sources</a>
       </nav>
 
       <section id="sunrun-settlement" className="state-source-lead" aria-labelledby="sunrun-settlement-title">
-        <div className="state-source-meta"><span>Arizona Sunrun settlement</span><span>Maricopa County Superior Court · May 22, 2025</span></div>
-        <h2 id="sunrun-settlement-title">Arizona&apos;s Sunrun settlement is more than a $1.25 million headline</h2>
+        <div className="state-source-meta"><span>Sunrun and Vivint Solar</span><span>Maricopa County Superior Court · May 22, 2025</span></div>
+        <h2 id="sunrun-settlement-title">What the Arizona Sunrun settlement actually requires</h2>
         <p>
-          Arizona filed a consumer-fraud action against Sunrun Inc. and Vivint Solar Inc. and resolved it through a court-approved stipulated consent agreement. The State alleged violations of the Arizona Consumer Fraud Act involving solar marketing, advertising, sales and leasing. Sunrun and Vivint Solar denied the allegations, and the agreement states that the settlement is not an admission of wrongdoing.
+          Arizona sued Sunrun Inc. and Vivint Solar Inc. under the Arizona Consumer Fraud Act over alleged conduct involving solar marketing, advertising, sales and leasing. The case ended in a court-approved stipulated consent agreement. Sunrun and Vivint Solar denied the allegations, and the agreement says the settlement is not an admission of wrongdoing.
         </p>
         <p>
-          The agreement requires <strong>$600,000 in consumer restitution</strong>, <strong>$600,000 in civil penalties</strong>, and <strong>$50,000 in attorney&apos;s fees and costs</strong>. The Arizona Attorney General&apos;s consumer page says eligible consumers may seek restitution, repairs and/or service-contract modification.
+          The agreement sets <strong>$600,000 in civil penalties</strong>, <strong>$50,000 in attorney&apos;s fees and costs</strong>, and a <strong>$600,000 Total Restitution Amount</strong>. The restitution amount is not limited to cash checks. The agreement allows qualifying resolutions to include cash, credits, rate reductions, contract changes or cancellations, repairs, labor and other relief. If the credited restitution is below $600,000 after the two-year restitution period, the remaining amount is paid to the State for the Consumer Protection-Consumer Fraud Revolving Fund.
         </p>
         <p className="state-source-note">
-          The agreement defines an eligible complaint broadly as an Arizona consumer or customer complaint, issue or question received by Sunrun during the two years following the agreement&apos;s effective date, plus unresolved complaints received before the effective date. Eligibility and the available resolution depend on the agreement and the individual facts.
+          The agreement covers eligible complaints received during the two years after May 22, 2025 and unresolved complaints received before that date. The Arizona Attorney General directs eligible consumers to file through the Sunrun complaint route listed on its settlement page.
         </p>
-        <a href={sources.sunrunSettlement.url} target="_blank" rel="noreferrer">Arizona AG: Sunrun settlement instructions ↗</a>
+        <a href={sources.sunrunSettlement.url} target="_blank" rel="noreferrer">Arizona AG settlement instructions ↗</a>
       </section>
 
       <section className="state-source-section" aria-labelledby="settlement-details-title">
         <div className="state-source-section-heading">
-          <span>What the agreement requires</span>
-          <h2 id="settlement-details-title">The complaint-handling rules are unusually specific</h2>
+          <span>Complaint handling</span>
+          <h2 id="settlement-details-title">How Sunrun has to handle Arizona complaints under the agreement</h2>
         </div>
         <div className="state-source-grid">
           <article>
-            <span>Complaint tracking</span>
-            <h3>A unique complaint number</h3>
-            <p>When an Arizona consumer contacts customer service with an issue or question, the agreement requires a unique complaint number so the matter and its outcome can be tracked.</p>
-            <a href={sources.sunrunAgreement.url} target="_blank" rel="noreferrer">Consent agreement ¶¶ 16–18 ↗</a>
+            <span>Tracking</span>
+            <h3>Unique complaint number</h3>
+            <p>An Arizona consumer who contacts customer service with an issue or question must be assigned a unique complaint number so the issue and outcome can be tracked.</p>
+            <a href={sources.sunrunAgreement.url} target="_blank" rel="noreferrer">Agreement ¶ 17 ↗</a>
           </article>
           <article>
             <span>Initial response</span>
             <h3>Two-business-day response target</h3>
-            <p>Sunrun must use commercially reasonable efforts to staff customer service at levels sufficient to provide a response within two business days. Read receipts and generic automated replies do not count as a response.</p>
-            <a href={sources.sunrunAgreement.url} target="_blank" rel="noreferrer">Consent agreement ¶ 18 ↗</a>
+            <p>Sunrun must use commercially reasonable efforts to staff customer service at levels sufficient to provide a response within two business days. A read receipt or generic automated reply does not count.</p>
+            <a href={sources.sunrunAgreement.url} target="_blank" rel="noreferrer">Agreement ¶ 18 ↗</a>
           </article>
           <article>
-            <span>Unresolved complaints</span>
+            <span>Still unresolved</span>
             <h3>Written status updates</h3>
-            <p>If a matter is still unresolved 60 days after the initial response, the agreement requires a written status update. It then calls for commercially reasonable efforts to send another written update at least every 30 days while resolution efforts continue.</p>
-            <a href={sources.sunrunAgreement.url} target="_blank" rel="noreferrer">Consent agreement ¶¶ 20–21 ↗</a>
+            <p>If the issue is still unresolved 60 days after the initial response, the agreement requires a written status update. It then calls for commercially reasonable efforts to send another written update at least every 30 days while the matter remains unresolved.</p>
+            <a href={sources.sunrunAgreement.url} target="_blank" rel="noreferrer">Agreement ¶ 21 ↗</a>
           </article>
           <article>
-            <span>Resolution period</span>
-            <h3>At least 180 days of resolution efforts</h3>
-            <p>The agreement says Sunrun must attempt to resolve the complaint for at least 180 days after its initial response before determining that a mutually agreeable resolution cannot be reached.</p>
-            <a href={sources.sunrunAgreement.url} target="_blank" rel="noreferrer">Consent agreement ¶ 21 ↗</a>
+            <span>180-day provisions</span>
+            <h3>There are two separate 180-day timeframes</h3>
+            <p>For general complaint handling, the agreement requires at least 180 days of resolution efforts after the initial response before Sunrun determines that a mutually agreeable resolution cannot be reached. For an Eligible Complaint under the restitution process, the agreement calls for 180 days of informal resolution efforts after receipt before an additional resolution attempt and specified options.</p>
+            <a href={sources.sunrunAgreement.url} target="_blank" rel="noreferrer">Agreement ¶¶ 21 and 43–45 ↗</a>
           </article>
         </div>
       </section>
 
       <section className="state-case-feature" aria-labelledby="sunrun-remedies-title">
-        <div className="state-source-meta"><span>Potential complaint resolutions</span><span>Read the agreement before relying on any remedy</span></div>
-        <h2 id="sunrun-remedies-title">Cash is only one form of relief contemplated by the settlement</h2>
+        <div className="state-source-meta"><span>Restitution process</span><span>Agreement ¶¶ 42–49</span></div>
+        <h2 id="sunrun-remedies-title">What can count toward the $600,000 restitution amount</h2>
         <p>
-          The restitution section recognizes several ways an eligible complaint may be resolved and credited toward the $600,000 restitution amount. Those include cash payments, credits, rate reductions, reduced monthly payments, reductions to annual increases, contract cancellations, waived amounts, repairs, free labor, system removal or reinstallation work, and other contractual adjustments. Those categories do not mean every consumer is entitled to every remedy.
+          The agreement lists several forms of relief that can be credited toward the Total Restitution Amount. They include cash payments, credits, rate reductions, reduced monthly payments, reductions to annual increases, contract cancellations, waived amounts, repairs, free labor, system removal or reinstallation work, and other contractual adjustments.
         </p>
         <p>
-          If an eligible complaint remains unresolved after 180 days, the agreement also requires at least one additional attempt to resolve it using specified options that can include contractual restitution, continuing a lease with a cash payment or credit, and mediation or arbitration when the consumer&apos;s contract provides for those processes.
+          Those are categories allowed by the agreement. They are not a promise that every eligible consumer will receive a particular remedy or dollar amount.
         </p>
-        <a href={sources.sunrunAgreement.url} target="_blank" rel="noreferrer">Read the restitution provisions, ¶¶ 42–49 ↗</a>
+        <a href={sources.sunrunAgreement.url} target="_blank" rel="noreferrer">Read the restitution provisions ↗</a>
       </section>
 
       <section className="state-source-section" aria-labelledby="sunrun-specific-problems-title">
         <div className="state-source-section-heading">
-          <span>High-intent consumer questions</span>
-          <h2 id="sunrun-specific-problems-title">Roof work and home sales have their own settlement rules</h2>
+          <span>Sunrun contract issues</span>
+          <h2 id="sunrun-specific-problems-title">Roof work and selling a home</h2>
         </div>
         <div className="state-source-grid">
           <article>
             <span>Roof removal and reinstallation</span>
-            <h3>What if the panels have to come off for a roof?</h3>
-            <p>The agreement requires a written estimated removal/reinstallation cost. After the customer agrees to the cost, it sets a goal of completing removal within 90 days. After roof or construction work is finished, it sets another 90-day goal for reinstallation and reactivation. The agreement also provides for certain credits, refunds or payments when delay beyond those periods is within Sunrun&apos;s control.</p>
-            <a href={sources.sunrunAgreement.url} target="_blank" rel="noreferrer">Consent agreement ¶¶ 30–32 ↗</a>
+            <h3>If the panels have to come off for roof work</h3>
+            <p>The agreement requires a written estimate of the cost to remove and reinstall the system. If the customer agrees to pay that cost, Sunrun must use commercially reasonable efforts to schedule the work, with a goal of completing removal within 90 days of the customer&apos;s notification. After the customer reports that the roof or other construction work is finished, the agreement sets another 90-day goal for reinstallation and reactivation.</p>
+            <p>When delay beyond those periods is not caused by forces outside Sunrun&apos;s control, the agreement provides for credits, refunds or payments for certain lease payments, fees or charges that accrue during the excess delay.</p>
+            <a href={sources.sunrunAgreement.url} target="_blank" rel="noreferrer">Agreement ¶¶ 30–32 ↗</a>
           </article>
           <article>
             <span>Home sale and lease transfer</span>
-            <h3>What if I am selling a home with Sunrun solar?</h3>
-            <p>After notice of a pending or completed home sale, the agreement requires a reasonable lease-assignment form and updated buyout price within 30 days. It also addresses credit review, billing transfer and refunds after an approved assignment, and says assignments may not be unreasonably hindered or delayed.</p>
-            <a href={sources.sunrunAgreement.url} target="_blank" rel="noreferrer">Consent agreement ¶¶ 33–37 ↗</a>
+            <h3>If you are selling a home with Sunrun solar</h3>
+            <p>After notice of a pending or completed home sale, the agreement requires a reasonable lease-assignment form and an updated buyout price within 30 days. It also sets timelines for any required credit review and for moving invoices to an approved assignee after closing.</p>
+            <p>The agreement says Sunrun and Vivint Solar may not unreasonably hinder or delay an assignment.</p>
+            <a href={sources.sunrunAgreement.url} target="_blank" rel="noreferrer">Agreement ¶¶ 33–37 ↗</a>
           </article>
         </div>
       </section>
 
       <section id="where-to-complain" className="state-source-section" aria-labelledby="where-to-complain-title">
         <div className="state-source-section-heading">
-          <span>Complaint routing</span>
-          <h2 id="where-to-complain-title">Where should I file an Arizona solar complaint?</h2>
+          <span>Arizona complaint routes</span>
+          <h2 id="where-to-complain-title">Where to file an Arizona solar complaint</h2>
         </div>
         <div className="state-source-grid">
           <article>
             <span>Sales, advertising, contracts</span>
             <h3>Arizona Attorney General</h3>
-            <p>Use the Attorney General&apos;s consumer complaint process for alleged deceptive or unfair practices involving the sale or advertising of goods and services. The office asks consumers to provide a dated chronology and copies of contracts, advertisements, warranties, proof of payment and correspondence.</p>
+            <p>The Attorney General investigates consumer complaints involving deceptive or unfair practices in the sale or advertising of goods and services. Its complaint guidance asks for events in date order and copies of contracts, advertisements, warranties, proof of payment and other supporting records.</p>
             <a href={sources.agComplaint.url} target="_blank" rel="noreferrer">File an Arizona consumer complaint ↗</a>
           </article>
           <article>
             <span>Installation, workmanship, licensing</span>
             <h3>Arizona Registrar of Contractors</h3>
-            <p>The ROC investigates alleged violations of licensed and unlicensed contracting laws. Its formal complaint process can include a jobsite inspection, a written directive for corrective work and, when warranted, referral to the ROC legal process.</p>
+            <p>The ROC investigates alleged violations of licensed and unlicensed contracting laws. A workmanship complaint can lead to a jobsite inspection and, when the investigator finds work below minimum industry standards, a written directive for corrective work.</p>
             <a href={sources.rocComplaint.url} target="_blank" rel="noreferrer">Open the ROC complaint process ↗</a>
           </article>
           <article>
             <span>Utility rates, billing, utility service</span>
             <h3>Arizona Corporation Commission</h3>
-            <p>The ACC can investigate certain disputes involving regulated utilities, including rates, billing responsibility and utility service. Its Consumer Services page expressly says it cannot assist with complaints regarding solar companies.</p>
+            <p>The ACC can investigate certain disputes involving regulated utilities, including rates, billing responsibility, utility service and utility procedures. Its Consumer Services page specifically says it cannot assist with complaints regarding solar companies.</p>
             <a href={sources.accConsumer.url} target="_blank" rel="noreferrer">ACC Utilities Consumer Services ↗</a>
           </article>
           <article>
-            <span>Sunrun / Vivint settlement</span>
-            <h3>Follow the settlement complaint route</h3>
-            <p>For a complaint seeking relief under the Sunrun agreement, use the complaint instructions on the Arizona Attorney General&apos;s dedicated Sunrun settlement page. A new issue may also need to be reported separately to the Attorney General as instructed there.</p>
+            <span>Sunrun and Vivint Solar</span>
+            <h3>Arizona settlement complaint route</h3>
+            <p>The Attorney General has a dedicated page for consumers seeking relief under the 2025 Sunrun agreement. It also explains what to do when the complaint involves a new Sunrun or Vivint Solar issue outside the settlement process.</p>
             <a href={sources.sunrunSettlement.url} target="_blank" rel="noreferrer">Arizona AG Sunrun settlement page ↗</a>
           </article>
         </div>
       </section>
 
       <section id="contract-rules" className="state-case-feature" aria-labelledby="contract-rules-title">
-        <div className="state-source-meta"><span>Arizona-specific solar law</span><span>A.R.S. § 44-1763</span></div>
-        <h2 id="contract-rules-title">Arizona law requires unusually detailed solar contract disclosures</h2>
+        <div className="state-source-meta"><span>Arizona law</span><span>A.R.S. § 44-1763</span></div>
+        <h2 id="contract-rules-title">What Arizona law requires in a solar contract</h2>
         <p>
-          Arizona&apos;s distributed-energy contract statute applies to agreements governing the financing, sale or lease of covered systems. Among other things, the agreement must be signed and dated, use at least ten-point type, and include a separately acknowledged right to rescind for at least three business days after signing and before installation.
+          For agreements covered by A.R.S. § 44-1763, the contract must be signed and dated, use at least ten-point type, and include a separately acknowledged right to rescind for at least three business days after signing and before installation.
         </p>
         <p>
-          The statute also requires disclosures about total cost, interest and fees, payment terms, tax incentives and conditions, warranty or maintenance transfers, restrictions on transferring the system or the underlying property, and the total costs of maintaining and operating the system over its life.
+          The statute also requires disclosures about total price or cost, interest and fees, payment terms, certain tax incentives and conditions, warranty or maintenance transfers, restrictions affecting transfer of the system or the property, and the total cost of maintaining and operating the system over its life.
         </p>
         <p className="state-source-note">
-          Savings claims receive special treatment. If a solar sales document or presentation states or suggests that a system will create financial savings, Arizona law requires the methodology to be substantiated. Specific comparative estimates are also subject to historical-rate and projected-rate disclosure requirements. The statute warns that utility rates, rate structures and tax incentives can change.
+          Savings claims have additional rules. A sales document or presentation that states or suggests financial savings must substantiate the methodology used to calculate those savings. The statute also contains rules for historical and projected utility-rate comparisons and warns that utility rates, rate structures and tax incentives can change. Section 44-1763 also contains an exception for certain transactions involving the sale or transfer of the real property.
         </p>
         <a href={sources.contracts.url} target="_blank" rel="noreferrer">Read A.R.S. § 44-1763 ↗</a>
       </section>
 
       <section className="state-source-section" aria-labelledby="contract-check-title">
         <div className="state-source-section-heading">
-          <span>Documents to compare</span>
-          <h2 id="contract-check-title">If the dispute is about what you were promised, preserve both the sales pitch and the contract</h2>
+          <span>What to save</span>
+          <h2 id="contract-check-title">If the dispute is about what the salesperson promised</h2>
         </div>
         <div className="state-source-grid">
           <article>
-            <span>Costs and financing</span>
-            <h3>Total price, fees and payment schedule</h3>
-            <p>Keep the signed agreement, financing documents and any proposal showing the system price, dealer or installation charges, payment amount, payment frequency and escalator or annual increase.</p>
-            <a href={sources.contracts.url} target="_blank" rel="noreferrer">Compare against the Arizona disclosure statute ↗</a>
+            <span>Price and financing</span>
+            <h3>Contract, financing and payment schedule</h3>
+            <p>Keep the signed agreement, financing documents and proposal showing the system price, installation or service fees, payment amount, payment frequency and any annual increase.</p>
+            <a href={sources.contracts.url} target="_blank" rel="noreferrer">Arizona contract disclosures ↗</a>
           </article>
           <article>
             <span>Savings claims</span>
@@ -294,15 +296,15 @@ export function ArizonaResourcePage() {
           </article>
           <article>
             <span>Tax claims</span>
-            <h3>Tax-credit and incentive representations</h3>
-            <p>Keep any written statement about tax credits, rebates or who qualifies. Arizona&apos;s contract statute requires disclosure of identified incentives and conditions when they are used in determining the purchase price, and the Attorney General warns consumers about promises of tax credits when they do not have taxable income.</p>
+            <h3>Tax-credit and incentive statements</h3>
+            <p>Keep written statements about tax credits, rebates or eligibility. Arizona&apos;s contract statute requires certain incentive disclosures, and the Attorney General&apos;s solar-sales guide warns about promises of a tax credit to a consumer who does not have taxable income.</p>
             <a href={sources.solarSalesGuide.url} target="_blank" rel="noreferrer">Arizona AG solar sales guide ↗</a>
           </article>
           <article>
-            <span>Transfer and sale of home</span>
-            <h3>Restrictions on transferring the system or property</h3>
-            <p>Arizona law requires disclosure of certain restrictions or third-party approvals affecting transfer of the system or the real property to which it is attached. Preserve transfer documents and any communications about selling or refinancing the home.</p>
-            <a href={sources.contracts.url} target="_blank" rel="noreferrer">Read the transfer disclosures ↗</a>
+            <span>Home sale or transfer</span>
+            <h3>Transfer restrictions and approvals</h3>
+            <p>Arizona law requires disclosure of certain restrictions or third-party approvals affecting transfer of the system or the real property. Keep transfer documents and communications about selling or refinancing the home.</p>
+            <a href={sources.contracts.url} target="_blank" rel="noreferrer">Read the transfer provisions ↗</a>
           </article>
         </div>
       </section>
@@ -310,44 +312,44 @@ export function ArizonaResourcePage() {
       <section id="warranty-installation" className="state-source-section" aria-labelledby="warranty-installation-title">
         <div className="state-source-section-heading">
           <span>Installation and warranty</span>
-          <h2 id="warranty-installation-title">Arizona also regulates the physical solar installation</h2>
+          <h2 id="warranty-installation-title">Arizona rules for warranties and contractor work</h2>
         </div>
         <div className="state-source-grid">
           <article>
             <span>Warranty and performance</span>
-            <h3>Written warranty and performance information</h3>
-            <p>A.R.S. § 44-1762 establishes warranty or energy-output-guarantee requirements for covered solar devices and requires a written statement describing warranty responsibilities and performance data.</p>
+            <h3>Written warranty information</h3>
+            <p>A.R.S. § 44-1762 sets warranty or energy-production-output requirements for covered solar devices and requires a written statement describing warranty responsibilities and performance data.</p>
             <a href={sources.warranties.url} target="_blank" rel="noreferrer">Read A.R.S. § 44-1762 ↗</a>
           </article>
           <article>
-            <span>Licensed installation</span>
-            <h3>Check the contractor license</h3>
-            <p>The statute requires an individual installing a photovoltaic device to possess the appropriate contractor license. The Arizona Registrar of Contractors provides the state license search and complaint system.</p>
+            <span>Contractor license</span>
+            <h3>Check the installer</h3>
+            <p>For covered installations, Arizona law requires an individual installing a photovoltaic device to possess the appropriate contractor&apos;s license. The Registrar of Contractors provides the state license search.</p>
             <a href={sources.rocSearch.url} target="_blank" rel="noreferrer">Search Arizona contractor licenses ↗</a>
           </article>
           <article>
-            <span>Codes and workmanship</span>
-            <h3>Fire, safety and building codes still apply</h3>
-            <p>Arizona law requires solar installations to comply with applicable fire, safety and building codes and other state, federal and local requirements. Contractor failures can also be subject to ROC discipline.</p>
+            <span>Installation standards</span>
+            <h3>Fire, safety and building codes</h3>
+            <p>A.R.S. § 44-1762 requires covered solar installations to comply with applicable fire, safety and building codes and other applicable federal, state and local laws.</p>
             <a href={sources.warranties.url} target="_blank" rel="noreferrer">Read the installation standards ↗</a>
           </article>
           <article>
-            <span>Complaint process</span>
-            <h3>Document the physical condition of the system and roof</h3>
-            <p>For installation or workmanship concerns, preserve photos, inspection reports, permits, repair estimates and the installer&apos;s license information. The ROC complaint process may include a jobsite inspection.</p>
+            <span>Workmanship complaint</span>
+            <h3>Photos, permits and inspection records</h3>
+            <p>For workmanship concerns, keep photos, inspection reports, permits, repair estimates and license information. The ROC complaint process may include a jobsite inspection.</p>
             <a href={sources.rocComplaint.url} target="_blank" rel="noreferrer">Arizona ROC formal complaint ↗</a>
           </article>
         </div>
       </section>
 
       <section id="utility-interconnection" className="state-case-feature" aria-labelledby="utility-interconnection-title">
-        <div className="state-source-meta"><span>Utility vs. solar-company dispute</span><span>A.R.S. §§ 44-1763 and 44-1764</span></div>
-        <h2 id="utility-interconnection-title">A system that is installed is not necessarily a system that is energized and interconnected</h2>
+        <div className="state-source-meta"><span>Utility and interconnection</span><span>A.R.S. §§ 44-1763 and 44-1764</span></div>
+        <h2 id="utility-interconnection-title">When the problem is interconnection or the utility</h2>
         <p>
-          Arizona law generally requires a complete interconnection application to the utility before a covered distributed-energy system is installed, energized or interconnected, subject to the statute&apos;s timing rules and exceptions. Separately, A.R.S. § 44-1763 says recurring payments under a distributed-energy system lease may not begin until the system is energized and interconnected.
+          A.R.S. § 44-1764 requires a complete interconnection application to the utility before a covered distributed-energy system is installed, energized or interconnected. The statute says the system may be installed if the utility does not approve or deny the application within 60 days. It also allows a utility with fewer than 75,000 customers to waive the section&apos;s requirements.
         </p>
         <p>
-          If the dispute concerns the installer&apos;s promises or conduct, the Attorney General or ROC may be the relevant state route. If the dispute is about a regulated utility&apos;s rates, billing, service or procedures, the ACC may be relevant. The ACC expressly says it does not handle complaints against solar companies.
+          Separately, A.R.S. § 44-1763 says recurring payments under a distributed-energy system lease may not begin until the system is energized and interconnected. For disputes with a regulated utility over rates, billing, service or procedures, the ACC may be the relevant route. The ACC says it does not handle complaints against solar companies.
         </p>
         <a href={sources.interconnection.url} target="_blank" rel="noreferrer">Read A.R.S. § 44-1764 ↗</a><br />
         <a href={sources.accConsumer.url} target="_blank" rel="noreferrer">Arizona Corporation Commission Consumer Services ↗</a>
@@ -355,53 +357,59 @@ export function ArizonaResourcePage() {
 
       <section id="sales-red-flags" className="state-source-section" aria-labelledby="sales-red-flags-title">
         <div className="state-source-section-heading">
-          <span>Arizona AG consumer guidance</span>
-          <h2 id="sales-red-flags-title">What solar sales claims should I document?</h2>
+          <span>Arizona Attorney General</span>
+          <h2 id="sales-red-flags-title">Solar sales claims the state says consumers should question</h2>
         </div>
         <div className="state-source-grid">
           <article>
-            <span>High-pressure sale</span>
-            <h3>“Sign right now”</h3>
-            <p>The Arizona Attorney General warns consumers about salespeople insisting that a contract must be signed immediately. Preserve the messages, appointment notes and any deadline or limited-time claim.</p>
+            <span>Pressure to sign</span>
+            <h3>Claims that you must sign immediately</h3>
+            <p>The Attorney General warns about salespeople insisting that a contract must be signed then and there. Keep messages, appointment notes and any claimed deadline.</p>
             <a href={sources.solarSalesGuide.url} target="_blank" rel="noreferrer">Read the Arizona AG guide ↗</a>
           </article>
           <article>
             <span>Cost and savings</span>
-            <h3>“Solar will cost nothing” or create instant savings</h3>
-            <p>The AG warns against claims that installing solar will cost nothing or automatically create immediate savings. Arizona law also requires substantiation when sales material claims financial savings.</p>
+            <h3>Claims that solar costs nothing or creates instant savings</h3>
+            <p>The AG warns about claims that solar will cost nothing or produce instant savings. Arizona law also requires substantiation when a solar sales document or presentation states or suggests financial savings.</p>
             <a href={sources.solarSalesGuide.url} target="_blank" rel="noreferrer">Arizona AG solar sales guide ↗</a>
           </article>
           <article>
             <span>Utility affiliation</span>
-            <h3>“We work with your utility”</h3>
-            <p>The AG guide tells consumers to verify claims that a salesperson works for or with a utility. Arizona&apos;s 2023 Vision Solar enforcement action also alleged false utility or government-affiliation representations by telemarketers.</p>
+            <h3>Claims of working for or with a utility</h3>
+            <p>The AG guide tells consumers to verify claims that a salesperson works for or with a utility. In a separate 2023 lawsuit, Arizona also alleged that Vision Solar telemarketers at times falsely claimed affiliation with a utility company or government agency. Those allegations were claims in the lawsuit, not findings by this site.</p>
             <a href={sources.visionSolar.url} target="_blank" rel="noreferrer">Read the Arizona enforcement record ↗</a>
           </article>
           <article>
             <span>Electronic documents</span>
-            <h3>Someone creates an email account or signs for you</h3>
-            <p>The AG specifically warns consumers not to allow a company to create an email account for them or sign documents on their behalf. Preserve access records, signature pages and the complete electronic contract package.</p>
+            <h3>Email accounts and signatures</h3>
+            <p>The AG specifically warns consumers not to allow a company to create an email account for them or sign documents on their behalf. Keep the complete electronic contract package and any records showing how documents were sent or signed.</p>
             <a href={sources.solarSalesGuide.url} target="_blank" rel="noreferrer">Read the Arizona AG guide ↗</a>
           </article>
         </div>
       </section>
 
-      <section id="current-arizona" className="state-source-section" aria-labelledby="current-arizona-title">
+      <section id="other-arizona-records" className="state-source-section" aria-labelledby="other-arizona-records-title">
         <div className="state-source-section-heading">
-          <span>Current Arizona solar record</span>
-          <h2 id="current-arizona-title">Recent Arizona rooftop-solar developments worth separating from company complaints</h2>
+          <span>Other Arizona records</span>
+          <h2 id="other-arizona-records-title">Other solar issues on the Arizona record</h2>
         </div>
         <div className="state-source-grid">
           <article>
             <span>APS rooftop-solar surcharge · June 16, 2026</span>
-            <h3>Arizona Court of Appeals vacated the surcharge decision</h3>
-            <p>The Arizona Attorney General reports that the Court of Appeals vacated the Corporation Commission decision authorizing a special APS rooftop-solar surcharge and remanded the matter for further proceedings. This is a utility-rate issue, not a finding about a solar installer.</p>
+            <h3>Court of Appeals vacated the surcharge decision</h3>
+            <p>The Arizona Attorney General reports that the Court of Appeals vacated the Corporation Commission decision authorizing a special APS rooftop-solar surcharge and sent the matter back for further proceedings. The ruling concerns a utility-rate issue.</p>
             <a href={sources.apsSolarSurcharge.url} target="_blank" rel="noreferrer">Read the Arizona AG update ↗</a>
           </article>
           <article>
+            <span>Vision Solar · July 27, 2023</span>
+            <h3>Arizona joined a solar-sales and telemarketing lawsuit</h3>
+            <p>Arizona, the U.S. Department of Justice and the Federal Trade Commission sued Vision Solar and related defendants over alleged telemarketing violations and alleged misrepresentations involving residential solar sales. The allegations in that complaint should not be treated as court findings unless the record establishes an outcome.</p>
+            <a href={sources.visionSolar.url} target="_blank" rel="noreferrer">Read the Arizona AG announcement ↗</a>
+          </article>
+          <article>
             <span>Titan Solar Power · Chapter 7</span>
-            <h3>Arizona has a state-named Titan debtor</h3>
-            <p>The U.S. Bankruptcy Court for the District of Arizona lists <strong>Titan Solar Power AZ, Inc.</strong> under case <strong>2:24-bk-04979-DPC</strong>. That bankruptcy record does not determine the status of an individual customer&apos;s loan, warranty or claim.</p>
+            <h3>Titan Solar Power AZ, Inc.</h3>
+            <p>The U.S. Bankruptcy Court for the District of Arizona lists Titan Solar Power AZ, Inc. under case <strong>2:24-bk-04979-DPC</strong>. That listing identifies the Arizona-named debtor. It does not determine the status of an individual customer&apos;s loan, warranty or bankruptcy claim.</p>
             <Link href="/cases/titan-solar-power/warranty-after-bankruptcy">Titan warranty-after-bankruptcy research →</Link>
             <a href={sources.titanBankruptcy.url} target="_blank" rel="noreferrer">Official bankruptcy case hub ↗</a>
           </article>
@@ -409,23 +417,23 @@ export function ArizonaResourcePage() {
       </section>
 
       <section className="state-case-feature" aria-labelledby="document-checklist-title">
-        <div className="state-source-meta"><span>Before filing</span><span>Build one clean record</span></div>
-        <h2 id="document-checklist-title">What documents should an Arizona solar consumer keep?</h2>
+        <div className="state-source-meta"><span>Before you file</span><span>Keep the originals</span></div>
+        <h2 id="document-checklist-title">Documents worth keeping</h2>
         <p>
-          Keep the complete sales proposal, signed or electronic contract, financing or lease documents, tax-credit or savings representations, utility bills from before and after installation, production records, permits and inspections, contractor-license information, roof or repair records, cancellation attempts, complaint numbers, and company correspondence. For an AG complaint, the state specifically recommends a dated chronology and copies of supporting records while keeping the originals.
+          Keep the sales proposal, complete signed or electronic contract, financing or lease documents, tax-credit or savings statements, utility bills from before and after installation, production records, permits, inspections, contractor-license information, roof or repair records, cancellation attempts, complaint numbers and company correspondence. The Arizona Attorney General recommends putting events in date order, using dates when possible, sending copies of supporting records and keeping the originals.
         </p>
         <a href={sources.agComplaint.url} target="_blank" rel="noreferrer">Arizona Attorney General complaint guidance ↗</a>
       </section>
 
       <section id="sources" className="state-source-section" aria-labelledby="sources-title">
         <div className="state-source-section-heading">
-          <span>{String(sourceList.length).padStart(2, "0")} primary sources</span>
-          <h2 id="sources-title">Arizona solar consumer source library</h2>
+          <span>{String(sourceList.length).padStart(2, "0")} official sources</span>
+          <h2 id="sources-title">Primary Arizona sources</h2>
         </div>
         <div className="state-source-grid">
           {sourceList.map((source) => (
             <article key={source.url}>
-              <span>Primary source</span>
+              <span>Official source</span>
               <h3>{source.name}</h3>
               <p>{source.publisher}</p>
               <a href={source.url} target="_blank" rel="noreferrer">Open source ↗</a>
@@ -434,19 +442,19 @@ export function ArizonaResourcePage() {
         </div>
       </section>
 
-      <section className="info-section case-notice" aria-label="Source boundary">
-        <strong>Source boundary</strong>
+      <section className="info-section case-notice" aria-label="About these sources">
+        <strong>About these sources</strong>
         <p>
-          This page summarizes statutes, agency guidance, court-approved settlement terms and current public records. It does not determine whether a particular contract violates Arizona law or whether a particular consumer qualifies for settlement relief. Use the linked primary source when the wording of a deadline, remedy or requirement matters.
+          This page summarizes statutes, agency guidance, a court-approved settlement and other public records. The original source controls when the exact wording of a deadline, remedy or legal requirement matters. This page does not determine whether a particular contract violates Arizona law or whether a consumer qualifies for settlement relief.
         </p>
       </section>
 
       <div className="state-page-links">
         <Link href="/companies/sunrun">Sunrun investigations and settlements →</Link>
-        <Link href="/research/solar-sales-financing-after-complaint">Related source-backed research →</Link>
+        <Link href="/research/solar-sales-financing-after-complaint">Related research →</Link>
         <Link href="/cases/titan-solar-power">Titan Solar Power tracker →</Link>
         <Link href="/resources">Choose another state →</Link>
-        <Link href="/guides">Browse consumer guides →</Link>
+        <Link href="/guides">Consumer guides →</Link>
       </div>
     </InfoPage>
   );
