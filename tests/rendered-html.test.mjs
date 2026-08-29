@@ -174,8 +174,48 @@ test("renders a Sunrun company hub that keeps enforcement statuses distinct", as
   assert.match(html, /Connecticut Attorney General lawsuit naming Sunrun/i);
   assert.match(html, /An investigation is not a finding of wrongdoing/i);
   assert.match(html, featuredResearchTitle);
+  assert.match(html, /href=["']\/states\/arizona["']/i);
   assert.match(html, /"@type":"CollectionPage"/i);
   assert.doesNotMatch(html, /noindex/i);
+});
+
+test("renders Arizona as a source-backed hub with legal boundary and internal links", async () => {
+  const worker = await loadWorker();
+  const response = await worker.fetch(
+    new Request("http://localhost/states/arizona", { headers: { accept: "text/html" } }),
+    env,
+    ctx,
+  );
+
+  assert.equal(response.status, 200);
+  const html = await response.text();
+  assert.match(html, /Arizona Solar Complaints: Sunrun Settlement/i);
+  assert.match(html, /What is happening in Arizona/i);
+  assert.match(html, /What the Arizona Sunrun settlement actually requires/i);
+  assert.match(html, /creates no private right of action/i);
+  assert.match(html, /does not limit private parties[^<]*other remedies under applicable law/i);
+  assert.match(html, /href=["']\/companies\/sunrun["']/i);
+  assert.match(html, /href=["']\/research\/solar-sales-financing-after-complaint["']/i);
+  assert.match(html, /href=["']\/cases\/titan-solar-power["']/i);
+  assert.match(html, /href=["']\/cases\/titan-solar-power\/warranty-after-bankruptcy["']/i);
+  assert.match(html, /href=["']\/guides["']/i);
+  assert.match(html, /href=["']\/resources["']/i);
+  assert.match(html, /href=["']\/research["']/i);
+  assert.doesNotMatch(html, /noindex/i);
+});
+
+test("cross-links the Titan tracker back to Arizona resources", async () => {
+  const worker = await loadWorker();
+  const response = await worker.fetch(
+    new Request("http://localhost/cases/titan-solar-power", { headers: { accept: "text/html" } }),
+    env,
+    ctx,
+  );
+
+  assert.equal(response.status, 200);
+  const html = await response.text();
+  assert.match(html, /href=["']\/states\/arizona["']/i);
+  assert.match(html, /Arizona solar complaint and consumer resources/i);
 });
 
 test("serves the federal resource page", async () => {
