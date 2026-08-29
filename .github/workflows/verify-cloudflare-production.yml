@@ -35,7 +35,16 @@ jobs:
           }
 
           scripts="$(api "/accounts/$CLOUDFLARE_ACCOUNT_ID/workers/scripts")"
-          worker_tag="$(jq -r --arg worker "$WORKER_NAME" '.result[] | select(.id == $worker) | .tag' <<<"$scripts")"
+          worker_tag="$(
+            jq -r --arg worker "$WORKER_NAME" '
+              .result
+              | if type == "array" then .
+                elif type == "object" and has("items") then .items
+                elif type == "object" and has("scripts") then .scripts
+                else [] end
+              | .[] | select(.id == $worker) | .tag
+            ' <<<"$scripts"
+          )"
 
           if [ -z "$worker_tag" ] || [ "$worker_tag" = "null" ]; then
             echo "::error::Cloudflare Worker $WORKER_NAME was not found in the configured account."
@@ -44,11 +53,31 @@ jobs:
 
           for attempt in $(seq 1 30); do
             deployments="$(api "/accounts/$CLOUDFLARE_ACCOUNT_ID/workers/scripts/$WORKER_NAME/deployments")"
-            version_id="$(jq -r '.result.deployments[0].versions[0].version_id // empty' <<<"$deployments")"
+            version_id="$(
+              jq -r '
+                .result
+                | if type == "array" then .
+                  elif type == "object" and has("deployments") then .deployments
+                  else [] end
+                | if type == "array" then .[0] else . end
+                | (.versions? // [])
+                | if type == "array" then (.[0].version_id // empty) else (.version_id // empty) end
+              ' <<<"$deployments"
+            )"
 
             if [ -n "$version_id" ]; then
               builds="$(api "/accounts/$CLOUDFLARE_ACCOUNT_ID/builds/builds?version_ids=$version_id")"
-              deployed_sha="$(jq -r '.result.builds[0].build_trigger_metadata.commit_hash // empty' <<<"$builds")"
+              deployed_sha="$(
+                jq -r '
+                  .result
+                  | if type == "array" then .
+                    elif type == "object" and has("builds") then .builds
+                    elif type == "object" and has("items") then .items
+                    else [] end
+                  | if type == "array" then .[0] else . end
+                  | .build_trigger_metadata.commit_hash // empty
+                ' <<<"$builds"
+              )"
 
               if [ "$deployed_sha" = "$GITHUB_SHA" ]; then
                 {
