@@ -145,6 +145,7 @@ export function ArizonaResourcePage() {
             <h3>$1.25 million Arizona settlement and a two-year restitution process</h3>
             <p>Arizona&apos;s court-approved agreement with Sunrun and Vivint Solar includes $600,000 in civil penalties, $50,000 in fees and costs, and a $600,000 Total Restitution Amount. It also sets complaint-handling, roof-work and home-transfer requirements.</p>
             <a href="#sunrun-settlement">Read what the agreement requires ↓</a>
+            <p><Link href="/companies/sunrun">See other documented Sunrun investigations and enforcement →</Link></p>
           </article>
           <article>
             <span>Vision Solar · July 27, 2023</span>
@@ -162,6 +163,7 @@ export function ArizonaResourcePage() {
             <span>Titan Solar Power · Chapter 7</span>
             <h3>Titan Solar Power AZ, Inc. is listed in the Arizona bankruptcy cases</h3>
             <p>The U.S. Bankruptcy Court for the District of Arizona lists Titan Solar Power AZ, Inc. under case <strong>2:24-bk-04979-DPC</strong>. The listing does not determine the status of an individual customer&apos;s loan, warranty or bankruptcy claim.</p>
+            <Link href="/cases/titan-solar-power">Titan Solar Power bankruptcy tracker →</Link><br />
             <Link href="/cases/titan-solar-power/warranty-after-bankruptcy">Titan warranty-after-bankruptcy research →</Link>
           </article>
         </div>
@@ -198,6 +200,7 @@ export function ArizonaResourcePage() {
             <a href={sources.sunrunSettlement.url} target="_blank" rel="noreferrer">Arizona AG Sunrun settlement page ↗</a>
           </article>
         </div>
+        <p><Link href="/resources">Compare complaint resources for other states →</Link></p>
       </section>
 
       <section id="sunrun-settlement" className="state-source-lead" aria-labelledby="sunrun-settlement-title">
@@ -212,7 +215,12 @@ export function ArizonaResourcePage() {
         <p className="state-source-note">
           The agreement covers eligible complaints received during the two years after May 22, 2025 and unresolved complaints received before that date. The Arizona Attorney General directs eligible consumers to file through the Sunrun complaint route listed on its settlement page.
         </p>
-        <a href={sources.sunrunSettlement.url} target="_blank" rel="noreferrer">Arizona AG settlement instructions ↗</a>
+        <p className="state-source-note">
+          The consent agreement says only the State and the defendants may enforce its terms and that it creates no private right of action. It also says the agreement does not limit private parties&apos; other remedies under applicable law.
+        </p>
+        <a href={sources.sunrunSettlement.url} target="_blank" rel="noreferrer">Arizona AG settlement instructions ↗</a><br />
+        <a href={sources.sunrunAgreement.url} target="_blank" rel="noreferrer">Read the consent agreement, including ¶¶ 62–63 ↗</a>
+        <p><Link href="/research/solar-sales-financing-after-complaint">Read our broader research on solar sales, financing and complaint handling →</Link></p>
       </section>
 
       <section className="state-source-section" aria-labelledby="settlement-details-title">
@@ -417,6 +425,40 @@ export function ArizonaResourcePage() {
           Keep the sales proposal, complete signed or electronic contract, financing or lease documents, tax-credit or savings statements, utility bills from before and after installation, production records, permits, inspections, contractor-license information, roof or repair records, cancellation attempts, complaint numbers and company correspondence. The Arizona Attorney General recommends putting events in date order, using dates when possible, sending copies of supporting records and keeping the originals.
         </p>
         <a href={sources.agComplaint.url} target="_blank" rel="noreferrer">Arizona Attorney General complaint guidance ↗</a>
+        <p><Link href="/guides">Browse Solar Consumer Research consumer guides →</Link></p>
+      </section>
+
+      <section className="state-source-section" aria-labelledby="related-research-title">
+        <div className="state-source-section-heading">
+          <span>SolarComplaint.com</span>
+          <h2 id="related-research-title">Related research</h2>
+        </div>
+        <div className="state-source-grid">
+          <article>
+            <span>Company research</span>
+            <h3>Sunrun investigations and enforcement</h3>
+            <p>Follow documented state actions involving Sunrun without blending investigations, lawsuits and settlements together.</p>
+            <Link href="/companies/sunrun">Open the Sunrun research hub →</Link>
+          </article>
+          <article>
+            <span>Featured research</span>
+            <h3>Solar sales, financing and complaint handling</h3>
+            <p>Compare Arizona&apos;s settlement with separate government records from Texas and Michigan.</p>
+            <Link href="/research/solar-sales-financing-after-complaint">Read the research →</Link>
+          </article>
+          <article>
+            <span>Case tracker</span>
+            <h3>Titan Solar Power</h3>
+            <p>Bankruptcy records, warranty research and customer resources for former Titan customers.</p>
+            <Link href="/cases/titan-solar-power">Open the Titan tracker →</Link>
+          </article>
+          <article>
+            <span>More research</span>
+            <h3>Solar Consumer Research archive</h3>
+            <p>Browse published research, company pages and case trackers.</p>
+            <Link href="/research">Browse research →</Link>
+          </article>
+        </div>
       </section>
 
       <section id="sources" className="state-source-section" aria-labelledby="sources-title">
