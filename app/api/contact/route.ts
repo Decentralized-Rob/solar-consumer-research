@@ -29,7 +29,7 @@ export async function POST(request: NextRequest) {
   if (databaseError) return Response.json({ error: "Your question could not be recorded. Please try again." }, { status: 500 });
 
   try {
-    const emailResponse = await fetch("https://formsubmit.co/ajax/rbeland21@gmail.com", {
+    const emailResponse = await fetch("https://formsubmit.co/ajax/contact@solarcomplaint.com", {
       method: "POST",
       headers: {
         "content-type": "application/json",
@@ -37,7 +37,7 @@ export async function POST(request: NextRequest) {
         origin: "https://solarcomplaint.com",
         referer: "https://solarcomplaint.com/",
       },
-      body: JSON.stringify({ email, state: stateCode, city, question, _subject: `Solar Consumer Research question — ${stateCode}`, _replyto: email, _template: "table", _captcha: "false" }),
+      body: JSON.stringify({ email, state: stateCode, city, question, _subject: `[${stateCode}] ${city} — Solar Consumer Research request`, _replyto: email, _template: "table", _captcha: "false" }),
     });
     const emailResult = (await emailResponse.json().catch(() => null)) as { success?: boolean | string } | null;
     const notificationAccepted = emailResult?.success === true || emailResult?.success === "true";
