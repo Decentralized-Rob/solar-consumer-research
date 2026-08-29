@@ -452,6 +452,77 @@
 .state-page-links { display: flex; flex-wrap: wrap; gap: 24px; margin-top: 40px; }
 .state-page-links a { color: var(--green); font-size: 11px; font-weight: 900; }
 
+/* Maine hub */
+.maine-hub-page .info-main { width: min(1080px, calc(100% - 40px)); }
+.maine-hub-page .info-lede { max-width: 820px; }
+.maine-help-callout { display: grid; grid-template-columns: minmax(0, 1fr) 270px; gap: 46px; align-items: end; margin: -6px 0 80px; padding: 38px; border-top: 5px solid var(--sun); background: #1e2821; color: white; }
+.maine-help-callout .eyebrow { color: #bdd0c1; }
+.maine-help-callout h2 { max-width: 690px; margin: 0; font-family: Georgia, serif; font-size: clamp(32px, 4vw, 48px); font-weight: 500; line-height: 1.07; letter-spacing: -0.032em; }
+.maine-help-callout p:not(.eyebrow) { max-width: 700px; margin: 18px 0 0; color: #d9e2dc; font-size: 14px; line-height: 1.75; }
+.maine-help-callout .maine-help-boundary { color: #afc0b2; font-size: 11px; }
+.maine-help-button { display: flex; justify-content: space-between; gap: 18px; align-items: center; padding: 17px 20px; background: var(--sun); color: var(--ink); font-size: 12px; font-weight: 900; }
+.maine-help-button:hover { background: #ffca59; }
+.maine-help-button span { font-size: 20px; }
+.maine-section-heading { display: grid; grid-template-columns: 180px minmax(0, 1fr); gap: 28px; align-items: baseline; padding-top: 20px; border-top: 2px solid var(--ink); }
+.maine-section-heading > span { color: #687068; font-size: 10px; font-weight: 900; letter-spacing: .08em; text-transform: uppercase; }
+.maine-section-heading h2 { max-width: 740px; margin: 0; font-family: Georgia, serif; font-size: clamp(35px, 4vw, 50px); font-weight: 500; line-height: 1.07; letter-spacing: -0.036em; }
+.maine-paths-section { scroll-margin-top: 24px; }
+.maine-path-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); margin-top: 30px; border-top: 1px solid #bfc2ba; border-left: 1px solid #bfc2ba; }
+.maine-path-grid a { position: relative; display: flex; min-height: 245px; flex-direction: column; padding: 23px; border-right: 1px solid #bfc2ba; border-bottom: 1px solid #bfc2ba; background: rgba(255,255,255,.2); }
+.maine-path-grid a:hover { background: var(--white); }
+.maine-path-grid a > span { color: #778077; font-size: 10px; font-weight: 900; letter-spacing: .08em; }
+.maine-path-grid strong { max-width: 255px; margin-top: 35px; font-family: Georgia, serif; font-size: 26px; font-weight: 500; line-height: 1.12; }
+.maine-path-grid p { margin: 12px 0 0; color: #5e675f; font-size: 12px; line-height: 1.62; }
+.maine-path-grid b { margin-top: auto; padding-top: 14px; color: var(--green); font-size: 18px; }
+.maine-record-section { margin-top: 100px; }
+.maine-stat-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 15px; margin-top: 30px; }
+.maine-stat-grid article { display: flex; min-height: 276px; flex-direction: column; padding: 27px; background: #e6e5dc; }
+.maine-stat-grid article:nth-child(2) { background: #efede5; }
+.maine-stat-grid article:nth-child(3) { background: #dce7dd; }
+.maine-stat-grid strong { font-family: Georgia, serif; font-size: clamp(56px, 6vw, 82px); font-weight: 500; line-height: .88; letter-spacing: -0.06em; }
+.maine-stat-grid p { margin: 23px 0 0; color: #505950; font-size: 13px; line-height: 1.68; }
+.maine-stat-grid a { margin-top: auto; padding-top: 20px; color: var(--green); font-size: 11px; font-weight: 900; }
+.maine-source-note { margin: 16px 0 0; color: #737a73; font-size: 11px; line-height: 1.6; }
+.maine-guide-section { max-width: 880px; margin: 94px auto 0; padding-top: 24px; border-top: 1px solid #b9beb7; scroll-margin-top: 24px; }
+.maine-guide-section--accent { max-width: none; padding: 42px; border-top: 5px solid var(--sun); background: #f0eee5; }
+.maine-guide-kicker { margin: 0 0 15px; color: #657066; font-size: 10px; font-weight: 900; letter-spacing: .08em; text-transform: uppercase; }
+.maine-guide-section h2 { max-width: 760px; margin: 0; font-family: Georgia, serif; font-size: clamp(34px, 4vw, 49px); font-weight: 500; line-height: 1.08; letter-spacing: -0.035em; }
+.maine-guide-section > p:not(.maine-guide-kicker) { max-width: 780px; margin: 20px 0 0; color: #515a52; font-size: 15px; line-height: 1.8; }
+.maine-guide-columns { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; margin-top: 28px; }
+.maine-guide-columns > div { padding: 24px; border: 1px solid var(--line); background: var(--white); }
+.maine-guide-columns h3 { margin: 0 0 14px; font-family: Georgia, serif; font-size: 22px; font-weight: 500; }
+.maine-guide-columns p, .maine-guide-columns li { color: #596259; font-size: 13px; line-height: 1.68; }
+.maine-guide-columns ul { margin: 0; padding-left: 18px; }
+.maine-guide-columns a, .maine-inline-link, .maine-source-links a { display: inline-block; margin-top: 15px; color: var(--green); font-size: 12px; font-weight: 900; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 4px; }
+.maine-source-links { display: flex; flex-wrap: wrap; gap: 12px 26px; margin-top: 4px; }
+.maine-last-paragraph { margin-top: 26px !important; padding-left: 17px; border-left: 3px solid var(--sun); }
+.maine-story-section { display: grid; grid-template-columns: 1.05fr .95fr; gap: 58px; align-items: start; margin-top: 100px; padding: 44px 0; border-top: 2px solid var(--ink); border-bottom: 1px solid #b9beb7; }
+.maine-story-section h2 { margin: 0; font-family: Georgia, serif; font-size: clamp(31px, 3.4vw, 44px); font-weight: 500; line-height: 1.1; letter-spacing: -0.03em; }
+.maine-story-section > div > p:not(.eyebrow) { margin: 4px 0 0; color: #566057; font-size: 14px; line-height: 1.75; }
+.maine-story-section a { display: inline-block; margin-top: 20px; color: var(--green); font-size: 12px; font-weight: 900; }
+.maine-sources-section, .maine-faq-section { margin-top: 100px; }
+.maine-source-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; margin-top: 28px; }
+.maine-source-grid > a { display: flex; min-height: 248px; flex-direction: column; padding: 25px; border: 1px solid var(--line); background: var(--white); }
+.maine-source-grid > a:hover { border-color: #99a398; box-shadow: 0 12px 32px rgba(31,49,34,.07); }
+.maine-source-grid span { color: #677067; font-size: 9px; font-weight: 900; letter-spacing: .07em; text-transform: uppercase; }
+.maine-source-grid strong { margin-top: 28px; font-family: Georgia, serif; font-size: 25px; font-weight: 500; line-height: 1.12; }
+.maine-source-grid p { margin: 12px 0 0; color: #5b655c; font-size: 12px; line-height: 1.62; }
+.maine-source-grid b { margin-top: auto; padding-top: 20px; color: var(--green); font-size: 11px; }
+.maine-faq-list { margin-top: 28px; border-top: 1px solid #bfc2ba; }
+.maine-faq-list details { border-bottom: 1px solid #bfc2ba; }
+.maine-faq-list summary { position: relative; padding: 22px 45px 22px 0; cursor: pointer; font-family: Georgia, serif; font-size: 23px; line-height: 1.2; }
+.maine-faq-list summary::after { position: absolute; right: 5px; content: "+"; color: var(--green); font-family: Arial, sans-serif; font-size: 28px; font-weight: 400; }
+.maine-faq-list details[open] summary::after { content: "−"; }
+.maine-faq-list summary::-webkit-details-marker { display: none; }
+.maine-faq-list p { max-width: 780px; margin: -2px 0 0; padding-bottom: 8px; color: #535c54; font-size: 14px; line-height: 1.75; }
+.maine-faq-list a { display: inline-block; margin: 8px 0 23px; color: var(--green); font-size: 11px; font-weight: 900; }
+.maine-final-cta { margin-top: 100px; padding: 50px; background: #1e2821; color: white; text-align: center; }
+.maine-final-cta .eyebrow { justify-content: center; color: #b9cfbe; }
+.maine-final-cta h2 { max-width: 700px; margin: 0 auto; font-family: Georgia, serif; font-size: clamp(35px, 4vw, 50px); font-weight: 500; line-height: 1.06; letter-spacing: -0.038em; }
+.maine-final-cta p:not(.eyebrow) { max-width: 630px; margin: 21px auto 0; color: #d4dfd6; font-size: 14px; line-height: 1.7; }
+.maine-final-cta a { display: inline-block; margin-top: 28px; padding: 14px 20px; background: var(--sun); color: var(--ink); font-size: 12px; font-weight: 900; }
+.maine-final-cta a:hover { background: #ffca59; }
+
 .home-directory { padding-top: 105px; padding-bottom: 120px; scroll-margin-top: 76px; }
 .home-directory-heading {
   display: grid;
@@ -654,4 +725,11 @@
   .state-case-feature { padding: 24px; }
   .state-source-grid { grid-template-columns: 1fr; }
   .state-source-section-heading { grid-template-columns: 1fr; gap: 8px; }
+  .maine-help-callout { grid-template-columns: 1fr; gap: 28px; }
+  .maine-section-heading { grid-template-columns: 1fr; gap: 9px; }
+  .maine-path-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .maine-stat-grid { grid-template-columns: 1fr; }
+  .maine-stat-grid article { min-height: 220px; }
+  .maine-guide-columns, .maine-source-grid, .maine-story-section { grid-template-columns: 1fr; }
+  .maine-story-section { gap: 24px; }
 }
