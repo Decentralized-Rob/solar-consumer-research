@@ -22,7 +22,7 @@ test("direct contact intake records the request and notifies the research team",
   assert.match(accountPanel, /Question received/);
   assert.match(contactRoute, /verifyTurnstile/);
   assert.match(contactRoute, /createSupabaseAdminClient/);
-  assert.match(contactRoute, /formsubmit\.co\/ajax\/rbeland21@gmail\.com/);
+  assert.match(contactRoute, /formsubmit\\.co\\/ajax\\/contact@solarcomplaint\\.com/);
   assert.match(contactRoute, /_captcha: "false"/);
   assert.match(contactRoute, /emailResult\?\.success === true \|\| emailResult\?\.success === "true"/);
 });
