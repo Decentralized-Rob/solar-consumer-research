@@ -124,7 +124,7 @@ export function ArizonaResourcePage() {
       className="state-resource-page arizona-resource-page"
       eyebrow="Arizona solar consumer resources · reviewed August 29, 2026"
       title="Arizona Solar Complaints: Sunrun Settlement, State Rules and Where to File"
-      lede="Arizona has different complaint routes depending on the problem. Start with the Sunrun settlement if it applies to you, or use the Attorney General, Registrar of Contractors or Corporation Commission route that fits the issue."
+      lede="Arizona has different complaint routes depending on the problem. This page starts with the major Arizona solar records, then shows where to file and what state law says about contracts, installation and interconnection."
     >
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }} />
 
@@ -134,16 +134,71 @@ export function ArizonaResourcePage() {
         <span aria-current="page">Arizona</span>
       </nav>
 
-      <nav className="state-question-nav" aria-label="Arizona solar consumer questions">
-        <a href="#sunrun-settlement">Sunrun or Vivint Solar complaint?</a>
-        <a href="#where-to-complain">Where should I file?</a>
-        <a href="#contract-rules">What does Arizona require in a solar contract?</a>
-        <a href="#warranty-installation">What rules apply to installation and warranties?</a>
-        <a href="#utility-interconnection">Is this a solar-company problem or a utility problem?</a>
-        <a href="#sales-red-flags">What sales claims should I save?</a>
-        <a href="#other-arizona-records">Other Arizona solar records</a>
-        <a href="#sources">Primary sources</a>
-      </nav>
+      <section id="arizona-record" className="state-source-section" aria-labelledby="arizona-record-title">
+        <div className="state-source-section-heading">
+          <span>Arizona solar record</span>
+          <h2 id="arizona-record-title">What is happening in Arizona</h2>
+        </div>
+        <div className="state-source-grid">
+          <article>
+            <span>Sunrun and Vivint Solar · May 22, 2025</span>
+            <h3>$1.25 million Arizona settlement and a two-year restitution process</h3>
+            <p>Arizona&apos;s court-approved agreement with Sunrun and Vivint Solar includes $600,000 in civil penalties, $50,000 in fees and costs, and a $600,000 Total Restitution Amount. It also sets complaint-handling, roof-work and home-transfer requirements.</p>
+            <a href="#sunrun-settlement">Read what the agreement requires ↓</a>
+          </article>
+          <article>
+            <span>Vision Solar · July 27, 2023</span>
+            <h3>Arizona joined a solar-sales and telemarketing lawsuit</h3>
+            <p>Arizona, the U.S. Department of Justice and the Federal Trade Commission sued Vision Solar and related defendants over alleged telemarketing violations and alleged misrepresentations involving residential solar sales. The allegations are claims in the case, not findings by this site.</p>
+            <a href={sources.visionSolar.url} target="_blank" rel="noreferrer">Read the Arizona AG announcement ↗</a>
+          </article>
+          <article>
+            <span>APS rooftop-solar surcharge · June 16, 2026</span>
+            <h3>Court of Appeals vacated the surcharge decision</h3>
+            <p>The Arizona Attorney General reports that the Court of Appeals vacated the Corporation Commission decision authorizing a special APS rooftop-solar surcharge and sent the matter back for further proceedings. This is a utility-rate issue.</p>
+            <a href={sources.apsSolarSurcharge.url} target="_blank" rel="noreferrer">Read the Arizona AG update ↗</a>
+          </article>
+          <article>
+            <span>Titan Solar Power · Chapter 7</span>
+            <h3>Titan Solar Power AZ, Inc. is listed in the Arizona bankruptcy cases</h3>
+            <p>The U.S. Bankruptcy Court for the District of Arizona lists Titan Solar Power AZ, Inc. under case <strong>2:24-bk-04979-DPC</strong>. The listing does not determine the status of an individual customer&apos;s loan, warranty or bankruptcy claim.</p>
+            <Link href="/cases/titan-solar-power/warranty-after-bankruptcy">Titan warranty-after-bankruptcy research →</Link>
+          </article>
+        </div>
+      </section>
+
+      <section id="where-to-complain" className="state-source-section" aria-labelledby="where-to-complain-title">
+        <div className="state-source-section-heading">
+          <span>Arizona complaint routes</span>
+          <h2 id="where-to-complain-title">Where to file an Arizona solar complaint</h2>
+        </div>
+        <div className="state-source-grid">
+          <article>
+            <span>Sales, advertising, contracts</span>
+            <h3>Arizona Attorney General</h3>
+            <p>The Attorney General investigates consumer complaints involving deceptive or unfair practices in the sale or advertising of goods and services. Its complaint guidance asks for events in date order and copies of contracts, advertisements, warranties, proof of payment and other supporting records.</p>
+            <a href={sources.agComplaint.url} target="_blank" rel="noreferrer">File an Arizona consumer complaint ↗</a>
+          </article>
+          <article>
+            <span>Installation, workmanship, licensing</span>
+            <h3>Arizona Registrar of Contractors</h3>
+            <p>The ROC investigates alleged violations of licensed and unlicensed contracting laws. A workmanship complaint can lead to a jobsite inspection and, when the investigator finds work below minimum industry standards, a written directive for corrective work.</p>
+            <a href={sources.rocComplaint.url} target="_blank" rel="noreferrer">Open the ROC complaint process ↗</a>
+          </article>
+          <article>
+            <span>Utility rates, billing, utility service</span>
+            <h3>Arizona Corporation Commission</h3>
+            <p>The ACC can investigate certain disputes involving regulated utilities, including rates, billing responsibility, utility service and utility procedures. Its Consumer Services page specifically says it cannot assist with complaints regarding solar companies.</p>
+            <a href={sources.accConsumer.url} target="_blank" rel="noreferrer">ACC Utilities Consumer Services ↗</a>
+          </article>
+          <article>
+            <span>Sunrun and Vivint Solar</span>
+            <h3>Arizona settlement complaint route</h3>
+            <p>The Attorney General has a dedicated page for consumers seeking relief under the 2025 Sunrun agreement. It also explains what to do when the complaint involves a new Sunrun or Vivint Solar issue outside the settlement process.</p>
+            <a href={sources.sunrunSettlement.url} target="_blank" rel="noreferrer">Arizona AG Sunrun settlement page ↗</a>
+          </article>
+        </div>
+      </section>
 
       <section id="sunrun-settlement" className="state-source-lead" aria-labelledby="sunrun-settlement-title">
         <div className="state-source-meta"><span>Sunrun and Vivint Solar</span><span>Maricopa County Superior Court · May 22, 2025</span></div>
@@ -224,39 +279,6 @@ export function ArizonaResourcePage() {
             <p>After notice of a pending or completed home sale, the agreement requires a reasonable lease-assignment form and an updated buyout price within 30 days. It also sets timelines for any required credit review and for moving invoices to an approved assignee after closing.</p>
             <p>The agreement says Sunrun and Vivint Solar may not unreasonably hinder or delay an assignment.</p>
             <a href={sources.sunrunAgreement.url} target="_blank" rel="noreferrer">Agreement ¶¶ 33–37 ↗</a>
-          </article>
-        </div>
-      </section>
-
-      <section id="where-to-complain" className="state-source-section" aria-labelledby="where-to-complain-title">
-        <div className="state-source-section-heading">
-          <span>Arizona complaint routes</span>
-          <h2 id="where-to-complain-title">Where to file an Arizona solar complaint</h2>
-        </div>
-        <div className="state-source-grid">
-          <article>
-            <span>Sales, advertising, contracts</span>
-            <h3>Arizona Attorney General</h3>
-            <p>The Attorney General investigates consumer complaints involving deceptive or unfair practices in the sale or advertising of goods and services. Its complaint guidance asks for events in date order and copies of contracts, advertisements, warranties, proof of payment and other supporting records.</p>
-            <a href={sources.agComplaint.url} target="_blank" rel="noreferrer">File an Arizona consumer complaint ↗</a>
-          </article>
-          <article>
-            <span>Installation, workmanship, licensing</span>
-            <h3>Arizona Registrar of Contractors</h3>
-            <p>The ROC investigates alleged violations of licensed and unlicensed contracting laws. A workmanship complaint can lead to a jobsite inspection and, when the investigator finds work below minimum industry standards, a written directive for corrective work.</p>
-            <a href={sources.rocComplaint.url} target="_blank" rel="noreferrer">Open the ROC complaint process ↗</a>
-          </article>
-          <article>
-            <span>Utility rates, billing, utility service</span>
-            <h3>Arizona Corporation Commission</h3>
-            <p>The ACC can investigate certain disputes involving regulated utilities, including rates, billing responsibility, utility service and utility procedures. Its Consumer Services page specifically says it cannot assist with complaints regarding solar companies.</p>
-            <a href={sources.accConsumer.url} target="_blank" rel="noreferrer">ACC Utilities Consumer Services ↗</a>
-          </article>
-          <article>
-            <span>Sunrun and Vivint Solar</span>
-            <h3>Arizona settlement complaint route</h3>
-            <p>The Attorney General has a dedicated page for consumers seeking relief under the 2025 Sunrun agreement. It also explains what to do when the complaint involves a new Sunrun or Vivint Solar issue outside the settlement process.</p>
-            <a href={sources.sunrunSettlement.url} target="_blank" rel="noreferrer">Arizona AG Sunrun settlement page ↗</a>
           </article>
         </div>
       </section>
@@ -384,34 +406,6 @@ export function ArizonaResourcePage() {
             <h3>Email accounts and signatures</h3>
             <p>The AG specifically warns consumers not to allow a company to create an email account for them or sign documents on their behalf. Keep the complete electronic contract package and any records showing how documents were sent or signed.</p>
             <a href={sources.solarSalesGuide.url} target="_blank" rel="noreferrer">Read the Arizona AG guide ↗</a>
-          </article>
-        </div>
-      </section>
-
-      <section id="other-arizona-records" className="state-source-section" aria-labelledby="other-arizona-records-title">
-        <div className="state-source-section-heading">
-          <span>Other Arizona records</span>
-          <h2 id="other-arizona-records-title">Other solar issues on the Arizona record</h2>
-        </div>
-        <div className="state-source-grid">
-          <article>
-            <span>APS rooftop-solar surcharge · June 16, 2026</span>
-            <h3>Court of Appeals vacated the surcharge decision</h3>
-            <p>The Arizona Attorney General reports that the Court of Appeals vacated the Corporation Commission decision authorizing a special APS rooftop-solar surcharge and sent the matter back for further proceedings. The ruling concerns a utility-rate issue.</p>
-            <a href={sources.apsSolarSurcharge.url} target="_blank" rel="noreferrer">Read the Arizona AG update ↗</a>
-          </article>
-          <article>
-            <span>Vision Solar · July 27, 2023</span>
-            <h3>Arizona joined a solar-sales and telemarketing lawsuit</h3>
-            <p>Arizona, the U.S. Department of Justice and the Federal Trade Commission sued Vision Solar and related defendants over alleged telemarketing violations and alleged misrepresentations involving residential solar sales. The allegations in that complaint should not be treated as court findings unless the record establishes an outcome.</p>
-            <a href={sources.visionSolar.url} target="_blank" rel="noreferrer">Read the Arizona AG announcement ↗</a>
-          </article>
-          <article>
-            <span>Titan Solar Power · Chapter 7</span>
-            <h3>Titan Solar Power AZ, Inc.</h3>
-            <p>The U.S. Bankruptcy Court for the District of Arizona lists Titan Solar Power AZ, Inc. under case <strong>2:24-bk-04979-DPC</strong>. That listing identifies the Arizona-named debtor. It does not determine the status of an individual customer&apos;s loan, warranty or bankruptcy claim.</p>
-            <Link href="/cases/titan-solar-power/warranty-after-bankruptcy">Titan warranty-after-bankruptcy research →</Link>
-            <a href={sources.titanBankruptcy.url} target="_blank" rel="noreferrer">Official bankruptcy case hub ↗</a>
           </article>
         </div>
       </section>
