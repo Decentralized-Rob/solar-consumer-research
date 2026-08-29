@@ -23,13 +23,13 @@ jobs:
             exit 1
           fi
 
-      - name: Match active Cloudflare production build to main
+      - name: Match Cloudflare production build to main
         shell: bash
         run: |
           set -euo pipefail
 
           api() {
-            curl --fail-with-body --silent --show-error \
+            curl --fail-with-body --silent --show-error --connect-timeout 10 --max-time 20 \
               --header "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
               "https://api.cloudflare.com/client/v4$1"
           }
@@ -52,51 +52,50 @@ jobs:
           fi
 
           for attempt in $(seq 1 30); do
-            deployments="$(api "/accounts/$CLOUDFLARE_ACCOUNT_ID/workers/scripts/$WORKER_NAME/deployments")"
-            version_id="$(
-              jq -r '
+            builds="$(api "/accounts/$CLOUDFLARE_ACCOUNT_ID/builds/workers/$worker_tag/builds")"
+            matching_build="$(
+              jq -c --arg sha "$GITHUB_SHA" '
                 .result
                 | if type == "array" then .
-                  elif type == "object" and has("deployments") then .deployments
+                  elif type == "object" and has("builds") then .builds
+                  elif type == "object" and has("items") then .items
                   else [] end
-                | if type == "array" then .[0] else . end
-                | (.versions? // [])
-                | if type == "array" then (.[0].version_id // empty) else (.version_id // empty) end
-              ' <<<"$deployments"
+                | map(select(.build_trigger_metadata.commit_hash == $sha))
+                | first // empty
+              ' <<<"$builds"
             )"
 
-            if [ -n "$version_id" ]; then
-              builds="$(api "/accounts/$CLOUDFLARE_ACCOUNT_ID/builds/builds?version_ids=$version_id")"
-              deployed_sha="$(
-                jq -r '
-                  .result
-                  | if type == "array" then .
-                    elif type == "object" and has("builds") then .builds
-                    elif type == "object" and has("items") then .items
-                    else [] end
-                  | if type == "array" then .[0] else . end
-                  | .build_trigger_metadata.commit_hash // empty
-                ' <<<"$builds"
-              )"
+            if [ -n "$matching_build" ]; then
+              outcome="$(jq -r '.build_outcome // empty' <<<"$matching_build")"
+              build_uuid="$(jq -r '.build_uuid // empty' <<<"$matching_build")"
 
-              if [ "$deployed_sha" = "$GITHUB_SHA" ]; then
+              if [ "$outcome" = "success" ]; then
+                status_code="$(curl --silent --show-error --connect-timeout 10 --max-time 20 --output /dev/null --write-out "%{http_code}" https://solarcomplaint.com/states/maine)"
+                if [ "$status_code" != "200" ]; then
+                  echo "::error::Cloudflare build succeeded, but solarcomplaint.com/states/maine returned HTTP $status_code."
+                  exit 1
+                fi
+
                 {
                   echo "## Cloudflare production verified"
                   echo
                   echo "- Worker: \`$WORKER_NAME\`"
-                  echo "- Active version: \`$version_id\`"
-                  echo "- Deployed commit: \`$deployed_sha\`"
+                  echo "- Build: \`$build_uuid\`"
+                  echo "- Deployed commit: \`$GITHUB_SHA\`"
+                  echo "- Public route: \`200 OK\`"
                 } >> "$GITHUB_STEP_SUMMARY"
                 exit 0
               fi
 
-              echo "Attempt $attempt/30: active Cloudflare commit is ${deployed_sha:-unknown}; waiting for $GITHUB_SHA."
-            else
-              echo "Attempt $attempt/30: Cloudflare has not reported an active deployment version yet."
+              if [ -n "$outcome" ] && [ "$outcome" != "success" ]; then
+                echo "::error::Cloudflare build $build_uuid for $GITHUB_SHA finished with outcome: $outcome."
+                exit 1
+              fi
             fi
 
+            echo "Attempt $attempt/30: Cloudflare has not completed a successful build for $GITHUB_SHA yet."
             sleep 10
           done
 
-          echo "::error::Cloudflare production did not reach $GITHUB_SHA within five minutes."
+          echo "::error::Cloudflare did not complete a build for $GITHUB_SHA within five minutes."
           exit 1
