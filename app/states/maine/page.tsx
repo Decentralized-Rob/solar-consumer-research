@@ -108,9 +108,9 @@ export default function MaineHubPage() {
               <a href={sources.pucReport} target="_blank" rel="noreferrer">See the PUC complaint data ↗</a>
             </article>
             <article>
-              <strong>2026</strong>
-              <p>Maine&apos;s Department of Energy Resources provides standard disclosure forms for customer-sited solar sales and leases.</p>
-              <a href={sources.solarDisclosure} target="_blank" rel="noreferrer">Open the disclosure forms ↗</a>
+              <strong>10/16/24</strong>
+              <p>Maine&apos;s Attorney General published a consumer advisory about misleading solar advertisements and financing claims.</p>
+              <a href={sources.agAds} target="_blank" rel="noreferrer">Read the AG advisory ↗</a>
             </article>
           </div>
           <p className="maine-source-note">Complaint counts describe reports received. They are not findings about every complaint, company, or transaction.</p>
