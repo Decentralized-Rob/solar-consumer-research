@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { InfoPage } from "../../../components/info-page";
+import { AccountPanel } from "../../../components/account-panel";
 
 const sources = {
   agSolar: "https://www.maine.gov/ag/consumer-protection/consumer-help-topics/housing/solar-power-systems",
@@ -205,7 +205,7 @@ export default function MaineHubPage() {
           <p className="eyebrow">Public-source research help</p>
           <h2 id="research-title">Still need help locating the record?</h2>
           <p>Use the question form with your Maine town, the company involved, and a brief description. We can help identify relevant public records and official sources. Do not send account numbers, passwords, government ID, or unredacted contracts.</p>
-          <Link href="/#questions">Ask for research help →</Link>
+          <AccountPanel defaultStateCode="ME" />
         </section>
       </InfoPage>
     </>
