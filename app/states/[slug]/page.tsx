@@ -16,8 +16,8 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   if (!state) return {};
 
   if (state.code === "AZ") {
-    const title = "Arizona Solar Complaints, Sunrun Settlement & Consumer Rights";
-    const description = "Arizona solar complaint help, Sunrun settlement relief, contractor complaints, solar contract and warranty rules, interconnection, utility disputes, and primary state sources.";
+    const title = "Arizona Solar Complaints: Sunrun Settlement & State Rules";
+    const description = "Arizona solar complaint routes, Sunrun and Vivint Solar settlement terms, contractor complaints, contract disclosures, warranty rules, interconnection and official state sources.";
     return {
       title,
       description,
