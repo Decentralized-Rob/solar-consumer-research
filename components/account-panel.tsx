@@ -5,9 +5,12 @@ import { states } from "../lib/content";
 import { getPublicFeatureConfig } from "../lib/supabase/config";
 import { TurnstileWidget } from "./turnstile-widget";
 
-export function AccountPanel() {
+type AccountPanelProps = { defaultStateCode?: string };
+
+export function AccountPanel({ defaultStateCode = "" }: AccountPanelProps) {
   const [email, setEmail] = useState("");
-  const [selectedState, setSelectedState] = useState("");
+  const [selectedState, setSelectedState] = useState(defaultStateCode);
+  const lockedState = states.find((state) => state.code === defaultStateCode);
   const [city, setCity] = useState("");
   const [question, setQuestion] = useState("");
   const [message, setMessage] = useState("");
@@ -43,7 +46,7 @@ export function AccountPanel() {
 
       setSubmittedEmail(email.trim());
       setNotificationSent(result.notificationSent !== false);
-      setSelectedState("");
+      if (!lockedState) setSelectedState("");
       setCity("");
       setQuestion("");
     } catch (error) {
@@ -74,10 +77,14 @@ export function AccountPanel() {
       <label htmlFor="question-email">Your email</label>
       <input id="question-email" type="email" value={email} onChange={(event) => setEmail(event.target.value)} placeholder="you@example.com" autoComplete="email" required />
       <label htmlFor="question-state">State</label>
-      <select id="question-state" value={selectedState} onChange={(event) => setSelectedState(event.target.value)} required>
-        <option value="" disabled>Select your state</option>
-        {states.map((state) => <option key={state.code} value={state.code}>{state.name}</option>)}
-      </select>
+      {lockedState ? (
+        <input id="question-state" type="text" value={lockedState.name} readOnly aria-readonly="true" />
+      ) : (
+        <select id="question-state" value={selectedState} onChange={(event) => setSelectedState(event.target.value)} required>
+          <option value="" disabled>Select your state</option>
+          {states.map((state) => <option key={state.code} value={state.code}>{state.name}</option>)}
+        </select>
+      )}
       <label htmlFor="question-city">City or town</label>
       <input id="question-city" type="text" value={city} onChange={(event) => setCity(event.target.value)} maxLength={100} autoComplete="address-level2" required />
       <label htmlFor="research-question">Briefly describe your situation or question</label>
@@ -85,7 +92,7 @@ export function AccountPanel() {
       <p className="form-note">Do not include account numbers, financial details, Social Security numbers, or confidential documents.</p>
       {turnstileSiteKey ? <TurnstileWidget siteKey={turnstileSiteKey} onToken={receiveTurnstileToken} resetKey={turnstileResetKey} /> : <p className="form-message" role="alert">This form is temporarily unavailable.</p>}
       <button className="button button--sun" type="submit" disabled={busy || !turnstileSiteKey}>{busy ? "Sending..." : "Send question"}</button>
-      <p className="form-note">We’ll reply by email. Check your spam or junk folder if you do not see a reply.</p>
+      <p className="form-note">This is research help, not legal advice.</p>
       {message && <p className="form-message" role="alert">{message}</p>}
     </form>
   );
