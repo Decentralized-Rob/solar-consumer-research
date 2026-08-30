@@ -21,6 +21,11 @@ const sources = [
     href: "https://www.oag.state.va.us/consumer-protection/index.php/file-a-complaint",
     detail: "Official Virginia consumer complaint channel.",
   },
+  {
+    title: "CFPB: Solar Financing Issue Spotlight",
+    href: "https://www.consumerfinance.gov/data-research/research-reports/issue-spotlight-solar-financing/",
+    detail: "Federal consumer-finance research on solar-specific loans, dealer fees, tax-credit representations, payment changes, and savings claims.",
+  },
 ];
 
 export default function GoodLeapVirginiaPage() {
@@ -28,7 +33,7 @@ export default function GoodLeapVirginiaPage() {
     <main className="gl-main">
       <section className="gl-section-intro">
         <p className="gl-kicker">FLAG state · Virginia</p>
-        <h1>Virginia's 2026 case connects GoodLeap financing directly to the Power Home Solar record.</h1>
+        <h1>Virginia&apos;s 2026 case connects GoodLeap financing directly to the Power Home Solar record.</h1>
         <p>
           Virginia is a first-tier FLAG state because the Attorney General filed federal litigation naming GoodLeap and other lenders alongside former Power Home Solar leadership. The amended complaint contains lender-specific allegations and transaction data that make Virginia unusually useful for consumer research.
         </p>
@@ -36,6 +41,11 @@ export default function GoodLeapVirginiaPage() {
           Status: active research page. The complaint contains allegations that have not necessarily been proven in court. This page does not provide legal advice.
         </p>
       </section>
+
+      <div className="gl-actions">
+        <Link className="gl-button gl-button-primary" href="/states/virginia">Virginia solar consumer resources</Link>
+        <Link className="gl-button" href="/federal-resources">Federal solar consumer resources</Link>
+      </div>
 
       <section className="gl-method-strip" aria-label="Virginia case summary">
         <div>
@@ -118,7 +128,7 @@ export default function GoodLeapVirginiaPage() {
         <div className="gl-heading-row">
           <div>
             <p className="gl-kicker">Primary sources</p>
-            <h2 id="va-sources-heading">Use the Attorney General's own record</h2>
+            <h2 id="va-sources-heading">Use the Attorney General&apos;s own record</h2>
           </div>
         </div>
         <div className="gl-section-grid">
@@ -138,7 +148,7 @@ export default function GoodLeapVirginiaPage() {
 
       <div className="gl-actions">
         <Link className="gl-button" href="/goodleap/states">← Back to FLAG states</Link>
-        <Link className="gl-button gl-button-primary" href="/goodleap/research">GoodLeap research library</Link>
+        <Link className="gl-button gl-button-primary" href="/states/virginia">All Virginia solar resources</Link>
       </div>
     </main>
   );
