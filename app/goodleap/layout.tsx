@@ -8,7 +8,7 @@ export const metadata: Metadata = {
     template: "%s | GoodLeap Consumer Resource Center",
   },
   description:
-    "A developing Solar Consumer Research hub for GoodLeap solar financing, consumer issues, state resources, lawsuits, and source documents.",
+    "Independent, source-based research on GoodLeap solar financing, state litigation, arbitration, regulatory actions, installer failures, and consumer resources.",
   robots: {
     index: false,
     follow: false,
@@ -16,10 +16,10 @@ export const metadata: Metadata = {
 };
 
 const nav = [
-  ["Issues", "/goodleap/issues"],
-  ["States", "/goodleap/states"],
+  ["Start with your issue", "/goodleap/issues"],
+  ["FLAG States", "/goodleap/states"],
   ["Research", "/goodleap/research"],
-  ["Lawsuits", "/goodleap/lawsuits"],
+  ["Cases", "/goodleap/lawsuits"],
   ["Resources", "/goodleap/resources"],
 ] as const;
 
@@ -30,7 +30,7 @@ export default function GoodLeapLayout({ children }: { children: React.ReactNode
         <div className="gl-header-inner">
           <Link className="gl-brand" href="/goodleap">
             <span>Solar Consumer Research</span>
-            <strong>GoodLeap Resource Center</strong>
+            <strong>GoodLeap Consumer Resource Center</strong>
           </Link>
           <nav aria-label="GoodLeap hub navigation">
             {nav.map(([label, href]) => (
@@ -42,7 +42,7 @@ export default function GoodLeapLayout({ children }: { children: React.ReactNode
       {children}
       <footer className="gl-footer">
         <p><strong>Solar Consumer Research</strong> · Independent consumer research and source-based information.</p>
-        <p>General information only. Not legal or financial advice.</p>
+        <p>Consumer allegations and lawsuit allegations are identified as such. General information only; not legal or financial advice.</p>
       </footer>
     </div>
   );
