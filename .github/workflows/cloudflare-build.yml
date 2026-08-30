@@ -1,0 +1,38 @@
+name: Cloudflare Build Verification
+
+on:
+  push:
+    branches: [main, master]
+  workflow_dispatch:
+
+jobs:
+  verify-build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Check Cloudflare Deployment Status
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_BUILDS_API_TOKEN }}
+          CF_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          WORKER_NAME: "solarcomplaint" 
+        run: |
+          echo "Verifying Cloudflare API token..."
+          AUTH_CHECK=$(curl -s -X GET "https://api.cloudflare.com/client/v4/user/tokens/verify" \
+            -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN")
+          
+          if echo "$AUTH_CHECK" | grep -q '"success":true'; then
+            echo "Token verified successfully."
+          else
+            echo "Token verification failed: $AUTH_CHECK"
+            exit 1
+          fi
+
+          echo "Fetching deployment status for $WORKER_NAME..."
+          RESPONSE=$(curl -s -X GET "https://api.cloudflare.com/client/v4/accounts/$CF_ACCOUNT_ID/workers/scripts/$WORKER_NAME/deployments" \
+            -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN")
+
+          echo "$RESPONSE" | grep -q '"success":true' \
+            && echo "Build deployment status retrieved successfully." \
+            || { echo "Failed to fetch deployment status: $RESPONSE"; exit 1; }
