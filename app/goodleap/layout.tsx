@@ -16,6 +16,7 @@ export const metadata: Metadata = {
 };
 
 const nav = [
+  ["SolarComplaint.com", "/"],
   ["Start with your issue", "/goodleap/issues"],
   ["FLAG States", "/goodleap/states"],
   ["Research", "/goodleap/research"],
@@ -42,7 +43,7 @@ export default function GoodLeapLayout({ children }: { children: React.ReactNode
       {children}
       <footer className="gl-footer">
         <p><strong>Solar Consumer Research</strong> · Independent consumer research and source-based information.</p>
-        <p>Consumer allegations and lawsuit allegations are identified as such. General information only; not legal or financial advice.</p>
+        <p><Link href="/">SolarComplaint.com</Link> · Consumer allegations and lawsuit allegations are identified as such. General information only; not legal or financial advice.</p>
       </footer>
     </div>
   );
