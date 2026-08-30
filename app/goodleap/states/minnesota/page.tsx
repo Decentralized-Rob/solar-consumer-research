@@ -42,6 +42,11 @@ export default function GoodLeapMinnesotaPage() {
         </p>
       </section>
 
+      <div className="gl-actions">
+        <Link className="gl-button gl-button-primary" href="/states/minnesota">Minnesota solar consumer resources</Link>
+        <Link className="gl-button" href="/federal-resources">Federal solar consumer resources</Link>
+      </div>
+
       <section className="gl-method-strip" aria-label="Minnesota case summary">
         <div>
           <strong>Primary case</strong>
@@ -79,7 +84,7 @@ export default function GoodLeapMinnesotaPage() {
           <article className="gl-card gl-card-compact">
             <small>Federal relevance</small>
             <h3>CFPB later cited the Minnesota case</h3>
-            <p>The CFPB's 2024 solar-financing report cites the Minnesota complaint in its discussion of dealer fees and loan-principal markups.</p>
+            <p>The CFPB&apos;s 2024 solar-financing report cites the Minnesota complaint in its discussion of dealer fees and loan-principal markups.</p>
           </article>
         </div>
       </section>
@@ -138,12 +143,12 @@ export default function GoodLeapMinnesotaPage() {
       </section>
 
       <aside className="gl-note">
-        Research note: the $35 million and 5,000-system figures are allegations covering all four lender defendants in the Minnesota case. They should not be presented as GoodLeap-only totals unless a later source isolates GoodLeap's share.
+        Research note: the $35 million and 5,000-system figures are allegations covering all four lender defendants in the Minnesota case. They should not be presented as GoodLeap-only totals unless a later source isolates GoodLeap&apos;s share.
       </aside>
 
       <div className="gl-actions">
         <Link className="gl-button" href="/goodleap/states">← Back to FLAG states</Link>
-        <Link className="gl-button gl-button-primary" href="/goodleap/research">GoodLeap research library</Link>
+        <Link className="gl-button gl-button-primary" href="/states/minnesota">All Minnesota solar resources</Link>
       </div>
     </main>
   );
