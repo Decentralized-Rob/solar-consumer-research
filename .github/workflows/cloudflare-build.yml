@@ -22,7 +22,7 @@ jobs:
           AUTH_CHECK=$(curl -s -X GET "https://api.cloudflare.com/client/v4/user/tokens/verify" \
             -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN")
           
-          if echo "$AUTH_CHECK" | grep -q '"success":true'; then
+          if echo "$AUTH_CHECK" | jq -e '.success == true' > /dev/null; then
             echo "Token verified successfully."
           else
             echo "Token verification failed: $AUTH_CHECK"
@@ -33,8 +33,12 @@ jobs:
           RESPONSE=$(curl -s -X GET "https://api.cloudflare.com/client/v4/accounts/$CF_ACCOUNT_ID/workers/scripts/$WORKER_NAME/deployments" \
             -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN")
 
-          echo "$RESPONSE"
-          
-          echo "$RESPONSE" | grep -q '"success":true' \
-            && echo "Build deployment status retrieved successfully." \
-            || { echo "Failed to fetch deployment status."; exit 1; }
+          if echo "$RESPONSE" | jq -e '.success == true' > /dev/null; then
+            echo "Build deployment status retrieved successfully."
+            LATEST_ID=$(echo "$RESPONSE" | jq -r '.result.deployments[0].id')
+            LATEST_DATE=$(echo "$RESPONSE" | jq -r '.result.deployments[0].created_on')
+            echo "Latest Deployment ID: $LATEST_ID (Created: $LATEST_DATE)"
+          else
+            echo "Failed to fetch deployment status: $RESPONSE"
+            exit 1
+          fi
