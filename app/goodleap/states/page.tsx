@@ -1,15 +1,15 @@
 import Link from "next/link";
 
 const flagStates = [
-  ["MN", "Minnesota", "Attorney General action", "Dealer-fee and solar-financing allegations involving GoodLeap and other lenders."],
-  ["VA", "Virginia", "Attorney General litigation", "2026 litigation tied to the former Power Home / Pink Energy sales ecosystem."],
-  ["TX", "Texas", "Litigation + arbitration", "Multiple GoodLeap solar-financing disputes, arbitration rulings, and appellate decisions."],
-  ["FL", "Florida", "Litigation", "Consumer solar-financing cases plus GoodLeap litigation involving solar-cancellation companies."],
-  ["NJ", "New Jersey", "Installer + financing", "Cases involving GoodLeap financing and major installers including Titan and Suntuity."],
-  ["MO", "Missouri", "Bankruptcy overlap", "GoodLeap financing disputes with a direct Titan Solar Power bankruptcy connection."],
-  ["OH", "Ohio", "Installer litigation", "Pink Energy / Power Home litigation involving GoodLeap financing."],
-  ["MI", "Michigan", "Installer litigation", "Companion Pink Energy / Power Home financing disputes."],
-  ["MD", "Maryland", "Arbitration ruling", "Recent federal ruling involving GoodLeap and a residential solar financing dispute."],
+  ["MN", "Minnesota", "Attorney General action", "Dealer-fee and solar-financing allegations involving GoodLeap and other lenders.", "/goodleap/states/minnesota"],
+  ["VA", "Virginia", "Attorney General litigation", "2026 litigation tied to the former Power Home / Pink Energy sales ecosystem.", "/goodleap/states/virginia"],
+  ["TX", "Texas", "Litigation + arbitration", "Multiple GoodLeap solar-financing disputes, arbitration rulings, and appellate decisions.", null],
+  ["FL", "Florida", "Litigation", "Consumer solar-financing cases plus GoodLeap litigation involving solar-cancellation companies.", null],
+  ["NJ", "New Jersey", "Installer + financing", "Cases involving GoodLeap financing and major installers including Titan and Suntuity.", null],
+  ["MO", "Missouri", "Bankruptcy overlap", "GoodLeap financing disputes with a direct Titan Solar Power bankruptcy connection.", null],
+  ["OH", "Ohio", "Installer litigation", "Pink Energy / Power Home litigation involving GoodLeap financing.", null],
+  ["MI", "Michigan", "Installer litigation", "Companion Pink Energy / Power Home financing disputes.", null],
+  ["MD", "Maryland", "Arbitration ruling", "Recent federal ruling involving GoodLeap and a residential solar financing dispute.", null],
 ] as const;
 
 const researchNext = [
@@ -48,14 +48,14 @@ export default function GoodLeapStatesPage() {
           <Link href="/goodleap/research">Research library →</Link>
         </div>
         <div className="gl-state-grid">
-          {flagStates.map(([abbr, state, tag, detail]) => (
+          {flagStates.map(([abbr, state, tag, detail, href]) => (
             <article className="gl-state-card" key={abbr}>
               <span>{abbr}</span>
               <div>
                 <small>{tag}</small>
                 <h3>{state}</h3>
                 <p>{detail}</p>
-                <em>Dedicated state research page planned</em>
+                {href ? <Link href={href}>Open sourced state research →</Link> : <em>Dedicated state research page planned</em>}
               </div>
             </article>
           ))}
