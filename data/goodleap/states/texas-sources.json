@@ -1,0 +1,189 @@
+{
+  "state": "Texas",
+  "abbr": "TX",
+  "as_of": "2026-08-30",
+  "flag_basis": "Texas has a comparatively dense GoodLeap-specific court record involving residential solar financing, electronic contract formation, arbitration, installer conduct, Truth in Lending claims, and recent appellate decisions. Broader Texas solar enforcement and new state regulation are tracked separately and must not be described as GoodLeap-specific enforcement unless GoodLeap is actually named.",
+  "editorial_rule": "Court holdings may be stated as holdings. Claims made by consumers or government plaintiffs must remain clearly labeled as allegations unless independently established. A ruling compelling arbitration is not a ruling on the merits of the underlying consumer allegations.",
+  "core_cases": [
+    {
+      "slug": "goodleap-v-mcgrew",
+      "case": "GoodLeap, LLC v. Preston McGrew",
+      "court": "Texas Twelfth Court of Appeals",
+      "docket": "12-26-00156-CV",
+      "trial_court": "423rd District Court, Bastrop County",
+      "trial_docket": "423-10491",
+      "decision_date": "2026-07-08",
+      "installer": null,
+      "topics": ["service of process", "default judgment", "fraud allegation", "forgery allegation", "Texas DTPA", "residential solar loan"],
+      "holding": "The court reversed a default judgment against GoodLeap because error was apparent in the service record and remanded for further proceedings.",
+      "allegations_or_background": "McGrew's underlying pro se suit arose from a 2021 residential solar loan and asserted fraud, forgery, contract, warranty, Texas DTPA, and unjust-enrichment claims. Those allegations were not resolved on the merits by the appellate decision.",
+      "why_it_matters": "Very recent Texas appellate decision involving GoodLeap. Useful for tracking litigation posture and demonstrating that not every GoodLeap appellate case is an arbitration ruling.",
+      "source_tier": "published appellate opinion",
+      "source": "https://law.justia.com/cases/texas/twelfth-court-of-appeals/2026/12-26-00156-cv.html"
+    },
+    {
+      "slug": "goodleap-v-garza",
+      "case": "GoodLeap, LLC v. Samuel Ramirez Garza",
+      "court": "Texas Thirteenth Court of Appeals",
+      "docket": "13-25-00224-CV",
+      "trial_court": "398th District Court, Hidalgo County",
+      "decision_date": "2025-10-23",
+      "installer": "Vantage Point Solar, LLC",
+      "other_entities": ["Texas Solar Broker, LLC", "Eagle View Marketing, LLC"],
+      "topics": ["arbitration", "electronic signature", "contract formation", "Spanish-language sale", "Texas DTPA", "Texas Home Solicitation Act"],
+      "holding": "The appellate court reversed the trial court's denial of GoodLeap's motion to compel arbitration and remanded. The court concluded that, on the record before it, GoodLeap met its initial burden and Garza did not create a fact issue preventing enforcement of the arbitration agreement.",
+      "allegations_or_background": "Garza alleged that door-to-door salespeople made promises about eliminating his electric bill, a $7,000 payment, and a carport roof; that he did not understand he was entering a separate GoodLeap loan; and that the transaction documents and amounts differed. The opinion recounts those allegations but does not adjudicate their truth.",
+      "why_it_matters": "One of the strongest Texas sources for explaining how courts analyze electronic assent and arbitration in a door-to-door solar financing transaction.",
+      "source_tier": "published appellate opinion",
+      "source": "https://law.justia.com/cases/texas/thirteenth-court-of-appeals/2025/13-25-00224-cv.html"
+    },
+    {
+      "slug": "solcius-goodleap-v-meraz",
+      "case": "Solcius, LLC and GoodLeap, LLC (formerly Loanpal) v. Salvador Meraz",
+      "court": "Texas Eighth Court of Appeals",
+      "docket": "08-22-00146-CV",
+      "trial_court": "168th District Court, El Paso County",
+      "trial_docket": "2021DCV3036",
+      "decision_date": "2023-02-27",
+      "installer": "Solcius, LLC",
+      "topics": ["arbitration", "electronic signature", "DocuSign", "contract formation", "solar performance", "roof damage"],
+      "holding": "The court reversed the trial court's denial of the motion to compel arbitration, holding that the record contained conclusive evidence that Meraz electronically signed contracts containing arbitration provisions. It remanded with instructions to compel arbitration and stay the lawsuit.",
+      "allegations_or_background": "Meraz alleged that the installed system did not perform as represented, work at a second property was not completed, and roof damage occurred. He later disputed signing the electronic contracts. The appellate court's holding concerned arbitration and electronic execution, not the merits of the installation allegations.",
+      "why_it_matters": "Earlier Texas appellate precedent showing successful use of DocuSign evidence to establish electronic execution of solar and GoodLeap agreements.",
+      "source_tier": "published appellate opinion",
+      "source": "https://law.justia.com/cases/texas/eighth-court-of-appeals/2023/08-22-00146-cv.html"
+    },
+    {
+      "slug": "lopez-v-goodleap",
+      "case": "Donaciano Salinas Lopez and Imelda Hinojosa Lopez v. Meraki Solar, LLC, Solcius, LLC, Karla Trevino, and GoodLeap, LLC",
+      "court": "U.S. District Court for the Southern District of Texas, McAllen Division",
+      "docket": "7:25-CV-00067",
+      "order_date": "2025-09-26",
+      "installer": "Meraki Solar, LLC / Solcius, LLC",
+      "topics": ["arbitration", "contract formation", "signature dispute", "electronic loan agreement", "equitable estoppel"],
+      "holding": "The federal court denied GoodLeap's motion to compel arbitration without prejudice and ordered limited discovery on contract-formation issues. The consumers submitted sworn declarations saying they never signed the GoodLeap loan agreement; GoodLeap relied on its electronic records and DocuSign materials.",
+      "allegations_or_background": "The Lopezes alleged that a salesperson represented the system would fully power their home and eliminate the need to purchase electricity and that they were unaware of a separate financing agreement. The court did not decide the truth of those substantive sales allegations in this order.",
+      "why_it_matters": "Key counterpoint to Meraz and Garza: a Texas federal court found the formation dispute required development before arbitration could be compelled. This makes Texas particularly useful for a neutral consumer explainer on when signature disputes matter.",
+      "source_tier": "primary federal court opinion via GovInfo",
+      "source": "https://www.govinfo.gov/content/pkg/USCOURTS-txsd-7_25-cv-00067/pdf/USCOURTS-txsd-7_25-cv-00067-0.pdf"
+    },
+    {
+      "slug": "ramos-v-goodleap",
+      "case": "Alma Ramos and Indara Ramos v. GoodLeap, LLC, et al.",
+      "court": "U.S. District Court for the Southern District of Texas",
+      "docket": "7:2025cv00193",
+      "filed": "2025-04-25",
+      "installer": "Meraki Solar, LLC / Solcius, LLC",
+      "topics": ["Truth in Lending", "arbitration", "solar financing"],
+      "holding": "On June 2, 2025, the court granted GoodLeap's motion to compel arbitration and stayed the case after the plaintiffs filed a statement of non-opposition to the motion.",
+      "allegations_or_background": "The docket categorizes the matter as a Truth in Lending case. Complaint-level allegations should not be summarized editorially until the complaint itself is reviewed.",
+      "why_it_matters": "Recent federal example where arbitration was granted without the contested formation analysis seen in Lopez.",
+      "source_tier": "federal docket",
+      "source": "https://dockets.justia.com/docket/texas/txsdce/7%3A2025cv00193/2003787"
+    },
+    {
+      "slug": "elejarza-v-goodleap",
+      "case": "Kassandra Elejarza v. GoodLeap, LLC, et al.",
+      "court": "U.S. District Court for the Southern District of Texas",
+      "docket": "7:2025cv00099",
+      "filed": "2025-03-07",
+      "installer": "TriSMART Solar, LLC",
+      "other_entities": ["Vivint, LLC", "Caleb Phillips"],
+      "topics": ["Truth in Lending", "arbitration", "solar financing"],
+      "holding": "At a July 15, 2025 motion hearing, the court granted motions to compel arbitration, stayed the case, and administratively closed it.",
+      "allegations_or_background": "The federal docket identifies the case as a Truth in Lending matter. Complaint allegations require separate primary-document review before publication.",
+      "why_it_matters": "Adds to the recent concentration of GoodLeap arbitration litigation in the Southern District of Texas and links the financing dispute to TriSMART Solar.",
+      "source_tier": "federal docket",
+      "source": "https://dockets.justia.com/docket/texas/txsdce/7%3A2025cv00099/1995485"
+    }
+  ],
+  "secondary_case_leads": [
+    {
+      "case": "Hinojosa et al. v. GoodLeap, LLC et al.",
+      "docket": "1:2025cv00188",
+      "court": "U.S. District Court for the Southern District of Texas",
+      "filed": "2025-08-27",
+      "installer": "Lone Star Solar Services, LLC",
+      "status_at_last_verified_docket": "GoodLeap filed a motion to compel arbitration on September 3, 2025; later docket materials show arbitration briefing. Do not state an outcome until a later order is verified.",
+      "source": "https://dockets.justia.com/docket/texas/txsdce/1%3A2025cv00188/2026208"
+    },
+    {
+      "case": "Elizabeth Arevalo v. Meraki Solar, LLC et al.",
+      "docket": "7:2024cv00534",
+      "court": "U.S. District Court for the Southern District of Texas",
+      "filed": "2024-12-26",
+      "installer": "Meraki Solar, LLC",
+      "status_at_last_verified_docket": "GoodLeap removed the case from Hidalgo County and moved to compel arbitration in January 2025. Requires later docket/order verification before editorial use.",
+      "source": "https://dockets.justia.com/docket/texas/txsdce/7%3A2024cv00534/1986244"
+    },
+    {
+      "case": "Deanda v. GoodLeap LLC",
+      "docket": "6:2025cv00085",
+      "court": "U.S. District Court for the Northern District of Texas",
+      "filed": "2025",
+      "installer": "Lumio HX Inc. / Deca Solar LLC",
+      "status_at_last_verified_docket": "GoodLeap filed a motion to dismiss and compel arbitration in November 2025. Requires merits/order review before use.",
+      "source": "https://dockets.justia.com/docket/texas/txndce/6%3A2025cv00085/411255"
+    }
+  ],
+  "texas_regulatory_context": [
+    {
+      "title": "Texas Attorney General solar fraud initiative",
+      "date": "2026-04-03",
+      "scope": "broader Texas solar market; not GoodLeap-specific",
+      "verified_fact": "The Texas Attorney General announced a solar-fraud initiative and said it had issued civil investigative demands to several solar companies after receiving more than 100 complaints concerning the named companies collectively. The announcement names Freedom Forever, Sunrun, Lone Star Solar Services, and CAM Solar; it does not name GoodLeap.",
+      "editorial_use": "Useful context for the Texas solar enforcement environment. Never phrase this as an investigation of GoodLeap based on the cited release.",
+      "source_tier": "primary government",
+      "source": "https://www.texasattorneygeneral.gov/news/releases/attorney-general-ken-paxton-launches-major-initiative-combat-widespread-fraud-companies-selling"
+    },
+    {
+      "title": "Texas AG lawsuit against CAM Solar",
+      "date": "2026-05-21",
+      "scope": "broader Texas solar market; not GoodLeap-specific",
+      "verified_fact": "The Texas Attorney General sued CAM Solar alleging fraudulent and deceptive practices in solar-panel sales. The action followed the broader April 2026 initiative.",
+      "editorial_use": "Demonstrates active Texas solar enforcement, but should remain clearly separated from GoodLeap-specific litigation.",
+      "source_tier": "primary government",
+      "source": "https://www.texasattorneygeneral.gov/news/releases/attorney-general-ken-paxton-sues-san-antonio-based-solar-company-fraudulent-sales-solar-panel"
+    },
+    {
+      "title": "Texas Residential Solar Retailer Regulatory Act / TDLR program",
+      "effective_dates": ["2025-09-01", "2026-09-01"],
+      "scope": "consumer protection and solar retail regulation",
+      "verified_fact": "Texas began requiring specified residential-solar contract provisions and a five-business-day cancellation right for covered transactions on September 1, 2025. Beginning September 1, 2026, covered residential solar retailers and salespersons must be registered with TDLR. TDLR also states that where a covered solar sale or lease involves an affiliated or referred third-party lender, the agreement must require the lender to cancel an accompanying loan when the solar agreement is properly cancelled.",
+      "editorial_use": "High-value official consumer resource for current Texas transactions. Because the registration mandate begins September 1, 2026, copy published before that date must describe it as upcoming rather than already effective.",
+      "source_tier": "primary government",
+      "source": "https://web1.tdlr.texas.gov/residential-solar-retailers/effect.htm"
+    },
+    {
+      "title": "Texas SB 1036 legislative record",
+      "date": "2025",
+      "scope": "statutory basis for residential solar regulation",
+      "verified_fact": "SB 1036 created the registration framework for residential solar retailers and salespersons and directed development of consumer educational materials regarding rights and remedies in residential solar transactions.",
+      "editorial_use": "Use when explaining the source of the new TDLR framework or linking to statutory history.",
+      "source_tier": "primary legislative record",
+      "source": "https://capitol.texas.gov/tlodocs/89R/analysis/html/SB01036H.htm"
+    }
+  ],
+  "page_storylines_supported_by_sources": [
+    {
+      "storyline": "Texas arbitration outcomes are fact-dependent",
+      "support": ["goodleap-v-garza", "solcius-goodleap-v-meraz", "lopez-v-goodleap", "ramos-v-goodleap", "elejarza-v-goodleap"],
+      "note": "Texas records include multiple orders compelling arbitration, but Lopez shows that a sworn dispute over whether consumers actually formed the GoodLeap agreement can require discovery before arbitration is decided."
+    },
+    {
+      "storyline": "Electronic signatures and sales-tablet transactions are central recurring issues",
+      "support": ["goodleap-v-garza", "solcius-goodleap-v-meraz", "lopez-v-goodleap"],
+      "note": "The cases provide different factual records involving DocuSign, email, tablets, electronic signatures, and disputes over consumer assent."
+    },
+    {
+      "storyline": "Installer conduct and lender financing frequently appear in the same dispute",
+      "support": ["goodleap-v-garza", "solcius-goodleap-v-meraz", "lopez-v-goodleap", "ramos-v-goodleap", "elejarza-v-goodleap"],
+      "note": "Keep allegations about installer conduct distinct from judicial findings concerning GoodLeap or the enforceability of financing agreements."
+    },
+    {
+      "storyline": "Texas consumer protections are changing rapidly",
+      "support": ["Texas Residential Solar Retailer Regulatory Act / TDLR program", "Texas Attorney General solar fraud initiative"],
+      "note": "The September 1, 2026 registration date is especially relevant for launch timing and should be updated immediately after it takes effect."
+    }
+  ]
+}
