@@ -1,0 +1,59 @@
+{
+  "as_of": "2026-08-30",
+  "method": "Prioritize dedicated state pages based on GoodLeap-specific enforcement, litigation density, installer-bankruptcy overlap, recency, and current solar-product availability. Licensing alone does not justify a state page.",
+  "tiers": {
+    "tier_1_build_first": {
+      "description": "Enough GoodLeap-specific material exists now to justify dedicated state research and likely a state page.",
+      "states": [
+        {"abbr":"MN","state":"Minnesota","why":"Attorney General enforcement focused directly on GoodLeap and solar lenders; foundational dealer-fee case cited by CFPB."},
+        {"abbr":"VA","state":"Virginia","why":"2026 Attorney General litigation names GoodLeap and alleges lender knowledge in the Power Home/Pink Energy sales ecosystem."},
+        {"abbr":"TX","state":"Texas","why":"High density of recent GoodLeap solar-financing cases, including multiple arbitration rulings and state appellate decisions; current GoodLeap residential-solar market."},
+        {"abbr":"FL","state":"Florida","why":"Recent GoodLeap suit against solar-cancellation companies plus consumer solar-financing litigation; current GoodLeap residential-solar market."},
+        {"abbr":"NJ","state":"New Jersey","why":"Multiple GoodLeap solar cases tied to major installers including Titan and Suntuity; current GoodLeap residential-solar market."},
+        {"abbr":"MO","state":"Missouri","why":"GoodLeap consumer litigation overlaps directly with Titan Solar Power Missouri bankruptcy; current GoodLeap residential-solar market."},
+        {"abbr":"OH","state":"Ohio","why":"Large coordinated Pink Energy/Power Home litigation involving GoodLeap financing and installer bankruptcy; current GoodLeap residential-solar market."},
+        {"abbr":"MI","state":"Michigan","why":"Companion Pink Energy litigation involving GoodLeap financing; current GoodLeap residential-solar market."},
+        {"abbr":"MD","state":"Maryland","why":"Very recent 2026 federal solar-financing ruling denying GoodLeap's motion to compel arbitration; current GoodLeap residential-solar market."}
+      ]
+    },
+    "tier_2_research_next": {
+      "description": "Recent GoodLeap-specific evidence exists, but one more meaningful source cluster would make the state page stronger.",
+      "states": [
+        {"abbr":"NC","state":"North Carolina","why":"Recent 2025-26 GoodLeap case with live arbitrability, credit-reporting and debt-collection issues."},
+        {"abbr":"LA","state":"Louisiana","why":"Recent 2026 consumer case naming GoodLeap and Green Light Solar."},
+        {"abbr":"OR","state":"Oregon","why":"Recent 2026 case naming GoodLeap and Freedom Forever Oregon; current GoodLeap residential-solar market."},
+        {"abbr":"NV","state":"Nevada","why":"Recent 2025 Truth in Lending case involving GoodLeap; current GoodLeap residential-solar market."},
+        {"abbr":"PA","state":"Pennsylvania","why":"Substantive GoodLeap solar-financing litigation exists, though the strongest identified case is older; current GoodLeap residential-solar market."},
+        {"abbr":"CO","state":"Colorado","why":"GoodLeap solar Truth in Lending litigation exists and GoodLeap currently lists residential solar availability, but identified case is older."}
+      ]
+    },
+    "watchlist": {
+      "description": "Do not build thin pages yet. Research these because current GoodLeap solar availability, major installer failures, complaint volume or existing SolarComplaint state infrastructure could surface stronger state-specific material.",
+      "states": [
+        {"abbr":"AZ","state":"Arizona","why":"Current GoodLeap solar market plus Titan bankruptcy nexus; needs GoodLeap-specific Arizona consumer/court/regulator evidence."},
+        {"abbr":"CA","state":"California","why":"GoodLeap headquarters, BBB complaint source and current solar market; needs stronger California-specific enforcement/litigation cluster."},
+        {"abbr":"CT","state":"Connecticut","why":"Current solar market and strong SolarComplaint state enforcement infrastructure; needs GoodLeap-specific evidence."},
+        {"abbr":"DE","state":"Delaware","why":"Current solar market and bankruptcy venue relevance; needs consumer-facing GoodLeap-specific state material."},
+        {"abbr":"GA","state":"Georgia","why":"Current GoodLeap solar market; research needed."},
+        {"abbr":"HI","state":"Hawaii","why":"Current GoodLeap solar market and GoodLeap office presence; research needed."},
+        {"abbr":"ID","state":"Idaho","why":"Current GoodLeap solar market; research needed."},
+        {"abbr":"KS","state":"Kansas","why":"Current GoodLeap solar market; research needed."},
+        {"abbr":"ME","state":"Maine","why":"Current GoodLeap solar market and active installer-failure consumer issues; needs direct GoodLeap-specific source cluster."},
+        {"abbr":"MA","state":"Massachusetts","why":"Current GoodLeap solar market and mature SolarComplaint state infrastructure; research needed before GoodLeap page."},
+        {"abbr":"NH","state":"New Hampshire","why":"Current GoodLeap solar market; research needed."},
+        {"abbr":"NM","state":"New Mexico","why":"Current GoodLeap solar market and explicit GoodLeap regulator disclosure; research needed."},
+        {"abbr":"OK","state":"Oklahoma","why":"Current GoodLeap solar market; research needed."},
+        {"abbr":"WA","state":"Washington","why":"Current GoodLeap solar market; research needed."},
+        {"abbr":"WY","state":"Wyoming","why":"Current GoodLeap solar market; research needed."}
+      ]
+    }
+  },
+  "not_state_page_targets_yet": [
+    "AL","AK","AR","IL","IN","IA","KY","MT","ND","RI","SC","SD","TN","UT","VT","WI"
+  ],
+  "not_currently_listed_as_licensed": ["MS","NE","NY","WV"],
+  "district_of_columbia": {
+    "priority":"tier_2_research_next",
+    "why":"Current GoodLeap residential-solar availability and a 2026 putative class action against GoodLeap. Treat separately from the 50-state page count."
+  }
+}
