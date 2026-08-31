@@ -50,10 +50,9 @@ export default function GoodLeapHubPage() {
       <section className="gl-hero gl-hero-grid">
         <div>
           <p className="gl-kicker">Independent consumer research</p>
-          <h1>GoodLeap solar financing, organized around the questions consumers are actually facing.</h1>
+          <h1>GoodLeap Solar Financing Research</h1>
           <p>
-            Track lawsuits, arbitration decisions, attorney general actions, installer failures,
-            state resources, licensing records, and practical consumer research in one place.
+            Track lawsuits, arbitration, installer failures, state actions, and consumer resources.
           </p>
           <div className="gl-actions">
             <Link className="gl-button gl-button-primary" href="/goodleap/issues">Start with your problem</Link>
