@@ -71,7 +71,7 @@
 }
 
 .gl-hero {
-  margin-bottom: 44px;
+  margin-bottom: 36px;
 }
 
 .gl-hero-grid {
@@ -164,6 +164,59 @@
   background: #22251f;
   color: #fffdf8;
   border-color: #22251f;
+}
+
+.gl-flag-mini {
+  margin-top: 30px;
+  padding: 22px 0 0;
+  border-top: 1px solid #cfc8bd;
+  display: grid;
+  grid-template-columns: 78px minmax(0, 1fr);
+  gap: 20px;
+  max-width: 760px;
+}
+
+.gl-flag-mini-mark {
+  width: 72px;
+  height: 72px;
+  display: grid;
+  place-items: center;
+  background: #22251f;
+  color: #fffdf8;
+  font-size: 0.95rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+}
+
+.gl-flag-mini .gl-kicker {
+  margin-bottom: 6px;
+}
+
+.gl-flag-mini h2 {
+  margin: 0;
+  max-width: 610px;
+  font-size: clamp(1.25rem, 2vw, 1.65rem);
+  line-height: 1.08;
+  letter-spacing: -0.025em;
+}
+
+.gl-flag-mini p:not(.gl-kicker) {
+  margin: 9px 0 8px;
+  max-width: 650px;
+  color: #56514a;
+  line-height: 1.5;
+  font-size: 0.94rem;
+}
+
+.gl-flag-mini a {
+  color: inherit;
+  font-size: 0.9rem;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.gl-flag-mini a:hover {
+  text-decoration: underline;
 }
 
 .gl-heading-row {
@@ -448,6 +501,16 @@
 
   .gl-hero {
     margin-bottom: 36px;
+  }
+
+  .gl-flag-mini {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  .gl-flag-mini-mark {
+    width: 64px;
+    height: 44px;
   }
 
   .gl-flag-section {
