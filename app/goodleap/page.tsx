@@ -58,6 +58,19 @@ export default function GoodLeapHubPage() {
             <Link className="gl-button gl-button-primary" href="/goodleap/issues">Start with your problem</Link>
             <Link className="gl-button" href="/goodleap/states">Open the FLAG State Tracker</Link>
           </div>
+
+          <div className="gl-flag-mini">
+            <div className="gl-flag-mini-mark">FLAG</div>
+            <div>
+              <p className="gl-kicker">FLAG State Tracker</p>
+              <h2>Financing Litigation &amp; Arbitration involving GoodLeap</h2>
+              <p>
+                FLAG tracks states where GoodLeap appears in litigation, arbitration rulings,
+                attorney general actions, or closely related solar-financing disputes.
+              </p>
+              <Link href="/goodleap/states">Explore the nine FLAG states →</Link>
+            </div>
+          </div>
         </div>
         <aside className="gl-hero-panel">
           <p className="gl-kicker">Current research footprint</p>
@@ -92,10 +105,10 @@ export default function GoodLeapHubPage() {
       <section className="gl-flag-section" aria-labelledby="gl-flag-heading">
         <div className="gl-flag-intro">
           <p className="gl-kicker">FLAG State Tracker</p>
-          <h2 id="gl-flag-heading">Financing Litigation & Arbitration involving GoodLeap</h2>
+          <h2 id="gl-flag-heading">Nine states currently stand out in the research</h2>
           <p>
-            FLAG identifies states where GoodLeap-specific litigation, arbitration, attorney general action,
-            or closely related financing disputes are substantial enough to justify deeper state research.
+            These states have enough GoodLeap-specific litigation, arbitration, attorney general action,
+            or closely related financing disputes to support deeper state research.
           </p>
           <p className="gl-fineprint">A FLAG designation is a research category, not a finding of wrongdoing.</p>
         </div>
