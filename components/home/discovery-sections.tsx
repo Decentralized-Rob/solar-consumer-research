@@ -44,15 +44,15 @@ export function HeroSection({
   return (
     <section className="home-hero home-wrap">
       <div className="home-hero-copy">
-        <p className="home-kicker"><span /> Independent public-source research</p>
-        <h1>Solar problems are complicated. Finding where to start shouldn&apos;t be.</h1>
+        <p className="home-kicker"><span /> Free research assistance</p>
+        <h1>Free research help for your solar problem.</h1>
         <p className="home-hero-lede">
-          Clear paths to official complaint channels, consumer agencies, public records,
-          and source-based guides.
+          Tell us your city, state, and what happened. We’ll look for the local records, agencies,
+          complaint options, and public resources that fit your situation.
         </p>
         <div className="home-hero-actions">
-          <a className="home-button home-button--dark" href="#start">Choose your state</a>
-          <a className="home-button home-button--outline" href="/resources">Browse states</a>
+          <a className="home-button home-button--dark" href="#questions">Ask for free research help</a>
+          <a className="home-button home-button--outline" href="#start">Choose your state</a>
         </div>
         <p className="home-scope-note">
           General public information only. No legal advice, claim evaluation, or findings of wrongdoing.
