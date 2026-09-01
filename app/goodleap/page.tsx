@@ -44,6 +44,13 @@ const researchAreas = [
   ["Licensing & market footprint", "GoodLeap licensing records, current solar-product availability, and state-by-state research status.", "/goodleap/states"],
 ] as const;
 
+const flagPillars = [
+  ["$", "Financing", "Loans, payments, and financing agreements."],
+  ["§", "Litigation", "Court cases involving GoodLeap or related parties."],
+  ["A", "Arbitration", "Arbitration rulings and disputes worth tracking."],
+  ["G", "GoodLeap", "The financing platform at the center of the research."],
+] as const;
+
 export default function GoodLeapHubPage() {
   return (
     <main className="gl-main">
@@ -58,19 +65,6 @@ export default function GoodLeapHubPage() {
             <Link className="gl-button gl-button-primary" href="/goodleap/issues">Start with your problem</Link>
             <Link className="gl-button" href="/goodleap/states">Open the FLAG State Tracker</Link>
           </div>
-
-          <div className="gl-flag-mini">
-            <div className="gl-flag-mini-mark">FLAG</div>
-            <div>
-              <p className="gl-kicker">FLAG State Tracker</p>
-              <h2>Financing Litigation &amp; Arbitration involving GoodLeap</h2>
-              <p>
-                FLAG tracks states where GoodLeap appears in litigation, arbitration rulings,
-                attorney general actions, or closely related solar-financing disputes.
-              </p>
-              <Link href="/goodleap/states">Explore the nine FLAG states →</Link>
-            </div>
-          </div>
         </div>
         <aside className="gl-hero-panel">
           <p className="gl-kicker">Current research footprint</p>
@@ -81,6 +75,57 @@ export default function GoodLeapHubPage() {
           </dl>
           <p className="gl-fineprint">Licensing does not mean every state has the same GoodLeap solar activity or consumer issues.</p>
         </aside>
+      </section>
+
+      <section className="gl-flag-feature" aria-labelledby="gl-flag-feature-title">
+        <div className="gl-flag-feature-top">
+          <div className="gl-flag-feature-copy">
+            <div className="gl-flag-word" aria-hidden="true">FLAG</div>
+            <h2 id="gl-flag-feature-title">Financing Litigation &amp; Arbitration involving GoodLeap</h2>
+            <span className="gl-flag-accent" aria-hidden="true" />
+            <p>
+              States where GoodLeap-related financing disputes, litigation, or arbitration are strong enough to track closely.
+            </p>
+          </div>
+
+          <div className="gl-flag-visual">
+            <div className="gl-us-map" aria-label="Nine FLAG states: Minnesota, Michigan, Ohio, Missouri, New Jersey, Maryland, Virginia, Texas, and Florida">
+              <div className="gl-us-map-shape" aria-hidden="true" />
+              <span className="gl-map-state gl-map-mn">MN</span>
+              <span className="gl-map-state gl-map-mi">MI</span>
+              <span className="gl-map-state gl-map-oh">OH</span>
+              <span className="gl-map-state gl-map-mo">MO</span>
+              <span className="gl-map-state gl-map-nj">NJ</span>
+              <span className="gl-map-state gl-map-md">MD</span>
+              <span className="gl-map-state gl-map-va">VA</span>
+              <span className="gl-map-state gl-map-tx">TX</span>
+              <span className="gl-map-state gl-map-fl">FL</span>
+            </div>
+
+            <div className="gl-flag-feature-side">
+              <div className="gl-flag-count" aria-label="9 FLAG States">
+                <strong>9</strong>
+                <span>FLAG<br />States</span>
+              </div>
+              <Link className="gl-flag-cta" href="/goodleap/states">
+                <span className="gl-flag-cta-arrow" aria-hidden="true">→</span>
+                <span><strong>FLAG State Tracker</strong><small>Track what matters.</small></span>
+              </Link>
+            </div>
+          </div>
+        </div>
+
+        <div className="gl-flag-pillars">
+          {flagPillars.map(([icon, title, copy]) => (
+            <div className="gl-flag-pillar" key={title}>
+              <span className="gl-flag-pillar-icon" aria-hidden="true">{icon}</span>
+              <div>
+                <h3>{title}</h3>
+                <p>{copy}</p>
+              </div>
+            </div>
+          ))}
+        </div>
       </section>
 
       <section aria-labelledby="gl-start-heading">
