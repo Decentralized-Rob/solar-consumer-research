@@ -5,23 +5,22 @@ import "./goodleap.css";
 export const metadata: Metadata = {
   title: {
     default: "GoodLeap Consumer Resource Center",
-    template: "%s | GoodLeap Consumer Resource Center",
+    template: "%s | Solar Consumer Research",
   },
   description:
-    "Independent, source-based research on GoodLeap solar financing, state litigation, arbitration, regulatory actions, installer failures, and consumer resources.",
+    "Independent, source-based research on GoodLeap solar financing, state litigation, arbitration, regulatory actions, and consumer resources.",
   robots: {
-    index: false,
-    follow: false,
+    index: true,
+    follow: true,
+    googleBot: { index: true, follow: true, "max-snippet": -1, "max-image-preview": "large" },
   },
 };
 
 const nav = [
   ["SolarComplaint.com", "/"],
-  ["Start with your issue", "/goodleap/issues"],
   ["FLAG States", "/goodleap/states"],
-  ["Research", "/goodleap/research"],
-  ["Cases", "/goodleap/lawsuits"],
   ["Resources", "/goodleap/resources"],
+  ["Free research assistance", "/#questions"],
 ] as const;
 
 export default function GoodLeapLayout({ children }: { children: React.ReactNode }) {
@@ -43,7 +42,7 @@ export default function GoodLeapLayout({ children }: { children: React.ReactNode
       {children}
       <footer className="gl-footer">
         <p><strong>Solar Consumer Research</strong> · Independent consumer research and source-based information.</p>
-        <p><Link href="/">SolarComplaint.com</Link> · Consumer allegations and lawsuit allegations are identified as such. General information only; not legal or financial advice.</p>
+        <p><Link href="/">SolarComplaint.com</Link> · Consumer and lawsuit allegations are identified as such. General information only; not legal or financial advice.</p>
       </footer>
     </div>
   );

@@ -12,18 +12,10 @@ export const metadata: Metadata = {
   alternates: { canonical: "/research" },
   openGraph: {
     title: "Residential Solar Research, Lawsuits and Enforcement",
-    description:
-      "Original source-backed research and case tracking for residential solar consumers.",
+    description: "Original source-backed research and case tracking for residential solar consumers.",
     url: "/research",
     type: "website",
-    images: [
-      {
-        url: "https://solarcomplaint.com/og.png",
-        width: 1200,
-        height: 630,
-        alt: "Solar Consumer Research",
-      },
-    ],
+    images: [{ url: "https://solarcomplaint.com/og.png", width: 1200, height: 630, alt: "Solar Consumer Research" }],
   },
   twitter: {
     card: "summary_large_image",
@@ -86,11 +78,7 @@ export default function ResearchPage() {
 
         <section className="info-section case-notice">
           <strong>How this section works</strong>
-          <p>
-            Research stories connect the original government record to the relevant state and company pages. Lawsuits,
-            investigations, settlements, and allegations are labeled separately. Source links remain available on the
-            story itself and on the related resource pages.
-          </p>
+          <p>Research stories connect the original government record to the relevant state and company pages. Lawsuits, investigations, settlements, and allegations are labeled separately. Source links remain available on the story itself and on the related resource pages.</p>
         </section>
 
         <section className="state-source-section" aria-labelledby="featured-research-title">
@@ -113,24 +101,15 @@ export default function ResearchPage() {
 
         <section className="info-section">
           <h2>Company and case trackers</h2>
-          <p>
-            <Link href="/companies/sunrun">Sunrun: investigations, enforcement, settlements, and documented cases →</Link>
-          </p>
-          <p>
-            <Link href="/cases/titan-solar-power">Titan Solar Power: closure, bankruptcy, customer resources, and updates →</Link>
-          </p>
-          <p>
-            <Link href="/cases/connecticut-attorney-general-sunrun-lawsuit">Connecticut Attorney General lawsuit involving Sunrun →</Link>
-          </p>
+          <p><Link href="/goodleap">GoodLeap Consumer Resource Center: solar financing, FLAG state tracking, and official consumer resources →</Link></p>
+          <p><Link href="/companies/sunrun">Sunrun: investigations, enforcement, settlements, and documented cases →</Link></p>
+          <p><Link href="/cases/titan-solar-power">Titan Solar Power: closure, bankruptcy, customer resources, and updates →</Link></p>
+          <p><Link href="/cases/connecticut-attorney-general-sunrun-lawsuit">Connecticut Attorney General lawsuit involving Sunrun →</Link></p>
         </section>
 
         <section className="info-section">
           <h2>Research standards</h2>
-          <p>
-            Solar Consumer Research prioritizes government records and primary documents, keeps procedural status clear,
-            and separates source facts from analysis. Read the full <Link href="/methodology">research methodology</Link>
-            {" "}or <Link href="/corrections">submit a correction</Link>.
-          </p>
+          <p>Solar Consumer Research prioritizes government records and primary documents, keeps procedural status clear, and separates source facts from analysis. Read the full <Link href="/methodology">research methodology</Link> or <Link href="/corrections">submit a correction</Link>.</p>
         </section>
       </InfoPage>
     </>
