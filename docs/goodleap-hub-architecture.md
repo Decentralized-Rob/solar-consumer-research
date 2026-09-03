@@ -1,31 +1,39 @@
 # GoodLeap Consumer Resource Hub Architecture
 
-Status: development scaffold only. Do not publish or merge without explicit approval.
+Status: v1 launch candidate. Keep the pull request unmerged until explicit launch approval and final verification pass.
 
-## Current route tree
+## Public v1 route tree
+
+The launch version intentionally exposes only substantive routes:
 
 - `/goodleap/`
-- `/goodleap/issues/`
-- `/goodleap/issues/system-installer/`
-- `/goodleap/issues/loan-payments/`
-- `/goodleap/issues/expectations/`
-- `/goodleap/issues/next-steps/`
 - `/goodleap/states/`
-- `/goodleap/research/`
-- `/goodleap/lawsuits/`
+- `/goodleap/states/minnesota/`
+- `/goodleap/states/virginia/`
 - `/goodleap/resources/`
+
+The previous empty issue, research-library, and lawsuits scaffold routes were removed before launch. They should not be recreated until they contain useful source-backed material.
+
+## FLAG state model
+
+FLAG means **Financing Litigation & Arbitration involving GoodLeap**.
+
+The public tracker currently contains nine research states. Two state pages are published in v1: Minnesota and Virginia. Seven additional states remain visible as research priorities without empty dedicated pages.
+
+A FLAG designation is a research category, not a finding of wrongdoing.
 
 ## Reserved future routes
 
-Create only when supported by substantive source material.
+Create these only when supported by substantive source material:
 
-- `/goodleap/states/minnesota/`
-- `/goodleap/states/texas/`
 - `/goodleap/states/[state]/`
+- `/goodleap/research/`
 - `/goodleap/research/court-filings/`
 - `/goodleap/research/regulatory-actions/`
 - `/goodleap/research/company-documents/`
 - `/goodleap/research/consumer-complaints/`
+- `/goodleap/lawsuits/`
+- issue-specific consumer pathways
 
 Do not pre-create 50 state pages or large numbers of thin issue pages.
 
@@ -41,24 +49,29 @@ Substantive pages should separate and label source types clearly:
 
 ## Internal linking model
 
-The GoodLeap hub is intended to remain part of SolarComplaint.com rather than becoming an isolated microsite.
+The GoodLeap hub remains part of SolarComplaint.com rather than operating as an isolated microsite.
 
-Examples:
+Current v1 linking includes:
 
-- GoodLeap state page -> matching SolarComplaint.com state hub -> official state regulator or Attorney General
-- SolarComplaint.com state hub -> relevant GoodLeap state or financing page
-- GoodLeap financing page -> federal source -> state page -> relevant lawsuit or research record
+- `/research` -> `/goodleap/`
+- GoodLeap hub -> FLAG tracker, resources, published state pages, and SolarComplaint.com research assistance
+- GoodLeap state page -> matching SolarComplaint.com state hub -> official state sources
+- GoodLeap resources -> federal resources and published GoodLeap state pages
+
+Future matching SolarComplaint.com state pages should link back to substantive GoodLeap state pages where the overlap materially helps consumers.
 
 ## Research assistance
 
-The future GoodLeap research-assistance form should reuse the existing SolarComplaint.com form architecture where practical. Expected fields include state, installer/company if known, broad issue category, short description, and email.
+GoodLeap v1 reuses the existing SolarComplaint.com research-assistance workflow at `/#questions`. It does not create a second intake system or duplicate storage path.
 
-The form is intentionally not implemented in this scaffold.
+## Indexing and discovery
 
-## Development indexing
+The v1 GoodLeap namespace is indexable. Only the five public v1 routes are added to the sitemap. Empty/deferred routes are absent rather than published with `noindex` placeholders.
 
-The `app/goodleap/layout.tsx` metadata currently sets `robots.index` and `robots.follow` to false. Remove or revise this only when the hub is content-complete enough for deliberate publication and indexing.
+Each public v1 page should have a canonical URL and page-specific search/social metadata. The GoodLeap homepage also exposes CollectionPage and breadcrumb structured data.
 
-## Architecture concern before content expansion
+## Structured research data
 
-The current SolarComplaint.com repository mixes broad state hubs, guides, company pages, and case hubs directly under the App Router. GoodLeap is large enough to justify its own top-level `/goodleap/` namespace and shared layout, which this scaffold establishes. Before adding substantial research data, decide whether source records will live directly in page components or in a structured data/content layer. A structured source layer is preferable if the same court filing, regulator action, or source needs to appear across multiple GoodLeap pages and SolarComplaint.com state pages.
+The repository already contains GoodLeap licensing, event, company-context, state-priority, and source datasets under `data/goodleap/`. These remain useful as research inputs.
+
+Before expanding the hub substantially, move repeated case and state facts toward a structured content layer so the same record is not maintained independently in multiple page components. The goal is one reviewed source record feeding multiple relevant pages, not duplicated hard-coded claims.
