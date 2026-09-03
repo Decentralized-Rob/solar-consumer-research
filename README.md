@@ -26,7 +26,7 @@ Research claims are reviewed against the underlying public record. Allegations, 
 
 ## Private intake and security
 
-Public intake is handled through server-side routes. The research-help and source-submission forms validate input, use a honeypot, and require server-side Cloudflare Turnstile verification before a database write.
+Public intake is handled through server-side routes. The research-help and source-submission routes validate input, reject a populated honeypot field, and require server-side Cloudflare Turnstile verification before a database write.
 
 Private intake tables are not directly available to browser roles. Server-only credentials are read from environment variables and are not sent to the browser. User submissions are not automatically published.
 
