@@ -1,0 +1,99 @@
+"use client";
+
+import { FormEvent, useCallback, useState } from "react";
+import { states } from "../lib/content";
+import { getPublicFeatureConfig } from "../lib/supabase/config";
+import { TurnstileWidget } from "./turnstile-widget";
+
+type ResearchHelpFormProps = { defaultStateCode?: string };
+
+export function ResearchHelpForm({ defaultStateCode = "" }: ResearchHelpFormProps) {
+  const [email, setEmail] = useState("");
+  const [selectedState, setSelectedState] = useState(defaultStateCode);
+  const lockedState = states.find((state) => state.code === defaultStateCode);
+  const [city, setCity] = useState("");
+  const [question, setQuestion] = useState("");
+  const [message, setMessage] = useState("");
+  const [submittedEmail, setSubmittedEmail] = useState("");
+  const [notificationSent, setNotificationSent] = useState(true);
+  const [busy, setBusy] = useState(false);
+  const [turnstileToken, setTurnstileToken] = useState("");
+  const [turnstileResetKey, setTurnstileResetKey] = useState(0);
+  const turnstileSiteKey = getPublicFeatureConfig().turnstileSiteKey;
+  const receiveTurnstileToken = useCallback((token: string) => setTurnstileToken(token), []);
+
+  async function submitQuestion(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setMessage("");
+    setSubmittedEmail("");
+    setNotificationSent(true);
+    if (!turnstileToken) {
+      setMessage("Complete the verification check before sending your question.");
+      return;
+    }
+    setBusy(true);
+    let attemptedSubmission = false;
+
+    try {
+      attemptedSubmission = true;
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ email: email.trim(), stateCode: selectedState, city: city.trim(), question: question.trim(), turnstileToken, website: "" }),
+      });
+      const result = (await response.json()) as { error?: string; received?: boolean; notificationSent?: boolean };
+      if (!response.ok || !result.received) throw new Error(result.error ?? "Your question could not be sent. Please try again.");
+
+      setSubmittedEmail(email.trim());
+      setNotificationSent(result.notificationSent !== false);
+      if (!lockedState) setSelectedState("");
+      setCity("");
+      setQuestion("");
+    } catch (error) {
+      setMessage(error instanceof Error ? error.message : "Your question could not be sent. Please try again.");
+    } finally {
+      if (attemptedSubmission) {
+        setTurnstileToken("");
+        setTurnstileResetKey((value) => value + 1);
+      }
+      setBusy(false);
+    }
+  }
+
+  if (submittedEmail) {
+    return (
+      <div className="contact-confirmation" role="status">
+        <p>Question received</p>
+        <h3>Thank you.</h3>
+        <span>{notificationSent ? "Your request has been recorded and sent to the research team." : "Your request has been recorded, but we could not send an immediate team notification."}</span>
+        <small>{notificationSent ? <>We’ll reply to {submittedEmail} by email. Check your spam or junk folder if you do not see a reply.</> : <>Please try again later if you need a prompt response.</>}</small>
+        <button type="button" onClick={() => setSubmittedEmail("")}>Send another question</button>
+      </div>
+    );
+  }
+
+  return (
+    <form className="question-form question-form--public" onSubmit={submitQuestion}>
+      <label htmlFor="question-email">Your email</label>
+      <input id="question-email" type="email" value={email} onChange={(event) => setEmail(event.target.value)} placeholder="you@example.com" autoComplete="email" required />
+      <label htmlFor="question-state">State</label>
+      {lockedState ? (
+        <input id="question-state" type="text" value={lockedState.name} readOnly aria-readonly="true" />
+      ) : (
+        <select id="question-state" value={selectedState} onChange={(event) => setSelectedState(event.target.value)} required>
+          <option value="" disabled>Select your state</option>
+          {states.map((state) => <option key={state.code} value={state.code}>{state.name}</option>)}
+        </select>
+      )}
+      <label htmlFor="question-city">City or town</label>
+      <input id="question-city" type="text" value={city} onChange={(event) => setCity(event.target.value)} maxLength={100} autoComplete="address-level2" required />
+      <label htmlFor="research-question">Briefly describe your situation or question</label>
+      <textarea id="research-question" value={question} onChange={(event) => setQuestion(event.target.value)} minLength={20} maxLength={4000} placeholder="Example: “My installer changed the system design after I signed. I’m trying to find the correct public resources for my situation.”" required />
+      <p className="form-note">Do not include account numbers, financial details, Social Security numbers, or confidential documents.</p>
+      {turnstileSiteKey ? <TurnstileWidget siteKey={turnstileSiteKey} onToken={receiveTurnstileToken} resetKey={turnstileResetKey} /> : <p className="form-message" role="alert">This form is temporarily unavailable.</p>}
+      <button className="button button--sun" type="submit" disabled={busy || !turnstileSiteKey}>{busy ? "Sending..." : "Send question"}</button>
+      <p className="form-note">This is research help, not legal advice.</p>
+      {message && <p className="form-message" role="alert">{message}</p>}
+    </form>
+  );
+}
