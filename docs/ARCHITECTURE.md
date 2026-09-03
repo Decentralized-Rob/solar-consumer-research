@@ -27,7 +27,7 @@ Read APIs                    Submission APIs
 updates, search              /api/source-submissions
   |                             |
   |                             +-> input validation
-  |                             +-> honeypot check
+  |                             +-> honeypot field check
   |                             +-> server-side Turnstile verification
   |                             +-> server-only Supabase admin client
   |                                      |
@@ -42,7 +42,7 @@ updates, search              /api/source-submissions
 Production runtime: Cloudflare Worker-compatible Vinext output
 ```
 
-The contact route records a valid research-help request before attempting a separate email notification to the research team. A notification failure does not discard a request that was already saved.
+The contact route records a valid research-help request before making a best-effort notification request through FormSubmit using the submitted email, state, city, and question. A notification failure does not discard a request that was already saved. The public privacy page identifies Supabase, FormSubmit, and Cloudflare as service providers involved in this flow.
 
 ## Trust and publishing model
 
@@ -62,7 +62,7 @@ The current public research-help flow does not require account creation or passw
 For `/api/contact` and `/api/source-submissions`:
 
 - Input is parsed and validated on the server.
-- Hidden honeypot input is checked before processing.
+- A populated honeypot field is rejected before normal processing.
 - Cloudflare Turnstile is verified server-side before a database write.
 - Missing Turnstile server configuration fails closed rather than accepting an unverified submission.
 - Database writes use a Supabase service-role credential available only to the server route.
@@ -113,9 +113,7 @@ AI output is not treated as a source of truth. Research claims are checked again
 
 Pull requests run the repository `Verify` workflow, which installs dependencies, runs linting, and runs the test suite. The default branch is protected by a repository ruleset requiring a pull request and the `verify` status check before changes can enter `main`.
 
-## Next architecture cleanup
-
-The main architecture debt is now explicit rather than hidden:
+## Known cleanup items
 
 - decide whether to remove the unused authenticated profile/question routes
 - move editorial dates and page metadata closer to the content records they describe
