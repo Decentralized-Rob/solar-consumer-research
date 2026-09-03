@@ -23,13 +23,13 @@ React 19 application with Next-compatible routing through Vinext
   |                             |
   v                             v
 Read APIs                    Submission APIs
-/resources, guides,          /api/contact
-updates, search              /api/source-submissions
-  |                             |
-  |                             +-> input validation
-  |                             +-> honeypot field check
-  |                             +-> server-side Turnstile verification
-  |                             +-> server-only Supabase admin client
+/api/resources              /api/contact
+/api/guides                 /api/source-submissions
+/api/updates                   |
+/api/search                    +-> input validation
+  |                            +-> honeypot field check
+  |                            +-> server-side Turnstile verification
+  |                            +-> server-only Supabase admin client
   |                                      |
   +-----------------------------+--------+
                                 v
@@ -46,7 +46,7 @@ The contact route records a valid research-help request before making a best-eff
 
 ## Trust and publishing model
 
-1. Public research is tied to an approved source domain where the database-backed publishing system is used.
+1. Database-backed public research records use approved source domains.
 2. Public records carry source information, editorial status, and verification metadata where an individual review date is recorded.
 3. Anonymous visitors can read only content exposed as published public material.
 4. Allegations, complaints, investigations, enforcement actions, settlements, and findings are described according to what the underlying source establishes.
@@ -99,7 +99,7 @@ The search endpoint exists, but the public site search interface remains intenti
 
 ## Earlier authenticated intake code
 
-The repository still contains `/api/profile`, `/api/questions`, related authentication helpers, and database tables from an earlier passwordless-account design. Code search confirms the current public interface does not call those endpoints.
+The repository still contains `/api/profile`, `/api/questions`, related authentication helpers, and database tables from an earlier passwordless-account design. The current public interface does not call those endpoints.
 
 They are retained for now rather than being removed as part of a documentation change. A separate cleanup should decide whether to retire them or deliberately reintroduce an authenticated workflow.
 
