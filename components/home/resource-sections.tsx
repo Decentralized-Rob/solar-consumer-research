@@ -1,4 +1,4 @@
-import { AccountPanel } from "../account-panel";
+import { ResearchHelpForm } from "../research-help-form";
 import { stateSlug, topics } from "../../lib/content";
 import type { Resource, Update } from "../../lib/types";
 import { ArrowIcon, SourceType, type State, type TopicFilter } from "./shared";
@@ -164,7 +164,7 @@ export function QuestionsSection() {
           </p>
         </div>
         <div className="home-question-account">
-          <AccountPanel />
+          <ResearchHelpForm />
         </div>
       </div>
     </section>
