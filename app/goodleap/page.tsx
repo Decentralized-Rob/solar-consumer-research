@@ -42,13 +42,6 @@ const publishedStates = [
 
 const trackedStates = ["Texas", "Florida", "New Jersey", "Missouri", "Ohio", "Michigan", "Maryland"];
 
-const flagPillars = [
-  ["$", "Financing", "Loans, payments, and financing agreements."],
-  ["§", "Litigation", "Court records involving GoodLeap or related parties."],
-  ["A", "Arbitration", "Orders and disputes involving arbitration."],
-  ["G", "Government", "Attorney General and regulator records."],
-] as const;
-
 export default function GoodLeapHubPage() {
   const structuredData = {
     "@context": "https://schema.org",
@@ -84,73 +77,41 @@ export default function GoodLeapHubPage() {
             <p>Track documented state actions, solar-financing litigation, arbitration rulings, and official consumer resources.</p>
             <div className="gl-actions">
               <Link className="gl-button gl-button-primary" href="/#questions">Get free research assistance</Link>
-              <Link className="gl-button" href="/goodleap/states">Open the FLAG State Tracker</Link>
+              <Link className="gl-button" href="/goodleap/states">Browse GoodLeap state research</Link>
             </div>
           </div>
           <aside className="gl-hero-panel">
             <p className="gl-kicker">Current research footprint</p>
             <dl>
-              <div><dt>46 + D.C.</dt><dd>states / district where GoodLeap lists licenses or registrations</dd></div>
               <div><dt>9</dt><dd>states in the current FLAG research set</dd></div>
-              <div><dt>2</dt><dd>state research pages published at launch</dd></div>
+              <div><dt>2</dt><dd>state research pages published now</dd></div>
             </dl>
-            <p className="gl-fineprint">Licensing does not mean every state has the same GoodLeap solar activity or consumer issues.</p>
+            <p className="gl-fineprint">GoodLeap lists licenses or registrations in 46 states plus Washington, D.C. Licensing alone does not determine where we publish state research.</p>
           </aside>
         </section>
 
         <section className="gl-flag-feature" aria-labelledby="gl-flag-feature-title">
-          <div className="gl-flag-feature-top">
-            <div className="gl-flag-feature-copy">
-              <div className="gl-flag-word" aria-hidden="true">FLAG</div>
+          <div className="gl-heading-row">
+            <div>
+              <p className="gl-kicker">FLAG State Tracker</p>
               <h2 id="gl-flag-feature-title">Financing Litigation &amp; Arbitration involving GoodLeap</h2>
-              <span className="gl-flag-accent" aria-hidden="true" />
-              <p>FLAG identifies states where the public record is strong enough to justify focused GoodLeap research. It is a research designation, not a finding of wrongdoing.</p>
             </div>
-
-            <div className="gl-flag-visual">
-              <div className="gl-us-map" aria-label="Nine FLAG research states: Minnesota, Michigan, Ohio, Missouri, New Jersey, Maryland, Virginia, Texas, and Florida">
-                <div className="gl-us-map-shape" aria-hidden="true" />
-                <span className="gl-map-state gl-map-mn">MN</span>
-                <span className="gl-map-state gl-map-mi">MI</span>
-                <span className="gl-map-state gl-map-oh">OH</span>
-                <span className="gl-map-state gl-map-mo">MO</span>
-                <span className="gl-map-state gl-map-nj">NJ</span>
-                <span className="gl-map-state gl-map-md">MD</span>
-                <span className="gl-map-state gl-map-va">VA</span>
-                <span className="gl-map-state gl-map-tx">TX</span>
-                <span className="gl-map-state gl-map-fl">FL</span>
-              </div>
-
-              <div className="gl-flag-feature-side">
-                <div className="gl-flag-count" aria-label="9 FLAG research states">
-                  <strong>9</strong>
-                  <span>FLAG<br />States</span>
-                </div>
-                <Link className="gl-flag-cta" href="/goodleap/states">
-                  <span className="gl-flag-cta-arrow" aria-hidden="true">→</span>
-                  <span><strong>FLAG State Tracker</strong><small>See published and tracked states.</small></span>
-                </Link>
-              </div>
-            </div>
+            <Link className="gl-button gl-button-primary" href="/goodleap/states">Open tracker</Link>
           </div>
-
-          <div className="gl-flag-pillars">
-            {flagPillars.map(([icon, title, copy]) => (
-              <div className="gl-flag-pillar" key={title}>
-                <span className="gl-flag-pillar-icon" aria-hidden="true">{icon}</span>
-                <div><h3>{title}</h3><p>{copy}</p></div>
-              </div>
-            ))}
-          </div>
+          <p>
+            FLAG is our research category for states with enough GoodLeap-specific court, arbitration, Attorney General,
+            or closely related financing records to justify focused review.
+          </p>
+          <p className="gl-fineprint">9 states tracked · 2 full state pages published · FLAG is not a finding of wrongdoing.</p>
         </section>
 
         <section aria-labelledby="gl-published-heading">
           <div className="gl-heading-row">
             <div>
               <p className="gl-kicker">Published state research</p>
-              <h2 id="gl-published-heading">Start with the sourced pages that are live now</h2>
+              <h2 id="gl-published-heading">Start with the sourced pages available now</h2>
             </div>
-            <Link href="/goodleap/states">View tracker →</Link>
+            <Link href="/goodleap/states">View all tracked states →</Link>
           </div>
           <div className="gl-state-grid">
             {publishedStates.map((item) => (
@@ -170,7 +131,7 @@ export default function GoodLeapHubPage() {
         <section className="gl-watch-section" aria-labelledby="gl-tracked-heading">
           <div>
             <p className="gl-kicker">Tracked for deeper review</p>
-            <h2 id="gl-tracked-heading">Seven more states are in the current FLAG research set</h2>
+            <h2 id="gl-tracked-heading">Seven more states are in the current research set</h2>
             <p>These states have GoodLeap-specific public records under review. Dedicated pages will be published only when the source record is complete enough to be useful.</p>
           </div>
           <div className="gl-chip-list">
