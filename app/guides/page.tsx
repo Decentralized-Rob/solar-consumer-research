@@ -22,14 +22,14 @@ async function loadGuides(): Promise<Guide[]> {
   try {
     const { data, error } = await createSupabaseServerClient()
       .from("guides")
-      .select("id,state_code,title,summary,time_label,source_title,source_url,last_verified_at,sort_order,guide_steps(id,step_order,title,detail)")
+      .select("slug,state_code,title,summary,time_label,source_title,source_url,last_verified_at,sort_order,guide_steps(id,step_order,title,detail)")
       .eq("status", "published")
       .or("state_code.is.null,state_code.eq.MA")
       .order("sort_order", { ascending: true })
       .order("step_order", { referencedTable: "guide_steps", ascending: true });
     if (error || !data) return fallbackGuides;
     return data.map((item) => ({
-      id: item.id,
+      id: item.slug,
       stateCode: item.state_code,
       title: item.title,
       summary: item.summary,
