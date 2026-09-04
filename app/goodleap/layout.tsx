@@ -4,7 +4,7 @@ import "./goodleap.css";
 
 export const metadata: Metadata = {
   title: {
-    default: "GoodLeap Consumer Resource Center",
+    default: "GoodLeap Solar Financing Research",
     template: "%s | Solar Consumer Research",
   },
   description:
@@ -17,10 +17,10 @@ export const metadata: Metadata = {
 };
 
 const nav = [
-  ["SolarComplaint.com", "/"],
-  ["FLAG States", "/goodleap/states"],
+  ["State research", "/goodleap/states"],
   ["Resources", "/goodleap/resources"],
-  ["Free research assistance", "/#questions"],
+  ["Methodology", "/methodology"],
+  ["Research help", "/#questions"],
 ] as const;
 
 export default function GoodLeapLayout({ children }: { children: React.ReactNode }) {
@@ -30,9 +30,9 @@ export default function GoodLeapLayout({ children }: { children: React.ReactNode
         <div className="gl-header-inner">
           <Link className="gl-brand" href="/goodleap">
             <span>Solar Consumer Research</span>
-            <strong>GoodLeap Consumer Resource Center</strong>
+            <strong>GoodLeap research</strong>
           </Link>
-          <nav aria-label="GoodLeap hub navigation">
+          <nav aria-label="GoodLeap research navigation">
             {nav.map(([label, href]) => (
               <Link href={href} key={href}>{label}</Link>
             ))}
@@ -41,8 +41,10 @@ export default function GoodLeapLayout({ children }: { children: React.ReactNode
       </header>
       {children}
       <footer className="gl-footer">
-        <p><strong>Solar Consumer Research</strong> · Independent consumer research and source-based information.</p>
-        <p><Link href="/">SolarComplaint.com</Link> · Consumer and lawsuit allegations are identified as such. General information only; not legal or financial advice.</p>
+        <p><strong>Solar Consumer Research</strong> is an independently operated public-records research project.</p>
+        <p>
+          <Link href="/">SolarComplaint.com</Link> · <Link href="/methodology">Methodology</Link> · <Link href="/corrections">Corrections</Link> · General information only; not legal or financial advice.
+        </p>
       </footer>
     </div>
   );
