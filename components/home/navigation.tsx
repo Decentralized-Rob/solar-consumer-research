@@ -1,4 +1,8 @@
+"use client";
+
 import Image from "next/image";
+import Link from "next/link";
+import { useState } from "react";
 
 export function HomeHeader({
   menuOpen,
@@ -9,6 +13,15 @@ export function HomeHeader({
   onMenuToggle: () => void;
   onMenuClose: () => void;
 }) {
+  const [researchOpen, setResearchOpen] = useState(false);
+  const [resourcesOpen, setResourcesOpen] = useState(false);
+
+  const closeMenu = () => {
+    setResearchOpen(false);
+    setResourcesOpen(false);
+    onMenuClose();
+  };
+
   return (
     <header className="home-header">
       <a className="home-wordmark" href="#top" aria-label="Solar Consumer Research home">
@@ -28,14 +41,69 @@ export function HomeHeader({
         className={`home-nav ${menuOpen ? "is-open" : ""}`}
         aria-label="Primary navigation"
       >
-        <a href="#start" onClick={onMenuClose}>Start here</a>
-        <a href="/research" onClick={onMenuClose}>Research</a>
-        <a href="/resources" onClick={onMenuClose}>States</a>
-        <a href="/federal-resources" onClick={onMenuClose}>Federal</a>
-        <a href="/guides" onClick={onMenuClose}>Guides</a>
-        <a href="/about" onClick={onMenuClose}>About</a>
+        <Link href="/#start" onClick={closeMenu}>Start here</Link>
+        <div className={`home-nav-group ${researchOpen ? "is-expanded" : ""}`}>
+          <div className="home-nav-group-label">
+            <a href="/research" onClick={closeMenu}>Research</a>
+            <button
+              type="button"
+              aria-label="Show research pages"
+              aria-expanded={researchOpen}
+              aria-controls="research-navigation-submenu"
+              onClick={() => {
+                const nextOpen = !researchOpen;
+                setResearchOpen(nextOpen);
+                if (nextOpen) setResourcesOpen(false);
+              }}
+            >
+              <span aria-hidden="true">⌄</span>
+            </button>
+          </div>
+          <div
+            id="research-navigation-submenu"
+            className="home-nav-submenu"
+            style={{ display: researchOpen ? "block" : "none" }}
+          >
+            <a href="/research/solar-sales-financing-after-complaint" onClick={closeMenu}>
+              Solar Sales, Financing and What Happens After a Complaint
+            </a>
+            <a href="/companies/sunrun" onClick={closeMenu}>Sunrun</a>
+            <a href="/cases/titan-solar-power" onClick={closeMenu}>Titan Solar Power</a>
+            <a href="/cases/connecticut-attorney-general-sunrun-lawsuit" onClick={closeMenu}>
+              Connecticut AG v. Sunrun
+            </a>
+          </div>
+        </div>
+        <a href="/resources" onClick={closeMenu}>States</a>
+        <div className={`home-nav-group ${resourcesOpen ? "is-expanded" : ""}`}>
+          <div className="home-nav-group-label">
+            <a href="/federal-resources" onClick={closeMenu}>Resources</a>
+            <button
+              type="button"
+              aria-label="Show consumer resources"
+              aria-expanded={resourcesOpen}
+              aria-controls="resources-navigation-submenu"
+              onClick={() => {
+                const nextOpen = !resourcesOpen;
+                setResourcesOpen(nextOpen);
+                if (nextOpen) setResearchOpen(false);
+              }}
+            >
+              <span aria-hidden="true">⌄</span>
+            </button>
+          </div>
+          <div
+            id="resources-navigation-submenu"
+            className="home-nav-submenu"
+            style={{ display: resourcesOpen ? "block" : "none" }}
+          >
+            <a href="/federal-resources" onClick={closeMenu}>Federal Resources</a>
+            <a href="/guides" onClick={closeMenu}>Consumer Guides</a>
+          </div>
+        </div>
+        <a href="/about" onClick={closeMenu}>About</a>
       </nav>
-      <a className="home-header-action" href="#questions">Ask a question</a>
+      <Link className="home-header-action" href="/#questions">Ask for free research help</Link>
     </header>
   );
 }
