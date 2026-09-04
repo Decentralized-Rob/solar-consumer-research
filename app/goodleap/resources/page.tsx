@@ -51,6 +51,7 @@ export default function GoodLeapResourcesPage() {
         name: "GoodLeap Solar Financing Resources for Consumers",
         description: "Official federal and state resources for consumers researching GoodLeap solar financing issues.",
         url: canonicalUrl,
+        inLanguage: "en-US",
         dateModified: reviewedDate,
         isPartOf: { "@id": "https://solarcomplaint.com/#website" },
         publisher: { "@id": "https://solarcomplaint.com/#publisher" },
@@ -78,7 +79,7 @@ export default function GoodLeapResourcesPage() {
             If you are trying to understand a GoodLeap solar loan or financing dispute, start with the agencies and source documents that explain how these transactions are regulated. This page keeps those links separate from our case research.
           </p>
           <div className="gl-review-line">
-            <span>Reviewed September 3, 2026</span><span>·</span>
+            <time dateTime={reviewedDate}>Reviewed September 3, 2026</time><span>·</span>
             <Link href="/methodology">Methodology</Link><span>·</span>
             <Link href="/corrections">Corrections</Link>
           </div>
