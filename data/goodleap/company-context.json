@@ -1,0 +1,50 @@
+{
+  "as_of":"2026-08-30",
+  "items":[
+    {
+      "date":"2026-08-30",
+      "type":"operating_status",
+      "title":"GoodLeap remains an operating home-improvement and solar-finance company",
+      "source":"https://www.goodleap.com/",
+      "notes":"GoodLeap's current site identifies GoodLeap, LLC as formerly Loanpal and continues to market financing/home-energy products."
+    },
+    {
+      "date":"2026-08-30",
+      "type":"market_footprint",
+      "title":"GoodLeap lists residential solar availability in 27 states plus Washington, D.C.",
+      "source":"https://www.goodleap.com/residential-solar",
+      "states":["AZ","CA","CO","CT","DE","FL","GA","HI","ID","KS","MA","MD","ME","MI","MO","NH","NJ","NM","NV","OH","OK","OR","PA","TX","VA","WA","WY","DC"],
+      "notes":"GoodLeap states not all products are available in all states or for all utilities. This list is narrower than its 46-state plus D.C. corporate licensing footprint."
+    },
+    {
+      "date":"2026-08-30",
+      "type":"consumer_complaint_volume",
+      "title":"BBB displays more than 1,200 GoodLeap complaints over the prior three years",
+      "source":"https://www.bbb.org/us/ca/roseville/profile/construction-loans/goodleap-llc-1156-33013909/complaints",
+      "metrics":{"complaints_last_3_years":1292,"complaints_closed_last_12_months":459},
+      "categories":{"order_issues":402,"service_or_repair":375,"billing":281,"product":103,"sales_and_advertising":81,"customer_service":47,"delivery":3},
+      "notes":"BBB complaints are consumer allegations and are not independently verified facts. Counts are a point-in-time snapshot and should be refreshed before publication."
+    },
+    {
+      "date":"2024-08-07",
+      "type":"federal_context",
+      "title":"CFPB publishes solar-financing issue spotlight citing Minnesota v. GoodLeap",
+      "source":"https://www.consumerfinance.gov/data-research/research-reports/issue-spotlight-solar-financing/",
+      "notes":"The report focuses on dealer fees/markups, tax-credit representations, payment increases and savings representations in solar-specific lending."
+    },
+    {
+      "date":"2026-04-23",
+      "type":"installer_bankruptcy_relationship",
+      "title":"Freedom Forever bankruptcy filing describes GoodLeap as a critical financing partner",
+      "source":"https://documents.elevenflo.com/uuid_database_8_14_23/e87029f6-8cab-4b28-8fb6-2f78218f7965.pdf",
+      "notes":"The bankruptcy motion describes a GoodLeap Program Agreement and seeks approval of a settlement between Freedom Forever and GoodLeap. This creates a major research lane for identifying affected GoodLeap-financed Freedom Forever customers by state."
+    },
+    {
+      "date":"2025-12-12",
+      "type":"capital_markets",
+      "title":"GoodLeap announces solar lease/PPA and broader securitization transactions",
+      "source":"https://www.goodleap.com/newsroom",
+      "notes":"Company-reported financing activity is relevant to establishing that GoodLeap remains active and has shifted/expanded into leases and PPAs. Treat as a company statement, not independent reporting."
+    }
+  ]
+}

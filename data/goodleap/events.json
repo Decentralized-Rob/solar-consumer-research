@@ -1,0 +1,75 @@
+{
+  "as_of": "2026-08-30",
+  "scope": "First-pass state prioritization research. Allegations in complaints are not treated as verified facts unless independently established.",
+  "events": [
+    {
+      "state":"Minnesota","abbr":"MN","date":"2024-03-08","type":"attorney_general_action","priority":"tier_1","title":"Minnesota AG sues GoodLeap and other solar lenders over alleged hidden dealer fees","entities":["GoodLeap, LLC","Sunlight Financial LLC","Solar Mosaic LLC","Dividend Solar Finance LLC"],"status":"ongoing litigation; discovery reported after jurisdictional issues resolved in January 2025","source":"https://www.ag.state.mn.us/Office/Communications/2024/03/08_SolarLending.asp","notes":"Primary state enforcement action. AG alleged approximately $35 million in hidden fees across nearly 5,000 Minnesota solar loans involving the four lender defendants."
+    },
+    {
+      "state":"Virginia","abbr":"VA","date":"2026-01-16","type":"attorney_general_action","priority":"tier_1","title":"Commonwealth of Virginia sues former Power Home/Pink Energy principals and multiple lenders including GoodLeap","entities":["Commonwealth of Virginia","GoodLeap, LLC","Power Home/Pink Energy principals","Solar Mosaic LLC","Sunlight Financial LLC","Technology Credit Union","Cross River Bank"],"status":"active federal litigation in 2026","source":"https://www.oag.state.va.us/consumer-protection/files/Lawsuits/Com-v-Waller-First-Amended-Complaint.pdf","notes":"Primary AG action. The amended complaint alleges widespread deceptive solar sales and financing practices affecting Virginia consumers and includes allegations concerning lender knowledge of consumer complaints."
+    },
+    {
+      "state":"Texas","abbr":"TX","date":"2026-07-08","type":"appellate_case","priority":"tier_1","title":"GoodLeap v. McGrew appellate decision involving a residential solar loan","entities":["GoodLeap, LLC","Preston McGrew"],"status":"default judgment reversed and matter remanded","source":"https://law.justia.com/cases/texas/twelfth-court-of-appeals/2026/12-26-00156-cv.html","notes":"Underlying pro se suit asserted fraud, forgery, contract, warranty, Texas DTPA and unjust-enrichment claims. Useful for arbitration/service/litigation research, not proof of the underlying allegations."
+    },
+    {
+      "state":"Texas","abbr":"TX","date":"2025-10-23","type":"appellate_case","priority":"tier_1","title":"GoodLeap v. Garza appellate decision compelling arbitration","entities":["GoodLeap, LLC","Samuel Ramirez Garza","Vantage Point Solar"],"status":"trial-court denial of arbitration reversed","source":"https://law.justia.com/cases/texas/thirteenth-court-of-appeals/2025/13-25-00224-cv.html","notes":"Underlying allegations concerned Spanish-language door-to-door solar sales, promised savings and promised additional work/benefits."
+    },
+    {
+      "state":"Texas","abbr":"TX","date":"2025-04-25","type":"consumer_litigation","priority":"tier_1","title":"Ramos v. GoodLeap and solar companies","entities":["GoodLeap, LLC","Meraki Solar, LLC","Solcius, LLC"],"status":"claims against GoodLeap compelled to arbitration and case stayed","source":"https://dockets.justia.com/docket/texas/txsdce/7%3A2025cv00193/2003787","notes":"One of several recent Texas federal solar-financing cases involving GoodLeap."
+    },
+    {
+      "state":"Texas","abbr":"TX","date":"2025-03-07","type":"consumer_litigation","priority":"tier_1","title":"Elejarza v. GoodLeap, TriSMART Solar and others","entities":["GoodLeap, LLC","TriSMART Solar, LLC","Vivint, LLC"],"status":"arbitration granted; case stayed/administratively closed","source":"https://dockets.justia.com/docket/texas/txsdce/7%3A2025cv00099/1995485","notes":"Truth in Lending case; reinforces Texas as a high-density GoodLeap litigation state."
+    },
+    {
+      "state":"Florida","abbr":"FL","date":"2026-05-14","type":"company_litigation","priority":"tier_1","title":"GoodLeap sues Solar Cancellation Resource Center and Consumer Advocacy Law Group","entities":["GoodLeap, LLC","Solar Cancellation Resource Center LLC","Consumer Advocacy Law Group"],"status":"active federal litigation in 2026","source":"https://dockets.justia.com/docket/florida/flmdce/6%3A2026cv01072/459845","notes":"Directly relevant to the future cancellation-company research lane, but should remain within GoodLeap research only where the litigation itself is discussed."
+    },
+    {
+      "state":"Florida","abbr":"FL","date":"2023-12-28","type":"consumer_litigation","priority":"tier_1","title":"Johnson v. Expert and GoodLeap","entities":["GoodLeap, LLC","Expert, Inc."],"status":"claims against GoodLeap compelled to arbitration and stayed","source":"https://ecf.flmd.uscourts.gov/cgi-bin/show_public_doc?2023-02980-41-8-cv=","notes":"Putative class action arising from a solar contract and financing."
+    },
+    {
+      "state":"New Jersey","abbr":"NJ","date":"2023-11-22","type":"consumer_litigation","priority":"tier_1","title":"Shoukat v. GoodLeap and Titan Solar entities","entities":["GoodLeap, LLC","Titan Solar Power NJ, LLC","Titan Solar Power Inc.","Sunbeam Solar LLC"],"status":"litigation continued after Titan bankruptcy-related events; 2025 opinion granted default judgment against Sunbeam","source":"https://dockets.justia.com/docket/new-jersey/njdce/2%3A2023cv22603/536978","notes":"Strong GoodLeap + failed-installer research connection for New Jersey."
+    },
+    {
+      "state":"New Jersey","abbr":"NJ","date":"2022-12-02","type":"consumer_litigation","priority":"tier_1","title":"Govinda v. Suntuity, GoodLeap and CoreFusion Solar","entities":["GoodLeap, LLC","Suntuity Solar LLC","CoreFusion Solar LLC"],"status":"GoodLeap dismissed by stipulation after settlement in 2024; later proceedings continued against other defendants","source":"https://dockets.justia.com/docket/new-jersey/njdce/3%3A2022cv06964/505259","notes":"Solar financing dispute involving a Suntuity project. Useful failed/changed-installer ecosystem example."
+    },
+    {
+      "state":"Missouri","abbr":"MO","date":"2025-11-17","type":"consumer_litigation_bankruptcy_overlap","priority":"tier_1","title":"Ball v. GoodLeap involving Titan Solar Power Missouri bankruptcy","entities":["GoodLeap, LLC","Titan Solar Power MO, Inc."],"status":"GoodLeap claims compelled to arbitration; Titan bankruptcy remained relevant to case posture","source":"https://law.justia.com/cases/federal/district-courts/missouri/moedce/2%3A2023cv00065/207869/86/","notes":"Direct example of an installer bankruptcy intersecting with an active GoodLeap financing dispute."
+    },
+    {
+      "state":"Ohio","abbr":"OH","date":"2022-07-27","type":"consumer_litigation_bankruptcy_overlap","priority":"tier_1","title":"Coordinated Pink Energy/Power Home Solar litigation includes GoodLeap-financed consumers","entities":["GoodLeap, LLC","Power Home Solar d/b/a Pink Energy","Jayson Waller","Trivest Partners"],"status":"GoodLeap claims in coordinated Ohio cases were directed to arbitration; Pink Energy filed bankruptcy in 2022","source":"https://dockets.justia.com/docket/ohio/ohsdce/1%3A2022cv00437/270903","notes":"Large multi-case cluster tied to a major installer collapse."
+    },
+    {
+      "state":"Michigan","abbr":"MI","date":"2024-03-30","type":"consumer_litigation_bankruptcy_overlap","priority":"tier_1","title":"McConville v. GoodLeap transferred into Michigan Pink Energy companion litigation","entities":["GoodLeap, LLC","Power Home Solar d/b/a Pink Energy","Jayson Waller","Trivest Partners"],"status":"GoodLeap motion to compel arbitration granted in 2024","source":"https://law.justia.com/cases/federal/district-courts/michigan/miedce/4%3A2023cv11749/371173/45/","notes":"Companion to broader Pink Energy litigation and useful for organizing multi-state installer-collapse research."
+    },
+    {
+      "state":"Maryland","abbr":"MD","date":"2026-08-11","type":"consumer_litigation","priority":"tier_1","title":"Arias v. GoodLeap arbitration motion denied","entities":["GoodLeap, LLC","Cesar Antonio Galeas Arias"],"status":"GoodLeap motion to dismiss/compel arbitration denied","source":"https://www.casemine.com/judgement/us/6a7dadf40021762387139e7f/amp","notes":"Recent arbitration and contract-formation ruling in a residential solar financing dispute. Complaint allegations should remain clearly labeled as allegations."
+    },
+    {
+      "state":"North Carolina","abbr":"NC","date":"2026-06-02","type":"consumer_litigation","priority":"tier_2","title":"Montgomery v. GoodLeap litigation over arbitrability, credit reporting and debt-collection claims","entities":["GoodLeap, LLC","Eleazar Montgomery"],"status":"court ordered further proceedings/trial on arbitrability issue","source":"https://law.justia.com/cases/federal/district-courts/north-carolina/ncwdce/1%3A2025cv00296/120883/38/","notes":"Recent case with an unusual live dispute over whether arbitration can be compelled."
+    },
+    {
+      "state":"Louisiana","abbr":"LA","date":"2026-05-13","type":"consumer_litigation","priority":"tier_2","title":"Meche v. Green Light Solar and GoodLeap","entities":["GoodLeap, LLC","Green Light Solar, LLC of Texas"],"status":"filed May 2026","source":"https://dockets.justia.com/docket/louisiana/laedce/2%3A2026cv01019/277365","notes":"Recent federal consumer case connecting installer and financing issues."
+    },
+    {
+      "state":"Oregon","abbr":"OR","date":"2026-04-06","type":"consumer_litigation","priority":"tier_2","title":"Zarate v. Freedom Forever Oregon and GoodLeap","entities":["GoodLeap, LLC","Freedom Forever Oregon, LLC"],"status":"active in 2026","source":"https://dockets.justia.com/docket/oregon/ordce/3%3A2026cv00678/193186","notes":"Recent GoodLeap + Freedom Forever consumer dispute."
+    },
+    {
+      "state":"Nevada","abbr":"NV","date":"2025-10-01","type":"consumer_litigation","priority":"tier_2","title":"Davidson v. GoodLeap","entities":["GoodLeap, LLC","Katrina Davidson","Timothy Davidson"],"status":"federal Truth in Lending case filed in 2025","source":"https://dockets.justia.com/docket/nevada/nvdce/2%3A2025cv01866/177215","notes":"Recent Nevada GoodLeap litigation; needs deeper complaint review before editorial use."
+    },
+    {
+      "state":"Pennsylvania","abbr":"PA","date":"2022-07-01","type":"consumer_litigation","priority":"tier_2","title":"Purnell v. GoodLeap and solar defendants","entities":["GoodLeap, LLC"],"status":"federal litigation produced a 2023 memorandum opinion","source":"https://www.govinfo.gov/content/pkg/USCOURTS-paed-2_22-cv-02773/pdf/USCOURTS-paed-2_22-cv-02773-0.pdf","notes":"Older but substantive Pennsylvania solar-financing case."
+    },
+    {
+      "state":"Colorado","abbr":"CO","date":"2022-10-27","type":"consumer_litigation","priority":"tier_3","title":"Hansen v. Valor Roof and Solar and GoodLeap","entities":["GoodLeap, LLC","Valor Roof and Solar"],"status":"federal Truth in Lending litigation","source":"https://dockets.justia.com/docket/colorado/codce/1%3A2022cv02828/219371","notes":"Useful historical Colorado case; lower current priority than 2025-26 clusters."
+    },
+    {
+      "state":"District of Columbia","abbr":"DC","date":"2026-05-20","type":"class_action_complaint","priority":"tier_2","title":"Taylor v. GoodLeap putative class action","entities":["GoodLeap, LLC","Deborah Taylor"],"status":"motion to compel arbitration pending in summer 2026 docket materials","source":"https://dockets.justia.com/docket/district-of-columbia/dcdce/1%3A2026cv01728/292588","notes":"Recent class-action filing; underlying allegations require complaint-level review before use."
+    },
+    {
+      "state":"National","abbr":"US","date":"2024-08-07","type":"federal_research","priority":"foundation","title":"CFPB solar financing issue spotlight","entities":["Consumer Financial Protection Bureau"],"status":"published federal consumer-finance research","source":"https://www.consumerfinance.gov/data-research/research-reports/issue-spotlight-solar-financing/","notes":"The CFPB discusses hidden dealer fees, tax-credit representations, payment re-amortization and savings claims, and cites the Minnesota v. GoodLeap complaint as a source."
+    },
+    {
+      "state":"National","abbr":"US","date":"2026-04-23","type":"installer_bankruptcy","priority":"foundation","title":"Freedom Forever Chapter 11 filing includes proposed settlement with GoodLeap","entities":["Freedom Forever LLC","GoodLeap, LLC"],"status":"Chapter 11 proceedings in Delaware in 2026","source":"https://documents.elevenflo.com/uuid_database_8_14_23/e87029f6-8cab-4b28-8fb6-2f78218f7965.pdf","notes":"Bankruptcy motion states Freedom Forever and GoodLeap had a program agreement and describes GoodLeap as a critical partner. This is a national installer-finance relationship that can support state-specific follow-up where affected customers are found."
+    }
+  ]
+}
