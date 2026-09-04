@@ -57,6 +57,9 @@ export default function GoodLeapMinnesotaPage() {
         headline: "GoodLeap in Minnesota: Attorney General Solar Loan Case",
         description: "Primary-source research on Minnesota's solar-lending case naming GoodLeap and three other lenders.",
         url: canonicalUrl,
+        mainEntityOfPage: canonicalUrl,
+        image: "https://solarcomplaint.com/og.png",
+        inLanguage: "en-US",
         datePublished: publishedDate,
         dateModified: reviewedDate,
         author: { "@id": "https://solarcomplaint.com/#publisher" },
@@ -90,7 +93,7 @@ export default function GoodLeapMinnesotaPage() {
             In March 2024, the Minnesota Attorney General sued GoodLeap and three other solar lenders over alleged hidden dealer fees in financed residential solar transactions. The complaint is public, detailed, and later cited by the CFPB.
           </p>
           <div className="gl-review-line">
-            <span>Published September 3, 2026</span><span>·</span>
+            <time dateTime={publishedDate}>Published September 3, 2026</time><span>·</span>
             <span>Reviewed against cited sources</span><span>·</span>
             <Link href="/methodology">Methodology</Link><span>·</span>
             <Link href="/corrections">Corrections</Link>
@@ -109,7 +112,7 @@ export default function GoodLeapMinnesotaPage() {
               The <a className="gl-text-link" href="https://www.ag.state.mn.us/Office/Communications/2024/03/08_SolarLending.asp" target="_blank" rel="noreferrer">Attorney General&apos;s announcement</a> says the State sued GoodLeap, Sunlight Financial, Solar Mosaic, and Dividend Solar over the way solar-loan dealer fees were allegedly built into financed prices and disclosed to borrowers.
             </p>
             <p>
-              The <a className="gl-text-link" href="https://www.ag.state.mn.us/Office/Communications/2024/docs/SolarLending_Complaint.pdf" target="_blank" rel="noreferrer">filed complaint</a> alleges that the four lenders collectively collected about $35 million in hidden fees across more than 5,000 Minnesota solar systems since 2017. Those figures cover all four defendants. They are not GoodLeap-only totals.
+              The Attorney General&apos;s summary says its investigation found about $35 million in alleged hidden fees on nearly 5,000 loans financing Minnesota residential solar purchases. Those figures cover the four lender defendants collectively. They are not GoodLeap-only totals.
             </p>
             <p>
               The complaint also matters beyond Minnesota. In 2024, the <a className="gl-text-link" href="https://www.consumerfinance.gov/data-research/research-reports/issue-spotlight-solar-financing/" target="_blank" rel="noreferrer">Consumer Financial Protection Bureau</a> cited the Minnesota case in a broader report on solar-specific lending, dealer fees, tax-credit representations, payment changes, and projected savings.
@@ -135,7 +138,7 @@ export default function GoodLeapMinnesotaPage() {
           </section>
 
           <aside className="gl-note">
-            <strong>Research note:</strong> the $35 million and 5,000-system figures in the Minnesota case are allegations covering all four lender defendants. We do not attribute those totals to GoodLeap alone unless a later source isolates GoodLeap&apos;s share.
+            <strong>Research note:</strong> the Attorney General&apos;s $35 million and nearly 5,000-loan figures cover the four lender defendants collectively. We do not attribute those totals to GoodLeap alone unless a source isolates GoodLeap&apos;s share.
           </aside>
 
           <section className="gl-section" aria-labelledby="mn-sources-heading">
