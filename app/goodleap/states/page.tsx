@@ -23,17 +23,24 @@ export const metadata: Metadata = {
   },
 };
 
-const stateRows = [
+type StateRow = {
+  state: string;
+  record: string;
+  status: "Published" | "Reviewing";
+  href: string | null;
+};
+
+const stateRows: StateRow[] = [
   { state: "Minnesota", record: "Attorney General lawsuit over alleged solar-loan dealer fees", status: "Published", href: "/goodleap/states/minnesota" },
   { state: "Virginia", record: "2026 Attorney General case involving Power Home / Pink Energy financing", status: "Published", href: "/goodleap/states/virginia" },
-  { state: "Texas", record: "Multiple recent GoodLeap solar-financing cases and arbitration decisions", status: "Reviewing" },
-  { state: "Florida", record: "Consumer litigation plus GoodLeap litigation involving solar-cancellation companies", status: "Reviewing" },
-  { state: "New Jersey", record: "GoodLeap financing disputes tied to major installer failures, including Titan and Suntuity", status: "Reviewing" },
-  { state: "Missouri", record: "GoodLeap consumer litigation overlapping Titan Solar Power bankruptcy issues", status: "Reviewing" },
-  { state: "Ohio", record: "Power Home / Pink Energy litigation involving GoodLeap-financed consumers", status: "Reviewing" },
-  { state: "Michigan", record: "Companion Power Home / Pink Energy litigation involving GoodLeap financing", status: "Reviewing" },
-  { state: "Maryland", record: "2026 federal ruling on arbitration and contract formation in a GoodLeap solar-financing dispute", status: "Reviewing" },
-] as const;
+  { state: "Texas", record: "Multiple recent GoodLeap solar-financing cases and arbitration decisions", status: "Reviewing", href: null },
+  { state: "Florida", record: "Consumer litigation plus GoodLeap litigation involving solar-cancellation companies", status: "Reviewing", href: null },
+  { state: "New Jersey", record: "GoodLeap financing disputes tied to major installer failures, including Titan and Suntuity", status: "Reviewing", href: null },
+  { state: "Missouri", record: "GoodLeap consumer litigation overlapping Titan Solar Power bankruptcy issues", status: "Reviewing", href: null },
+  { state: "Ohio", record: "Power Home / Pink Energy litigation involving GoodLeap-financed consumers", status: "Reviewing", href: null },
+  { state: "Michigan", record: "Companion Power Home / Pink Energy litigation involving GoodLeap financing", status: "Reviewing", href: null },
+  { state: "Maryland", record: "2026 federal ruling on arbitration and contract formation in a GoodLeap solar-financing dispute", status: "Reviewing", href: null },
+];
 
 export default function GoodLeapStatesPage() {
   const structuredData = {
