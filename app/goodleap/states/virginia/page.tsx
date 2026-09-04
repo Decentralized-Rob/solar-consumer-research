@@ -57,6 +57,9 @@ export default function GoodLeapVirginiaPage() {
         headline: "GoodLeap in Virginia: 2026 Solar Financing Lawsuit",
         description: "Primary-source research on Virginia's 2026 Power Home / Pink Energy financing case naming GoodLeap.",
         url: canonicalUrl,
+        mainEntityOfPage: canonicalUrl,
+        image: "https://solarcomplaint.com/og.png",
+        inLanguage: "en-US",
         datePublished: publishedDate,
         dateModified: reviewedDate,
         author: { "@id": "https://solarcomplaint.com/#publisher" },
@@ -91,7 +94,7 @@ export default function GoodLeapVirginiaPage() {
             The Virginia Attorney General&apos;s amended federal complaint names GoodLeap and other lenders alongside former Power Home Solar leadership. Unlike a general industry warning, the filing contains lender-specific allegations and transaction figures that can be checked directly against the source.
           </p>
           <div className="gl-review-line">
-            <span>Published September 3, 2026</span><span>·</span>
+            <time dateTime={publishedDate}>Published September 3, 2026</time><span>·</span>
             <span>Reviewed against cited sources</span><span>·</span>
             <Link href="/methodology">Methodology</Link><span>·</span>
             <Link href="/corrections">Corrections</Link>
