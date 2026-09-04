@@ -30,6 +30,12 @@ const pathOptions: Array<{
   },
 ];
 
+const standaloneGuideHrefById: Record<string, string> = {
+  "organize-record": "/guides/solar-complaint-record-checklist",
+  "ma-ago-complaint-guide": "/guides/massachusetts-solar-complaint",
+  "ma-30-day-information": "/guides/massachusetts-30-day-demand-letter",
+};
+
 export function HeroSection({
   stateCode,
   selectedState,
@@ -116,7 +122,7 @@ export function FeaturedSection({ guides, resources }: { guides: Guide[]; resour
           {guides.map((guide, index) => (
             <a
               className={`home-story-card ${index === 0 ? "home-story-card--lead" : ""}`}
-              href={`/guides#guide-${guide.id}`}
+              href={standaloneGuideHrefById[guide.id] ?? `/guides#guide-${guide.id}`}
               key={guide.id}
             >
               <span className="home-story-meta">Guide · {guide.timeLabel}</span>
