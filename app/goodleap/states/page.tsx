@@ -52,6 +52,7 @@ export default function GoodLeapStatesPage() {
         name: "GoodLeap Solar Financing by State",
         description: "State-by-state GoodLeap solar financing research built from court, arbitration, and government records.",
         url: canonicalUrl,
+        inLanguage: "en-US",
         dateModified: reviewedDate,
         isPartOf: { "@id": "https://solarcomplaint.com/#website" },
         publisher: { "@id": "https://solarcomplaint.com/#publisher" },
@@ -78,7 +79,7 @@ export default function GoodLeapStatesPage() {
             This tracker shows where we have found enough GoodLeap-specific public material to justify deeper review. We publish a full state page only after the underlying record has been opened, checked, and organized into something useful for homeowners.
           </p>
           <div className="gl-review-line">
-            <span>Reviewed September 3, 2026</span><span>·</span>
+            <time dateTime={reviewedDate}>Reviewed September 3, 2026</time><span>·</span>
             <Link href="/methodology">Methodology</Link><span>·</span>
             <Link href="/corrections">Corrections</Link>
           </div>
