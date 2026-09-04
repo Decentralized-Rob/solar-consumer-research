@@ -5,7 +5,7 @@ const canonicalUrl = "https://solarcomplaint.com/goodleap";
 const reviewedDate = "2026-09-03";
 
 export const metadata: Metadata = {
-  title: "GoodLeap Solar Financing: Lawsuits, Arbitration & Consumer Research",
+  title: "GoodLeap Solar Financing: Lawsuits & Consumer Research",
   description:
     "GoodLeap solar financing research based on court records, Attorney General actions, arbitration rulings, and official consumer resources.",
   alternates: { canonical: "/goodleap" },
@@ -52,7 +52,12 @@ export default function GoodLeapHubPage() {
         dateModified: reviewedDate,
         isPartOf: { "@id": "https://solarcomplaint.com/#website" },
         publisher: { "@id": "https://solarcomplaint.com/#publisher" },
-        about: { "@type": "Organization", name: "GoodLeap, LLC" },
+        about: {
+          "@type": "Organization",
+          name: "GoodLeap, LLC",
+          alternateName: "Loanpal",
+          sameAs: "https://www.goodleap.com/",
+        },
       },
       {
         "@type": "BreadcrumbList",
@@ -72,10 +77,10 @@ export default function GoodLeapHubPage() {
           <p className="gl-eyebrow">GoodLeap research</p>
           <h1>GoodLeap solar financing: what the public record shows</h1>
           <p className="gl-deck">
-            GoodLeap appears in a growing set of solar-financing lawsuits, Attorney General cases, and arbitration disputes. This section pulls the strongest public records into one place and keeps allegations, court rulings, and broader industry context separate.
+            GoodLeap, formerly Loanpal, appears in a growing set of solar-financing lawsuits, Attorney General cases, and arbitration disputes. This section pulls the strongest public records into one place and keeps allegations, court rulings, and broader industry context separate.
           </p>
           <div className="gl-review-line">
-            <span>Reviewed September 3, 2026</span><span>·</span>
+            <time dateTime={reviewedDate}>Reviewed September 3, 2026</time><span>·</span>
             <Link href="/methodology">How we verify records</Link><span>·</span>
             <Link href="/corrections">Corrections</Link>
           </div>
