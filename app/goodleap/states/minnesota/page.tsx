@@ -1,21 +1,25 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
+const canonicalUrl = "https://solarcomplaint.com/goodleap/states/minnesota";
+const publishedDate = "2026-09-03";
+const reviewedDate = "2026-09-03";
+
 export const metadata: Metadata = {
-  title: "GoodLeap in Minnesota | FLAG State Research",
-  description: "Minnesota GoodLeap solar-financing research, including Attorney General litigation, dealer-fee allegations, federal consumer-finance context, and official consumer resources.",
+  title: "GoodLeap in Minnesota: Attorney General Solar Loan Case",
+  description: "Minnesota GoodLeap solar financing research covering the Attorney General lawsuit, alleged dealer fees, CFPB context, and official consumer resources.",
   alternates: { canonical: "/goodleap/states/minnesota" },
   openGraph: {
-    title: "GoodLeap in Minnesota | FLAG State Research",
-    description: "Primary-source research on Minnesota's solar-lending case naming GoodLeap and other lenders.",
+    title: "GoodLeap in Minnesota: Attorney General Solar Loan Case",
+    description: "Primary-source research on Minnesota's solar-lending case naming GoodLeap and three other lenders.",
     url: "/goodleap/states/minnesota",
     type: "article",
     images: [{ url: "https://solarcomplaint.com/og.png", width: 1200, height: 630, alt: "Solar Consumer Research" }],
   },
   twitter: {
     card: "summary_large_image",
-    title: "GoodLeap in Minnesota | FLAG State Research",
-    description: "Primary-source research on Minnesota's solar-lending case naming GoodLeap and other lenders.",
+    title: "GoodLeap in Minnesota: Attorney General Solar Loan Case",
+    description: "Primary-source research on Minnesota's solar-lending case naming GoodLeap and three other lenders.",
     images: ["https://solarcomplaint.com/og.png"],
   },
 };
@@ -34,77 +38,131 @@ const sources = [
   {
     title: "CFPB: Solar Financing Issue Spotlight",
     href: "https://www.consumerfinance.gov/data-research/research-reports/issue-spotlight-solar-financing/",
-    detail: "Federal consumer-finance analysis of solar-specific loans; the CFPB cites the Minnesota GoodLeap case in its discussion of dealer fees.",
+    detail: "Federal analysis of solar-specific lending. The CFPB cites the Minnesota complaint in its discussion of dealer fees.",
   },
   {
     title: "Minnesota Attorney General: file a consumer complaint",
     href: "https://www.ag.state.mn.us/Office/Complaint.asp",
     detail: "Official complaint channel for Minnesota consumers.",
   },
-];
+] as const;
 
 export default function GoodLeapMinnesotaPage() {
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Article",
+        "@id": `${canonicalUrl}#article`,
+        headline: "GoodLeap in Minnesota: Attorney General Solar Loan Case",
+        description: "Primary-source research on Minnesota's solar-lending case naming GoodLeap and three other lenders.",
+        url: canonicalUrl,
+        datePublished: publishedDate,
+        dateModified: reviewedDate,
+        author: { "@id": "https://solarcomplaint.com/#publisher" },
+        publisher: { "@id": "https://solarcomplaint.com/#publisher" },
+        isPartOf: { "@id": "https://solarcomplaint.com/#website" },
+        about: [
+          { "@type": "Organization", name: "GoodLeap, LLC" },
+          { "@type": "Thing", name: "Residential solar financing" },
+        ],
+      },
+      {
+        "@type": "BreadcrumbList",
+        itemListElement: [
+          { "@type": "ListItem", position: 1, name: "Home", item: "https://solarcomplaint.com/" },
+          { "@type": "ListItem", position: 2, name: "GoodLeap", item: "https://solarcomplaint.com/goodleap" },
+          { "@type": "ListItem", position: 3, name: "States", item: "https://solarcomplaint.com/goodleap/states" },
+          { "@type": "ListItem", position: 4, name: "Minnesota", item: canonicalUrl },
+        ],
+      },
+    ],
+  };
+
   return (
-    <main className="gl-main">
-      <section className="gl-section-intro">
-        <p className="gl-kicker">FLAG state · Minnesota</p>
-        <h1>Minnesota has one of the clearest public GoodLeap enforcement records.</h1>
-        <p>Minnesota is a FLAG state because its Attorney General filed a consumer-protection case naming GoodLeap directly and published the underlying complaint. The case focuses on the pricing and disclosure of solar-loan financing.</p>
-        <p className="gl-fineprint">Status: active research page. Allegations in complaints are allegations, not findings of liability. This page does not provide legal advice.</p>
-      </section>
+    <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }} />
+      <main className="gl-main">
+        <article className="gl-article">
+          <p className="gl-eyebrow">GoodLeap in Minnesota</p>
+          <h1>Minnesota&apos;s solar-loan case puts GoodLeap directly in the public record</h1>
+          <p className="gl-deck">
+            In March 2024, the Minnesota Attorney General sued GoodLeap and three other solar lenders over alleged hidden dealer fees in financed residential solar transactions. The complaint is public, detailed, and later cited by the CFPB.
+          </p>
+          <div className="gl-review-line">
+            <span>Published September 3, 2026</span><span>·</span>
+            <span>Reviewed against cited sources</span><span>·</span>
+            <Link href="/methodology">Methodology</Link><span>·</span>
+            <Link href="/corrections">Corrections</Link>
+          </div>
 
-      <div className="gl-actions">
-        <Link className="gl-button gl-button-primary" href="/#questions">Get free research assistance</Link>
-        <Link className="gl-button" href="/states/minnesota">Minnesota solar consumer resources</Link>
-        <Link className="gl-button" href="/federal-resources">Federal solar consumer resources</Link>
-      </div>
+          <dl className="gl-key-facts">
+            <div><dt>Case</dt><dd>State of Minnesota v. GoodLeap LLC, Sunlight Financial LLC, Solar Mosaic LLC, and Dividend Solar Finance LLC</dd></div>
+            <div><dt>Court file</dt><dd>27-CV-24-3558, Hennepin County District Court</dd></div>
+            <div><dt>Filed</dt><dd>March 8, 2024</dd></div>
+            <div><dt>What this page covers</dt><dd>The State&apos;s allegations, the financing issues it identified, and the official records a Minnesota borrower can review.</dd></div>
+          </dl>
 
-      <section className="gl-method-strip" aria-label="Minnesota case summary">
-        <div><strong>Primary case</strong><span>State of Minnesota v. GoodLeap LLC, Sunlight Financial LLC, Solar Mosaic LLC, and Dividend Solar Finance LLC.</span></div>
-        <div><strong>Court file</strong><span>27-CV-24-3558 · Hennepin County District Court · filed March 8, 2024.</span></div>
-      </section>
+          <section className="gl-section" aria-labelledby="mn-case-heading">
+            <h2 id="mn-case-heading">What Minnesota alleges</h2>
+            <p>
+              The <a className="gl-text-link" href="https://www.ag.state.mn.us/Office/Communications/2024/03/08_SolarLending.asp" target="_blank" rel="noreferrer">Attorney General&apos;s announcement</a> says the State sued GoodLeap, Sunlight Financial, Solar Mosaic, and Dividend Solar over the way solar-loan dealer fees were allegedly built into financed prices and disclosed to borrowers.
+            </p>
+            <p>
+              The <a className="gl-text-link" href="https://www.ag.state.mn.us/Office/Communications/2024/docs/SolarLending_Complaint.pdf" target="_blank" rel="noreferrer">filed complaint</a> alleges that the four lenders collectively collected about $35 million in hidden fees across more than 5,000 Minnesota solar systems since 2017. Those figures cover all four defendants. They are not GoodLeap-only totals.
+            </p>
+            <p>
+              The complaint also matters beyond Minnesota. In 2024, the <a className="gl-text-link" href="https://www.consumerfinance.gov/data-research/research-reports/issue-spotlight-solar-financing/" target="_blank" rel="noreferrer">Consumer Financial Protection Bureau</a> cited the Minnesota case in a broader report on solar-specific lending, dealer fees, tax-credit representations, payment changes, and projected savings.
+            </p>
+          </section>
 
-      <section aria-labelledby="mn-why-heading">
-        <div className="gl-heading-row"><div><p className="gl-kicker">Why Minnesota is FLAGged</p><h2 id="mn-why-heading">The record goes beyond isolated consumer complaints.</h2></div></div>
-        <div className="gl-section-grid">
-          <article className="gl-card gl-card-compact"><small>Attorney General action</small><h3>GoodLeap is a named defendant</h3><p>The Minnesota Attorney General sued GoodLeap and three other solar lenders under state consumer-protection and lending laws.</p></article>
-          <article className="gl-card gl-card-compact"><small>Dealer-fee allegations</small><h3>The case centers on the financed price</h3><p>The State alleges that upfront lender fees were embedded in financed solar prices without being adequately identified to borrowers.</p></article>
-          <article className="gl-card gl-card-compact"><small>Market-wide allegations</small><h3>The complaint alleges substantial statewide impact</h3><p>The Attorney General alleges the four lenders collected about $35 million in hidden fees across more than 5,000 Minnesota solar systems since 2017. That figure applies to the defendants collectively, not GoodLeap alone.</p></article>
-          <article className="gl-card gl-card-compact"><small>Federal relevance</small><h3>CFPB later cited the Minnesota case</h3><p>The CFPB&apos;s 2024 solar-financing report cites the Minnesota complaint in its discussion of dealer fees and loan-principal markups.</p></article>
-        </div>
-      </section>
+          <section className="gl-section" aria-labelledby="mn-why-heading">
+            <h2 id="mn-why-heading">Why this record is useful to a homeowner</h2>
+            <p>
+              The Minnesota case gives consumers something more concrete than a complaint count or online review. It identifies a specific financing theory, names the lenders, and provides a primary filing that can be compared with a borrower&apos;s own paperwork.
+            </p>
+            <p>If you are reviewing a Minnesota solar loan, the documents most worth putting side by side are:</p>
+            <ul className="gl-bullets">
+              <li>the original solar proposal and any stated cash price;</li>
+              <li>the final amount financed and Truth in Lending disclosure;</li>
+              <li>payment schedules, dealer-fee or program-fee references, and later amendments;</li>
+              <li>texts, emails, recordings, tax-credit claims, and utility-savings estimates from the sale;</li>
+              <li>installer contracts, permits, inspection records, completion documents, and service history.</li>
+            </ul>
+            <p>
+              None of those documents, by itself, proves that the Minnesota Attorney General&apos;s allegations apply to an individual transaction. They are simply the records that make a meaningful comparison possible.
+            </p>
+          </section>
 
-      <hr className="gl-divider" />
+          <aside className="gl-note">
+            <strong>Research note:</strong> the $35 million and 5,000-system figures in the Minnesota case are allegations covering all four lender defendants. We do not attribute those totals to GoodLeap alone unless a later source isolates GoodLeap&apos;s share.
+          </aside>
 
-      <section aria-labelledby="mn-consumer-heading">
-        <div className="gl-heading-row"><div><p className="gl-kicker">What a Minnesota borrower can check</p><h2 id="mn-consumer-heading">Documents that matter</h2></div></div>
-        <div className="gl-section-grid">
-          <article className="gl-card gl-card-compact"><small>Compare prices</small><h3>Cash price vs. financed price</h3><p>Look for any difference between the cash system price, sales proposal, amount financed, and the amount actually paid to the installer.</p></article>
-          <article className="gl-card gl-card-compact"><small>Loan disclosures</small><h3>Finance charge and amount financed</h3><p>Keep the Truth in Lending disclosure, loan agreement, payment schedule, and any dealer or program-fee references.</p></article>
-          <article className="gl-card gl-card-compact"><small>Sales record</small><h3>What was represented before signing</h3><p>Save proposals, texts, emails, recordings, utility-savings estimates, tax-credit representations, and versions of the contract.</p></article>
-          <article className="gl-card gl-card-compact"><small>Installer record</small><h3>Who sold and installed the system</h3><p>Financing disputes often overlap with installer conduct. Keep installer contracts, permits, inspection records, completion documents, and service history.</p></article>
-        </div>
-      </section>
+          <section className="gl-section" aria-labelledby="mn-sources-heading">
+            <h2 id="mn-sources-heading">Primary sources</h2>
+            <ol className="gl-source-list">
+              {sources.map((source) => (
+                <li key={source.href}>
+                  <a href={source.href} target="_blank" rel="noreferrer">{source.title}</a>
+                  <span>{source.detail}</span>
+                </li>
+              ))}
+            </ol>
+          </section>
 
-      <hr className="gl-divider" />
-
-      <section aria-labelledby="mn-sources-heading">
-        <div className="gl-heading-row"><div><p className="gl-kicker">Primary sources</p><h2 id="mn-sources-heading">Start with the official record</h2></div></div>
-        <div className="gl-section-grid">
-          {sources.map((source) => (
-            <a className="gl-card gl-card-compact" href={source.href} target="_blank" rel="noreferrer" key={source.href}>
-              <small>Official source</small><h3>{source.title}</h3><p>{source.detail}</p>
-            </a>
-          ))}
-        </div>
-      </section>
-
-      <aside className="gl-note">Research note: the $35 million and 5,000-system figures are allegations covering all four lender defendants in the Minnesota case. They should not be presented as GoodLeap-only totals unless a later source isolates GoodLeap&apos;s share.</aside>
-
-      <div className="gl-actions">
-        <Link className="gl-button" href="/goodleap/states">← Back to FLAG states</Link>
-        <Link className="gl-button gl-button-primary" href="/states/minnesota">All Minnesota solar resources</Link>
-      </div>
-    </main>
+          <section className="gl-help-box" aria-labelledby="mn-help-heading">
+            <h2 id="mn-help-heading">Need help researching a Minnesota GoodLeap issue?</h2>
+            <p>
+              Send your city or town and a short description of what happened. We can help identify public records and official complaint or regulatory resources that may be relevant.
+            </p>
+            <div className="gl-actions">
+              <Link className="gl-button gl-button-primary" href="/#questions">Request free research assistance</Link>
+              <Link className="gl-button" href="/states/minnesota">Minnesota solar consumer resources</Link>
+              <Link className="gl-button" href="/goodleap/states">GoodLeap state tracker</Link>
+            </div>
+          </section>
+        </article>
+      </main>
+    </>
   );
 }
