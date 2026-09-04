@@ -42,7 +42,11 @@ export function HomeHeader({
         aria-label="Primary navigation"
       >
         <Link href="/#start" onClick={closeMenu}>Start here</Link>
-        <div className={`home-nav-group ${researchOpen ? "is-expanded" : ""}`}>
+        <div
+          className={`home-nav-group ${researchOpen ? "is-expanded" : ""}`}
+          onMouseEnter={() => setResourcesOpen(false)}
+          onFocus={() => setResourcesOpen(false)}
+        >
           <div className="home-nav-group-label">
             <a href="/research" onClick={closeMenu}>Research</a>
             <button
@@ -74,7 +78,11 @@ export function HomeHeader({
           </div>
         </div>
         <a href="/resources" onClick={closeMenu}>States</a>
-        <div className={`home-nav-group ${resourcesOpen ? "is-expanded" : ""}`}>
+        <div
+          className={`home-nav-group ${resourcesOpen ? "is-expanded" : ""}`}
+          onMouseEnter={() => setResearchOpen(false)}
+          onFocus={() => setResearchOpen(false)}
+        >
           <div className="home-nav-group-label">
             <a href="/federal-resources" onClick={closeMenu}>Resources</a>
             <button
