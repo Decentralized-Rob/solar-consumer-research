@@ -23,10 +23,10 @@ Do not include unnecessary personal information. Do not publicly disclose the is
 Examples include:
 
 - Exposed credentials or secrets
-- Unauthorized access to private accounts, questions, or data
-- Authentication, authorization, or session flaws
+- Unauthorized access to private research requests, source submissions, or administrative data
+- Authentication, authorization, or session flaws in any retained or future authenticated feature
 - Cross-site scripting, injection, or other security defects
-- A way to bypass a security control
+- A way to bypass Turnstile, server-side validation, database access controls, or another security boundary
 
 This policy does not cover source corrections, individual solar situations, Code of Conduct reports, or general site feedback.
 

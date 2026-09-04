@@ -2,153 +2,121 @@
 
 ## Product boundary
 
-The product is a neutral research utility for residential solar consumers. It organizes verified public information by state and gives signed-in users a private place to submit research questions.
+Solar Consumer Research is a public research utility for residential solar consumers. It organizes source-backed state and federal resources, documented cases, guides, and a private research-help intake.
 
-The product does not evaluate individual claims, interpret contracts, recommend a course of legal action, draft legal documents, or connect users with attorneys, contractors, or paid service providers.
+The product does not automatically evaluate individual claims, interpret contracts, recommend legal action, draft legal documents, or connect users with attorneys, contractors, or paid service providers. Research-help submissions are reviewed by a person and are not published automatically.
 
-## System architecture
+## Current system
 
 ```text
-Browser / installable PWA
-        |
-        v
-Next-compatible React application (Vinext)
-  - public research interface
-  - state, topic, and full-text search
-  - dedicated resource, guide, and update indexes
-  - Supabase passwordless authentication
-  - accessible responsive UI
-        |
-        +-------------------------+
-        |                         |
-        v                         v
-Next route handlers          Supabase Auth
-  /api/resources             email identity
-  /api/guides                    |
-  /api/updates                   v
-  /api/search                    |
-  /api/profile                   v
-  /api/questions             PostgreSQL
-                             - published content
-                               - profiles
-                               - private questions
-                               - review workflow
-                               - audit records
+Browser
+  |
+  v
+React 19 application with Next-compatible routing through Vinext
+  - public state and federal research pages
+  - documented case and company research
+  - guides and resource directories
+  - private research-help form
+  - public source-submission form
+  |
+  +-----------------------------+
+  |                             |
+  v                             v
+Read APIs                    Submission APIs
+/api/resources              /api/contact
+/api/guides                 /api/source-submissions
+/api/updates                   |
+/api/search                    +-> input validation
+  |                            +-> honeypot field check
+  |                            +-> server-side Turnstile verification
+  |                            +-> server-only Supabase admin client
+  |                                      |
+  +-----------------------------+--------+
+                                v
+                         Supabase Postgres
+                         - published research content
+                         - private contact requests
+                         - private source submissions
+                         - administrative and audit data
+
+Production runtime: Cloudflare Worker-compatible Vinext output
 ```
+
+The contact route records a valid research-help request before making a best-effort notification request through FormSubmit using the submitted email, state, city, and question. A notification failure does not discard a request that was already saved. The public privacy page identifies Supabase, FormSubmit, and Cloudflare as service providers involved in this flow.
 
 ## Trust and publishing model
 
-1. Every public item is tied to an allowlisted source domain.
-2. Every item carries a publisher, source URL, verification date, and editorial status.
-3. Anonymous visitors can read only published content.
-4. Signed-in users can read and update only their own profile and questions.
-5. Content creation and publishing are admin-only.
-6. Questions are never public and are not answered automatically. User wording is stored as the user's description, not as a verified factual or legal finding.
-7. Database row-level security is the final authorization boundary.
+1. Database-backed public research records use approved source domains.
+2. Public records carry source information, editorial status, and verification metadata where an individual review date is recorded.
+3. Anonymous visitors can read only content exposed as published public material.
+4. Allegations, complaints, investigations, enforcement actions, settlements, and findings are described according to what the underlying source establishes.
+5. User submissions are private intake, not public research records.
+6. AI does not have an autonomous publication path. Publication decisions remain human-controlled.
+
+The application also keeps a reviewed local content snapshot so core public information can remain available when the content API is unavailable.
+
+## Private intake and security boundaries
+
+The current public research-help flow does not require account creation or passwordless sign-in.
+
+For `/api/contact` and `/api/source-submissions`:
+
+- Input is parsed and validated on the server.
+- A populated honeypot field is rejected before normal processing.
+- Cloudflare Turnstile is verified server-side before a database write.
+- Missing Turnstile server configuration fails closed rather than accepting an unverified submission.
+- Database writes use a Supabase service-role credential available only to the server route.
+- Direct browser access to the private intake tables is revoked.
+- The service-role key and Turnstile secret are read from server environment variables.
+- Submitted research-help text is not automatically converted into a public claim, finding, or legal analysis.
+
+The Supabase URL, publishable key, and Turnstile site key are public client configuration. They are distinct from the server-only service-role and Turnstile secret values.
 
 ## Application layers
 
-- `app/`: routes, page composition, and HTTP API handlers.
-- `components/`: reusable client-side product UI.
-- `lib/content.ts`: reviewed fallback content and the state directory used when the API is unavailable.
-- `lib/supabase/`: browser and server Supabase clients.
-- `supabase/`: reproducible PostgreSQL schema and seed data.
-- `docs/`: architecture and operating decisions.
+- `app/`: page routes and HTTP API handlers.
+- `components/`: reusable interface components and public intake forms.
+- `lib/content.ts`: reviewed fallback content and the state directory.
+- `lib/state-research.ts` and related research modules: structured state and research data used by public pages.
+- `lib/supabase/`: browser and server Supabase configuration and clients.
+- `supabase/migrations/`: reproducible database schema and access-control history.
+- `worker/`: Cloudflare Worker entry point for the Vinext application.
+- `docs/`: architecture and operating documentation.
 
-## File structure
-
-```text
-app/
-  about/page.tsx
-  corrections/page.tsx
-  guides/page.tsx
-  methodology/page.tsx
-  privacy/page.tsx
-  resources/page.tsx
-  updates/page.tsx
-  api/
-    guides/route.ts
-    health/route.ts
-    profile/route.ts
-    questions/route.ts
-    resources/route.ts
-    search/route.ts
-    updates/route.ts
-  globals.css
-  layout.tsx
-  page.tsx
-components/
-  account-panel.tsx
-  info-page.tsx
-  research-app.tsx
-docs/
-  ARCHITECTURE.md
-lib/
-  api/auth.ts
-  supabase/client.ts
-  supabase/config.ts
-  supabase/server.ts
-  content.ts
-  state-research.ts
-  database.types.ts
-  types.ts
-supabase/
-  migrations/
-    20260816224500_initial_schema.sql
-    20260816225500_optimize_rls_and_indexes.sql
-    20260816230500_enforce_source_allowlist.sql
-    20260816234000_add_full_text_search.sql
-```
-
-## Database schema
-
-| Table | Purpose | Public access |
-| --- | --- | --- |
-| `states` | State rollout and availability | Active rows readable |
-| `source_domains` | Publisher metadata and URL allowlist | Active rows readable |
-| `resources` | State and federal official resources | Published rows readable |
-| `guides` | Source-backed guide metadata | Published rows readable |
-| `guide_steps` | Ordered guide instructions | Steps of published guides readable |
-| `updates` | Source-backed public updates | Published rows readable |
-| `profiles` | Email and selected state | Owner only |
-| `questions` | Private user research questions | Owner and admins only |
-| `question_responses` | Source-backed private responses | Question owner and admins only |
-| `admin_users` | Administrative allowlist | Current admin can verify own row |
-| `audit_logs` | Administrative activity record | Admin only |
-
-Every exposed table has row-level security enabled. Content records use `draft`, `reviewed`, `published`, and `archived` states. A database trigger rejects public source URLs that do not match the selected allowlisted domain.
-
-Published resources, guides, and updates carry generated weighted `tsvector` columns. Partial GIN indexes support fast natural-language search while limiting the indexed set to published content.
-
-## UI architecture
-
-- Sticky responsive navigation with dedicated resource, guide, update, and methodology routes.
-- Disabled homepage search preview marked as coming soon; published content remains browsable by section and route.
-- State selector that scopes state-specific content while retaining federal resources.
-- Topic filters for complaints, utility, financing, records, and programs.
-- Source cards that expose publisher type and verification date before sending a visitor off-site.
-- Expandable guides with ordered steps and a direct source citation.
-- Source-backed update feed with publication or verification dates.
-- Passwordless account panel with private question submission and response history.
-- Verified local content snapshot remains visible if the content API is temporarily unavailable.
-
-## Scale path
-
-- Update state sources and documented case records through a reviewed publishing workflow.
-- Move editorial work into an authenticated admin interface without changing public APIs.
-- Add result ranking and synonyms to PostgreSQL search before introducing a separate search service.
-- Add moderation queues and source-check automation without allowing automated publishing.
-- Wrap the same responsive web application with Capacitor after the web MVP is validated.
-
-## Initial API surface
+## Current API surface
 
 | Method | Endpoint | Access | Purpose |
 | --- | --- | --- | --- |
-| GET | `/api/health` | Public | Application readiness check |
+| GET | `/api/health` | Public | Basic application health response |
 | GET | `/api/resources?state=MA&topic=complaints` | Public | Published official resources |
-| GET | `/api/guides?state=MA` | Public | Published step-by-step guides |
+| GET | `/api/guides?state=MA` | Public | Published guides |
 | GET | `/api/updates?state=MA` | Public | Published source-backed updates |
-| GET | `/api/search?state=MA&q=financing` | Public | Full-text search across published content |
-| PUT | `/api/profile` | Signed in | Save the current user's state |
-| POST | `/api/questions` | Signed in | Store a private question as `submitted` and return the human-review workflow state |
-| GET | `/api/questions` | Signed in | Retrieve the current user's questions |
+| GET | `/api/search?state=MA&q=financing` | Public | Full-text search across published database content |
+| POST | `/api/contact` | Public, Turnstile protected | Store a private research-help request and attempt a team notification |
+| POST | `/api/source-submissions` | Public, Turnstile protected | Store a private proposed public-source link for review |
+
+The search endpoint exists, but the public site search interface remains intentionally disabled while the content and update process are refined.
+
+## Earlier authenticated intake code
+
+The repository still contains `/api/profile`, `/api/questions`, related authentication helpers, and database tables from an earlier passwordless-account design. The current public interface does not call those endpoints.
+
+They are retained for now rather than being removed as part of a documentation change. A separate cleanup should decide whether to retire them or deliberately reintroduce an authenticated workflow.
+
+## AI-native engineering workflow
+
+AI is used as an engineering tool across implementation, research organization, testing, code review, debugging, and documentation. The workflow is human-directed: architecture, product scope, source standards, security boundaries, acceptance criteria, and publication decisions are controlled by the maintainer.
+
+AI output is not treated as a source of truth. Research claims are checked against the underlying record, code changes are reviewed against repository behavior and automated checks, and public release remains a human decision.
+
+## Verification and release controls
+
+Pull requests run the repository `Verify` workflow, which installs dependencies, runs linting, and runs the test suite. The default branch is protected by a repository ruleset requiring a pull request and the `verify` status check before changes can enter `main`.
+
+## Known cleanup items
+
+- decide whether to remove the unused authenticated profile/question routes
+- move editorial dates and page metadata closer to the content records they describe
+- continue separating large research datasets from page-rendering components
+- keep private submission writes behind server-side validation and access controls
+- expose the existing search infrastructure publicly only when the research update process is ready for it
