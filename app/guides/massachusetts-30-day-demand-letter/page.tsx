@@ -84,7 +84,7 @@ export default function MassachusettsDemandLetterGuidePage() {
         <section className="info-section case-notice" aria-label="Guide status">
           <strong>Official requirements, not a personalized template</strong>
           <p>
-            Published and reviewed September 4, 2026 against the Massachusetts 30 Day Demand Letter page. This page summarizes the state's published requirements and does not determine whether Chapter 93A applies to a particular solar dispute.
+            Published and reviewed September 4, 2026 against the Massachusetts 30 Day Demand Letter page. This page summarizes the state&apos;s published requirements and does not determine whether Chapter 93A applies to a particular solar dispute.
           </p>
         </section>
 
@@ -129,7 +129,7 @@ export default function MassachusettsDemandLetterGuidePage() {
         <section className="info-section">
           <h2>What happens after the business receives the letter?</h2>
           <p>
-            The state says the business has 30 days to respond in writing. If the business makes a settlement offer, later court proceedings can be affected by whether that offer is found reasonable. The official page also explains the circumstances in which damages or attorney's fees may be available after a court finding.
+            The state says the business has 30 days to respond in writing. If the business makes a settlement offer, later court proceedings can be affected by whether that offer is found reasonable. The official page also explains the circumstances in which damages or attorney&apos;s fees may be available after a court finding.
           </p>
           <p>
             Those outcomes depend on the facts and the court. Sending a demand letter by itself does not establish liability or guarantee damages.
