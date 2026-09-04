@@ -42,31 +42,28 @@ export function HomeHeader({
         aria-label="Primary navigation"
       >
         <Link href="/#start" onClick={closeMenu}>Start here</Link>
-        <div
-          className={`home-nav-group ${researchOpen ? "is-expanded" : ""}`}
-          onMouseEnter={() => setResourcesOpen(false)}
-          onFocus={() => setResourcesOpen(false)}
-        >
+        <div className={`home-nav-group ${researchOpen ? "is-expanded" : ""}`}>
           <div className="home-nav-group-label">
             <a href="/research" onClick={closeMenu}>Research</a>
             <button
               type="button"
               aria-label="Show research pages"
               aria-expanded={researchOpen}
-              onClick={(event) => {
+              aria-controls="research-navigation-submenu"
+              onClick={() => {
                 const nextOpen = !researchOpen;
                 setResearchOpen(nextOpen);
-                if (nextOpen) {
-                  setResourcesOpen(false);
-                } else {
-                  event.currentTarget.blur();
-                }
+                if (nextOpen) setResourcesOpen(false);
               }}
             >
               <span aria-hidden="true">⌄</span>
             </button>
           </div>
-          <div className="home-nav-submenu">
+          <div
+            id="research-navigation-submenu"
+            className="home-nav-submenu"
+            style={{ display: researchOpen ? "block" : "none" }}
+          >
             <a href="/research/solar-sales-financing-after-complaint" onClick={closeMenu}>
               Solar Sales, Financing and What Happens After a Complaint
             </a>
@@ -78,31 +75,28 @@ export function HomeHeader({
           </div>
         </div>
         <a href="/resources" onClick={closeMenu}>States</a>
-        <div
-          className={`home-nav-group ${resourcesOpen ? "is-expanded" : ""}`}
-          onMouseEnter={() => setResearchOpen(false)}
-          onFocus={() => setResearchOpen(false)}
-        >
+        <div className={`home-nav-group ${resourcesOpen ? "is-expanded" : ""}`}>
           <div className="home-nav-group-label">
             <a href="/federal-resources" onClick={closeMenu}>Resources</a>
             <button
               type="button"
               aria-label="Show consumer resources"
               aria-expanded={resourcesOpen}
-              onClick={(event) => {
+              aria-controls="resources-navigation-submenu"
+              onClick={() => {
                 const nextOpen = !resourcesOpen;
                 setResourcesOpen(nextOpen);
-                if (nextOpen) {
-                  setResearchOpen(false);
-                } else {
-                  event.currentTarget.blur();
-                }
+                if (nextOpen) setResearchOpen(false);
               }}
             >
               <span aria-hidden="true">⌄</span>
             </button>
           </div>
-          <div className="home-nav-submenu">
+          <div
+            id="resources-navigation-submenu"
+            className="home-nav-submenu"
+            style={{ display: resourcesOpen ? "block" : "none" }}
+          >
             <a href="/federal-resources" onClick={closeMenu}>Federal Resources</a>
             <a href="/guides" onClick={closeMenu}>Consumer Guides</a>
           </div>
