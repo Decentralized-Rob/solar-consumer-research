@@ -2,11 +2,11 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "GoodLeap Consumer Resources",
-  description: "Official federal and state consumer resources relevant to GoodLeap solar financing, loans, sales claims, and residential solar disputes.",
+  title: "GoodLeap Solar Financing Resources for Consumers",
+  description: "Official federal and state resources for consumers researching GoodLeap solar loans, financing disclosures, sales claims, and related disputes.",
   alternates: { canonical: "/goodleap/resources" },
   openGraph: {
-    title: "GoodLeap Consumer Resources",
+    title: "GoodLeap Solar Financing Resources for Consumers",
     description: "Official consumer-finance and solar resources for homeowners researching GoodLeap-related issues.",
     url: "/goodleap/resources",
     type: "website",
@@ -14,7 +14,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "GoodLeap Consumer Resources",
+    title: "GoodLeap Solar Financing Resources for Consumers",
     description: "Official consumer-finance and solar resources for homeowners researching GoodLeap-related issues.",
     images: ["https://solarcomplaint.com/og.png"],
   },
@@ -27,76 +27,92 @@ const federalResources = [
     detail: "Federal analysis of solar-specific loans, dealer fees, tax-credit representations, payment changes, and projected savings.",
   },
   {
-    title: "FTC solar consumer alert",
+    title: "FTC consumer alert on solar scams and sales claims",
     href: "https://consumer.ftc.gov/consumer-alerts/2024/09/solar-energy-rising-popularity-so-are-scams",
-    detail: "Federal consumer guidance on solar sales claims, contracts, pressure tactics, hidden fees, and reporting suspected scams.",
+    detail: "Federal guidance on contracts, pressure tactics, hidden fees, sales claims, and reporting suspected scams.",
   },
   {
     title: "U.S. Department of Energy Homeowner’s Guide to Solar",
     href: "https://www.energy.gov/cmei/systems/homeowners-guide-solar",
-    detail: "Federal homeowner guidance covering solar decisions, financing, installers, contracts, system ownership, and consumer protection.",
+    detail: "Federal homeowner guidance on financing, installers, contracts, ownership, and consumer protection.",
   },
 ] as const;
 
 export default function GoodLeapResourcesPage() {
   return (
     <main className="gl-main">
-      <section className="gl-section-intro">
-        <p className="gl-kicker">Consumer resources</p>
-        <h1>GoodLeap consumer resources</h1>
-        <p>Use this page for official federal guidance and the published GoodLeap state research pages. SolarComplaint.com’s broader state and federal directories cover complaint routes, regulators, licensing, and general residential-solar resources.</p>
-      </section>
+      <div className="gl-page">
+        <p className="gl-eyebrow">Consumer resources</p>
+        <h1>Official resources for GoodLeap solar financing questions</h1>
+        <p className="gl-deck">
+          If you are trying to understand a GoodLeap solar loan or financing dispute, start with the agencies and source documents that explain how these transactions are regulated. This page keeps those links separate from our case research.
+        </p>
+        <div className="gl-review-line">
+          <span>Reviewed September 3, 2026</span><span>·</span>
+          <Link href="/methodology">Methodology</Link><span>·</span>
+          <Link href="/corrections">Corrections</Link>
+        </div>
 
-      <div className="gl-actions">
-        <Link className="gl-button gl-button-primary" href="/#questions">Get free research assistance</Link>
-        <Link className="gl-button" href="/federal-resources">SolarComplaint federal resources</Link>
-        <Link className="gl-button" href="/goodleap/states">FLAG State Tracker</Link>
+        <section className="gl-section" aria-labelledby="federal-resources-heading">
+          <h2 id="federal-resources-heading">Federal guidance worth reading first</h2>
+          <p>
+            These are not GoodLeap enforcement pages. They explain the broader federal consumer-finance and solar issues that show up repeatedly in the public record, including dealer fees, disclosures, savings claims, tax-credit representations, and contract terms.
+          </p>
+          <ol className="gl-source-list">
+            {federalResources.map((resource) => (
+              <li key={resource.href}>
+                <a href={resource.href} target="_blank" rel="noreferrer">{resource.title}</a>
+                <span>{resource.detail}</span>
+              </li>
+            ))}
+          </ol>
+        </section>
+
+        <section className="gl-section" aria-labelledby="state-research-heading">
+          <h2 id="state-research-heading">Published GoodLeap state research</h2>
+          <p>We currently have full source-reviewed pages for Minnesota and Virginia.</p>
+          <div className="gl-published-list">
+            <article className="gl-published-item">
+              <span className="gl-state-abbr" aria-hidden="true">MN</span>
+              <div>
+                <h3>Minnesota</h3>
+                <p>Attorney General litigation over alleged solar-loan dealer fees, with the filed complaint and CFPB context.</p>
+                <Link href="/goodleap/states/minnesota">Read the Minnesota research →</Link>
+              </div>
+            </article>
+            <article className="gl-published-item">
+              <span className="gl-state-abbr" aria-hidden="true">VA</span>
+              <div>
+                <h3>Virginia</h3>
+                <p>2026 Attorney General litigation involving Power Home / Pink Energy, GoodLeap, and other lenders.</p>
+                <Link href="/goodleap/states/virginia">Read the Virginia research →</Link>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <section className="gl-section" aria-labelledby="other-resources-heading">
+          <h2 id="other-resources-heading">State complaint and regulatory resources</h2>
+          <p>
+            GoodLeap-specific research is only one part of a solar dispute. SolarComplaint.com&apos;s state pages collect Attorney General complaint channels, licensing agencies, utility or solar regulators, and other official resources that may be relevant even when GoodLeap is not the only company involved.
+          </p>
+          <div className="gl-actions">
+            <Link className="gl-button" href="/states">Browse state resources</Link>
+            <Link className="gl-button" href="/federal-resources">Federal solar consumer resources</Link>
+          </div>
+        </section>
+
+        <section className="gl-help-box" aria-labelledby="resource-help-heading">
+          <h2 id="resource-help-heading">Not sure which record or agency applies?</h2>
+          <p>
+            Send us your state, city or town, and a short description of the problem. We can help identify the public sources and official complaint routes worth checking.
+          </p>
+          <div className="gl-actions">
+            <Link className="gl-button gl-button-primary" href="/#questions">Request free research assistance</Link>
+            <Link className="gl-button" href="/goodleap/states">GoodLeap state tracker</Link>
+          </div>
+        </section>
       </div>
-
-      <hr className="gl-divider" />
-
-      <section aria-labelledby="published-state-resources-heading">
-        <div className="gl-heading-row">
-          <div>
-            <p className="gl-kicker">Published state research</p>
-            <h2 id="published-state-resources-heading">State-specific GoodLeap resources</h2>
-          </div>
-        </div>
-        <div className="gl-section-grid">
-          <Link className="gl-card gl-card-compact" href="/goodleap/states/minnesota">
-            <small>Minnesota</small>
-            <h3>Attorney General case and complaint resources</h3>
-            <p>Primary filings, federal financing context, and Minnesota consumer resources.</p>
-          </Link>
-          <Link className="gl-card gl-card-compact" href="/goodleap/states/virginia">
-            <small>Virginia</small>
-            <h3>Attorney General litigation and complaint resources</h3>
-            <p>Primary filings, lender-specific allegations, federal financing context, and Virginia consumer resources.</p>
-          </Link>
-        </div>
-      </section>
-
-      <hr className="gl-divider" />
-
-      <section aria-labelledby="federal-authorities-heading">
-        <div className="gl-heading-row">
-          <div>
-            <p className="gl-kicker">Federal authorities</p>
-            <h2 id="federal-authorities-heading">Start with primary government guidance</h2>
-          </div>
-        </div>
-        <div className="gl-section-grid">
-          {federalResources.map((resource) => (
-            <a className="gl-card gl-card-compact" href={resource.href} target="_blank" rel="noreferrer" key={resource.href}>
-              <small>Official federal resource</small>
-              <h3>{resource.title}</h3>
-              <p>{resource.detail}</p>
-            </a>
-          ))}
-        </div>
-      </section>
-
-      <aside className="gl-note">This site provides research help, not legal advice. If you need help identifying the public records or complaint channels that may fit your situation, use the free research-assistance form on SolarComplaint.com.</aside>
     </main>
   );
 }
