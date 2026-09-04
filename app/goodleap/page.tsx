@@ -2,23 +2,24 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 const canonicalUrl = "https://solarcomplaint.com/goodleap";
+const reviewedDate = "2026-09-03";
 
 export const metadata: Metadata = {
-  title: "GoodLeap Solar Financing Research and Consumer Resources",
+  title: "GoodLeap Solar Financing: Lawsuits, Arbitration & Consumer Research",
   description:
-    "Source-backed GoodLeap solar financing research, FLAG state tracking, official consumer resources, and free research assistance from Solar Consumer Research.",
+    "GoodLeap solar financing research based on court records, Attorney General actions, arbitration rulings, and official consumer resources.",
   alternates: { canonical: "/goodleap" },
   openGraph: {
-    title: "GoodLeap Solar Financing Research and Consumer Resources",
-    description: "Independent GoodLeap solar financing research built around court records, government sources, and consumer resources.",
+    title: "GoodLeap Solar Financing: What the Public Record Shows",
+    description: "Independent research on GoodLeap solar financing using court records, government filings, and primary sources.",
     url: "/goodleap",
     type: "website",
     images: [{ url: "https://solarcomplaint.com/og.png", width: 1200, height: 630, alt: "Solar Consumer Research" }],
   },
   twitter: {
     card: "summary_large_image",
-    title: "GoodLeap Solar Financing Research and Consumer Resources",
-    description: "Independent GoodLeap solar financing research and consumer resources.",
+    title: "GoodLeap Solar Financing: What the Public Record Shows",
+    description: "Independent research on GoodLeap solar financing using court records, government filings, and primary sources.",
     images: ["https://solarcomplaint.com/og.png"],
   },
 };
@@ -27,20 +28,16 @@ const publishedStates = [
   {
     abbr: "MN",
     state: "Minnesota",
-    tag: "Attorney General action",
-    detail: "Primary-source research on Minnesota's solar-lending case naming GoodLeap and other lenders.",
+    detail: "The Attorney General sued GoodLeap and three other solar lenders in 2024 over alleged hidden dealer fees in financed solar transactions.",
     href: "/goodleap/states/minnesota",
   },
   {
     abbr: "VA",
     state: "Virginia",
-    tag: "Attorney General litigation",
-    detail: "Primary-source research on Virginia's 2026 Power Home / Pink Energy financing case naming GoodLeap.",
+    detail: "A 2026 Attorney General case names GoodLeap among lenders connected to the Power Home Solar / Pink Energy record.",
     href: "/goodleap/states/virginia",
   },
 ] as const;
-
-const trackedStates = ["Texas", "Florida", "New Jersey", "Missouri", "Ohio", "Michigan", "Maryland"];
 
 export default function GoodLeapHubPage() {
   const structuredData = {
@@ -49,12 +46,13 @@ export default function GoodLeapHubPage() {
       {
         "@type": "CollectionPage",
         "@id": `${canonicalUrl}#page`,
-        name: "GoodLeap Solar Financing Research and Consumer Resources",
-        description: "Independent GoodLeap solar financing research built around court records, government sources, and consumer resources.",
+        name: "GoodLeap Solar Financing: What the Public Record Shows",
+        description: "Independent research on GoodLeap solar financing using court records, government filings, and primary sources.",
         url: canonicalUrl,
+        dateModified: reviewedDate,
         isPartOf: { "@id": "https://solarcomplaint.com/#website" },
         publisher: { "@id": "https://solarcomplaint.com/#publisher" },
-        about: { "@type": "Organization", name: "GoodLeap" },
+        about: { "@type": "Organization", name: "GoodLeap, LLC" },
       },
       {
         "@type": "BreadcrumbList",
@@ -70,100 +68,71 @@ export default function GoodLeapHubPage() {
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }} />
       <main className="gl-main">
-        <section className="gl-hero gl-hero-grid">
-          <div>
-            <p className="gl-kicker">Independent consumer research</p>
-            <h1>GoodLeap Solar Financing Research</h1>
-            <p>Track documented state actions, solar-financing litigation, arbitration rulings, and official consumer resources.</p>
-            <div className="gl-actions">
-              <Link className="gl-button gl-button-primary" href="/#questions">Get free research assistance</Link>
-              <Link className="gl-button" href="/goodleap/states">Browse GoodLeap state research</Link>
-            </div>
-          </div>
-          <aside className="gl-hero-panel">
-            <p className="gl-kicker">Current research footprint</p>
-            <dl>
-              <div><dt>9</dt><dd>states in the current FLAG research set</dd></div>
-              <div><dt>2</dt><dd>state research pages published now</dd></div>
-            </dl>
-            <p className="gl-fineprint">GoodLeap lists licenses or registrations in 46 states plus Washington, D.C. Licensing alone does not determine where we publish state research.</p>
-          </aside>
-        </section>
-
-        <section className="gl-flag-feature" aria-labelledby="gl-flag-feature-title">
-          <div className="gl-heading-row">
-            <div>
-              <p className="gl-kicker">FLAG State Tracker</p>
-              <h2 id="gl-flag-feature-title">Financing Litigation &amp; Arbitration involving GoodLeap</h2>
-            </div>
-            <Link className="gl-button gl-button-primary" href="/goodleap/states">Open tracker</Link>
-          </div>
-          <p>
-            FLAG is our research category for states with enough GoodLeap-specific court, arbitration, Attorney General,
-            or closely related financing records to justify focused review.
+        <div className="gl-page">
+          <p className="gl-eyebrow">GoodLeap research</p>
+          <h1>GoodLeap solar financing: what the public record shows</h1>
+          <p className="gl-deck">
+            GoodLeap appears in a growing set of solar-financing lawsuits, Attorney General cases, and arbitration disputes. This section pulls the strongest public records into one place and keeps allegations, court rulings, and broader industry context separate.
           </p>
-          <p className="gl-fineprint">9 states tracked · 2 full state pages published · FLAG is not a finding of wrongdoing.</p>
-        </section>
+          <div className="gl-review-line">
+            <span>Reviewed September 3, 2026</span><span>·</span>
+            <Link href="/methodology">How we verify records</Link><span>·</span>
+            <Link href="/corrections">Corrections</Link>
+          </div>
+          <div className="gl-actions">
+            <Link className="gl-button gl-button-primary" href="/#questions">Get free research assistance</Link>
+            <Link className="gl-button" href="/goodleap/states">Browse GoodLeap research by state</Link>
+          </div>
 
-        <section aria-labelledby="gl-published-heading">
-          <div className="gl-heading-row">
-            <div>
-              <p className="gl-kicker">Published state research</p>
-              <h2 id="gl-published-heading">Start with the sourced pages available now</h2>
-            </div>
-            <Link href="/goodleap/states">View all tracked states →</Link>
-          </div>
-          <div className="gl-state-grid">
-            {publishedStates.map((item) => (
-              <article className="gl-state-card" key={item.abbr}>
-                <span>{item.abbr}</span>
-                <div>
-                  <small>{item.tag}</small>
-                  <h3>{item.state}</h3>
-                  <p>{item.detail}</p>
-                  <Link href={item.href}>Open sourced state research →</Link>
-                </div>
-              </article>
-            ))}
-          </div>
-        </section>
-
-        <section className="gl-watch-section" aria-labelledby="gl-tracked-heading">
-          <div>
-            <p className="gl-kicker">Tracked for deeper review</p>
-            <h2 id="gl-tracked-heading">Seven more states are in the current research set</h2>
-            <p>These states have GoodLeap-specific public records under review. Dedicated pages will be published only when the source record is complete enough to be useful.</p>
-          </div>
-          <div className="gl-chip-list">
-            {trackedStates.map((state) => <span key={state}>{state}</span>)}
-          </div>
-        </section>
-
-        <section aria-labelledby="gl-help-heading">
-          <div className="gl-heading-row">
-            <div>
-              <p className="gl-kicker">Consumer help</p>
-              <h2 id="gl-help-heading">Need help finding the public record for your situation?</h2>
+          <div className="gl-summary">
+            <p>
+              We are starting with states where the GoodLeap-specific record is substantial enough to be useful to homeowners. That means court filings, government actions, or meaningful arbitration decisions, not simply a license or an isolated complaint.
+            </p>
+            <div className="gl-number-line" aria-label="GoodLeap research status">
+              <span><strong>9</strong> states under focused review</span>
+              <span><strong>2</strong> full state pages published</span>
+              <span><strong>46 + D.C.</strong> licenses or registrations listed by GoodLeap</span>
             </div>
           </div>
-          <div className="gl-section-grid">
-            <Link className="gl-card gl-card-compact" href="/#questions">
-              <small>Free research assistance</small>
-              <h3>Tell us what happened</h3>
-              <p>Use SolarComplaint.com’s existing research-help form. We can help identify public records, regulators, complaint channels, and other source-based resources that may fit your situation.</p>
-            </Link>
-            <Link className="gl-card gl-card-compact" href="/goodleap/resources">
-              <small>Official guidance</small>
-              <h3>GoodLeap consumer resources</h3>
-              <p>Start with federal consumer-finance and solar guidance, then move into state-specific resources where available.</p>
-            </Link>
-            <Link className="gl-card gl-card-compact" href="/federal-resources">
-              <small>Federal resources</small>
-              <h3>Broader solar consumer protection</h3>
-              <p>Use SolarComplaint.com’s federal resource page for agencies, financing guidance, and national consumer-protection information.</p>
-            </Link>
-          </div>
-        </section>
+
+          <section className="gl-section" aria-labelledby="published-research-heading">
+            <h2 id="published-research-heading">Published research</h2>
+            <p>These are the first two state pages where we have completed a source review and can show readers the underlying record directly.</p>
+            <div className="gl-published-list">
+              {publishedStates.map((item) => (
+                <article className="gl-published-item" key={item.abbr}>
+                  <span className="gl-state-abbr" aria-hidden="true">{item.abbr}</span>
+                  <div>
+                    <h3>{item.state}</h3>
+                    <p>{item.detail}</p>
+                    <Link href={item.href}>Read the {item.state} research →</Link>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </section>
+
+          <section className="gl-section" aria-labelledby="flag-heading">
+            <h2 id="flag-heading">What FLAG means here</h2>
+            <p>
+              We use <strong>FLAG</strong> as shorthand for <strong>Financing Litigation &amp; Arbitration involving GoodLeap</strong>. It is an editorial research label, not a legal finding and not a claim that every GoodLeap-financed system in a state has a problem.
+            </p>
+            <p>
+              Seven more states are being reviewed now: Texas, Florida, New Jersey, Missouri, Ohio, Michigan, and Maryland. The <Link className="gl-text-link" href="/goodleap/states">state tracker</Link> explains why each one is on the list and whether a full page has been published.
+            </p>
+          </section>
+
+          <section className="gl-help-box" aria-labelledby="research-help-heading">
+            <h2 id="research-help-heading">Have a GoodLeap solar financing issue?</h2>
+            <p>
+              Send your state, city or town, and a short description of what happened. We will look for public records, regulators, complaint channels, and other source-backed information that may help you understand what is already out there.
+            </p>
+            <div className="gl-actions">
+              <Link className="gl-button gl-button-primary" href="/#questions">Request free research assistance</Link>
+              <Link className="gl-button" href="/goodleap/resources">Official consumer resources</Link>
+            </div>
+          </section>
+        </div>
       </main>
     </>
   );
