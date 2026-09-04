@@ -49,7 +49,15 @@ export function HomeHeader({
               type="button"
               aria-label="Show research pages"
               aria-expanded={researchOpen}
-              onClick={() => setResearchOpen((current) => !current)}
+              onClick={(event) => {
+                const nextOpen = !researchOpen;
+                setResearchOpen(nextOpen);
+                if (nextOpen) {
+                  setResourcesOpen(false);
+                } else {
+                  event.currentTarget.blur();
+                }
+              }}
             >
               <span aria-hidden="true">⌄</span>
             </button>
@@ -73,7 +81,15 @@ export function HomeHeader({
               type="button"
               aria-label="Show consumer resources"
               aria-expanded={resourcesOpen}
-              onClick={() => setResourcesOpen((current) => !current)}
+              onClick={(event) => {
+                const nextOpen = !resourcesOpen;
+                setResourcesOpen(nextOpen);
+                if (nextOpen) {
+                  setResearchOpen(false);
+                } else {
+                  event.currentTarget.blur();
+                }
+              }}
             >
               <span aria-hidden="true">⌄</span>
             </button>
