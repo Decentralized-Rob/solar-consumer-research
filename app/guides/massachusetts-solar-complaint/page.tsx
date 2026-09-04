@@ -85,14 +85,14 @@ export default function MassachusettsSolarComplaintGuidePage() {
         <section className="info-section case-notice" aria-label="Guide status">
           <strong>Source-backed procedure</strong>
           <p>
-            Published and reviewed September 4, 2026 against the Massachusetts Attorney General's current consumer complaint instructions. This page explains a public filing process; it does not assess an individual claim or provide legal advice.
+            Published and reviewed September 4, 2026 against the Massachusetts Attorney General&apos;s current consumer complaint instructions. This page explains a public filing process; it does not assess an individual claim or provide legal advice.
           </p>
         </section>
 
         <section className="info-section">
           <h2>Can you file a solar complaint with the Massachusetts Attorney General?</h2>
           <p>
-            Yes. The Attorney General's complaint system is available to consumers having a problem with a business. The AGO lists home-improvement contracts, business closures, debt collection, mortgage and loan issues, and utility-bill disputes among common consumer matters it handles. A solar complaint may involve one or more of those subjects depending on what happened.
+            Yes. The Attorney General&apos;s complaint system is available to consumers having a problem with a business. The AGO lists home-improvement contracts, business closures, debt collection, mortgage and loan issues, and utility-bill disputes among common consumer matters it handles. A solar complaint may involve one or more of those subjects depending on what happened.
           </p>
           <p>
             The filing itself does not mean the Attorney General has found that a company violated the law, and the complaint process does not guarantee a particular outcome.
@@ -105,14 +105,14 @@ export default function MassachusettsSolarComplaintGuidePage() {
             Build a short factual timeline first. Note the important dates, company and salesperson names, amounts paid or financed, what was promised in writing, what was installed or not completed, and what remains unresolved. Keep the contract, proposal, financing documents, permits, inspection records, utility bills, production records, service records, and written communications together.
           </p>
           <p>
-            The AGO's current online instructions say not to send additional documentation after filing unless the office asks for it. Keep your records available rather than repeatedly submitting material the agency has not requested.
+            The AGO&apos;s current online instructions say not to send additional documentation after filing unless the office asks for it. Keep your records available rather than repeatedly submitting material the agency has not requested.
           </p>
         </section>
 
         <section className="info-section">
           <h2>How do you file the complaint?</h2>
           <ol>
-            <li><strong>Use the official AGO complaint page.</strong> Review the filing instructions and open the state's online complaint form.</li>
+            <li><strong>Use the official AGO complaint page.</strong> Review the filing instructions and open the state&apos;s online complaint form.</li>
             <li><strong>Describe the problem with dates and facts.</strong> Separate what your documents show from conclusions or assumptions.</li>
             <li><strong>Save your submission.</strong> The AGO says consumers have an opportunity to save or print a copy after filing.</li>
             <li><strong>Do not file a duplicate complaint.</strong> If you already filed about the same issue and need to add information or ask a question, the AGO directs consumers to its Consumer Hotline instead.</li>
@@ -122,7 +122,7 @@ export default function MassachusettsSolarComplaintGuidePage() {
         <section className="info-section">
           <h2>Where is the official Massachusetts complaint form?</h2>
           <p>
-            Start with the Massachusetts Attorney General's official instructions. That page contains the current online filing link, mail instructions, hotline information, and filing notes.
+            Start with the Massachusetts Attorney General&apos;s official instructions. That page contains the current online filing link, mail instructions, hotline information, and filing notes.
           </p>
           <p>
             <a href={agoComplaintUrl} target="_blank" rel="noreferrer">Massachusetts Attorney General: File a consumer complaint ↗</a>
