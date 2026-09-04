@@ -65,6 +65,9 @@ test("serves canonical robots and sitemap files", async () => {
   assert.match(sitemap, /<loc>https:\/\/solarcomplaint\.com\/states\/massachusetts<\/loc>/);
   assert.match(sitemap, /<loc>https:\/\/solarcomplaint\.com\/federal-resources<\/loc>/);
   assert.match(sitemap, /<loc>https:\/\/solarcomplaint\.com\/states\/new-york<\/loc>/);
+  assert.match(sitemap, /<loc>https:\/\/solarcomplaint\.com\/guides\/massachusetts-solar-complaint<\/loc>/);
+  assert.match(sitemap, /<loc>https:\/\/solarcomplaint\.com\/guides\/massachusetts-30-day-demand-letter<\/loc>/);
+  assert.match(sitemap, /<loc>https:\/\/solarcomplaint\.com\/guides\/solar-complaint-record-checklist<\/loc>/);
   assert.match(sitemap, /<loc>https:\/\/solarcomplaint\.com\/resources<\/loc>[\s\S]*?<lastmod>2026-08-21/i);
   assert.doesNotMatch(`${robots}\n${sitemap}`, /solar-resource-mvp\.rbeland21\.chatgpt\.site/);
 });
@@ -216,6 +219,45 @@ test("cross-links the Titan tracker back to Arizona resources", async () => {
   const html = await response.text();
   assert.match(html, /href=["']\/states\/arizona["']/i);
   assert.match(html, /Arizona solar complaint and consumer resources/i);
+});
+
+test("renders standalone consumer guides with canonical metadata and structured data", async () => {
+  const worker = await loadWorker();
+  const guidePaths = [
+    "/guides/massachusetts-solar-complaint",
+    "/guides/massachusetts-30-day-demand-letter",
+    "/guides/solar-complaint-record-checklist",
+  ];
+
+  for (const path of guidePaths) {
+    const response = await worker.fetch(
+      new Request(`http://localhost${path}`, { headers: { accept: "text/html" } }),
+      env,
+      ctx,
+    );
+    assert.equal(response.status, 200, path);
+    const html = await response.text();
+    const escapedPath = path.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    assert.match(html, new RegExp(`rel=["']canonical["'][^>]*href=["']https:\\/\\/solarcomplaint\\.com${escapedPath}["']`, "i"));
+    assert.match(html, /"@type":"Article"/i);
+    assert.match(html, /"@type":"BreadcrumbList"/i);
+    assert.doesNotMatch(html, /noindex/i);
+  }
+});
+
+test("links the guide index to the new standalone pages", async () => {
+  const worker = await loadWorker();
+  const response = await worker.fetch(
+    new Request("http://localhost/guides", { headers: { accept: "text/html" } }),
+    env,
+    ctx,
+  );
+
+  assert.equal(response.status, 200);
+  const html = await response.text();
+  assert.match(html, /href=["']\/guides\/massachusetts-solar-complaint["']/i);
+  assert.match(html, /href=["']\/guides\/massachusetts-30-day-demand-letter["']/i);
+  assert.match(html, /href=["']\/guides\/solar-complaint-record-checklist["']/i);
 });
 
 test("serves the federal resource page", async () => {
