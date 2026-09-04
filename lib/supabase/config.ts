@@ -1,9 +1,5 @@
-// These values are public client configuration. The browser needs them at build
-// time, while the hosted runtime may expose environment values only on the
-// server. Keep verified defaults so the public intake cannot silently fall back
-// to its "coming soon" state when a deployment environment is missing them.
-const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || "https://zuwxlbcdpvijnkzxmftc.supabase.co";
-const SUPABASE_PUBLISHABLE_KEY = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY || "sb_publishable_Sga6OrGH5zRDgL_6UtyOsw_OlmJE1B6";
+const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL?.trim();
+const SUPABASE_PUBLISHABLE_KEY = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY?.trim();
 const EMAIL_AUTH_ENABLED = process.env.NEXT_PUBLIC_EMAIL_AUTH_ENABLED !== "false";
 const GOOGLE_AUTH_ENABLED = process.env.NEXT_PUBLIC_GOOGLE_AUTH_ENABLED === "true";
 const TURNSTILE_SITE_KEY = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || "0x4AAAAAAEY7QpTGRNh102iJ";
