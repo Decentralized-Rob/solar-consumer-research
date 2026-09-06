@@ -1,0 +1,135 @@
+.florida-resource-page .info-main {
+  isolation: isolate;
+}
+
+.florida-resource-page .info-main::before {
+  content: "";
+  position: absolute;
+  z-index: 0;
+  top: 20px;
+  left: 0;
+  right: 0;
+  height: 560px;
+  border-radius: 28px;
+  background:
+    linear-gradient(90deg, rgba(11, 50, 43, 0.68) 0%, rgba(15, 64, 55, 0.48) 52%, rgba(15, 64, 55, 0.12) 100%),
+    url("/florida/florida-sunset-hero.svg") center / cover no-repeat;
+  box-shadow: 0 18px 44px rgba(28, 67, 57, 0.12);
+  pointer-events: none;
+}
+
+.florida-resource-page .info-main > .eyebrow,
+.florida-resource-page .info-main > h1,
+.florida-resource-page .info-main > .info-lede {
+  padding-left: clamp(22px, 4vw, 48px);
+  padding-right: clamp(22px, 4vw, 48px);
+}
+
+.florida-resource-page .info-main > .eyebrow {
+  margin-top: 16px;
+  margin-left: clamp(22px, 4vw, 48px);
+  padding-left: 11px;
+  padding-right: 11px;
+  border-color: rgba(255, 211, 124, 0.58);
+  background: rgba(255, 248, 231, 0.90);
+  color: #9e461e;
+}
+
+.florida-resource-page .info-main > h1 {
+  max-width: 900px;
+  color: #fffaf0;
+  text-shadow: 0 2px 18px rgba(4, 34, 30, 0.24);
+}
+
+.florida-resource-page .info-main > .info-lede {
+  max-width: 820px;
+  color: rgba(255, 250, 240, 0.96);
+  text-shadow: 0 1px 12px rgba(4, 34, 30, 0.20);
+}
+
+.florida-resource-page .florida-jump-nav {
+  margin-top: 38px;
+}
+
+.florida-resource-page .florida-jump-nav a {
+  border-color: rgba(255, 250, 240, 0.58);
+  background: rgba(255, 250, 240, 0.94);
+  box-shadow: 0 8px 22px rgba(18, 66, 57, 0.08);
+}
+
+.florida-resource-page .florida-help-strip {
+  margin-top: 8px;
+  background:
+    radial-gradient(circle at 92% 15%, rgba(229, 182, 75, 0.24) 0 52px, transparent 53px),
+    rgba(255, 251, 242, 0.98);
+}
+
+.florida-resource-page .florida-case-hero {
+  background:
+    linear-gradient(145deg, rgba(25, 87, 75, 0.96), rgba(46, 111, 96, 0.94)),
+    var(--fl-ink-deep);
+  box-shadow: 0 18px 42px rgba(27, 59, 51, 0.12);
+}
+
+.florida-resource-page .florida-case-numbers article {
+  background: rgba(255, 255, 255, 0.11);
+}
+
+@media (max-width: 760px) {
+  .florida-resource-page .info-main {
+    width: min(100% - 16px, 1120px);
+    padding-top: 28px;
+  }
+
+  .florida-resource-page .info-main::before {
+    top: 8px;
+    height: 610px;
+    border-radius: 24px;
+    background:
+      linear-gradient(180deg, rgba(11, 50, 43, 0.38) 0%, rgba(11, 50, 43, 0.58) 58%, rgba(11, 50, 43, 0.72) 100%),
+      url("/florida/florida-sunset-hero.svg") 62% center / cover no-repeat;
+  }
+
+  .florida-resource-page .info-main > .eyebrow,
+  .florida-resource-page .info-main > h1,
+  .florida-resource-page .info-main > .info-lede {
+    padding-left: 18px;
+    padding-right: 18px;
+  }
+
+  .florida-resource-page .info-main > .eyebrow {
+    margin-top: 8px;
+    margin-left: 18px;
+  }
+
+  .florida-resource-page .info-main > h1 {
+    font-size: clamp(34px, 10.2vw, 48px);
+    line-height: 0.99;
+  }
+
+  .florida-resource-page .info-main > .info-lede {
+    margin-top: 18px;
+    font-size: 17px;
+    line-height: 1.45;
+  }
+
+  .florida-resource-page .florida-jump-nav {
+    margin-top: 34px;
+    padding-left: 18px;
+    padding-right: 18px;
+  }
+
+  .florida-resource-page .florida-help-strip {
+    margin-top: 12px;
+  }
+}
+
+@media (max-width: 390px) {
+  .florida-resource-page .info-main::before {
+    height: 640px;
+  }
+
+  .florida-resource-page .info-main > h1 {
+    font-size: 33px;
+  }
+}
