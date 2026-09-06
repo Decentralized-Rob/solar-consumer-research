@@ -61,6 +61,29 @@ test("renders Michigan as a guided solar consumer hub", async () => {
   assert.doesNotMatch(html, /noindex/i);
 });
 
+test("keeps a clean semantic heading hierarchy", async () => {
+  const worker = await loadWorker();
+  const response = await worker.fetch(
+    new Request("http://localhost/states/michigan", { headers: { accept: "text/html" } }),
+    env,
+    ctx,
+  );
+
+  assert.equal(response.status, 200);
+  const html = await response.text();
+  const h1s = html.match(/<h1\b[^>]*>[\s\S]*?<\/h1>/gi) ?? [];
+
+  assert.equal(h1s.length, 1);
+  assert.match(h1s[0], /Have a solar problem in Michigan\?/i);
+  assert.match(html, /<h2\b[^>]*>[^<]*What is happening with your solar project\?/i);
+  assert.match(html, /<h2\b[^>]*>[^<]*Michigan sued Climax Solar/i);
+  assert.match(html, /<h2\b[^>]*>[^<]*A separate Michigan case involving Power Home Solar \/ Pink Energy/i);
+  assert.match(html, /<h2\b[^>]*>[^<]*Official sources grouped by the problem you are trying to solve/i);
+  assert.match(html, /<h3\b[^>]*>[^<]*Problem with the solar company/i);
+  assert.match(html, /<h3\b[^>]*>[^<]*System installed but not working/i);
+  assert.doesNotMatch(html, /<h4\b|<h5\b|<h6\b/i);
+});
+
 test("keeps Michigan discoverable to search and AI crawlers", async () => {
   const worker = await loadWorker();
   const robotsResponse = await worker.fetch(new Request("http://localhost/robots.txt"), env, ctx);
