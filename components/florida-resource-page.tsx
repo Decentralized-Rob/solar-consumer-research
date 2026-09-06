@@ -1,4 +1,6 @@
 import Link from "next/link";
+import { getStateSolarCase } from "../lib/state-research";
+import { getTitanStateBankruptcy, titanBankruptcyCourtUrl } from "../lib/titan-state-research";
 import { AccountPanel } from "./account-panel";
 import { InfoPage } from "./info-page";
 
@@ -87,6 +89,8 @@ const disclosureChecks = [
 
 export function FloridaResourcePage() {
   const sourceList = Object.values(sources);
+  const floridaEnforcement = getStateSolarCase("FL");
+  const titanBankruptcy = getTitanStateBankruptcy("FL");
   const structuredData = {
     "@context": "https://schema.org",
     "@graph": [
@@ -106,13 +110,28 @@ export function FloridaResourcePage() {
           { "@type": "Thing", name: "Florida solar panel removal costs" },
           { "@type": "Thing", name: "Florida solar contract disclosures" },
           { "@type": "Thing", name: "Florida solar complaints" },
+          { "@type": "Thing", name: "Titan Solar Power Florida bankruptcy" },
         ],
-        citation: sourceList.map((source) => ({
-          "@type": "WebPage",
-          name: source.name,
-          url: source.url,
-          provider: { "@type": "Organization", name: source.publisher },
-        })),
+        citation: [
+          ...sourceList.map((source) => ({
+            "@type": "WebPage",
+            name: source.name,
+            url: source.url,
+            provider: { "@type": "Organization", name: source.publisher },
+          })),
+          floridaEnforcement && {
+            "@type": "WebPage",
+            name: floridaEnforcement.title,
+            url: floridaEnforcement.url,
+            provider: { "@type": "Organization", name: floridaEnforcement.publisher },
+          },
+          titanBankruptcy && {
+            "@type": "WebPage",
+            name: `${titanBankruptcy.debtorName} bankruptcy case reference`,
+            url: titanBankruptcyCourtUrl,
+            provider: { "@type": "Organization", name: "U.S. Bankruptcy Court for the District of Arizona" },
+          },
+        ].filter(Boolean),
       },
       {
         "@type": "BreadcrumbList",
@@ -305,6 +324,28 @@ export function FloridaResourcePage() {
           </Link>
         </div>
       </section>
+
+      {floridaEnforcement && (
+        <section className="florida-judge-callout" aria-labelledby="florida-enforcement-title">
+          <span>Existing Florida enforcement record</span>
+          <h2 id="florida-enforcement-title">{floridaEnforcement.title}</h2>
+          <p>{floridaEnforcement.summary}</p>
+          <small>{floridaEnforcement.publisher} · Source dated {floridaEnforcement.publishedAt}</small>
+          <a href={floridaEnforcement.url} target="_blank" rel="noreferrer">Read the Florida Attorney General source ↗</a>
+        </section>
+      )}
+
+      {titanBankruptcy && (
+        <section className="florida-penalty-card" aria-labelledby="florida-titan-title">
+          <p className="florida-kicker">Florida Titan Solar Power record</p>
+          <h2 id="florida-titan-title">Titan Solar Power FL, Inc. appears in the Chapter 7 bankruptcy record.</h2>
+          <p>
+            The U.S. Bankruptcy Court for the District of Arizona lists <strong>{titanBankruptcy.debtorName}</strong> as an associated Titan debtor under case <strong>{titanBankruptcy.caseNumber}</strong>. That listing identifies the Florida-named debtor; it does not determine the status of an individual customer&apos;s contract, loan, warranty, or bankruptcy claim.
+          </p>
+          <a href={titanBankruptcyCourtUrl} target="_blank" rel="noreferrer">View the official Titan bankruptcy case hub ↗</a>
+          <p><Link href="/cases/titan-solar-power/warranty-after-bankruptcy">Titan Solar Power warranty after bankruptcy →</Link></p>
+        </section>
+      )}
 
       <section className="florida-more-research" aria-labelledby="florida-more-title">
         <div>
