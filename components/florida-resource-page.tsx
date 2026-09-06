@@ -7,8 +7,8 @@ import { InfoPage } from "./info-page";
 const sources = {
   firstFederalOrder: {
     name: "Dow v. SunRun, Inc. — October 30, 2025 remand order",
-    publisher: "U.S. District Court for the Middle District of Florida via Justia",
-    url: "https://law.justia.com/cases/federal/district-courts/florida/flmdce/8%3A2025cv02459/447334/10/",
+    publisher: "U.S. District Court for the Middle District of Florida",
+    url: "https://ecf.flmd.uscourts.gov/cgi-bin/show_public_doc?2025-02459-10-8-cv=",
   },
   laterFederalDocket: {
     name: "Dow v. SunRun, Inc. — later federal docket",
