@@ -53,8 +53,8 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   }
 
   if (state.code === "FL") {
-    const title = "Sunrun Roof Dispute in Florida: $8,000 Removal Cost and $35,000 Buyout Alleged";
-    const description = "A Florida homeowner alleged Sunrun required more than $8,000 to remove panels for a leaking-roof replacement and later demanded about $35,000 to buy out the contract. Read the court record, Florida solar disclosure rules, and official complaint routes.";
+    const title = "Sunrun Roof Dispute Florida: $8K Removal, $35K Buyout Alleged";
+    const description = "Florida homeowner alleges Sunrun wanted $8,000+ to remove panels for roof replacement and about $35,000 to buy out the contract. Read the court record.";
     return {
       title,
       description,
@@ -74,7 +74,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
         title,
         description,
         url: "/states/florida",
-        type: "article",
+        type: "website",
       },
       twitter: {
         card: "summary",
