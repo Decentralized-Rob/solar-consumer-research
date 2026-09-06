@@ -47,13 +47,18 @@ const sources = {
     publisher: "Michigan Department of Licensing and Regulatory Affairs",
     url: "https://www.michigan.gov/lara/bureau-list/bcc/sections/permit-section/permits/building-permit-information",
   },
+  electricalPermits: {
+    name: "Electrical Permit Information",
+    publisher: "Michigan Department of Licensing and Regulatory Affairs",
+    url: "https://www.michigan.gov/lara/bureau-list/bcc/sections/permit-section/permits/electrical-permit-information",
+  },
   jurisdictionList: {
     name: "Statewide Jurisdiction List",
     publisher: "Michigan Department of Licensing and Regulatory Affairs",
     url: "https://www.michigan.gov/lara/-/media/Project/Websites/lara/bcc-media/ASD/StatewideJurisdictionList.pdf",
   },
   mpscComplaints: {
-    name: "MPSC Complaints",
+    name: "MPSC Inquiries & Complaints",
     publisher: "Michigan Public Service Commission",
     url: "https://www.michigan.gov/mpsc/consumer/complaints",
   },
@@ -76,6 +81,11 @@ const sources = {
     name: "Utility Interconnection Contacts",
     publisher: "Michigan Public Service Commission",
     url: "https://www.michigan.gov/mpsc/consumer/electricity/utility-interconnection-contacts",
+  },
+  difsComplaints: {
+    name: "Filing a Complaint with DIFS",
+    publisher: "Michigan Department of Insurance and Financial Services",
+    url: "https://www.michigan.gov/difs/consumers/complaint",
   },
   consumerProtectionAct: {
     name: "Michigan Consumer Protection Act",
@@ -116,6 +126,11 @@ const sources = {
     name: "MI Solar for All",
     publisher: "Michigan Department of Environment, Great Lakes, and Energy",
     url: "https://www.michigan.gov/egle/about/organization/climate-and-energy/mi-healthy-climate-plan/funding/ggrf/mi-solar",
+  },
+  solarForAllAdvisory: {
+    name: "MI Solar For All consumer advisory",
+    publisher: "Michigan Department of Environment, Great Lakes, and Energy",
+    url: "https://www.michigan.gov/egle/about/organization/climate-and-energy/mi-healthy-climate-plan/funding/ggrf/mi-solar/advisory",
   },
 };
 
@@ -211,7 +226,7 @@ export function MichiganResourcePage() {
           <article>
             <span>Loans, collections, liens</span>
             <h3>Loan or financing problem</h3>
-            <p>Separate the installer dispute from the financing issue. Loan records, dealer-fee allegations, collections, credit reporting, and liens may involve different companies.</p>
+            <p>Separate the installer dispute from the financing issue. Loan terms, collections, credit reporting, liens, or UCC filings may involve a separate finance company.</p>
             <a href="#financing-problem">Start here ↓</a>
           </article>
         </div>
@@ -227,7 +242,7 @@ export function MichiganResourcePage() {
           The Michigan Attorney General filed a federal public-enforcement lawsuit alleging deceptive solar sales, rushed electronic contracting, project failures, and finance-side conduct involving origination, funding, servicing, collection, reporting, and enforcement. The complaint identifies 1,689 Climax-originated Michigan loans totaling about $81.26 million and alleges about $22.14 million in financing charges were embedded in financed prices rather than separately disclosed.
         </p>
         <p className="state-source-note">
-          These are allegations in a pending lawsuit, not findings by SolarComplaint.com. The Attorney General is seeking relief that includes restitution, changes or cancellation of certain loans, refunds or credits, credit-reporting corrections, release of liens or UCC filings, and civil penalties where authorized.
+          These are allegations in a pending lawsuit, not court findings. The Attorney General is seeking relief that includes restitution, changes or cancellation of certain loans, refunds or credits, credit-reporting corrections, release of liens or UCC filings, and civil penalties where authorized.
         </p>
         <a href={sources.wwmtClimax.url} target="_blank" rel="noreferrer">Read the WWMT homeowner story ↗</a><br />
         <a href={sources.climaxAnnouncement.url} target="_blank" rel="noreferrer">Michigan Attorney General announcement ↗</a><br />
@@ -242,7 +257,7 @@ export function MichiganResourcePage() {
         </div>
         <h2 id="michigan-cases-title">A separate Michigan case involving Power Home Solar / Pink Energy is still developing</h2>
         <p>
-          In June 2026, the Sixth Circuit reversed a district-court jurisdiction ruling as to several Trivest defendants in the civil RICO litigation. In July, the Eastern District of Michigan preliminarily approved a proposed class settlement with former Power Home Solar founder William Waller only. That settlement does not resolve the broader litigation against every defendant.
+          In June 2026, the Sixth Circuit held that the Michigan district court lacked personal jurisdiction over the Trivest defendants, reversed the jurisdiction ruling, and vacated the May 23, 2025 order denying their motions to compel arbitration. In July, the Eastern District of Michigan preliminarily approved a proposed class settlement with former Power Home Solar founder William Waller only. That settlement does not resolve the broader litigation against every defendant.
         </p>
         <a href={sources.pinkEnergyAppeal.url} target="_blank" rel="noreferrer">Read the June 16 Sixth Circuit opinion ↗</a><br />
         <a href={sources.pinkEnergySettlement.url} target="_blank" rel="noreferrer">Read the July 28 preliminary-approval order ↗</a><br />
@@ -270,7 +285,8 @@ export function MichiganResourcePage() {
           <p><a href={sources.interconnection.url} target="_blank" rel="noreferrer">MPSC: What is interconnection? ↗</a></p>
           <p><a href={sources.distributedGeneration.url} target="_blank" rel="noreferrer">MPSC Distributed Generation resources ↗</a></p>
           <p><a href={sources.utilityContacts.url} target="_blank" rel="noreferrer">Utility interconnection contacts ↗</a></p>
-          <p><a href={sources.mpscComplaints.url} target="_blank" rel="noreferrer">MPSC complaint information ↗</a></p>
+          <p>The MPSC complaint process is for utility issues within the Commission&apos;s authority; it is not a general complaint route against a solar installer.</p>
+          <p><a href={sources.mpscComplaints.url} target="_blank" rel="noreferrer">MPSC utility complaint information ↗</a></p>
         </details>
 
         <details id="check-installer" className="state-research-status">
@@ -279,6 +295,7 @@ export function MichiganResourcePage() {
           <p><a href={sources.laraVerify.url} target="_blank" rel="noreferrer">Verify a licensed professional or business through LARA ↗</a></p>
           <p><a href={sources.laraComplaint.url} target="_blank" rel="noreferrer">LARA complaint route ↗</a></p>
           <p><a href={sources.buildingPermits.url} target="_blank" rel="noreferrer">Michigan building permit information ↗</a></p>
+          <p><a href={sources.electricalPermits.url} target="_blank" rel="noreferrer">Michigan electrical permit information ↗</a></p>
           <p><a href={sources.jurisdictionList.url} target="_blank" rel="noreferrer">Statewide building-code jurisdiction list ↗</a></p>
           <p><a href={sources.bccEnforcement.url} target="_blank" rel="noreferrer">Bureau of Construction Codes enforcement ↗</a></p>
         </details>
@@ -286,6 +303,8 @@ export function MichiganResourcePage() {
         <details id="financing-problem" className="state-research-status">
           <summary><strong>Loan or financing problem</strong></summary>
           <p>Keep the loan agreement, payment history, any UCC or lien notices, credit-reporting records, cancellation requests, and communications with both the installer and finance company. A financing complaint may need a different route from an installation complaint.</p>
+          <p>If the issue involves a financial institution or consumer lender regulated by Michigan, DIFS investigates complaints involving banks, credit unions, mortgages, and other consumer financial products.</p>
+          <p><a href={sources.difsComplaints.url} target="_blank" rel="noreferrer">Michigan DIFS financial-services complaint information ↗</a></p>
           <p><a href={sources.cfpbComplaint.url} target="_blank" rel="noreferrer">Consumer Financial Protection Bureau complaint ↗</a></p>
           <p><a href={sources.ftcReportFraud.url} target="_blank" rel="noreferrer">Federal Trade Commission ReportFraud ↗</a></p>
           <p><a href={sources.agComplaints.url} target="_blank" rel="noreferrer">Michigan Attorney General complaint directory ↗</a></p>
@@ -316,10 +335,11 @@ export function MichiganResourcePage() {
         </div>
         <div className="state-source-grid">
           <article>
-            <span>State program</span>
-            <h3>Michigan Solar for All</h3>
-            <p>Use the state program page for the current status, eligibility information, and implementation updates rather than relying on older announcements.</p>
-            <a href={sources.solarForAll.url} target="_blank" rel="noreferrer">Check the current Michigan Solar for All page ↗</a>
+            <span>State program · paused</span>
+            <h3>MI Solar for All is paused</h3>
+            <p>EGLE says the program received a termination letter from the U.S. Environmental Protection Agency dated August 7, 2025 and that Michigan is working with the Attorney General on next steps. EGLE also warns that MI Solar for All has not distributed promotional advertisements and says it is not aware of a state or federal program providing solar installation at no cost.</p>
+            <a href={sources.solarForAll.url} target="_blank" rel="noreferrer">Check the current MI Solar for All status ↗</a><br />
+            <a href={sources.solarForAllAdvisory.url} target="_blank" rel="noreferrer">Read the MI Solar For All consumer advisory ↗</a>
           </article>
         </div>
       </section>
