@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
+  <title id="title">Sunrun ethics guide image option B</title>
+  <desc id="desc">Editorial source stack with policy documents and a solar roof in the background.</desc>
+  <rect width="1200" height="630" fill="#f4efe2"/>
+  <path d="M0 438 C160 360 300 410 430 350 C610 268 710 310 870 245 C1010 188 1090 208 1200 165 V630 H0 Z" fill="#d8d7c2"/>
+  <path d="M0 492 C160 410 320 460 490 402 C640 350 790 390 930 334 C1040 292 1120 305 1200 280 V630 H0 Z" fill="#264c3a"/>
+  <g transform="translate(795 124)">
+    <path d="M-28 164 L170 34 L394 164 Z" fill="#39413d"/>
+    <rect x="10" y="160" width="344" height="186" rx="8" fill="#f8f5ec"/>
+    <g transform="translate(100 64) rotate(-7)">
+      <rect width="210" height="92" rx="4" fill="#223c58"/>
+      <path d="M0 30 H210 M0 60 H210 M52 0 V92 M104 0 V92 M156 0 V92" stroke="#7aa0bf" stroke-width="3"/>
+    </g>
+  </g>
+  <g transform="translate(118 56)">
+    <text x="0" y="25" font-family="Arial, sans-serif" font-size="18" font-weight="700" letter-spacing="5" fill="#7a6a43">POLICY SOURCE GUIDE</text>
+    <rect x="0" y="44" width="105" height="4" fill="#b88a25"/>
+    <g transform="translate(155 25)">
+      <rect x="96" y="0" width="380" height="160" rx="13" fill="#fffdfa" stroke="#d1c7ae"/>
+      <text x="130" y="52" font-family="Georgia, serif" font-size="34" fill="#183729">Code of Business Conduct</text>
+      <rect x="130" y="78" width="270" height="8" rx="4" fill="#b3b4aa"/>
+      <rect x="130" y="102" width="220" height="8" rx="4" fill="#c4c3b7"/>
+      <rect x="130" y="126" width="290" height="8" rx="4" fill="#c4c3b7"/>
+
+      <rect x="50" y="128" width="410" height="168" rx="13" fill="#fffdfa" stroke="#d1c7ae"/>
+      <text x="84" y="180" font-family="Georgia, serif" font-size="38" fill="#183729">Whistleblower Policy</text>
+      <text x="84" y="215" font-family="Arial, sans-serif" font-size="18" font-weight="700" fill="#b88a25">ALLVOICES + ETHICS HOTLINE</text>
+      <rect x="84" y="244" width="285" height="8" rx="4" fill="#b3b4aa"/>
+      <rect x="84" y="267" width="230" height="8" rx="4" fill="#c4c3b7"/>
+
+      <rect x="0" y="260" width="405" height="190" rx="13" fill="#fffdfa" stroke="#d1c7ae"/>
+      <text x="34" y="318" font-family="Georgia, serif" font-size="42" fill="#183729">Vendor Code</text>
+      <rect x="34" y="348" width="280" height="8" rx="4" fill="#b3b4aa"/>
+      <rect x="34" y="373" width="310" height="8" rx="4" fill="#c4c3b7"/>
+      <rect x="34" y="398" width="235" height="8" rx="4" fill="#c4c3b7"/>
+    </g>
+  </g>
+  <g transform="translate(900 465)">
+    <circle cx="0" cy="0" r="58" fill="#f4efe2" stroke="#c89b34" stroke-width="5"/>
+    <path d="M-16 8 L-2 22 L25 -17" fill="none" stroke="#214f3b" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  <text x="760" y="560" font-family="Arial, sans-serif" font-size="18" font-weight="700" fill="#fffdfa">CURRENT POLICY SOURCES</text>
+  <text x="760" y="592" font-family="Arial, sans-serif" font-size="16" fill="#dbe5de">Reporting • vendors • leadership • escalation</text>
+</svg>
