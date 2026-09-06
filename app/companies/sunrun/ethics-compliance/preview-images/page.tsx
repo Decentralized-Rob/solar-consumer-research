@@ -5,7 +5,7 @@ import { InfoPage } from "../../../../../components/info-page";
 
 export const metadata: Metadata = {
   title: "Sunrun Ethics Guide Image Review",
-  description: "Temporary review page for Sunrun ethics guide hero image options.",
+  description: "Temporary review page for Sunrun ethics guide editorial image options.",
   robots: { index: false, follow: false },
 };
 
@@ -27,20 +27,20 @@ export default function SunrunEthicsImagePreviewPage() {
   return (
     <InfoPage
       eyebrow="Review only · Sunrun ethics guide"
-      title="Hero image options"
-      lede="Two image directions for the Sunrun ethics and compliance guide. This temporary page is marked noindex and is intended only for design review."
+      title="Editorial image options"
+      lede="Two independent-publication directions for the Sunrun ethics and compliance guide. Sunrun is identified in ordinary editorial type rather than by using its corporate logo."
     >
       <nav className="case-question-links" aria-label="Breadcrumb">
         <Link href="/companies/sunrun/ethics-compliance">Back to ethics guide</Link>
       </nav>
 
       <section className="info-section">
-        <h2>Option A: investigation desk</h2>
-        <p>Lighter editorial treatment with policy documents, magnifying glass and a solar home. More open space and less dense text.</p>
+        <h2>Option A: company-watch dossier</h2>
+        <p>Lighter, publication-first treatment. SolarComplaint.com leads, Sunrun appears as the subject, and the image combines a compact source file with residential solar context.</p>
         <div style={optionStyle}>
           <Image
             src="/sunrun/ethics-hero-option-a.svg"
-            alt="Option A: editorial ethics guide illustration with policy documents, magnifying glass and solar home"
+            alt="Option A: independent Sunrun company-watch editorial graphic with source file and solar home"
             width={1200}
             height={630}
             style={imageStyle}
@@ -51,12 +51,12 @@ export default function SunrunEthicsImagePreviewPage() {
       </section>
 
       <section className="info-section">
-        <h2>Option B: policy source stack</h2>
-        <p>More direct source-library treatment built around the Code of Business Conduct, Whistleblower Policy and Vendor Code.</p>
+        <h2>Option B: premium source dossier</h2>
+        <p>Darker and more investigative. The visual centers the Code of Business Conduct, Whistleblower Policy, Vendor Code and AllVoices reporting route.</p>
         <div style={optionStyle}>
           <Image
             src="/sunrun/ethics-hero-option-b.svg"
-            alt="Option B: policy source stack with ethics code, whistleblower policy, vendor code and solar roof"
+            alt="Option B: premium Sunrun ethics source dossier with policy documents and AllVoices reporting reference"
             width={1200}
             height={630}
             style={imageStyle}
