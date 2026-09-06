@@ -1,0 +1,464 @@
+/* Michigan state hub: task-first app treatment scoped to this page only. */
+.michigan-resource-page {
+  background:
+    radial-gradient(circle at 100% 0%, rgba(223, 229, 217, 0.72), transparent 34rem),
+    #f3f1e9;
+}
+
+.michigan-resource-page .info-header {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  min-height: 64px;
+  border-bottom: 1px solid rgba(28, 37, 31, 0.12);
+  background: rgba(243, 241, 233, 0.94);
+  backdrop-filter: blur(14px);
+}
+
+.michigan-resource-page .info-main {
+  width: min(1080px, calc(100% - 40px));
+  padding-top: 58px;
+}
+
+.michigan-resource-page .info-main > .eyebrow {
+  display: inline-flex;
+  align-items: center;
+  min-height: 30px;
+  margin-bottom: 18px;
+  padding: 0 12px;
+  border: 1px solid #c7cec5;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.7);
+  color: #46624f;
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+}
+
+.michigan-resource-page .info-main > h1 {
+  max-width: 760px;
+  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: clamp(44px, 6vw, 70px);
+  font-weight: 760;
+  line-height: 0.98;
+  letter-spacing: -0.055em;
+}
+
+.michigan-resource-page .info-lede {
+  max-width: 700px;
+  margin-top: 20px;
+  color: #566057;
+  font-size: 18px;
+  line-height: 1.6;
+}
+
+.michigan-resource-page .case-question-links {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  margin: 28px 0 36px;
+  padding-bottom: 2px;
+  border: 0;
+  scrollbar-width: none;
+}
+
+.michigan-resource-page .case-question-links::-webkit-scrollbar { display: none; }
+
+.michigan-resource-page .case-question-links a,
+.michigan-resource-page .case-question-links span {
+  flex: 0 0 auto;
+  padding: 9px 12px;
+  border: 1px solid #c4cbc2;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.72);
+  color: #355640;
+  font-family: ui-sans-serif, system-ui, sans-serif;
+  font-size: 11px;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.michigan-resource-page .case-question-links span[aria-current="page"] {
+  border-color: #244b32;
+  background: #244b32;
+  color: white;
+}
+
+.michigan-resource-page #start-here {
+  margin-top: 18px;
+  padding: 28px;
+  border: 1px solid #d2d7cf;
+  border-radius: 28px;
+  background: rgba(255, 255, 255, 0.62);
+  box-shadow: 0 20px 56px rgba(31, 48, 37, 0.06);
+}
+
+.michigan-resource-page #start-here .state-source-section-heading {
+  grid-template-columns: 150px 1fr;
+  padding-top: 0;
+  border-top: 0;
+}
+
+.michigan-resource-page #start-here .state-source-section-heading h2 {
+  max-width: 660px;
+  font-family: ui-sans-serif, system-ui, sans-serif;
+  font-size: clamp(27px, 3vw, 38px);
+  font-weight: 760;
+  line-height: 1.05;
+  letter-spacing: -0.035em;
+}
+
+.michigan-resource-page #start-here .state-source-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.michigan-resource-page #start-here .state-source-grid article {
+  position: relative;
+  min-height: 225px;
+  padding: 20px;
+  overflow: hidden;
+  border: 1px solid #d2d8d0;
+  border-radius: 20px;
+  background: #fffdfa;
+  box-shadow: 0 9px 28px rgba(37, 55, 42, 0.05);
+  transition: transform 150ms ease, box-shadow 150ms ease, border-color 150ms ease;
+}
+
+.michigan-resource-page #start-here .state-source-grid article:hover,
+.michigan-resource-page #start-here .state-source-grid article:focus-within {
+  transform: translateY(-2px);
+  border-color: #a8b4a9;
+  box-shadow: 0 16px 34px rgba(37, 55, 42, 0.09);
+}
+
+.michigan-resource-page #start-here .state-source-grid article:nth-child(2) { background: #edf2ea; }
+.michigan-resource-page #start-here .state-source-grid article:nth-child(3) { background: #f4ead7; }
+.michigan-resource-page #start-here .state-source-grid article:nth-child(4) { background: #e7ece8; }
+
+.michigan-resource-page #start-here .state-source-grid article::before {
+  display: grid;
+  width: 34px;
+  height: 34px;
+  place-items: center;
+  margin-bottom: 22px;
+  border-radius: 11px;
+  background: #244b32;
+  color: white;
+  content: "01";
+  font-family: ui-sans-serif, system-ui, sans-serif;
+  font-size: 10px;
+  font-weight: 900;
+}
+
+.michigan-resource-page #start-here .state-source-grid article:nth-child(2)::before { content: "02"; }
+.michigan-resource-page #start-here .state-source-grid article:nth-child(3)::before { content: "03"; }
+.michigan-resource-page #start-here .state-source-grid article:nth-child(4)::before { content: "04"; }
+
+.michigan-resource-page #start-here .state-source-grid article > span {
+  color: #69736a;
+  font-family: ui-sans-serif, system-ui, sans-serif;
+  font-size: 9px;
+  letter-spacing: 0.06em;
+}
+
+.michigan-resource-page #start-here .state-source-grid h3 {
+  margin: 12px 0 9px;
+  font-family: ui-sans-serif, system-ui, sans-serif;
+  font-size: 20px;
+  font-weight: 760;
+  line-height: 1.13;
+  letter-spacing: -0.025em;
+}
+
+.michigan-resource-page #start-here .state-source-grid p {
+  font-size: 12px;
+  line-height: 1.55;
+}
+
+.michigan-resource-page #start-here .state-source-grid a {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 42px;
+  margin-top: auto;
+  padding-top: 16px;
+  color: #244b32;
+  font-family: ui-sans-serif, system-ui, sans-serif;
+  font-size: 11px;
+  font-weight: 900;
+}
+
+.michigan-resource-page .state-source-lead,
+.michigan-resource-page .state-case-feature {
+  margin-top: 28px;
+  padding: 34px;
+  border: 1px solid #d0d6ce;
+  border-radius: 24px;
+  box-shadow: 0 16px 44px rgba(31, 48, 37, 0.055);
+}
+
+.michigan-resource-page .state-source-lead {
+  border-top: 6px solid var(--sun);
+  background: #fffdfa;
+}
+
+.michigan-resource-page .state-case-feature { background: #e8ede7; }
+
+.michigan-resource-page .state-source-lead h2,
+.michigan-resource-page .state-case-feature h2 {
+  margin-top: 24px;
+  font-size: clamp(30px, 3.8vw, 46px);
+}
+
+.michigan-resource-page .state-source-meta {
+  font-family: ui-sans-serif, system-ui, sans-serif;
+}
+
+.michigan-resource-page .state-source-section:not(#start-here) {
+  margin-top: 72px;
+}
+
+.michigan-resource-page .state-source-section:not(#start-here) .state-source-section-heading h2 {
+  max-width: 760px;
+}
+
+.michigan-resource-page details.state-research-status {
+  margin-top: 12px;
+  padding: 0;
+  overflow: hidden;
+  border: 1px solid #cbd2c9;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.72);
+}
+
+.michigan-resource-page details.state-research-status summary {
+  position: relative;
+  display: flex;
+  min-height: 64px;
+  align-items: center;
+  padding: 18px 58px 18px 20px;
+  cursor: pointer;
+  list-style: none;
+  font-family: ui-sans-serif, system-ui, sans-serif;
+}
+
+.michigan-resource-page details.state-research-status summary::-webkit-details-marker { display: none; }
+
+.michigan-resource-page details.state-research-status summary::after {
+  position: absolute;
+  right: 18px;
+  display: grid;
+  width: 30px;
+  height: 30px;
+  place-items: center;
+  border-radius: 50%;
+  background: #e4eae3;
+  color: #244b32;
+  content: "+";
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.michigan-resource-page details.state-research-status[open] summary::after { content: "−"; }
+
+.michigan-resource-page details.state-research-status summary strong {
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: 800;
+}
+
+.michigan-resource-page details.state-research-status > p {
+  margin: 0;
+  padding: 0 20px 16px;
+  color: #566057;
+}
+
+.michigan-resource-page details.state-research-status > p:first-of-type {
+  padding-top: 4px;
+  border-top: 1px solid #dde1dc;
+}
+
+.michigan-resource-page details.state-research-status a {
+  display: inline-flex;
+  min-height: 36px;
+  align-items: center;
+  color: #244b32;
+  font-weight: 850;
+}
+
+.michigan-resource-page .legal-notice {
+  margin-top: 70px;
+  border-radius: 18px;
+}
+
+@media (max-width: 900px) {
+  .michigan-resource-page #start-here .state-source-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 650px) {
+  .michigan-resource-page .info-header {
+    min-height: 58px;
+    padding: 7px 14px;
+  }
+
+  .michigan-resource-page .info-header .brand-logo { width: 176px; }
+  .michigan-resource-page .info-back { font-size: 11px; }
+
+  .michigan-resource-page .info-main {
+    width: min(100% - 24px, 1080px);
+    padding: 30px 0 82px;
+  }
+
+  .michigan-resource-page .info-main > .eyebrow {
+    min-height: 28px;
+    margin-bottom: 14px;
+    padding: 0 10px;
+    font-size: 9px;
+  }
+
+  .michigan-resource-page .info-main > h1 {
+    max-width: 360px;
+    font-size: clamp(39px, 12vw, 52px);
+    line-height: 0.98;
+  }
+
+  .michigan-resource-page .info-lede {
+    max-width: 390px;
+    margin-top: 14px;
+    font-size: 15px;
+    line-height: 1.5;
+  }
+
+  .michigan-resource-page .case-question-links {
+    margin: 20px 0 22px;
+  }
+
+  .michigan-resource-page .case-question-links a,
+  .michigan-resource-page .case-question-links span {
+    padding: 8px 10px;
+    font-size: 10px;
+  }
+
+  .michigan-resource-page #start-here {
+    margin: 0;
+    padding: 18px;
+    border-radius: 22px;
+  }
+
+  .michigan-resource-page #start-here .state-source-section-heading {
+    display: block;
+  }
+
+  .michigan-resource-page #start-here .state-source-section-heading > span {
+    display: none;
+  }
+
+  .michigan-resource-page #start-here .state-source-section-heading h2 {
+    font-size: 24px;
+    line-height: 1.08;
+  }
+
+  .michigan-resource-page #start-here .state-source-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 9px;
+    margin-top: 16px;
+  }
+
+  .michigan-resource-page #start-here .state-source-grid article {
+    min-height: 164px;
+    padding: 14px;
+    border-radius: 16px;
+  }
+
+  .michigan-resource-page #start-here .state-source-grid article::before {
+    width: 28px;
+    height: 28px;
+    margin-bottom: 12px;
+    border-radius: 9px;
+    font-size: 9px;
+  }
+
+  .michigan-resource-page #start-here .state-source-grid article > span,
+  .michigan-resource-page #start-here .state-source-grid p {
+    display: none;
+  }
+
+  .michigan-resource-page #start-here .state-source-grid h3 {
+    margin: 0;
+    font-size: 16px;
+    line-height: 1.15;
+  }
+
+  .michigan-resource-page #start-here .state-source-grid a {
+    min-height: 36px;
+    padding-top: 10px;
+    font-size: 10px;
+  }
+
+  .michigan-resource-page .state-source-lead,
+  .michigan-resource-page .state-case-feature {
+    margin-top: 18px;
+    padding: 22px;
+    border-radius: 20px;
+  }
+
+  .michigan-resource-page .state-source-lead h2,
+  .michigan-resource-page .state-case-feature h2 {
+    margin-top: 18px;
+    font-size: 30px;
+    line-height: 1.04;
+  }
+
+  .michigan-resource-page .state-source-lead p,
+  .michigan-resource-page .state-case-feature p {
+    font-size: 13px;
+    line-height: 1.65;
+  }
+
+  .michigan-resource-page .state-source-meta {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .michigan-resource-page .state-source-section:not(#start-here) {
+    margin-top: 54px;
+  }
+
+  .michigan-resource-page .state-source-section:not(#start-here) .state-source-section-heading {
+    display: block;
+    padding-top: 16px;
+  }
+
+  .michigan-resource-page .state-source-section:not(#start-here) .state-source-section-heading > span {
+    display: block;
+    margin-bottom: 8px;
+  }
+
+  .michigan-resource-page .state-source-section:not(#start-here) .state-source-section-heading h2 {
+    font-size: 30px;
+    line-height: 1.06;
+  }
+
+  .michigan-resource-page details.state-research-status {
+    border-radius: 15px;
+  }
+
+  .michigan-resource-page details.state-research-status summary {
+    min-height: 58px;
+    padding: 15px 52px 15px 16px;
+  }
+
+  .michigan-resource-page details.state-research-status summary::after {
+    right: 14px;
+    width: 28px;
+    height: 28px;
+  }
+
+  .michigan-resource-page details.state-research-status summary strong { font-size: 15px; }
+  .michigan-resource-page details.state-research-status > p { padding-right: 16px; padding-left: 16px; }
+}
