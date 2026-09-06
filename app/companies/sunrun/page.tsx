@@ -137,7 +137,7 @@ export default function SunrunCompanyPage() {
         <section className="info-section">
           <h2>Sunrun ethics &amp; compliance</h2>
           <p>
-            SolarComplaint.com maintains a separate source guide to Sunrun's current AllVoices reporting route, Code of Business Conduct and Ethics, Whistleblower Policy, Vendor Code of Conduct, and publicly identified leadership responsibilities.
+            SolarComplaint.com maintains a separate source guide to Sunrun’s current AllVoices reporting route, Code of Business Conduct and Ethics, Whistleblower Policy, Vendor Code of Conduct, and publicly identified leadership responsibilities.
           </p>
           <p><Link href="/companies/sunrun/ethics-compliance">Open the Sunrun ethics and compliance guide →</Link></p>
         </section>
