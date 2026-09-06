@@ -102,7 +102,7 @@ export function FloridaResourcePage() {
         spatialCoverage: { "@type": "AdministrativeArea", name: "Florida" },
         isPartOf: { "@id": "https://solarcomplaint.com/#website" },
         about: [
-          { "@type": "Thing", name: "Sunrun roof problems in Florida" },
+          { "@type": "Thing", name: "Sunrun roof disputes in Florida" },
           { "@type": "Thing", name: "Florida solar panel removal costs" },
           { "@type": "Thing", name: "Florida solar contract disclosures" },
           { "@type": "Thing", name: "Florida solar complaints" },
@@ -135,20 +135,28 @@ export function FloridaResourcePage() {
     >
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }} />
 
-      <nav className="florida-jump-nav" aria-label="Florida solar resource navigation">
-        <a href="#sunrun-roof-case">Sunrun roof case</a>
-        <a href="#florida-disclosures">Check your paperwork</a>
-        <a href="#florida-routes">Florida complaint routes</a>
-        <a href="#research-help">Free research assistance</a>
+      <nav className="florida-hero-action" aria-label="Featured Florida case">
+        <a href="#sunrun-roof-case">Read the Florida case →</a>
       </nav>
 
       <section className="florida-help-strip" aria-labelledby="florida-help-title">
         <div>
           <span>Free Research Assistance</span>
-          <h2 id="florida-help-title">Have a Florida solar problem of your own?</h2>
+          <h2 id="florida-help-title">Have a Florida solar situation of your own?</h2>
           <p>Tell us the company, your Florida city or town, and what happened. We can help locate relevant public records and official sources.</p>
         </div>
         <a href="#research-help">Request research help</a>
+      </section>
+
+      <section className="florida-situation-section" aria-labelledby="florida-situation-title">
+        <h2 id="florida-situation-title">Start with your situation</h2>
+        <div className="florida-situation-grid">
+          <a href="#research-help"><strong>Sunrun or another company</strong><span>Research the company and public record →</span></a>
+          <a href="#sunrun-roof-case"><strong>Roof or installation issues</strong><span>See the Florida Sunrun roof case →</span></a>
+          <a href="#florida-disclosures"><strong>Loan, lease or buyout</strong><span>Check Florida disclosure requirements →</span></a>
+          <a href="#florida-routes"><strong>System not working</strong><span>Find the official Florida route →</span></a>
+        </div>
+        <a className="florida-situation-law" href="#florida-disclosures"><strong>What Florida law requires</strong><span>Check the solar disclosure items →</span></a>
       </section>
 
       <section id="sunrun-roof-case" className="florida-case-hero" aria-labelledby="sunrun-roof-case-title">
@@ -268,7 +276,7 @@ export function FloridaResourcePage() {
       <section id="florida-routes" className="florida-routes" aria-labelledby="florida-routes-title">
         <div className="florida-section-heading">
           <span>Official Florida routes</span>
-          <h2 id="florida-routes-title">Use the route that matches the problem.</h2>
+          <h2 id="florida-routes-title">Use the route that matches the situation.</h2>
         </div>
         <div className="florida-route-grid">
           <a href={sources.agComplaint.url} target="_blank" rel="noreferrer">
