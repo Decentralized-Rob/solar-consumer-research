@@ -1,47 +1,69 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
   <title id="title">Sunrun ethics guide image option A</title>
-  <desc id="desc">Editorial illustration of policy documents, a magnifying glass, and a solar home.</desc>
+  <desc id="desc">Independent editorial company-watch graphic with Sunrun in plain type, source timeline, policy file and solar home.</desc>
   <defs>
-    <linearGradient id="sky" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#fff8e8"/>
-      <stop offset="1" stop-color="#f4e5bd"/>
+    <linearGradient id="paper" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#fffaf0"/>
+      <stop offset="1" stop-color="#efe6d3"/>
     </linearGradient>
-    <linearGradient id="hill" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#80917c"/>
-      <stop offset="1" stop-color="#3e5b49"/>
+    <linearGradient id="sunset" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#f6cf81"/>
+      <stop offset=".55" stop-color="#b8c6ad"/>
+      <stop offset="1" stop-color="#315543"/>
     </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="14" stdDeviation="15" flood-color="#173226" flood-opacity=".16"/></filter>
   </defs>
-  <rect width="1200" height="630" fill="url(#sky)"/>
-  <circle cx="960" cy="135" r="66" fill="#f5b942" opacity=".82"/>
-  <path d="M480 365 C650 285 780 320 925 280 C1040 248 1110 270 1200 240 V630 H420 Z" fill="#d7d5bd"/>
-  <path d="M450 420 C630 340 800 390 930 340 C1040 300 1110 320 1200 300 V630 H390 Z" fill="url(#hill)"/>
-  <g transform="translate(715 335)">
-    <rect x="0" y="100" width="350" height="150" rx="8" fill="#f6f4ed"/>
-    <path d="M-28 115 L172 0 L382 115 Z" fill="#3a413c"/>
-    <g transform="translate(88 28) rotate(-8)">
-      <rect x="0" y="0" width="205" height="86" rx="4" fill="#233d59"/>
-      <path d="M0 28 H205 M0 56 H205 M51 0 V86 M102 0 V86 M153 0 V86" stroke="#7da5c6" stroke-width="3"/>
-    </g>
-    <rect x="64" y="150" width="72" height="100" fill="#d7c59a"/>
-    <rect x="190" y="146" width="98" height="62" fill="#cfd7cd"/>
-  </g>
-  <g transform="translate(82 78)">
-    <rect x="0" y="0" width="438" height="420" rx="24" fill="#1f4c39"/>
-    <rect x="28" y="34" width="370" height="340" rx="10" fill="#fffdfa" transform="rotate(-3 28 34)"/>
-    <text x="72" y="105" font-family="Georgia, serif" font-size="43" fill="#153326">Ethics &amp;</text>
-    <text x="72" y="154" font-family="Georgia, serif" font-size="43" fill="#153326">Compliance Guide</text>
-    <rect x="73" y="190" width="90" height="7" rx="4" fill="#c99a2e"/>
-    <g fill="#8e948f">
-      <rect x="72" y="226" width="260" height="9" rx="4"/>
-      <rect x="72" y="250" width="302" height="9" rx="4"/>
-      <rect x="72" y="274" width="230" height="9" rx="4"/>
-      <rect x="72" y="318" width="282" height="9" rx="4"/>
-    </g>
-    <g transform="translate(266 272)">
-      <circle cx="0" cy="0" r="76" fill="none" stroke="#bd8d21" stroke-width="15"/>
-      <line x1="54" y1="55" x2="126" y2="130" stroke="#bd8d21" stroke-width="18" stroke-linecap="round"/>
+  <rect width="1200" height="630" fill="url(#paper)"/>
+  <rect x="0" y="0" width="14" height="630" fill="#214f3b"/>
+
+  <g transform="translate(58 50)">
+    <text x="0" y="0" dominant-baseline="hanging" font-family="Georgia, serif" font-size="27" font-weight="700" fill="#173428">SolarComplaint.com</text>
+    <text x="0" y="39" font-family="Arial, sans-serif" font-size="11" font-weight="700" letter-spacing="3" fill="#6b735f">INDEPENDENT CONSUMER RESEARCH</text>
+    <rect x="0" y="59" width="82" height="4" fill="#c5962d"/>
+
+    <text x="0" y="122" font-family="Arial, sans-serif" font-size="13" font-weight="800" letter-spacing="3.5" fill="#52705d">COMPANY WATCH</text>
+    <text x="0" y="185" font-family="Georgia, serif" font-size="76" fill="#132f24">Sunrun</text>
+    <text x="0" y="244" font-family="Georgia, serif" font-size="47" fill="#132f24">Ethics &amp; Compliance</text>
+    <text x="0" y="283" font-family="Arial, sans-serif" font-size="17" fill="#4e5b52">Reporting routes • policies • people • public record</text>
+
+    <g transform="translate(0 332)">
+      <line x1="0" y1="0" x2="496" y2="0" stroke="#bfc0b5"/>
+      <text x="0" y="28" font-family="Arial, sans-serif" font-size="11" font-weight="800" letter-spacing="2" fill="#657168">CURRENT ROUTE</text>
+      <text x="152" y="28" font-family="Georgia, serif" font-size="21" fill="#173428">AllVoices</text>
+      <line x1="0" y1="52" x2="496" y2="52" stroke="#d0d0c5"/>
+      <text x="0" y="82" font-family="Arial, sans-serif" font-size="11" font-weight="800" letter-spacing="2" fill="#657168">POLICY SET</text>
+      <text x="152" y="82" font-family="Georgia, serif" font-size="21" fill="#173428">October 2025</text>
+      <line x1="0" y1="106" x2="496" y2="106" stroke="#d0d0c5"/>
+      <text x="0" y="136" font-family="Arial, sans-serif" font-size="11" font-weight="800" letter-spacing="2" fill="#657168">SOURCE FIRST</text>
+      <text x="152" y="136" font-family="Georgia, serif" font-size="21" fill="#173428">Primary documents</text>
     </g>
   </g>
-  <text x="760" y="548" font-family="Arial, sans-serif" font-size="20" font-weight="700" fill="#fffdfa">SOURCE-FIRST CONSUMER GUIDE</text>
-  <text x="760" y="580" font-family="Arial, sans-serif" font-size="16" fill="#dce6de">Policy documents • reporting routes • leadership context</text>
+
+  <g transform="translate(650 0)">
+    <rect width="550" height="630" fill="url(#sunset)"/>
+    <circle cx="426" cy="115" r="54" fill="#ffd36f" opacity=".82"/>
+    <path d="M0 346 C128 284 221 321 330 270 C417 229 482 247 550 220 V630 H0 Z" fill="#8e9c86" opacity=".78"/>
+    <path d="M0 424 C145 350 258 404 365 345 C449 299 508 320 550 301 V630 H0 Z" fill="#274d3b"/>
+    <g transform="translate(94 214)">
+      <rect x="0" y="155" width="372" height="192" rx="5" fill="#f3eee1"/>
+      <path d="M-34 170 L180 30 L405 170 Z" fill="#343c38"/>
+      <g transform="translate(99 70) rotate(-7)">
+        <rect width="221" height="95" rx="3" fill="#213d58"/>
+        <path d="M0 31 H221 M0 63 H221 M55 0 V95 M110 0 V95 M165 0 V95" stroke="#87a9c6" stroke-width="3"/>
+      </g>
+      <rect x="58" y="225" width="72" height="122" fill="#d8c8a4"/>
+      <rect x="205" y="216" width="105" height="68" fill="#c7d1c6"/>
+    </g>
+    <g transform="translate(45 42)" filter="url(#shadow)">
+      <rect width="234" height="150" rx="8" fill="#fffdf7"/>
+      <text x="23" y="35" font-family="Arial, sans-serif" font-size="10" font-weight="800" letter-spacing="2" fill="#6d765f">RESEARCH FILE</text>
+      <text x="23" y="73" font-family="Georgia, serif" font-size="26" fill="#173428">Ethics sources</text>
+      <rect x="23" y="92" width="153" height="6" rx="3" fill="#b8b7aa"/>
+      <rect x="23" y="110" width="181" height="6" rx="3" fill="#d0cfc2"/>
+      <rect x="23" y="128" width="128" height="6" rx="3" fill="#d0cfc2"/>
+      <rect x="198" y="18" width="13" height="47" fill="#c5962d"/>
+    </g>
+    <rect x="0" y="570" width="550" height="60" fill="#173428" opacity=".96"/>
+    <text x="36" y="605" font-family="Arial, sans-serif" font-size="12" font-weight="800" letter-spacing="2.4" fill="#fffaf0">NOT AFFILIATED WITH OR ENDORSED BY SUNRUN</text>
+  </g>
 </svg>
