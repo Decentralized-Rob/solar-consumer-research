@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import "../../michigan-app.css";
+import "../../michigan-mobile-v2.css";
 import { ArizonaResourcePage } from "../../../components/arizona-resource-page";
 import { MichiganResourcePage } from "../../../components/michigan-resource-page";
 import { StateResourcePage } from "../../../components/state-resource-page";
