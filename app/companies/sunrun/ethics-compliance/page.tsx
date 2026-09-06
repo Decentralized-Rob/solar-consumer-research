@@ -215,12 +215,12 @@ export default function SunrunEthicsCompliancePage() {
           <div className={styles.sectionLabel}>Reporting guide</div>
           <h2>How to report a Sunrun ethics or compliance concern</h2>
           <p>
-            Sunrun's current Code of Business Conduct and Ethics and Whistleblower Policy identify <strong>AllVoices</strong> and an ethics hotline as reporting resources. Those resources are different from ordinary customer-service channels.
+            Sunrun’s current Code of Business Conduct and Ethics and Whistleblower Policy identify <strong>AllVoices</strong> and an ethics hotline as reporting resources. Those resources are different from ordinary customer-service channels.
           </p>
           <div className={styles.reportRow}>
             <div>
               <h3>Use the current Sunrun reporting route</h3>
-              <p>Before submitting, verify the live reporting information against Sunrun's current governance materials.</p>
+              <p>Before submitting, verify the live reporting information against Sunrun’s current governance materials.</p>
             </div>
             <a className={styles.reportButton} href={allVoicesUrl} target="_blank" rel="noreferrer">Open Sunrun AllVoices ↗</a>
           </div>
@@ -249,10 +249,10 @@ export default function SunrunEthicsCompliancePage() {
 
         <section className="info-section" id="evidence">
           <div className={styles.sectionLabel}>Evidence</div>
-          <h2>Sunrun's published ethics documents</h2>
+          <h2>Sunrun’s published ethics documents</h2>
           <div className={styles.sourceList}>
-            <div className={styles.sourceItem}><span>Primary source</span><div><strong>Code of Business Conduct and Ethics</strong><p>Sunrun's October 2025 company ethics code.</p></div><a href={codeUrl} target="_blank" rel="noreferrer">Open ↗</a></div>
-            <div className={styles.sourceItem}><span>Primary source</span><div><strong>Whistleblower Policy</strong><p>Sunrun's October 2025 policy identifying current reporting resources.</p></div><a href={whistleblowerUrl} target="_blank" rel="noreferrer">Open ↗</a></div>
+            <div className={styles.sourceItem}><span>Primary source</span><div><strong>Code of Business Conduct and Ethics</strong><p>Sunrun’s October 2025 company ethics code.</p></div><a href={codeUrl} target="_blank" rel="noreferrer">Open ↗</a></div>
+            <div className={styles.sourceItem}><span>Primary source</span><div><strong>Whistleblower Policy</strong><p>Sunrun’s October 2025 policy identifying current reporting resources.</p></div><a href={whistleblowerUrl} target="_blank" rel="noreferrer">Open ↗</a></div>
             <div className={styles.sourceItem}><span>Primary source</span><div><strong>Vendor Code of Conduct</strong><p>Separately published standards for Sunrun vendors and third-party relationships.</p></div><a href={vendorCodeUrl} target="_blank" rel="noreferrer">Open ↗</a></div>
             <div className={styles.sourceItem}><span>Company library</span><div><strong>Governance documents</strong><p>The current Sunrun index for governance and ethics materials.</p></div><a href={governanceUrl} target="_blank" rel="noreferrer">Open ↗</a></div>
             <div className={styles.sourceItem}><span>Public LinkedIn</span><div><strong>Sunrun Ethics &amp; Compliance Week post</strong><p>A public company statement about integrity, accountability and transparency.</p></div><a href={ethicsLinkedInPost} target="_blank" rel="noreferrer">Open ↗</a></div>
@@ -263,7 +263,7 @@ export default function SunrunEthicsCompliancePage() {
           <div className={styles.sectionLabel}>Vendor conduct</div>
           <h2>Why the Sunrun Vendor Code matters</h2>
           <p>
-            A homeowner may deal with a salesperson, installer, roofer, dealer, contractor or other third party rather than a direct Sunrun employee. Sunrun publishes a separate Vendor Code of Conduct, so it is worth documenting the person's company, role, how the relationship to Sunrun was represented and which documents identify the vendor or partner.
+            A homeowner may deal with a salesperson, installer, roofer, dealer, contractor or other third party rather than a direct Sunrun employee. Sunrun publishes a separate Vendor Code of Conduct, so it is worth documenting the person’s company, role, how the relationship to Sunrun was represented and which documents identify the vendor or partner.
           </p>
           <p><a href={vendorCodeUrl} target="_blank" rel="noreferrer">Read the Sunrun Vendor Code of Conduct ↗</a></p>
         </section>
@@ -339,7 +339,7 @@ export default function SunrunEthicsCompliancePage() {
           <div className={styles.sectionLabel}>Editorial note</div>
           <h2>Source and update standard</h2>
           <p>
-            Reviewed September 6, 2026. Sunrun can change reporting systems, phone numbers, policies and executive roles. Before filing, verify current information against Sunrun's governance page and live AllVoices portal. Primary sources control if a SolarComplaint.com summary differs from the underlying record.
+            Reviewed September 6, 2026. Sunrun can change reporting systems, phone numbers, policies and executive roles. Before filing, verify current information against Sunrun’s governance page and live AllVoices portal. Primary sources control if a SolarComplaint.com summary differs from the underlying record.
           </p>
           <p>Read the <Link href="/methodology">research methodology</Link> and <Link href="/corrections">corrections policy</Link>.</p>
         </section>
