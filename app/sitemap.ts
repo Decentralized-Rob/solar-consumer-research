@@ -9,6 +9,7 @@ const stateLastModifiedByCode: Record<string, string> = {
   ME: "2026-08-29",
   ...Object.fromEntries(Object.keys(titanStateBankruptcyByCode).map((code) => [code, "2026-08-28"])),
   AZ: "2026-08-29",
+  FL: "2026-09-06",
 };
 
 export default function sitemap(): MetadataRoute.Sitemap {
@@ -30,7 +31,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: baseUrl, lastModified: new Date("2026-08-27"), changeFrequency: "weekly", priority: 1 },
     { url: `${baseUrl}/research`, lastModified: new Date("2026-08-27"), changeFrequency: "weekly", priority: 0.95 },
     ...researchPages,
-    { url: `${baseUrl}/companies/sunrun`, lastModified: new Date("2026-08-27"), changeFrequency: "weekly", priority: 0.9 },
+    { url: `${baseUrl}/companies/sunrun`, lastModified: new Date("2026-09-06"), changeFrequency: "weekly", priority: 0.9 },
     { url: `${baseUrl}/resources`, lastModified: new Date("2026-08-21"), changeFrequency: "weekly", priority: 0.9 },
     { url: `${baseUrl}/federal-resources`, lastModified: new Date("2026-08-21"), changeFrequency: "monthly", priority: 0.9 },
     { url: `${baseUrl}/guides`, lastModified: new Date("2026-09-04"), changeFrequency: "monthly", priority: 0.8 },

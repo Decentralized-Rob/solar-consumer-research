@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+  <title id="title">Florida coastal sunset illustration</title>
+  <desc id="desc">Warm Florida sunset over water with palm silhouettes and a low coastal horizon.</desc>
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#f9cf84"/>
+      <stop offset="0.48" stop-color="#f3a85f"/>
+      <stop offset="1" stop-color="#dfece4"/>
+    </linearGradient>
+    <linearGradient id="water" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#9ccfc4"/>
+      <stop offset="1" stop-color="#2f7168"/>
+    </linearGradient>
+    <linearGradient id="fade" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#123f38" stop-opacity="0.50"/>
+      <stop offset="0.62" stop-color="#123f38" stop-opacity="0.18"/>
+      <stop offset="1" stop-color="#123f38" stop-opacity="0.04"/>
+    </linearGradient>
+  </defs>
+  <rect width="1600" height="900" fill="url(#sky)"/>
+  <circle cx="1250" cy="265" r="118" fill="#ffd46b" opacity="0.96"/>
+  <path d="M0 520 C190 470 330 500 510 475 C710 445 870 500 1050 470 C1240 438 1430 480 1600 452 L1600 900 L0 900 Z" fill="#245e55" opacity="0.78"/>
+  <path d="M0 575 C210 540 380 590 590 548 C780 510 980 570 1190 532 C1360 502 1490 528 1600 518 L1600 900 L0 900 Z" fill="url(#water)"/>
+  <g fill="none" stroke="#f8d28c" stroke-width="8" stroke-linecap="round" opacity="0.48">
+    <path d="M890 610 C1010 590 1110 600 1270 575"/>
+    <path d="M830 650 C1010 628 1170 642 1350 612"/>
+    <path d="M770 696 C1010 670 1220 685 1430 648"/>
+  </g>
+  <g fill="#0f4039">
+    <path d="M1510 900 C1495 760 1470 626 1428 520 C1406 462 1410 389 1443 334 C1468 294 1512 263 1558 260 C1514 286 1490 324 1482 366 C1516 326 1552 312 1592 320 C1556 343 1532 370 1520 404 C1548 383 1574 377 1600 382 L1600 900 Z"/>
+    <path d="M1494 415 C1454 360 1403 340 1355 345 C1400 360 1434 385 1453 418 C1417 392 1379 384 1342 394 C1388 411 1422 434 1445 465 Z"/>
+    <path d="M1470 374 C1448 321 1440 273 1448 228 C1472 265 1482 305 1480 348 C1504 303 1537 273 1577 258 C1543 297 1523 335 1519 376 Z"/>
+  </g>
+  <path d="M0 733 C130 688 260 690 395 718 C515 744 625 760 760 744 C866 732 965 706 1062 700 C1180 692 1284 724 1394 733 C1470 740 1538 730 1600 712 L1600 900 L0 900 Z" fill="#0f4039" opacity="0.92"/>
+  <rect width="1600" height="900" fill="url(#fade)"/>
+</svg>
