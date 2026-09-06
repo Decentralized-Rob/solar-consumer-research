@@ -13,6 +13,7 @@
 - Corrections: https://solarcomplaint.com/corrections
 - Disclaimer: https://solarcomplaint.com/disclaimer
 - State pages: https://solarcomplaint.com/states/{state-name}
+- Michigan solar consumer hub: https://solarcomplaint.com/states/michigan
 - Arizona solar consumer hub: https://solarcomplaint.com/states/arizona
 
 ## Featured research
@@ -34,6 +35,14 @@
   - Separates Titan workmanship/service obligations from manufacturer warranty coverage.
   - Links directly to the U.S. Bankruptcy Court for the District of Arizona, SolarEdge, Enphase, and EnergyAid source pages.
   - Links to state consumer-resource pages for the 22 state-named Titan affiliates listed by the bankruptcy court.
+
+## Michigan source hub
+
+- Michigan solar complaints, financing and consumer resources: https://solarcomplaint.com/states/michigan
+  - Starts with four homeowner problem paths: solar-company disputes, installed systems that are not working, installer or contractor checks, and loan or financing problems.
+  - Features the July 15, 2026 Michigan Attorney General lawsuit against Climax Solar, its owner, and finance defendants, with the WWMT homeowner report and primary government records attached.
+  - Separately tracks 2026 Power Home Solar / Pink Energy litigation developments without presenting the partial William Waller settlement as a complete resolution of the broader case.
+  - Groups Michigan Attorney General, LARA, Bureau of Construction Codes, MPSC, Michigan Legislature, CFPB, and FTC resources by user problem rather than agency.
 
 ## Arizona source hub
 
@@ -57,7 +66,7 @@
 ## Internal research relationships
 
 - Featured story -> relevant state pages -> primary government sources.
-- Michigan page -> Michigan enforcement source + related featured research.
+- Michigan page -> Michigan enforcement source + related featured research + problem-specific state and federal resources.
 - Texas page -> Texas Sunrun investigation source + related featured research.
 - Arizona page -> Sunrun consent agreement + Arizona solar statutes + Attorney General complaint route + contractor and utility complaint routes + related featured research.
 - Sunrun company page -> Texas investigation + Arizona settlement + Connecticut lawsuit + related research.
@@ -71,6 +80,7 @@
 - Original source-backed research that connects related records without collapsing their procedural differences.
 - Federal consumer, finance, and complaint resources.
 - Company and case tracking where a sufficient public-source record exists.
+- Expanded Michigan solar complaint, financing, installer, permitting, interconnection, Climax Solar enforcement, and current case resources.
 - Expanded Arizona solar consumer, contract, contractor, utility, Sunrun settlement, and current rooftop-solar resources.
 - Expanded Massachusetts consumer protection, utility, public-record, and solar-program resources.
 - State-page depth varies. Pages without an expanded source section are starting directories, not complete state research files.

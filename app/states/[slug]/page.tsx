@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import "../../michigan-app.css";
 import { ArizonaResourcePage } from "../../../components/arizona-resource-page";
+import { MichiganResourcePage } from "../../../components/michigan-resource-page";
 import { StateResourcePage } from "../../../components/state-resource-page";
 import { stateSlug, states } from "../../../lib/content";
 import { consumerProtectionByState, getStateSolarCase } from "../../../lib/state-research";
@@ -46,6 +48,40 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     };
   }
 
+  if (state.code === "MI") {
+    const title = "Michigan Solar Complaints, Financing & Consumer Resources";
+    const description = "Michigan solar complaint resources, installer and financing issues, permits and utility approval, current enforcement cases, and official state sources.";
+    return {
+      title,
+      description,
+      keywords: [
+        "Michigan solar complaints",
+        "Michigan solar installer problems",
+        "Michigan solar financing complaints",
+        "Climax Solar Michigan",
+        "Michigan solar lawsuit",
+        "Michigan solar contractor complaint",
+        "Michigan solar permits",
+        "Michigan solar PTO",
+        "Michigan solar interconnection",
+        "Michigan solar loan problems",
+      ],
+      alternates: { canonical: "/states/michigan" },
+      openGraph: {
+        title,
+        description,
+        url: "/states/michigan",
+        type: "website",
+      },
+      twitter: {
+        card: "summary",
+        title,
+        description,
+      },
+      robots: { index: true, follow: true },
+    };
+  }
+
   const complaintRoute = consumerProtectionByState[state.code];
   const caseReference = getStateSolarCase(state.code);
   const titanReference = getTitanStateBankruptcy(state.code);
@@ -79,5 +115,6 @@ export default async function StatePage({ params }: { params: Promise<{ slug: st
   const state = states.find((item) => stateSlug(item.name) === slug);
   if (!state) notFound();
   if (state.code === "AZ") return <ArizonaResourcePage />;
+  if (state.code === "MI") return <MichiganResourcePage />;
   return <StateResourcePage state={state} />;
 }
