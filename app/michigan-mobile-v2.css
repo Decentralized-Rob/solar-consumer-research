@@ -1,0 +1,101 @@
+/* Michigan mobile correction: put the consumer task paths ahead of editorial chrome. */
+@media (max-width: 650px) {
+  .michigan-resource-page .info-header {
+    position: sticky;
+    top: 0;
+    min-height: 52px;
+    padding: 6px 12px;
+  }
+
+  .michigan-resource-page .info-header .brand-logo {
+    width: 156px;
+  }
+
+  .michigan-resource-page .info-back {
+    display: none;
+  }
+
+  .michigan-resource-page .info-main {
+    width: min(100% - 24px, 1080px);
+    padding-top: 20px;
+  }
+
+  .michigan-resource-page .info-main > .eyebrow {
+    min-height: 24px;
+    margin: 0 0 10px;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    font-size: 9px;
+    line-height: 1.35;
+  }
+
+  .michigan-resource-page .info-main > h1 {
+    max-width: 430px;
+    font-size: clamp(38px, 10.8vw, 48px);
+    line-height: 0.96;
+    letter-spacing: -0.05em;
+  }
+
+  .michigan-resource-page .info-lede {
+    max-width: 430px;
+    margin: 12px 0 16px;
+    font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    font-size: 14px;
+    line-height: 1.42;
+  }
+
+  .michigan-resource-page .case-question-links {
+    display: none;
+  }
+
+  .michigan-resource-page #start-here {
+    margin: 0;
+    padding: 14px;
+    border-radius: 18px;
+    box-shadow: none;
+  }
+
+  .michigan-resource-page #start-here .state-source-section-heading h2 {
+    max-width: 320px;
+    font-size: 20px;
+    line-height: 1.05;
+  }
+
+  .michigan-resource-page #start-here .state-source-grid {
+    gap: 8px;
+    margin-top: 12px;
+  }
+
+  .michigan-resource-page #start-here .state-source-grid article {
+    min-height: 124px;
+    padding: 12px;
+    border-radius: 14px;
+    box-shadow: none;
+  }
+
+  .michigan-resource-page #start-here .state-source-grid article::before {
+    width: 25px;
+    height: 25px;
+    margin-bottom: 9px;
+    border-radius: 8px;
+    font-size: 8px;
+  }
+
+  .michigan-resource-page #start-here .state-source-grid h3 {
+    font-size: 14px;
+    line-height: 1.12;
+  }
+
+  .michigan-resource-page #start-here .state-source-grid a {
+    min-height: 26px;
+    padding-top: 7px;
+    font-size: 9px;
+  }
+
+  .michigan-resource-page .state-source-lead,
+  .michigan-resource-page .state-case-feature {
+    margin-top: 16px;
+  }
+}
