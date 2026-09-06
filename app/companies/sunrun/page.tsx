@@ -14,34 +14,28 @@ const canonicalUrl = "https://solarcomplaint.com/companies/sunrun";
 export const metadata: Metadata = {
   title: "Sunrun Lawsuits, Investigations and Solar Consumer Resources",
   description:
-    "Track documented state lawsuits, investigations, settlements, and official consumer resources involving Sunrun, with direct links to government sources.",
+    "Track documented state lawsuits, investigations, settlements, ethics resources, and official consumer information involving Sunrun, with direct links to primary sources.",
   keywords: [
     "Sunrun lawsuit",
     "Sunrun investigation",
     "Sunrun settlement",
     "Sunrun complaints",
+    "Sunrun ethics complaint",
     "Sunrun roof dispute",
     "Sunrun solar consumer resources",
   ],
   alternates: { canonical: "/companies/sunrun" },
   openGraph: {
     title: "Sunrun Lawsuits, Investigations and Solar Consumer Resources",
-    description: "A source-based hub for documented state actions involving Sunrun.",
+    description: "A source-based hub for documented state actions and consumer research involving Sunrun.",
     url: "/companies/sunrun",
     type: "website",
-    images: [
-      {
-        url: "https://solarcomplaint.com/og.png",
-        width: 1200,
-        height: 630,
-        alt: "Solar Consumer Research",
-      },
-    ],
+    images: [{ url: "https://solarcomplaint.com/og.png", width: 1200, height: 630, alt: "Solar Consumer Research" }],
   },
   twitter: {
     card: "summary_large_image",
     title: "Sunrun Lawsuits, Investigations and Solar Consumer Resources",
-    description: "A source-based hub for documented state actions involving Sunrun.",
+    description: "A source-based hub for documented state actions and consumer research involving Sunrun.",
     images: ["https://solarcomplaint.com/og.png"],
   },
 };
@@ -93,7 +87,7 @@ export default function SunrunCompanyPage() {
         "@type": "CollectionPage",
         "@id": `${canonicalUrl}#page`,
         name: "Sunrun Lawsuits, Investigations and Solar Consumer Resources",
-        description: "A source-based hub for documented state actions involving Sunrun.",
+        description: "A source-based hub for documented state actions and consumer research involving Sunrun.",
         url: canonicalUrl,
         dateModified: "2026-09-06",
         isPartOf: { "@id": "https://solarcomplaint.com/#website" },
@@ -104,12 +98,7 @@ export default function SunrunCompanyPage() {
           itemListElement: actions.map((action, index) => ({
             "@type": "ListItem",
             position: index + 1,
-            item: {
-              "@type": "CreativeWork",
-              name: action.title,
-              description: action.summary,
-              url: action.source,
-            },
+            item: { "@type": "CreativeWork", name: action.title, description: action.summary, url: action.source },
           })),
         },
       },
@@ -141,10 +130,16 @@ export default function SunrunCompanyPage() {
         <section className="info-section case-notice">
           <strong>Status matters</strong>
           <p>
-            An investigation is not a finding of wrongdoing. Lawsuit allegations are not court findings. A settlement can
-            resolve disputed claims without an admission of wrongdoing. This page labels each action separately and does
-            not treat them as one case.
+            An investigation is not a finding of wrongdoing. Lawsuit allegations are not court findings. A settlement can resolve disputed claims without an admission of wrongdoing. This page labels each action separately and does not treat them as one case.
           </p>
+        </section>
+
+        <section className="info-section">
+          <h2>Sunrun ethics &amp; compliance</h2>
+          <p>
+            SolarComplaint.com maintains a separate source guide to Sunrun's current AllVoices reporting route, Code of Business Conduct and Ethics, Whistleblower Policy, Vendor Code of Conduct, and publicly identified leadership responsibilities.
+          </p>
+          <p><Link href="/companies/sunrun/ethics-compliance">Open the Sunrun ethics and compliance guide →</Link></p>
         </section>
 
         <section className="state-source-section" aria-labelledby="sunrun-actions-title">
@@ -175,11 +170,7 @@ export default function SunrunCompanyPage() {
 
         <section className="info-section">
           <h2>Detailed case page</h2>
-          <p>
-            <Link href="/cases/connecticut-attorney-general-sunrun-lawsuit">
-              Read the Connecticut Attorney General lawsuit summary and allegations →
-            </Link>
-          </p>
+          <p><Link href="/cases/connecticut-attorney-general-sunrun-lawsuit">Read the Connecticut Attorney General lawsuit summary and allegations →</Link></p>
         </section>
 
         <section className="info-section">
@@ -193,8 +184,7 @@ export default function SunrunCompanyPage() {
         <section className="info-section">
           <h2>Research standards</h2>
           <p>
-            This page is an index of documented public actions, not a claim score or legal assessment. Read the
-            {" "}<Link href="/methodology">methodology</Link> and <Link href="/corrections">corrections policy</Link>.
+            This page is an index of documented public actions, not a claim score or legal assessment. Read the <Link href="/methodology">methodology</Link> and <Link href="/corrections">corrections policy</Link>.
           </p>
         </section>
       </InfoPage>
