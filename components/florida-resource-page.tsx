@@ -107,6 +107,7 @@ export function FloridaResourcePage() {
         isPartOf: { "@id": "https://solarcomplaint.com/#website" },
         about: [
           { "@type": "Thing", name: "Sunrun roof disputes in Florida" },
+          { "@type": "Thing", name: "Sunrun roof replacement in Florida" },
           { "@type": "Thing", name: "Florida solar panel removal costs" },
           { "@type": "Thing", name: "Florida solar contract disclosures" },
           { "@type": "Thing", name: "Florida solar complaints" },
@@ -150,7 +151,7 @@ export function FloridaResourcePage() {
       className="state-resource-page florida-resource-page"
       eyebrow="Florida solar consumer resources · reviewed September 6, 2026"
       title="Sunrun Roof Dispute in Florida: Homeowner Alleged $8,000 Removal Cost and $35,000 Buyout"
-      lede="A Florida homeowner alleged that Sunrun would not remove its solar panels for a leaking-roof replacement unless she signed a new agreement and paid more than $8,000. When she sought cancellation instead, she alleged Sunrun demanded about $35,000 to buy out the contract."
+      lede="A Florida homeowner alleged that Sunrun would not remove its solar panels so she could replace a leaking roof unless she signed a new agreement and paid more than $8,000. When she sought cancellation instead, she alleged Sunrun demanded about $35,000 to buy out the contract."
     >
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }} />
 
@@ -181,12 +182,12 @@ export function FloridaResourcePage() {
       <section id="sunrun-roof-case" className="florida-case-hero" aria-labelledby="sunrun-roof-case-title">
         <div className="florida-case-copy">
           <p className="florida-kicker">Featured Florida Sunrun case</p>
-          <h2 id="sunrun-roof-case-title">A leaking roof turned into a dispute over panel removal, a new agreement, and a contract buyout.</h2>
+          <h2 id="sunrun-roof-case-title">Sunrun roof replacement dispute: panel removal, a new agreement and a contract buyout.</h2>
           <p>
             According to an October 2025 federal court order summarizing Linda Dow&apos;s amended complaint, she entered a 25-year Sunrun contract in 2019. After learning in September 2024 that her roof was leaking, she sought to replace it. The order says she alleged Sunrun refused to remove the panels unless she agreed to sign a new contract and pay more than $8,000, the estimated panel-removal cost.
           </p>
           <p>
-            Dow then sought to cancel. The court order says Sunrun demanded a $35,000 buyout. She retained an attorney and later sued, alleging three violations of the Florida Consumer Collection Practices Act during attempted negotiations. Those claims were allegations, not findings that Sunrun violated the law.
+            Dow then sought to cancel. The court order says Sunrun demanded a $35,000 buyout. She retained an attorney and later sued, alleging three violations of the Florida Consumer Collection Practices Act. Those claims were allegations, not findings that Sunrun violated the law.
           </p>
           <div className="florida-case-actions">
             <a href={sources.firstFederalOrder.url} target="_blank" rel="noreferrer">Read the federal court order ↗</a>
@@ -218,7 +219,7 @@ export function FloridaResourcePage() {
         <span>What the federal judge actually said</span>
         <h2 id="judge-callout-title">One Sunrun removal-cost argument was called a “red herring.”</h2>
         <p>
-          In deciding whether the first federal case belonged in federal court, Judge Kathryn Kimball Mizelle rejected Sunrun&apos;s attempt to include the $8,000 panel-removal cost in the amount in controversy. The order called that theory a “red herring” and later said Sunrun&apos;s additional theories were “none ... persuasive.” Those statements addressed federal jurisdiction, not whether Sunrun committed the consumer-law violations Dow alleged.
+          In deciding whether the first federal case belonged in federal court, Judge Kathryn Kimball Mizelle rejected Sunrun&apos;s attempt to include the $8,000 panel-removal cost in the amount in controversy. The order called that theory a “red herring” and later said of Sunrun&apos;s additional theories, “None are persuasive.” Those statements addressed federal jurisdiction, not whether Sunrun committed the consumer-law violations Dow alleged.
         </p>
         <a href={sources.firstFederalOrder.url} target="_blank" rel="noreferrer">Read the relevant court order ↗</a>
       </section>
@@ -242,7 +243,7 @@ export function FloridaResourcePage() {
             <p>The Middle District of Florida sent the first removed case back to state court after finding Sunrun had not established the federal amount-in-controversy requirement.</p>
           </li>
           <li>
-            <span>December 2025 - January 2026</span>
+            <span>December 2025 to January 2026</span>
             <p>Sunrun removed the Pasco County case to federal court again and moved to compel arbitration. The parties then jointly asked to stay the case for binding arbitration, which the court granted on January 6.</p>
           </li>
           <li>
@@ -255,7 +256,7 @@ export function FloridaResourcePage() {
       <section id="florida-disclosures" className="florida-disclosure-section" aria-labelledby="florida-disclosures-title">
         <div className="florida-section-heading">
           <span>Florida paperwork check</span>
-          <h2 id="florida-disclosures-title">Florida solar contracts are supposed to come with a separate disclosure. Check yours.</h2>
+          <h2 id="florida-disclosures-title">Florida solar sales and leases covered by § 520.23 require a separate disclosure. Check yours.</h2>
           <p>
             Florida Statutes § 520.23 requires a separate written disclosure, separately acknowledged by the buyer or lessee, covering dozens of items when applicable. Several of them matter directly when a homeowner later needs roof work or wants to sell the home.
           </p>
@@ -301,7 +302,7 @@ export function FloridaResourcePage() {
           <a href={sources.agComplaint.url} target="_blank" rel="noreferrer">
             <span>Consumer transaction</span>
             <strong>Florida Attorney General complaint</strong>
-            <p>For deceptive or unfair business-conduct complaints involving a consumer transaction.</p>
+            <p>For complaints about deceptive or unfair business conduct in a consumer transaction.</p>
             <b>Open official complaint route ↗</b>
           </a>
           <a href={sources.dbprLicense.url} target="_blank" rel="noreferrer">
@@ -318,7 +319,7 @@ export function FloridaResourcePage() {
           </a>
           <Link href="/companies/sunrun">
             <span>SolarComplaint.com research</span>
-            <strong>Sunrun research tracker</strong>
+            <strong>Sunrun complaints, lawsuits and enforcement</strong>
             <p>Continue into documented Sunrun investigations, enforcement actions, settlements, and cases from other states.</p>
             <b>Browse Sunrun research →</b>
           </Link>
