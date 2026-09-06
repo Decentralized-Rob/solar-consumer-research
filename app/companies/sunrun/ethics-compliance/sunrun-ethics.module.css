@@ -1,0 +1,268 @@
+.page :global(.info-main) {
+  width: min(1060px, calc(100% - 40px));
+  padding-top: 58px;
+}
+
+.page :global(.info-main > .eyebrow),
+.page :global(.info-main > h1),
+.page :global(.info-main > .info-lede) {
+  max-width: 820px;
+}
+
+.jumpGrid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  margin: 24px 0 34px;
+}
+
+.jumpGrid a {
+  min-height: 86px;
+  padding: 17px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--white);
+  font-size: 14px;
+  font-weight: 800;
+  line-height: 1.35;
+}
+
+.primaryCard {
+  display: grid;
+  grid-template-columns: 1.25fr 0.75fr;
+  gap: 22px;
+  align-items: stretch;
+  margin: 18px 0 8px;
+}
+
+.reportBox,
+.sourceBox {
+  padding: 25px;
+  border-radius: 20px;
+}
+
+.reportBox {
+  background: #214f3b;
+  color: #fffefa;
+}
+
+.reportBox h3,
+.sourceBox h3 {
+  margin: 0 0 10px;
+  font-family: Georgia, serif;
+  font-size: 28px;
+  font-weight: 500;
+}
+
+.reportBox p,
+.sourceBox p {
+  margin: 0 0 14px;
+  line-height: 1.65;
+}
+
+.reportButton {
+  display: inline-flex;
+  min-height: 48px;
+  align-items: center;
+  justify-content: center;
+  padding: 0 18px;
+  border-radius: 999px;
+  background: #f5b942;
+  color: #151914;
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.hotline {
+  display: block;
+  margin-top: 14px;
+  color: #fff0c9;
+  font-weight: 800;
+}
+
+.sourceBox {
+  border: 1px solid #d9d8cf;
+  background: #fffefa;
+}
+
+.sourceBox a,
+.sourceList a,
+.personCard a,
+.callout a {
+  color: #214f3b;
+  font-weight: 800;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.callout {
+  margin: 18px 0;
+  padding: 18px 20px;
+  border-left: 4px solid #f5b942;
+  background: #fff8e6;
+  line-height: 1.65;
+}
+
+.checklist {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin: 20px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.checklist li {
+  padding: 17px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--white);
+  line-height: 1.55;
+}
+
+.checklist strong {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.peopleGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 13px;
+  margin-top: 20px;
+}
+
+.personCard {
+  padding: 21px;
+  border: 1px solid var(--line);
+  border-radius: 17px;
+  background: var(--white);
+}
+
+.personCard span {
+  display: block;
+  margin-bottom: 7px;
+  color: #526057;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.personCard h3 {
+  margin: 0 0 9px;
+  font-family: Georgia, serif;
+  font-size: 25px;
+  font-weight: 500;
+}
+
+.personCard p {
+  margin: 0 0 12px;
+  color: #4f574f;
+  line-height: 1.6;
+}
+
+.sourceList {
+  display: grid;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.sourceItem {
+  display: grid;
+  grid-template-columns: 150px minmax(0, 1fr) auto;
+  gap: 18px;
+  align-items: center;
+  padding: 18px 0;
+  border-top: 1px solid var(--line);
+}
+
+.sourceItem:first-child {
+  border-top: 0;
+}
+
+.sourceType {
+  color: #587061;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+}
+
+.sourceItem strong {
+  display: block;
+  margin-bottom: 4px;
+}
+
+.sourceItem p {
+  margin: 0;
+  color: #5e665e;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.nextGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.nextGrid a {
+  min-height: 112px;
+  padding: 20px;
+  border-radius: 16px;
+  background: #edf0e8;
+  font-weight: 800;
+  line-height: 1.45;
+}
+
+.reviewLink {
+  margin-top: 18px;
+  font-size: 12px;
+  color: #70766f;
+}
+
+.reviewLink a {
+  text-decoration: underline;
+}
+
+@media (max-width: 760px) {
+  .page :global(.info-main) {
+    width: min(100% - 24px, 1060px);
+    padding-top: 34px;
+  }
+
+  .page :global(.info-main > h1) {
+    font-size: clamp(40px, 12vw, 58px);
+    line-height: .98;
+  }
+
+  .page :global(.info-main > .info-lede) {
+    margin-bottom: 34px;
+    font-size: 19px;
+  }
+
+  .jumpGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .primaryCard,
+  .peopleGrid,
+  .nextGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .checklist {
+    grid-template-columns: 1fr;
+  }
+
+  .sourceItem {
+    grid-template-columns: 1fr;
+    gap: 7px;
+  }
+
+  .sourceItem a {
+    width: fit-content;
+  }
+}
