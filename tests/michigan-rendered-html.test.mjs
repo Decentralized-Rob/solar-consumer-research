@@ -57,5 +57,27 @@ test("renders Michigan as a guided solar consumer hub", async () => {
   assert.match(html, /href=["']\/guides["']/i);
   assert.match(html, /"@type":"CollectionPage"/i);
   assert.match(html, /"@type":"BreadcrumbList"/i);
+  assert.doesNotMatch(html, /rel=["'][^"']*nofollow/i);
   assert.doesNotMatch(html, /noindex/i);
+});
+
+test("keeps Michigan discoverable to search and AI crawlers", async () => {
+  const worker = await loadWorker();
+  const robotsResponse = await worker.fetch(new Request("http://localhost/robots.txt"), env, ctx);
+  const sitemapResponse = await worker.fetch(new Request("http://localhost/sitemap.xml"), env, ctx);
+
+  assert.equal(robotsResponse.status, 200);
+  assert.equal(sitemapResponse.status, 200);
+
+  const robots = await robotsResponse.text();
+  const sitemap = await sitemapResponse.text();
+
+  assert.match(robots, /User-agent:\s*\*/i);
+  assert.match(robots, /Allow:\s*\//i);
+  assert.match(robots, /Sitemap:\s*https:\/\/solarcomplaint\.com\/sitemap\.xml/i);
+  assert.doesNotMatch(robots, /User-agent:\s*OAI-SearchBot[\s\S]*?Disallow:\s*\//i);
+  assert.match(
+    sitemap,
+    /<loc>https:\/\/solarcomplaint\.com\/states\/michigan<\/loc>[\s\S]*?<lastmod>2026-09-05/i,
+  );
 });
