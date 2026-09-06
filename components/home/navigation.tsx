@@ -68,6 +68,7 @@ export function HomeHeader({
               Solar Sales, Financing and What Happens After a Complaint
             </a>
             <a href="/companies/sunrun" onClick={closeMenu}>Sunrun</a>
+            <a href="/companies/sunrun/ethics-compliance" onClick={closeMenu}>Sunrun Ethics &amp; Compliance Guide</a>
             <a href="/cases/titan-solar-power" onClick={closeMenu}>Titan Solar Power</a>
             <a href="/cases/connecticut-attorney-general-sunrun-lawsuit" onClick={closeMenu}>
               Connecticut AG v. Sunrun
