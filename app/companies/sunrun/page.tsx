@@ -8,6 +8,7 @@ const texasSource = featuredStateSources.TX[0];
 const arizonaAgreement = featuredStateSources.AZ[0];
 const connecticutSource = "https://portal.ct.gov/ag/press-releases/2024-press-releases/attorney-general-tong-sues-sunrun";
 const arizonaSettlementPage = "https://www.azag.gov/consumer/sunrun";
+const floridaRoofOrder = "https://ecf.flmd.uscourts.gov/cgi-bin/show_public_doc?2025-02459-10-8-cv=";
 const canonicalUrl = "https://solarcomplaint.com/companies/sunrun";
 
 export const metadata: Metadata = {
@@ -19,6 +20,7 @@ export const metadata: Metadata = {
     "Sunrun investigation",
     "Sunrun settlement",
     "Sunrun complaints",
+    "Sunrun roof dispute",
     "Sunrun solar consumer resources",
   ],
   alternates: { canonical: "/companies/sunrun" },
@@ -56,6 +58,15 @@ export default function SunrunCompanyPage() {
       stateHref: "/states/texas",
     },
     {
+      type: "Lawsuit",
+      state: "Florida",
+      date: "October 30, 2025",
+      title: "Florida Sunrun roof-removal and contract-buyout dispute",
+      summary: "A federal court order summarizes a Florida homeowner's allegations that Sunrun would not remove panels for a roof replacement unless she signed a new agreement and paid more than $8,000, and that Sunrun later demanded about $35,000 to buy out the contract. The case later proceeded toward arbitration and the federal docket reported a settlement in April 2026. The allegations were not findings of wrongdoing.",
+      source: floridaRoofOrder,
+      stateHref: "/states/florida",
+    },
+    {
       type: "Settlement",
       state: "Arizona",
       date: "May 22, 2025",
@@ -84,6 +95,7 @@ export default function SunrunCompanyPage() {
         name: "Sunrun Lawsuits, Investigations and Solar Consumer Resources",
         description: "A source-based hub for documented state actions involving Sunrun.",
         url: canonicalUrl,
+        dateModified: "2026-09-06",
         isPartOf: { "@id": "https://solarcomplaint.com/#website" },
         publisher: { "@id": "https://solarcomplaint.com/#publisher" },
         about: { "@type": "Organization", name: "Sunrun" },
