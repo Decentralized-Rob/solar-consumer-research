@@ -1,31 +1,34 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { InfoPage } from "../../../components/info-page";
+import { SunrunEthicsSpotlight } from "../../../components/sunrun-ethics-spotlight";
 
 const officialSource = "https://portal.ct.gov/ag/press-releases/2024-press-releases/attorney-general-tong-sues-sunrun";
 
 export const metadata: Metadata = {
-  title: "Connecticut Sunrun Lawsuit: What the Attorney General Alleges",
-  description: "A plain-language summary of Connecticut's lawsuit against Sunrun and other solar companies, based on the Attorney General's official complaint announcement.",
+  title: "Connecticut Sunrun Lawsuit: Attorney General Allegations",
+  description: "Connecticut Attorney General lawsuit involving Sunrun, Bright Planet Solar, Elevate Solar Solutions, and two salespeople, summarized from the official complaint announcement.",
   keywords: [
     "Sunrun lawsuit",
     "Connecticut Sunrun lawsuit",
+    "Sunrun Connecticut",
+    "Bright Planet Solar lawsuit",
     "solar contract forged signature",
     "solar consumer lawsuit",
     "residential solar complaint",
   ],
   alternates: { canonical: "/cases/connecticut-attorney-general-sunrun-lawsuit" },
   openGraph: {
-    title: "What does Connecticut's lawsuit against Sunrun allege?",
-    description: "A source-based summary of the Connecticut Attorney General's allegations involving residential solar contracts, signatures, permits, and non-functioning systems.",
+    title: "Connecticut Sunrun Lawsuit: Attorney General Allegations",
+    description: "A source-based summary of the Connecticut Attorney General's allegations involving Sunrun, Bright Planet Solar, Elevate Solar Solutions, residential solar contracts, signatures, permits, and non-functioning systems.",
     url: "/cases/connecticut-attorney-general-sunrun-lawsuit",
     type: "article",
     images: [],
   },
   twitter: {
     card: "summary",
-    title: "What does Connecticut's lawsuit against Sunrun allege?",
-    description: "A source-based summary of the Connecticut Attorney General's allegations involving residential solar contracts, signatures, permits, and non-functioning systems.",
+    title: "Connecticut Sunrun Lawsuit: Attorney General Allegations",
+    description: "A source-based summary of the Connecticut Attorney General's allegations involving Sunrun, Bright Planet Solar, Elevate Solar Solutions, residential solar contracts, signatures, permits, and non-functioning systems.",
     images: [],
   },
 };
@@ -34,13 +37,24 @@ export default function ConnecticutSunrunCasePage() {
   const articleSchema = {
     "@context": "https://schema.org",
     "@type": "Article",
-    headline: "What does Connecticut's lawsuit against Sunrun allege?",
-    description: "A source-based summary of Connecticut's lawsuit against Sunrun and other solar companies.",
+    headline: "Connecticut Sunrun Lawsuit: Attorney General Allegations",
+    description: "A source-based summary of Connecticut's lawsuit involving Sunrun, Bright Planet Solar, Elevate Solar Solutions, and two salespeople.",
     datePublished: "2024-07-19",
-    dateModified: "2026-08-18",
+    dateModified: "2026-09-07",
     mainEntityOfPage: "https://solarcomplaint.com/cases/connecticut-attorney-general-sunrun-lawsuit",
     author: { "@type": "Organization", name: "Solar Consumer Research" },
     publisher: { "@type": "Organization", name: "Solar Consumer Research" },
+    about: [
+      { "@type": "Organization", name: "Sunrun" },
+      { "@type": "Organization", name: "Bright Planet Solar" },
+      { "@type": "Organization", name: "Elevate Solar Solutions" },
+      { "@type": "AdministrativeArea", name: "Connecticut" },
+    ],
+    relatedLink: [
+      "https://solarcomplaint.com/states/connecticut",
+      "https://solarcomplaint.com/companies/sunrun",
+      "https://solarcomplaint.com/companies/sunrun/ethics-compliance",
+    ],
   };
 
   return (
@@ -48,8 +62,8 @@ export default function ConnecticutSunrunCasePage() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }} />
       <InfoPage
         eyebrow="Connecticut solar case · Filed July 19, 2024"
-        title="What does Connecticut's lawsuit against Sunrun allege?"
-        lede="The Connecticut Attorney General filed a lawsuit naming Sunrun, two other solar companies, and two salespeople. This page summarizes the government's allegations using the official announcement as its source."
+        title="Connecticut Sunrun Lawsuit: What the Attorney General Alleges"
+        lede="The Connecticut Attorney General filed a lawsuit naming Sunrun, Bright Planet Solar, Elevate Solar Solutions, and two salespeople. This page summarizes the government's allegations using the official announcement as its source."
       >
         <nav className="case-question-links" aria-label="Questions answered on this page">
           <a href="#allegations">What does the complaint allege?</a>
@@ -63,13 +77,15 @@ export default function ConnecticutSunrunCasePage() {
           <p>These are allegations in a government complaint. They are not findings by this site, and this summary does not state that a court has made a final decision.</p>
         </section>
 
+        <SunrunEthicsSpotlight context="Related Sunrun reporting guide" />
+
         <section id="allegations" className="info-section">
-          <h2>What does the complaint allege?</h2>
+          <h2>What does the Connecticut solar lawsuit allege?</h2>
           <p>The Attorney General&apos;s announcement says the lawsuit alleges deceptive, unfair, and otherwise unlawful residential solar sales. The allegations include contracts entered without full and informed consent, impersonation of consumers, forged signatures, work performed without required permits, and systems that were installed but did not function.</p>
         </section>
 
         <section id="named" className="info-section">
-          <h2>Who is named in the lawsuit?</h2>
+          <h2>Sunrun, Bright Planet Solar and Elevate Solar Solutions are named</h2>
           <p>The announcement names SunRun Inc., SunRun Installation Services, Bright Planet Solar, Elevate Solar Solutions, and two salespeople. The official source should be used for the complete description of the parties and allegations.</p>
         </section>
 
@@ -85,8 +101,10 @@ export default function ConnecticutSunrunCasePage() {
         </section>
 
         <section className="info-section">
-          <h2>Looking for Connecticut solar complaint resources?</h2>
-          <p><Link href="/#start">Choose Connecticut on the homepage</Link> to view the state-specific resource collection.</p>
+          <h2>Related Connecticut and Sunrun resources</h2>
+          <p><Link href="/states/connecticut">Connecticut solar complaint and consumer resources →</Link></p>
+          <p><Link href="/companies/sunrun">Sunrun lawsuits, investigations and consumer resources →</Link></p>
+          <p><Link href="/companies/sunrun/ethics-compliance">Sunrun ethics and compliance reporting guide →</Link></p>
         </section>
       </InfoPage>
     </>

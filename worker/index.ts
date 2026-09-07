@@ -5,6 +5,7 @@ import handler from "vinext/server/app-router-entry";
 interface Env {
   ASSETS: Fetcher;
   DB: D1Database;
+  SEARCH_RATE_LIMITER: RateLimit;
   IMAGES: {
     input(stream: ReadableStream): {
       transform(options: Record<string, unknown>): {
@@ -28,6 +29,26 @@ interface ExecutionContext {
 const worker = {
   async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
     const url = new URL(request.url);
+
+    if (request.method === "GET" && url.pathname === "/api/search") {
+      const clientIp = request.headers.get("cf-connecting-ip") ?? "unknown";
+      const { success } = await env.SEARCH_RATE_LIMITER.limit({
+        key: `search:${clientIp}`,
+      });
+
+      if (!success) {
+        return Response.json(
+          { error: "Too many search requests. Please try again shortly." },
+          {
+            status: 429,
+            headers: {
+              "Cache-Control": "no-store",
+              "Retry-After": "60",
+            },
+          },
+        );
+      }
+    }
 
     if (url.pathname === "/_vinext/image") {
       const allowedWidths = [...DEFAULT_DEVICE_SIZES, ...DEFAULT_IMAGE_SIZES];

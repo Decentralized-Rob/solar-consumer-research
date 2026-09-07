@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
+  <title id="title">Sunrun ethics guide image option A</title>
+  <desc id="desc">Independent editorial company-watch graphic with Sunrun in plain type, source timeline, policy file and solar home.</desc>
+  <defs>
+    <linearGradient id="paper" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#fffaf0"/>
+      <stop offset="1" stop-color="#efe6d3"/>
+    </linearGradient>
+    <linearGradient id="sunset" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#f6cf81"/>
+      <stop offset=".55" stop-color="#b8c6ad"/>
+      <stop offset="1" stop-color="#315543"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="14" stdDeviation="15" flood-color="#173226" flood-opacity=".16"/></filter>
+  </defs>
+  <rect width="1200" height="630" fill="url(#paper)"/>
+  <rect x="0" y="0" width="14" height="630" fill="#214f3b"/>
+
+  <g transform="translate(58 50)">
+    <text x="0" y="0" dominant-baseline="hanging" font-family="Georgia, serif" font-size="27" font-weight="700" fill="#173428">SolarComplaint.com</text>
+    <text x="0" y="39" font-family="Arial, sans-serif" font-size="11" font-weight="700" letter-spacing="3" fill="#6b735f">INDEPENDENT CONSUMER RESEARCH</text>
+    <rect x="0" y="59" width="82" height="4" fill="#c5962d"/>
+
+    <text x="0" y="122" font-family="Arial, sans-serif" font-size="13" font-weight="800" letter-spacing="3.5" fill="#52705d">COMPANY WATCH</text>
+    <text x="0" y="185" font-family="Georgia, serif" font-size="76" fill="#132f24">Sunrun</text>
+    <text x="0" y="244" font-family="Georgia, serif" font-size="47" fill="#132f24">Ethics &amp; Compliance</text>
+    <text x="0" y="283" font-family="Arial, sans-serif" font-size="17" fill="#4e5b52">Reporting routes • policies • people • public record</text>
+
+    <g transform="translate(0 332)">
+      <line x1="0" y1="0" x2="496" y2="0" stroke="#bfc0b5"/>
+      <text x="0" y="28" font-family="Arial, sans-serif" font-size="11" font-weight="800" letter-spacing="2" fill="#657168">CURRENT ROUTE</text>
+      <text x="152" y="28" font-family="Georgia, serif" font-size="21" fill="#173428">AllVoices</text>
+      <line x1="0" y1="52" x2="496" y2="52" stroke="#d0d0c5"/>
+      <text x="0" y="82" font-family="Arial, sans-serif" font-size="11" font-weight="800" letter-spacing="2" fill="#657168">POLICY SET</text>
+      <text x="152" y="82" font-family="Georgia, serif" font-size="21" fill="#173428">October 2025</text>
+      <line x1="0" y1="106" x2="496" y2="106" stroke="#d0d0c5"/>
+      <text x="0" y="136" font-family="Arial, sans-serif" font-size="11" font-weight="800" letter-spacing="2" fill="#657168">SOURCE FIRST</text>
+      <text x="152" y="136" font-family="Georgia, serif" font-size="21" fill="#173428">Primary documents</text>
+    </g>
+  </g>
+
+  <g transform="translate(650 0)">
+    <rect width="550" height="630" fill="url(#sunset)"/>
+    <circle cx="426" cy="115" r="54" fill="#ffd36f" opacity=".82"/>
+    <path d="M0 346 C128 284 221 321 330 270 C417 229 482 247 550 220 V630 H0 Z" fill="#8e9c86" opacity=".78"/>
+    <path d="M0 424 C145 350 258 404 365 345 C449 299 508 320 550 301 V630 H0 Z" fill="#274d3b"/>
+    <g transform="translate(94 214)">
+      <rect x="0" y="155" width="372" height="192" rx="5" fill="#f3eee1"/>
+      <path d="M-34 170 L180 30 L405 170 Z" fill="#343c38"/>
+      <g transform="translate(99 70) rotate(-7)">
+        <rect width="221" height="95" rx="3" fill="#213d58"/>
+        <path d="M0 31 H221 M0 63 H221 M55 0 V95 M110 0 V95 M165 0 V95" stroke="#87a9c6" stroke-width="3"/>
+      </g>
+      <rect x="58" y="225" width="72" height="122" fill="#d8c8a4"/>
+      <rect x="205" y="216" width="105" height="68" fill="#c7d1c6"/>
+    </g>
+    <g transform="translate(45 42)" filter="url(#shadow)">
+      <rect width="234" height="150" rx="8" fill="#fffdf7"/>
+      <text x="23" y="35" font-family="Arial, sans-serif" font-size="10" font-weight="800" letter-spacing="2" fill="#6d765f">RESEARCH FILE</text>
+      <text x="23" y="73" font-family="Georgia, serif" font-size="26" fill="#173428">Ethics sources</text>
+      <rect x="23" y="92" width="153" height="6" rx="3" fill="#b8b7aa"/>
+      <rect x="23" y="110" width="181" height="6" rx="3" fill="#d0cfc2"/>
+      <rect x="23" y="128" width="128" height="6" rx="3" fill="#d0cfc2"/>
+      <rect x="198" y="18" width="13" height="47" fill="#c5962d"/>
+    </g>
+    <rect x="0" y="570" width="550" height="60" fill="#173428" opacity=".96"/>
+    <text x="36" y="605" font-family="Arial, sans-serif" font-size="12" font-weight="800" letter-spacing="2.4" fill="#fffaf0">NOT AFFILIATED WITH OR ENDORSED BY SUNRUN</text>
+  </g>
+</svg>

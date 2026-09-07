@@ -13,6 +13,8 @@
 - Corrections: https://solarcomplaint.com/corrections
 - Disclaimer: https://solarcomplaint.com/disclaimer
 - State pages: https://solarcomplaint.com/states/{state-name}
+- Florida Sunrun roof-dispute and solar consumer hub: https://solarcomplaint.com/states/florida
+- Michigan solar consumer hub: https://solarcomplaint.com/states/michigan
 - Arizona solar consumer hub: https://solarcomplaint.com/states/arizona
 
 ## Featured research
@@ -27,6 +29,10 @@
 ## Company research
 
 - Sunrun investigations, enforcement, settlements, and documented cases: https://solarcomplaint.com/companies/sunrun
+- Sunrun ethics complaint, AllVoices, Code of Conduct, Vendor Code and escalation guide: https://solarcomplaint.com/companies/sunrun/ethics-compliance
+  - Uses Sunrun's current governance document library, October 2025 Code of Business Conduct and Ethics, October 2025 Whistleblower Policy, Vendor Code of Conduct, current executive-management page and public LinkedIn sources.
+  - Separates ethics reporting from ordinary customer service and from state, contractor, financing or legal complaint routes.
+  - Includes public leadership context for Mary Powell, Paul Dickson, Jeanna Steele, Chance Allred and Patrick Kent without alleging individual involvement in a consumer complaint.
 - Connecticut Attorney General lawsuit involving Sunrun: https://solarcomplaint.com/cases/connecticut-attorney-general-sunrun-lawsuit
 - Titan Solar Power closure and bankruptcy tracker: https://solarcomplaint.com/cases/titan-solar-power
 - Titan Solar Power customer research paths: https://solarcomplaint.com/cases/titan-solar-power/customer-help
@@ -34,6 +40,23 @@
   - Separates Titan workmanship/service obligations from manufacturer warranty coverage.
   - Links directly to the U.S. Bankruptcy Court for the District of Arizona, SolarEdge, Enphase, and EnergyAid source pages.
   - Links to state consumer-resource pages for the 22 state-named Titan affiliates listed by the bankruptcy court.
+
+## Florida source hub
+
+- Florida Sunrun roof dispute and solar consumer resources: https://solarcomplaint.com/states/florida
+  - Features a Florida Sunrun roof-removal and contract-buyout dispute summarized in an October 30, 2025 U.S. District Court order.
+  - Separately labels the homeowner's allegations, the federal remand ruling, later arbitration proceedings, and the April 2026 settlement report.
+  - Links directly to the official Middle District of Florida court order, Florida Statutes §§ 520.23 and 520.25, the Florida Attorney General complaint route, DBPR licensing and complaint resources, and the U.S. Bankruptcy Court Titan case hub.
+  - Turns Florida solar disclosure requirements into homeowner-facing checks covering roof warranties, roof replacement, system-removal fees, liens/UCC filings, transfers, financing, cancellation, and installer/service-provider information.
+  - Links to the Sunrun company research hub, Titan Solar Power resources, federal resources, guides, and the state directory.
+
+## Michigan source hub
+
+- Michigan solar complaints, financing and consumer resources: https://solarcomplaint.com/states/michigan
+  - Starts with four homeowner problem paths: solar-company disputes, installed systems that are not working, installer or contractor checks, and loan or financing problems.
+  - Features the July 15, 2026 Michigan Attorney General lawsuit against Climax Solar, its owner, and finance defendants, with the WWMT homeowner report and primary government records attached.
+  - Separately tracks 2026 Power Home Solar / Pink Energy litigation developments without presenting the partial William Waller settlement as a complete resolution of the broader case.
+  - Groups Michigan Attorney General, LARA, Bureau of Construction Codes, MPSC, Michigan Legislature, CFPB, and FTC resources by user problem rather than agency.
 
 ## Arizona source hub
 
@@ -57,10 +80,12 @@
 ## Internal research relationships
 
 - Featured story -> relevant state pages -> primary government sources.
-- Michigan page -> Michigan enforcement source + related featured research.
+- Florida page -> official federal court order + Florida solar statutes + Attorney General and DBPR routes + Sunrun and Titan research.
+- Michigan page -> Michigan enforcement source + related featured research + problem-specific state and federal resources.
 - Texas page -> Texas Sunrun investigation source + related featured research.
 - Arizona page -> Sunrun consent agreement + Arizona solar statutes + Attorney General complaint route + contractor and utility complaint routes + related featured research.
-- Sunrun company page -> Texas investigation + Arizona settlement + Connecticut lawsuit + related research.
+- Sunrun company page -> Sunrun ethics and compliance guide + Florida roof dispute + Texas investigation + Arizona settlement + Connecticut lawsuit + related research.
+- Sunrun ethics guide -> current Sunrun governance sources + AllVoices reporting route + Vendor Code + leadership sources + state and consumer guides.
 - Titan state pages -> exact state-named Titan bankruptcy debtor/case reference -> official bankruptcy court hub -> Titan warranty and customer research pages.
 - Titan warranty page -> manufacturer sources + relevant Titan state pages.
 
@@ -71,6 +96,9 @@
 - Original source-backed research that connects related records without collapsing their procedural differences.
 - Federal consumer, finance, and complaint resources.
 - Company and case tracking where a sufficient public-source record exists.
+- A current Sunrun ethics and compliance guide centered on AllVoices, Sunrun's current governance policies, vendor standards, leadership roles and external escalation pathways.
+- Expanded Florida Sunrun roof-dispute, solar disclosure, contractor, complaint-route, Titan, and current case resources.
+- Expanded Michigan solar complaint, financing, installer, permitting, interconnection, Climax Solar enforcement, and current case resources.
 - Expanded Arizona solar consumer, contract, contractor, utility, Sunrun settlement, and current rooftop-solar resources.
 - Expanded Massachusetts consumer protection, utility, public-record, and solar-program resources.
 - State-page depth varies. Pages without an expanded source section are starting directories, not complete state research files.

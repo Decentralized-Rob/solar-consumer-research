@@ -5,12 +5,12 @@ import SubscribeForm from "./SubscribeForm";
 import "./titan-tracker.css";
 
 export const metadata: Metadata = {
-  title: "Titan Solar Power Closure: Customer Resources & Updates",
-  description: "Court records, warranty information, service resources, reporting, and updates for former Titan Solar Power customers.",
+  title: "Titan Solar Power Bankruptcy, Closure & Customer Help",
+  description: "Titan Solar Power bankruptcy and closure information, who took over selected assets, warranty limits, court records, and customer-help resources for former Titan customers.",
   alternates: { canonical: "/cases/titan-solar-power" },
   openGraph: {
-    title: "Titan Solar Power Closure: Customer Resources & Updates",
-    description: "A sourced tracker for former Titan Solar Power customers.",
+    title: "Titan Solar Power Bankruptcy, Closure & Customer Help",
+    description: "A sourced tracker covering Titan Solar Power's Chapter 7 bankruptcy, closure, selected asset acquisition, warranty limits, and customer-help resources.",
     url: "/cases/titan-solar-power",
     type: "article",
   },
@@ -72,22 +72,23 @@ export default function TitanSolarPowerPage() {
           <Image src="/brand/solar-consumer-research.svg" alt="" width={690} height={104} priority unoptimized />
         </Link>
         <nav aria-label="Page navigation">
+          <a href="#who-took-over">Who took over?</a>
+          <a href="#bankruptcy-status">Bankruptcy</a>
           <a href="#tt-updates">Updates</a>
           <a href="#tt-resources">Resources</a>
-          <a href="#tt-community">Community</a>
           <Link className="tt-header-cta" href="/cases/titan-solar-power/customer-help">Customer help</Link>
         </nav>
       </header>
 
       <main>
         <section className="tt-hero">
-          <div className="tt-kicker"><span>Company tracker</span><i /><span>Last reviewed August 28, 2026</span></div>
+          <div className="tt-kicker"><span>Company tracker</span><i /><span>Last reviewed September 7, 2026</span></div>
           <div className="tt-hero-grid">
             <div>
               <div className="tt-status-pill"><span /> Closed · Chapter 7</div>
               <h1>Titan Solar Power is gone. The systems, loans and questions are not.</h1>
-              <p className="tt-deck">A sourced tracker for former Titan customers looking for court records, warranty information, service resources, reporting and community updates.</p>
-              <div className="tt-actions"><Link className="tt-button tt-button-primary" href="/cases/titan-solar-power/customer-help">Find the right research path</Link><a className="tt-button tt-button-secondary" href="#tt-updates">Read the timeline</a></div>
+              <p className="tt-deck">A sourced tracker for former Titan customers looking for bankruptcy records, warranty information, service resources, reporting and customer help after the company closed.</p>
+              <div className="tt-actions"><Link className="tt-button tt-button-primary" href="/cases/titan-solar-power/customer-help">Find the right research path</Link><a className="tt-button tt-button-secondary" href="#who-took-over">Read the quick answers</a></div>
             </div>
             <aside className="tt-status-card" aria-label="Current company status">
               <p>Current status</p>
@@ -103,6 +104,36 @@ export default function TitanSolarPowerPage() {
           <ExternalLink href="https://energyaid.net/titan-solar-power-is-out-of-business/">Read the FAQ ↗</ExternalLink>
         </section>
 
+        <section className="tt-section" id="who-took-over">
+          <div className="tt-section-heading"><div><p>Quick answer</p><h2>Who took over Titan Solar Power?</h2></div><span>No company identified in the sources reviewed by this site took over Titan Solar Power itself.</span></div>
+          <p>EnergyAid says it acquired selected Titan assets, including intellectual property, so it could offer service options to former customers. EnergyAid also says it did not acquire Titan, Titan&apos;s liabilities, or Titan&apos;s warranties.</p>
+          <ExternalLink href="https://energyaid.net/titan-solar-power-is-out-of-business/">Read EnergyAid&apos;s Titan FAQ ↗</ExternalLink>
+        </section>
+
+        <section className="tt-section" id="what-happened">
+          <div className="tt-section-heading"><div><p>Quick answer</p><h2>What happened to Titan Solar Power?</h2></div><span>Titan ceased operations in June 2024 and then entered Chapter 7 bankruptcy.</span></div>
+          <p>Reporting at the time said Titan closed after a prospective investment did not materialize. On June 20, 2024, Titan Solar Power and affiliated companies entered Chapter 7 proceedings in the U.S. Bankruptcy Court for the District of Arizona.</p>
+          <div className="tt-actions">
+            <ExternalLink className="tt-button tt-button-secondary" href="https://www.ktnv.com/news/embattled-firm-titan-solar-power-goes-out-of-business">Read the closure reporting ↗</ExternalLink>
+            <ExternalLink className="tt-button tt-button-secondary" href="https://www.azb.uscourts.gov/re-titan-solar-power-inc-and-its-affiliates">Open the bankruptcy court hub ↗</ExternalLink>
+          </div>
+        </section>
+
+        <section className="tt-section" id="bankruptcy-status">
+          <div className="tt-section-heading"><div><p>Quick answer</p><h2>Titan Solar Power bankruptcy status</h2></div><span>The bankruptcy is a Chapter 7 proceeding in the U.S. Bankruptcy Court for the District of Arizona.</span></div>
+          <p>The court&apos;s Titan case hub is the primary source for case numbers, notices and claims information. Bankruptcy does not by itself determine what happens to an individual customer&apos;s financing agreement, equipment warranty, service obligation or claim.</p>
+          <ExternalLink href="https://www.azb.uscourts.gov/re-titan-solar-power-inc-and-its-affiliates">View the official Titan bankruptcy case hub ↗</ExternalLink>
+        </section>
+
+        <section className="tt-section" id="customer-help-now">
+          <div className="tt-section-heading"><div><p>Quick answer</p><h2>What can former Titan customers do now?</h2></div><span>The right research path depends on whether the issue is service, warranty, financing, a home sale, unfinished work or the bankruptcy.</span></div>
+          <p>Start by identifying the company named on each contract, loan, lease, warranty and equipment document. Then use the customer-help paths below to separate service and repair questions from warranty, financing, home-sale and bankruptcy issues.</p>
+          <div className="tt-actions">
+            <Link className="tt-button tt-button-primary" href="/cases/titan-solar-power/customer-help">Choose a Titan customer-help path</Link>
+            <Link className="tt-button tt-button-secondary" href="/cases/titan-solar-power/warranty-after-bankruptcy">Check warranty information</Link>
+          </div>
+        </section>
+
         <section className="tt-section" id="tt-updates">
           <div className="tt-section-heading"><div><p>Latest developments</p><h2>What happened, and what changed</h2></div><span>Updates are summarized from court records, service-provider statements and local reporting.</span></div>
           <div className="tt-timeline">{developments.map((item, index) => <article key={item.title}>
@@ -112,7 +143,7 @@ export default function TitanSolarPowerPage() {
         </section>
 
         <section className="tt-section" aria-label="Customer research help">
-          <div className="tt-section-heading"><div><p>Customer research help</p><h2>Different problem, different next step.</h2></div><span>Service and repair, a home sale, and a contract or financing concern each require different records.</span></div>
+          <div className="tt-section-heading"><div><p>Customer research help</p><h2>Different situation, different next step.</h2></div><span>Service and repair, a home sale, and a contract or financing concern each require different records.</span></div>
           <div className="tt-actions">
             <Link className="tt-button tt-button-primary" href="/cases/titan-solar-power/customer-help">Choose a Titan research path</Link>
             <Link className="tt-button tt-button-secondary" href="/cases/titan-solar-power/warranty-after-bankruptcy">Check Titan warranty coverage</Link>

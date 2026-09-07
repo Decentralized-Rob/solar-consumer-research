@@ -1,14 +1,21 @@
+import Link from "next/link";
 import { InfoPage } from "../../components/info-page";
 import { updates as fallbackUpdates } from "../../lib/content";
+import { featuredResearchStory } from "../../lib/research-stories";
 import { createSupabaseServerClient } from "../../lib/supabase/server";
 import type { Update } from "../../lib/types";
 
 export const dynamic = "force-dynamic";
 export const metadata = {
-  title: "Updates | Solar Consumer Research",
-  description: "Verified updates on solar programs, consumer alerts, enforcement actions, and public procedures.",
+  title: "Solar Consumer Protection, Lawsuit & Enforcement Updates",
+  description: "Verified solar consumer protection updates, lawsuits, enforcement actions, company trackers, state resources, and source-backed research.",
   alternates: { canonical: "/updates" },
-  openGraph: { url: "/updates" },
+  openGraph: {
+    title: "Solar Consumer Protection, Lawsuit & Enforcement Updates",
+    description: "Verified public-record updates with links to company trackers, case summaries, state resources, and source-backed research.",
+    url: "/updates",
+    type: "website",
+  },
 };
 
 async function loadUpdates(): Promise<Update[]> {
@@ -41,19 +48,45 @@ export default async function UpdatesPage() {
   return (
     <InfoPage
       eyebrow="News and updates"
-      title="Changes in the public record."
-      lede="Short summaries of program notices, consumer alerts, enforcement actions, and procedural changes."
+      title="Solar Consumer Protection, Lawsuit & Enforcement Updates"
+      lede="Verified public-record updates with direct paths into company trackers, case summaries, state resources, and source-backed research."
     >
-      <div className="updates-page-list">
-        {items.map((item) => (
-          <a className="updates-page-row" href={item.url} target="_blank" rel="noreferrer" key={item.id}>
-            <span>{item.publishedAt}</span>
-            <strong>{item.title}</strong>
-            <p>{item.summary}</p>
-            <small>{item.publisher} ↗</small>
-          </a>
-        ))}
-      </div>
+      <section className="info-section" aria-labelledby="company-case-trackers-title">
+        <h2 id="company-case-trackers-title">Company and case trackers</h2>
+        <p><Link href="/companies/sunrun">Sunrun lawsuits, investigations, settlements and consumer resources →</Link></p>
+        <p><Link href="/cases/connecticut-attorney-general-sunrun-lawsuit">Connecticut Attorney General lawsuit involving Sunrun →</Link></p>
+        <p><Link href="/cases/titan-solar-power">Titan Solar Power bankruptcy, closure and customer-help tracker →</Link></p>
+      </section>
+
+      <section className="info-section" aria-labelledby="state-research-hubs-title">
+        <h2 id="state-research-hubs-title">State research hubs</h2>
+        <p><Link href="/states/connecticut">Connecticut solar complaint and consumer resources →</Link></p>
+        <p><Link href="/states/massachusetts">Massachusetts solar complaint, litigation and consumer resources →</Link></p>
+        <p><Link href="/states/florida">Florida Sunrun roof dispute and consumer resources →</Link></p>
+        <p><Link href="/states/texas">Texas residential-solar investigation and consumer resources →</Link></p>
+        <p><Link href="/states/arizona">Arizona Sunrun settlement and consumer resources →</Link></p>
+      </section>
+
+      <section className="info-section" aria-labelledby="featured-research-title">
+        <h2 id="featured-research-title">Featured research</h2>
+        <p><Link href={featuredResearchStory.href}>{featuredResearchStory.title} →</Link></p>
+        <p>{featuredResearchStory.deck}</p>
+        <p><Link href="/research">Browse all source-backed solar consumer research →</Link></p>
+      </section>
+
+      <section className="info-section" aria-labelledby="latest-updates-title">
+        <h2 id="latest-updates-title">Latest verified public-record updates</h2>
+        <div className="updates-page-list">
+          {items.map((item) => (
+            <a className="updates-page-row" href={item.url} target="_blank" rel="noreferrer" key={item.id}>
+              <span>{item.publishedAt}</span>
+              <strong>{item.title}</strong>
+              <p>{item.summary}</p>
+              <small>{item.publisher} ↗</small>
+            </a>
+          ))}
+        </div>
+      </section>
     </InfoPage>
   );
 }
