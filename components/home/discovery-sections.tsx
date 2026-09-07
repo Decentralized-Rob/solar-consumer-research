@@ -1,6 +1,7 @@
 import { stateSlug, states } from "../../lib/content";
 import type { Guide, Resource } from "../../lib/types";
 import { ArrowIcon, type State, type TopicFilter } from "./shared";
+import styles from "./home-priority.module.css";
 
 const pathOptions: Array<{
   topic: Exclude<TopicFilter, "all">;
@@ -55,9 +56,14 @@ export function HeroSection({
   onStateChange: (stateCode: string) => void;
 }) {
   return (
-    <section className="home-hero home-wrap">
+    <section className={`home-hero home-wrap ${styles.compactHero}`}>
       <div className="home-hero-copy">
         <p className="home-kicker"><span /> Independent public-source research</p>
+        <a className={styles.featuredTopLink} href={currentFeaturedResearch.href}>
+          <span>Featured research</span>
+          <strong>Sunrun Ethics &amp; Compliance</strong>
+          <span aria-hidden="true">→</span>
+        </a>
         <h1>Solar problems are complicated. Finding where to start shouldn&apos;t be.</h1>
         <p className="home-hero-lede">
           Clear paths to official complaint channels, consumer agencies, public records,
