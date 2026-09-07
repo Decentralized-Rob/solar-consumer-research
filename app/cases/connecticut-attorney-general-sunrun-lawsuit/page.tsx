@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { InfoPage } from "../../../components/info-page";
+import { SunrunEthicsSpotlight } from "../../../components/sunrun-ethics-spotlight";
 
 const officialSource = "https://portal.ct.gov/ag/press-releases/2024-press-releases/attorney-general-tong-sues-sunrun";
 
@@ -52,6 +53,7 @@ export default function ConnecticutSunrunCasePage() {
     relatedLink: [
       "https://solarcomplaint.com/states/connecticut",
       "https://solarcomplaint.com/companies/sunrun",
+      "https://solarcomplaint.com/companies/sunrun/ethics-compliance",
     ],
   };
 
@@ -74,6 +76,8 @@ export default function ConnecticutSunrunCasePage() {
           <strong>Important distinction</strong>
           <p>These are allegations in a government complaint. They are not findings by this site, and this summary does not state that a court has made a final decision.</p>
         </section>
+
+        <SunrunEthicsSpotlight context="Related Sunrun reporting guide" />
 
         <section id="allegations" className="info-section">
           <h2>What does the Connecticut solar lawsuit allege?</h2>
@@ -100,6 +104,7 @@ export default function ConnecticutSunrunCasePage() {
           <h2>Related Connecticut and Sunrun resources</h2>
           <p><Link href="/states/connecticut">Connecticut solar complaint and consumer resources →</Link></p>
           <p><Link href="/companies/sunrun">Sunrun lawsuits, investigations and consumer resources →</Link></p>
+          <p><Link href="/companies/sunrun/ethics-compliance">Sunrun ethics and compliance reporting guide →</Link></p>
         </section>
       </InfoPage>
     </>
