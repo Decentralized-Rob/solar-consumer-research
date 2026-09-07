@@ -67,7 +67,12 @@ test("includes Sunrun ethics guide in sitemap and keeps review routes out of ind
     const previewHtml = await previewResponse.text();
     assert.match(previewHtml, /noindex/i);
     assert.match(previewHtml, new RegExp(asset.replace(".", "\\."), "i"));
-    assert.match(previewHtml, /Sunrun Ethics &amp; Compliance/i);
+    assert.match(previewHtml, /<h1[^>]*>Sunrun<\/h1>/i);
+    assert.match(previewHtml, />Timeline</i);
+    assert.match(previewHtml, />Evidence</i);
+    assert.match(previewHtml, />Featured</i);
+    assert.match(previewHtml, />The latest</i);
     assert.match(previewHtml, /sunrun\.allvoices\.co/i);
+    assert.doesNotMatch(previewHtml, /Becki Berkeley/i);
   }
 });
