@@ -27,12 +27,16 @@ test("renders Sunrun ethics guide as an independent source-first editorial page"
   assert.match(html, /independent consumer research and editorial publication/i);
   assert.match(html, /not affiliated with, endorsed by or sponsored by Sunrun/i);
   assert.match(html, /https:\/\/sunrun\.allvoices\.co\//i);
-  assert.match(html, /866-602-6613/);
+  assert.match(html, /https:\/\/investors\.sunrun\.com\/leadership-governance\/governance-documents/i);
+  assert.doesNotMatch(html, /866-602-6613/);
+  assert.doesNotMatch(html, /ethics hotline/i);
+  assert.doesNotMatch(html, /<meta[^>]+name=["']keywords["']/i);
   assert.doesNotMatch(html, /ethicspoint/i);
   assert.match(html, />Timeline</i);
   assert.match(html, />Evidence</i);
   assert.match(html, />Featured</i);
   assert.match(html, />The latest</i);
+  assert.match(html, /Whistleblower Policy/i);
   assert.match(html, /Vendor Code of Conduct/i);
   assert.match(html, /Mary Powell/i);
   assert.match(html, /Jeanna Steele/i);
@@ -73,6 +77,8 @@ test("includes Sunrun ethics guide in sitemap and keeps review routes out of ind
     assert.match(previewHtml, />Featured</i);
     assert.match(previewHtml, />The latest</i);
     assert.match(previewHtml, /sunrun\.allvoices\.co/i);
+    assert.doesNotMatch(previewHtml, /866-602-6613/);
+    assert.doesNotMatch(previewHtml, /ethics hotline/i);
     assert.doesNotMatch(previewHtml, /Becki Berkeley/i);
   }
 });
