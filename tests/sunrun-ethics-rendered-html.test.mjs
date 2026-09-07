@@ -39,7 +39,7 @@ test("renders Sunrun ethics guide as an independent source-first editorial page"
   assert.match(html, /Chance Allred/i);
   assert.match(html, /Paul Dickson/i);
   assert.match(html, /Patrick Kent/i);
-  assert.match(html, /Becki Berkeley/i);
+  assert.doesNotMatch(html, /Becki Berkeley/i);
   assert.match(html, /application\/ld\+json/i);
   assert.doesNotMatch(html, /noindex/i);
 });
