@@ -48,7 +48,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${baseUrl}/corrections`, lastModified: new Date("2026-08-16"), changeFrequency: "yearly", priority: 0.3 },
     { url: `${baseUrl}/privacy`, lastModified: new Date("2026-08-16"), changeFrequency: "yearly", priority: 0.2 },
     { url: `${baseUrl}/disclaimer`, lastModified: new Date("2026-08-16"), changeFrequency: "yearly", priority: 0.2 },
-    { url: `${baseUrl}/cases/titan-solar-power`, lastModified: new Date("2026-08-28"), changeFrequency: "weekly", priority: 0.9 },
+    { url: `${baseUrl}/cases/titan-solar-power`, lastModified: new Date("2026-09-07"), changeFrequency: "weekly", priority: 0.9 },
     { url: `${baseUrl}/cases/titan-solar-power/customer-help`, lastModified: new Date("2026-08-28"), changeFrequency: "monthly", priority: 0.8 },
     { url: `${baseUrl}/cases/titan-solar-power/warranty-after-bankruptcy`, lastModified: new Date("2026-08-28"), changeFrequency: "monthly", priority: 0.85 },
     { url: `${baseUrl}/cases/connecticut-attorney-general-sunrun-lawsuit`, lastModified: new Date("2026-09-07"), changeFrequency: "monthly", priority: 0.8 },
