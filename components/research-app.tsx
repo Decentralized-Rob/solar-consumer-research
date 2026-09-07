@@ -19,6 +19,7 @@ import {
   UpdatesSection,
 } from "./home/resource-sections";
 import type { TopicFilter } from "./home/shared";
+import { SunrunEthicsSpotlight } from "./sunrun-ethics-spotlight";
 import { useResearchContent } from "./home/use-research-content";
 
 export function ResearchApp() {
@@ -110,6 +111,7 @@ export function ResearchApp() {
       <HomeHeader menuOpen={menuOpen} onMenuToggle={() => setMenuOpen((current) => !current)} onMenuClose={() => setMenuOpen(false)} />
       <main id="top">
         <HeroSection stateCode={stateCode} selectedState={selectedState} resourceCount={availableResources.length} onStateChange={changeState} />
+        <SunrunEthicsSpotlight variant="feature" context="Featured company watch" />
         <CaseFeature />
         <FeaturedSection guides={featuredGuides} resources={availableResources.slice(0, 4)} />
         <PathSection onChoosePath={choosePath} />
