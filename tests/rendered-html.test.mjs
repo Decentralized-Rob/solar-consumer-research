@@ -68,7 +68,7 @@ test("serves canonical robots and sitemap files", async () => {
   assert.match(sitemap, /<loc>https:\/\/solarcomplaint\.com\/guides\/massachusetts-solar-complaint<\/loc>/);
   assert.match(sitemap, /<loc>https:\/\/solarcomplaint\.com\/guides\/massachusetts-30-day-demand-letter<\/loc>/);
   assert.match(sitemap, /<loc>https:\/\/solarcomplaint\.com\/guides\/solar-complaint-record-checklist<\/loc>/);
-  assert.match(sitemap, /<loc>https:\/\/solarcomplaint\.com\/resources<\/loc>[\s\S]*?<lastmod>2026-08-21/i);
+  assert.match(sitemap, /<loc>https:\/\/solarcomplaint\.com\/resources<\/loc>[\s\S]*?<lastmod>2026-09-07/i);
   assert.doesNotMatch(`${robots}\n${sitemap}`, /solar-resource-mvp\.rbeland21\.chatgpt\.site/);
 });
 
