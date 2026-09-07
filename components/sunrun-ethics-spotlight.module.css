@@ -1,0 +1,160 @@
+.spotlight {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(23, 23, 23, 0.12);
+  border-radius: 22px;
+  background: linear-gradient(135deg, #fffaf0 0%, #f5efe2 100%);
+  color: #171717;
+  box-shadow: 0 14px 36px rgba(23, 23, 23, 0.08);
+}
+
+.spotlight::after {
+  content: "";
+  position: absolute;
+  width: 180px;
+  height: 180px;
+  right: -70px;
+  top: -80px;
+  border-radius: 999px;
+  background: rgba(178, 128, 37, 0.12);
+  pointer-events: none;
+}
+
+.meta {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 0.78rem;
+  font-weight: 750;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #4e5b45;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  min-height: 26px;
+  padding: 0 9px;
+  border-radius: 999px;
+  background: #273226;
+  color: #fffaf0;
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+}
+
+.body {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  gap: 18px;
+  align-items: end;
+}
+
+.body h2 {
+  margin: 0 0 8px;
+  font-size: clamp(1.55rem, 3vw, 2.35rem);
+  line-height: 1.02;
+  letter-spacing: -0.035em;
+}
+
+.body p {
+  margin: 0;
+  max-width: 760px;
+  color: #4b4b43;
+  font-size: 0.98rem;
+  line-height: 1.55;
+}
+
+.cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  min-height: 48px;
+  padding: 0 16px;
+  border-radius: 13px;
+  background: #273226;
+  color: #fffaf0;
+  font-weight: 800;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.cta:hover,
+.cta:focus-visible {
+  background: #151d15;
+}
+
+.sources {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin-top: 18px;
+}
+
+.sources span {
+  padding: 7px 10px;
+  border: 1px solid rgba(39, 50, 38, 0.14);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.56);
+  color: #596051;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.feature {
+  margin: 10px auto 34px;
+  padding: clamp(22px, 4vw, 38px);
+  max-width: 1180px;
+}
+
+.feature .body {
+  grid-template-columns: minmax(0, 1fr) auto;
+  margin-top: 20px;
+}
+
+.compact {
+  margin: 24px 0;
+  padding: 20px;
+  border-radius: 18px;
+  box-shadow: none;
+}
+
+.compact .body {
+  grid-template-columns: minmax(0, 1fr) auto;
+  margin-top: 14px;
+}
+
+.compact .body h2 {
+  font-size: clamp(1.35rem, 2.5vw, 1.75rem);
+}
+
+@media (max-width: 720px) {
+  .feature,
+  .compact {
+    border-radius: 17px;
+  }
+
+  .feature {
+    margin: 4px 14px 26px;
+    padding: 20px;
+  }
+
+  .feature .body,
+  .compact .body {
+    grid-template-columns: 1fr;
+  }
+
+  .cta {
+    width: 100%;
+  }
+
+  .sources {
+    gap: 6px;
+  }
+}

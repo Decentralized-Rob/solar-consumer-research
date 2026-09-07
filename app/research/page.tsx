@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { InfoPage } from "../../components/info-page";
+import { SunrunEthicsSpotlight } from "../../components/sunrun-ethics-spotlight";
 import { researchStories } from "../../lib/research-stories";
 
 const canonicalUrl = "https://solarcomplaint.com/research";
@@ -12,18 +13,10 @@ export const metadata: Metadata = {
   alternates: { canonical: "/research" },
   openGraph: {
     title: "Residential Solar Research, Lawsuits and Enforcement",
-    description:
-      "Original source-backed research and case tracking for residential solar consumers.",
+    description: "Original source-backed research and case tracking for residential solar consumers.",
     url: "/research",
     type: "website",
-    images: [
-      {
-        url: "https://solarcomplaint.com/og.png",
-        width: 1200,
-        height: 630,
-        alt: "Solar Consumer Research",
-      },
-    ],
+    images: [{ url: "https://solarcomplaint.com/og.png", width: 1200, height: 630, alt: "Solar Consumer Research" }],
   },
   twitter: {
     card: "summary_large_image",
@@ -93,6 +86,8 @@ export default function ResearchPage() {
           </p>
         </section>
 
+        <SunrunEthicsSpotlight variant="feature" context="New company research" />
+
         <section className="state-source-section" aria-labelledby="featured-research-title">
           <div className="state-source-section-heading">
             <span>{String(researchStories.length).padStart(2, "0")} featured stor{researchStories.length === 1 ? "y" : "ies"}</span>
@@ -113,23 +108,18 @@ export default function ResearchPage() {
 
         <section className="info-section">
           <h2>Company and case trackers</h2>
-          <p>
-            <Link href="/companies/sunrun">Sunrun: investigations, enforcement, settlements, and documented cases →</Link>
-          </p>
-          <p>
-            <Link href="/cases/titan-solar-power">Titan Solar Power: closure, bankruptcy, customer resources, and updates →</Link>
-          </p>
-          <p>
-            <Link href="/cases/connecticut-attorney-general-sunrun-lawsuit">Connecticut Attorney General lawsuit involving Sunrun →</Link>
-          </p>
+          <p><Link href="/companies/sunrun">Sunrun: investigations, enforcement, settlements, and documented cases →</Link></p>
+          <p><Link href="/companies/sunrun/ethics-compliance">Sunrun ethics &amp; compliance: AllVoices, policies, leadership and reporting guide →</Link></p>
+          <p><Link href="/cases/titan-solar-power">Titan Solar Power: closure, bankruptcy, customer resources, and updates →</Link></p>
+          <p><Link href="/cases/connecticut-attorney-general-sunrun-lawsuit">Connecticut Attorney General lawsuit involving Sunrun →</Link></p>
         </section>
 
         <section className="info-section">
           <h2>Research standards</h2>
           <p>
             Solar Consumer Research prioritizes government records and primary documents, keeps procedural status clear,
-            and separates source facts from analysis. Read the full <Link href="/methodology">research methodology</Link>
-            {" "}or <Link href="/corrections">submit a correction</Link>.
+            and separates source facts from analysis. Read the full <Link href="/methodology">research methodology</Link>{" "}
+            or <Link href="/corrections">submit a correction</Link>.
           </p>
         </section>
       </InfoPage>

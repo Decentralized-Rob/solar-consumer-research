@@ -29,6 +29,10 @@
 ## Company research
 
 - Sunrun investigations, enforcement, settlements, and documented cases: https://solarcomplaint.com/companies/sunrun
+- Sunrun ethics complaint, AllVoices, Code of Conduct, Vendor Code and escalation guide: https://solarcomplaint.com/companies/sunrun/ethics-compliance
+  - Uses Sunrun's current governance document library, October 2025 Code of Business Conduct and Ethics, October 2025 Whistleblower Policy, Vendor Code of Conduct, current executive-management page and public LinkedIn sources.
+  - Separates ethics reporting from ordinary customer service and from state, contractor, financing or legal complaint routes.
+  - Includes public leadership context for Mary Powell, Paul Dickson, Jeanna Steele, Chance Allred and Patrick Kent without alleging individual involvement in a consumer complaint.
 - Connecticut Attorney General lawsuit involving Sunrun: https://solarcomplaint.com/cases/connecticut-attorney-general-sunrun-lawsuit
 - Titan Solar Power closure and bankruptcy tracker: https://solarcomplaint.com/cases/titan-solar-power
 - Titan Solar Power customer research paths: https://solarcomplaint.com/cases/titan-solar-power/customer-help
@@ -80,7 +84,8 @@
 - Michigan page -> Michigan enforcement source + related featured research + problem-specific state and federal resources.
 - Texas page -> Texas Sunrun investigation source + related featured research.
 - Arizona page -> Sunrun consent agreement + Arizona solar statutes + Attorney General complaint route + contractor and utility complaint routes + related featured research.
-- Sunrun company page -> Florida roof dispute + Texas investigation + Arizona settlement + Connecticut lawsuit + related research.
+- Sunrun company page -> Sunrun ethics and compliance guide + Florida roof dispute + Texas investigation + Arizona settlement + Connecticut lawsuit + related research.
+- Sunrun ethics guide -> current Sunrun governance sources + AllVoices reporting route + Vendor Code + leadership sources + state and consumer guides.
 - Titan state pages -> exact state-named Titan bankruptcy debtor/case reference -> official bankruptcy court hub -> Titan warranty and customer research pages.
 - Titan warranty page -> manufacturer sources + relevant Titan state pages.
 
@@ -91,6 +96,7 @@
 - Original source-backed research that connects related records without collapsing their procedural differences.
 - Federal consumer, finance, and complaint resources.
 - Company and case tracking where a sufficient public-source record exists.
+- A current Sunrun ethics and compliance guide centered on AllVoices, Sunrun's current governance policies, vendor standards, leadership roles and external escalation pathways.
 - Expanded Florida Sunrun roof-dispute, solar disclosure, contractor, complaint-route, Titan, and current case resources.
 - Expanded Michigan solar complaint, financing, installer, permitting, interconnection, Climax Solar enforcement, and current case resources.
 - Expanded Arizona solar consumer, contract, contractor, utility, Sunrun settlement, and current rooftop-solar resources.

@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
+import styles from "./home-priority.module.css";
 
 export function HomeHeader({
   menuOpen,
@@ -23,7 +24,7 @@ export function HomeHeader({
   };
 
   return (
-    <header className="home-header">
+    <header className={`home-header ${styles.compactHeader}`}>
       <a className="home-wordmark" href="#top" aria-label="Solar Consumer Research home">
         <Image className="brand-logo" src="/brand/solar-consumer-research.svg" alt="" width={690} height={104} priority unoptimized />
       </a>
@@ -68,6 +69,7 @@ export function HomeHeader({
               Solar Sales, Financing and What Happens After a Complaint
             </a>
             <a href="/companies/sunrun" onClick={closeMenu}>Sunrun</a>
+            <a href="/companies/sunrun/ethics-compliance" onClick={closeMenu}>Sunrun Ethics &amp; Compliance Guide</a>
             <a href="/cases/titan-solar-power" onClick={closeMenu}>Titan Solar Power</a>
             <a href="/cases/connecticut-attorney-general-sunrun-lawsuit" onClick={closeMenu}>
               Connecticut AG v. Sunrun
@@ -103,7 +105,7 @@ export function HomeHeader({
         </div>
         <a href="/about" onClick={closeMenu}>About</a>
       </nav>
-      <Link className="home-header-action" href="/#questions">Ask for free research help</Link>
+      <Link className="home-header-action" href="/#questions">Always Free Research Assistance</Link>
     </header>
   );
 }

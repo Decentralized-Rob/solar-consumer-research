@@ -1,0 +1,77 @@
+.featuredTopLink {
+  display: inline-grid;
+  max-width: 100%;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 9px;
+  align-items: center;
+  margin: 0 0 20px;
+  padding: 9px 12px;
+  border: 1px solid #c9cec6;
+  border-radius: 999px;
+  background: #fffdfa;
+  color: #1c251f;
+  font-size: 11px;
+  line-height: 1.2;
+}
+
+.featuredTopLink span:first-child {
+  color: #3d644c;
+  font-size: 9px;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.featuredTopLink strong {
+  min-width: 0;
+  font-weight: 900;
+}
+
+.featuredTopLink span:last-child {
+  font-size: 16px;
+  line-height: 1;
+}
+
+.featuredTopLink:hover,
+.featuredTopLink:focus-visible {
+  border-color: #1c251f;
+  background: #f0eee5;
+}
+
+@media (max-width: 650px) {
+  .compactHeader.compactHeader {
+    min-height: 58px;
+    gap: 7px;
+    padding: 6px 10px;
+  }
+
+  .compactHeader :global(.home-wordmark) :global(.brand-logo) {
+    width: 158px;
+  }
+
+  .compactHeader :global(.home-menu-toggle) {
+    min-height: 36px;
+    padding: 0 10px;
+  }
+
+  .compactHeader :global(.home-header-action) {
+    max-width: 94px;
+    padding: 7px 9px;
+    font-size: 11px;
+  }
+
+  .compactHero.compactHero {
+    padding-top: 34px;
+  }
+
+  .featuredTopLink {
+    width: 100%;
+    margin-bottom: 17px;
+    padding: 9px 11px;
+    border-radius: 12px;
+  }
+
+  .featuredTopLink span:first-child {
+    font-size: 8px;
+  }
+}

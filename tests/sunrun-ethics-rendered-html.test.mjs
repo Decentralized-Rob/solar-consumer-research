@@ -1,0 +1,84 @@
+import assert from "node:assert/strict";
+import test from "node:test";
+
+async function loadWorker() {
+  const workerUrl = new URL("../dist/server/index.js", import.meta.url);
+  workerUrl.searchParams.set("test", `${process.pid}-${Date.now()}-${Math.random()}`);
+  const { default: worker } = await import(workerUrl.href);
+  return worker;
+}
+
+const env = { ASSETS: { fetch: async () => new Response("Not found", { status: 404 }) } };
+const ctx = { waitUntil() {}, passThroughOnException() {} };
+
+test("renders Sunrun ethics guide as an independent source-first editorial page", async () => {
+  const worker = await loadWorker();
+  const response = await worker.fetch(
+    new Request("http://localhost/companies/sunrun/ethics-compliance", { headers: { accept: "text/html" } }),
+    env,
+    ctx,
+  );
+
+  assert.equal(response.status, 200);
+  const html = await response.text();
+
+  assert.match(html, /<title>Sunrun Ethics Complaint: AllVoices, Code of Conduct &amp; Compliance Guide/i);
+  assert.match(html, /<h1[^>]*>Sunrun Ethics &amp; Compliance<\/h1>/i);
+  assert.match(html, /independent consumer research and editorial publication/i);
+  assert.match(html, /not affiliated with, endorsed by or sponsored by Sunrun/i);
+  assert.match(html, /https:\/\/sunrun\.allvoices\.co\//i);
+  assert.match(html, /https:\/\/investors\.sunrun\.com\/leadership-governance\/governance-documents/i);
+  assert.doesNotMatch(html, /866-602-6613/);
+  assert.doesNotMatch(html, /ethics hotline/i);
+  assert.doesNotMatch(html, /<meta[^>]+name=["']keywords["']/i);
+  assert.doesNotMatch(html, /ethicspoint/i);
+  assert.match(html, />Timeline</i);
+  assert.match(html, />Evidence</i);
+  assert.match(html, />Featured</i);
+  assert.match(html, />The latest</i);
+  assert.match(html, /Whistleblower Policy/i);
+  assert.match(html, /Vendor Code of Conduct/i);
+  assert.match(html, /Mary Powell/i);
+  assert.match(html, /Jeanna Steele/i);
+  assert.match(html, /Chance Allred/i);
+  assert.match(html, /Paul Dickson/i);
+  assert.match(html, /Patrick Kent/i);
+  assert.doesNotMatch(html, /Becki Berkeley/i);
+  assert.match(html, /application\/ld\+json/i);
+  assert.doesNotMatch(html, /noindex/i);
+});
+
+test("includes Sunrun ethics guide in sitemap and keeps review routes out of index", async () => {
+  const worker = await loadWorker();
+  const sitemapResponse = await worker.fetch(new Request("http://localhost/sitemap.xml"), env, ctx);
+  assert.equal(sitemapResponse.status, 200);
+  const sitemap = await sitemapResponse.text();
+  assert.match(sitemap, /<loc>https:\/\/solarcomplaint\.com\/companies\/sunrun\/ethics-compliance<\/loc>/);
+  assert.doesNotMatch(sitemap, /ethics-compliance\/preview-images/);
+  assert.doesNotMatch(sitemap, /ethics-compliance\/preview-a/);
+  assert.doesNotMatch(sitemap, /ethics-compliance\/preview-b/);
+
+  for (const [slug, asset] of [
+    ["preview-a", "ethics-hero-option-a.svg"],
+    ["preview-b", "ethics-hero-option-b.svg"],
+  ]) {
+    const previewResponse = await worker.fetch(
+      new Request(`http://localhost/companies/sunrun/ethics-compliance/${slug}`, { headers: { accept: "text/html" } }),
+      env,
+      ctx,
+    );
+    assert.equal(previewResponse.status, 200);
+    const previewHtml = await previewResponse.text();
+    assert.match(previewHtml, /noindex/i);
+    assert.match(previewHtml, new RegExp(asset.replace(".", "\\."), "i"));
+    assert.match(previewHtml, /<h1[^>]*>Sunrun<\/h1>/i);
+    assert.match(previewHtml, />Timeline</i);
+    assert.match(previewHtml, />Evidence</i);
+    assert.match(previewHtml, />Featured</i);
+    assert.match(previewHtml, />The latest</i);
+    assert.match(previewHtml, /sunrun\.allvoices\.co/i);
+    assert.doesNotMatch(previewHtml, /866-602-6613/);
+    assert.doesNotMatch(previewHtml, /ethics hotline/i);
+    assert.doesNotMatch(previewHtml, /Becki Berkeley/i);
+  }
+});
