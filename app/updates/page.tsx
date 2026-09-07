@@ -49,6 +49,7 @@ export default async function UpdatesPage() {
         <h2 id="sunrun-research-title">Sunrun research</h2>
         <p><Link href="/companies/sunrun">Sunrun lawsuits, investigations, settlements and consumer resources →</Link></p>
         <p><Link href="/cases/connecticut-attorney-general-sunrun-lawsuit">Connecticut Attorney General lawsuit involving Sunrun →</Link></p>
+        <p><Link href="/states/connecticut">Connecticut solar complaint and consumer resources →</Link></p>
         <p><Link href="/states/florida">Florida Sunrun roof dispute and consumer resources →</Link></p>
         <p><Link href="/states/arizona">Arizona Sunrun settlement and consumer resources →</Link></p>
         <p><Link href="/states/texas">Texas residential-solar investigation and consumer resources →</Link></p>
