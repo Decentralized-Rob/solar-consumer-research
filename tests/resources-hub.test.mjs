@@ -30,7 +30,7 @@ test("renders resources as a decision hub with crawlable internal paths", async 
   assert.equal(response.status, 200);
   const html = await response.text();
 
-  assert.match(html, /<title>Solar Complaint Resources: State, Company &amp; Federal Help \| Solar Consumer Research<\/title>/i);
+  assert.match(html, /<title>Solar Complaint Resources: State, Company &amp; Federal Help<\/title>/i);
   assert.match(html, /Solar complaint resources: where to start/i);
   assert.match(html, /What are you trying to resolve\?/i);
   assert.match(html, /Company or installer issue/i);
