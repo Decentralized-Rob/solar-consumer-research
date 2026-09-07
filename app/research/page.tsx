@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { InfoPage } from "../../components/info-page";
+import { SunrunEthicsSpotlight } from "../../components/sunrun-ethics-spotlight";
 import { researchStories } from "../../lib/research-stories";
 
 const canonicalUrl = "https://solarcomplaint.com/research";
@@ -84,6 +85,8 @@ export default function ResearchPage() {
             story itself and on the related resource pages.
           </p>
         </section>
+
+        <SunrunEthicsSpotlight variant="feature" context="New company research" />
 
         <section className="state-source-section" aria-labelledby="featured-research-title">
           <div className="state-source-section-heading">
