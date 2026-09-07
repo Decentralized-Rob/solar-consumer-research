@@ -44,22 +44,30 @@ test("renders Sunrun ethics guide as an independent source-first editorial page"
   assert.doesNotMatch(html, /noindex/i);
 });
 
-test("includes Sunrun ethics guide in sitemap and keeps image review page out of index", async () => {
+test("includes Sunrun ethics guide in sitemap and keeps review routes out of index", async () => {
   const worker = await loadWorker();
   const sitemapResponse = await worker.fetch(new Request("http://localhost/sitemap.xml"), env, ctx);
   assert.equal(sitemapResponse.status, 200);
   const sitemap = await sitemapResponse.text();
   assert.match(sitemap, /<loc>https:\/\/solarcomplaint\.com\/companies\/sunrun\/ethics-compliance<\/loc>/);
   assert.doesNotMatch(sitemap, /ethics-compliance\/preview-images/);
+  assert.doesNotMatch(sitemap, /ethics-compliance\/preview-a/);
+  assert.doesNotMatch(sitemap, /ethics-compliance\/preview-b/);
 
-  const previewResponse = await worker.fetch(
-    new Request("http://localhost/companies/sunrun/ethics-compliance/preview-images", { headers: { accept: "text/html" } }),
-    env,
-    ctx,
-  );
-  assert.equal(previewResponse.status, 200);
-  const previewHtml = await previewResponse.text();
-  assert.match(previewHtml, /noindex/i);
-  assert.match(previewHtml, /ethics-hero-option-a\.svg/i);
-  assert.match(previewHtml, /ethics-hero-option-b\.svg/i);
+  for (const [slug, asset] of [
+    ["preview-a", "ethics-hero-option-a.svg"],
+    ["preview-b", "ethics-hero-option-b.svg"],
+  ]) {
+    const previewResponse = await worker.fetch(
+      new Request(`http://localhost/companies/sunrun/ethics-compliance/${slug}`, { headers: { accept: "text/html" } }),
+      env,
+      ctx,
+    );
+    assert.equal(previewResponse.status, 200);
+    const previewHtml = await previewResponse.text();
+    assert.match(previewHtml, /noindex/i);
+    assert.match(previewHtml, new RegExp(asset.replace(".", "\\."), "i"));
+    assert.match(previewHtml, /Sunrun Ethics &amp; Compliance/i);
+    assert.match(previewHtml, /sunrun\.allvoices\.co/i);
+  }
 });
