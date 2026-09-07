@@ -23,13 +23,14 @@ export function StateResourcePage({ state }: { state: { code: string; name: stri
     ? solarCase
     : undefined;
   const hasExpandedSources = stateResources.length > 0 || currentEnforcementSources.length > 0 || Boolean(titanBankruptcy);
+  const sunrunHubState = ["CT", "MA", "TX"].includes(state.code);
   const pageSchema = {
     "@context": "https://schema.org",
     "@type": "CollectionPage",
     name: consumerProtection.title,
     description: `${consumerProtection.summary} ${hasExpandedSources ? "Additional source-reviewed state resources are included." : "This page is a starting directory with one documented solar reference, not a complete state research file."}`,
     url: `https://solarcomplaint.com/states/${stateSlug(state.name)}`,
-    dateModified: state.code === "CT" ? "2026-09-07" : titanBankruptcy ? "2026-08-28" : relatedResearch.length > 0 ? "2026-08-27" : "2026-08-21",
+    dateModified: sunrunHubState ? "2026-09-07" : titanBankruptcy ? "2026-08-28" : relatedResearch.length > 0 ? "2026-08-27" : "2026-08-21",
     spatialCoverage: { "@type": "AdministrativeArea", name: state.name },
     about: [
       { "@type": "Thing", name: `${state.name} consumer complaint route` },
@@ -39,8 +40,8 @@ export function StateResourcePage({ state }: { state: { code: string; name: stri
     relatedLink: [
       ...(state.code === "CT" ? [
         "https://solarcomplaint.com/cases/connecticut-attorney-general-sunrun-lawsuit",
-        "https://solarcomplaint.com/companies/sunrun",
       ] : []),
+      ...(sunrunHubState ? ["https://solarcomplaint.com/companies/sunrun"] : []),
       ...relatedResearch.map((story) => `https://solarcomplaint.com${story.href}`),
       ...(titanBankruptcy ? [
         "https://solarcomplaint.com/cases/titan-solar-power",
@@ -137,6 +138,9 @@ export function StateResourcePage({ state }: { state: { code: string; name: stri
                 <p>{item.summary}</p>
                 <small>{item.publisher} · Source dated {item.publishedAt}</small>
                 <a href={item.url} target="_blank" rel="noreferrer">Open official source ↗</a>
+                {state.code === "TX" && item.id === "tx-sunrun-solar-investigation-2026" && (
+                  <Link href="/companies/sunrun">Browse related Sunrun investigations, lawsuits and settlements →</Link>
+                )}
               </article>
             ))}
           </div>
@@ -183,10 +187,10 @@ export function StateResourcePage({ state }: { state: { code: string; name: stri
           <small>{displayedSolarCase.publisher} · Source dated {displayedSolarCase.publishedAt}</small>
           <a href={displayedSolarCase.url} target="_blank" rel="noreferrer">Read the source and case details ↗</a>
           {state.code === "CT" && (
-            <>
-              <Link href="/cases/connecticut-attorney-general-sunrun-lawsuit">Read the SolarComplaint.com Connecticut Attorney General v. Sunrun case summary →</Link>
-              <Link href="/companies/sunrun">Browse Sunrun lawsuits, investigations and consumer resources →</Link>
-            </>
+            <Link href="/cases/connecticut-attorney-general-sunrun-lawsuit">Read the SolarComplaint.com Connecticut Attorney General v. Sunrun case summary →</Link>
+          )}
+          {(state.code === "CT" || state.code === "MA") && (
+            <Link href="/companies/sunrun">Browse Sunrun lawsuits, investigations and consumer resources →</Link>
           )}
         </section>
       )}
