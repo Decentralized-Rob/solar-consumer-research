@@ -94,9 +94,11 @@ All pull requests require maintainer review before merge.
 
 ## AI-assisted contributions
 
-AI tools may be used for implementation, drafting, or research organization. Contributors are responsible for checking all submitted code, claims, citations, and summaries against the underlying source.
+AI-assisted contributions are welcome. This project itself uses an AI-native, human-directed engineering workflow, and contributors may use AI for implementation, research organization, tests, review, and documentation.
 
-Disclose material AI assistance in the pull request. Do not submit AI-generated research claims or citations without verification.
+The contributor remains responsible for the submitted work. Check code against actual repository behavior, verify research claims and citations against the underlying source, and review generated wording for unsupported conclusions or invented detail.
+
+Disclose material AI assistance in the pull request. AI output is work to review and verify, not evidence or authority by itself.
 
 ## License and contribution terms
 
