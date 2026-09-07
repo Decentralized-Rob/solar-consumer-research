@@ -20,12 +20,12 @@ SolarComplaint.com remains the publisher. Sunrun is the subject. The page does n
 ## Reporting sources
 
 - AllVoices: `https://sunrun.allvoices.co/`
-- Sunrun governance documents
+- Sunrun live Governance Documents page
 - October 2025 Code of Business Conduct and Ethics
-- October 2025 Whistleblower Policy
+- October 2025 Whistleblower Policy, sourced through the current Sunrun governance library rather than a stale direct CDN object
 - Vendor Code of Conduct
 
-No EthicsPoint references are included.
+The previously listed hotline has been removed because the number was not sufficiently verified against a current live Sunrun source. No EthicsPoint references are included.
 
 ## Internal authority links
 
@@ -40,13 +40,19 @@ No EthicsPoint references are included.
 
 The visible byline is currently `SolarComplaint.com Research Desk`, leaving the layout ready for a named editorial writer later. Article structured data currently uses the SolarComplaint.com publisher entity and can be switched to a Person author when that writer profile exists.
 
-## Review checks
+Becki Berkeley is excluded from the page and `llms.txt`.
+
+## SEO / review checks
 
 - one search-focused H1
 - canonical URL
 - Article and BreadcrumbList structured data
+- no meta-keywords tag
 - AllVoices present
+- current Sunrun governance source present
+- unverified hotline absent
 - EthicsPoint absent
+- Becki Berkeley absent
 - independent-publication disclosure present
 - timeline distinguishes investigations, settlements, allegations, and policy materials
 - people/leadership section explains why names are included and avoids attributing individual complaint responsibility
