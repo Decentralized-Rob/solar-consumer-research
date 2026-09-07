@@ -93,6 +93,7 @@ export function AccountPanel({ defaultStateCode = "" }: AccountPanelProps) {
       {turnstileSiteKey ? <TurnstileWidget siteKey={turnstileSiteKey} onToken={receiveTurnstileToken} resetKey={turnstileResetKey} /> : <p className="form-message" role="alert">This form is temporarily unavailable.</p>}
       <button className="button button--sun" type="submit" disabled={busy || !turnstileSiteKey}>{busy ? "Sending..." : "Send question"}</button>
       <p className="form-note">This is research help, not legal advice.</p>
+      <p className="form-note">By submitting this form, you agree that your information may be stored and analyzed to respond to your request, improve SolarComplaint.com, and study consumer trends. Personal information will not be made public. Anonymous or combined data may be used for research or commercial purposes.</p>
       {message && <p className="form-message" role="alert">{message}</p>}
     </form>
   );
