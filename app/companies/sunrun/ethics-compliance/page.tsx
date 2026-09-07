@@ -8,10 +8,8 @@ const canonicalUrl = "https://solarcomplaint.com/companies/sunrun/ethics-complia
 const governanceUrl = "https://investors.sunrun.com/leadership-governance/governance-documents";
 const leadershipUrl = "https://investors.sunrun.com/leadership-governance/executive-management";
 const codeUrl = "https://d1io3yog0oux5.cloudfront.net/_5069419c6c0a7a5b730d48e3b1411191/sunrun/db/405/3799/file/Code%2Bof%2BBusiness%2BConduct%2B%26%2BEthics_Oct_2025.pdf";
-const whistleblowerUrl = "https://d1io3yog0oux5.cloudfront.net/_c1eacf661f8f940cb0d1529a22a7aa53/sunrun/db/405/3801/file/Whistleblower%2BPolicy_Oct_2025.pdf";
 const vendorCodeUrl = "https://d1io3yog0oux5.cloudfront.net/_c9159127ad06b657d37a299d3e74348a/sunrun/db/405/3803/file/6.25_Vendor%2BCode%2BOf%2BConduct_v2.pdf";
 const allVoicesUrl = "https://sunrun.allvoices.co/";
-const ethicsHotline = "866-602-6613";
 const ethicsLinkedInPost = "https://www.linkedin.com/posts/sunrun_at-sunrun-were-committed-to-upholding-the-activity-7251577600949522435-tGOM";
 const connecticutSource = "https://portal.ct.gov/ag/press-releases/2024-press-releases/attorney-general-tong-sues-sunrun";
 const floridaRoofOrder = "https://ecf.flmd.uscourts.gov/cgi-bin/show_public_doc?2025-02459-10-8-cv=";
@@ -22,24 +20,6 @@ export const metadata: Metadata = {
   title: "Sunrun Ethics Complaint: AllVoices, Code of Conduct & Compliance Guide",
   description:
     "How to report a Sunrun ethics concern through AllVoices, what Sunrun's current ethics and vendor policies say, who holds relevant leadership roles, and where consumers can go next.",
-  keywords: [
-    "Sunrun ethics complaint",
-    "Sunrun compliance complaint",
-    "Sunrun AllVoices",
-    "Sunrun ethics hotline",
-    "Sunrun code of conduct",
-    "Sunrun vendor code of conduct",
-    "Sunrun employee complaint",
-    "Sunrun sales rep complaint",
-    "Sunrun representative complaint",
-    "Sunrun sales misconduct",
-    "Sunrun forged signature complaint",
-    "Mary Powell Sunrun",
-    "Jeanna Steele Sunrun compliance",
-    "Chance Allred Sunrun sales",
-    "Paul Dickson Sunrun sales",
-    "Patrick Kent Sunrun operations",
-  ],
   alternates: { canonical: "/companies/sunrun/ethics-compliance" },
   openGraph: {
     title: "Sunrun Ethics & Compliance: Reporting, Policies and Public Record",
@@ -101,8 +81,8 @@ const timeline = [
   {
     year: "2025",
     date: "October",
-    title: "Current Sunrun ethics policies identify AllVoices",
-    text: "Sunrun's October 2025 Code of Business Conduct and Ethics and Whistleblower Policy identify AllVoices and an ethics hotline among the company's reporting resources.",
+    title: "Sunrun publishes its current ethics policy set",
+    text: "Sunrun's governance library currently lists an October 2025 Code of Business Conduct and Ethics and an October 2025 Whistleblower Policy. The Code identifies AllVoices as a reporting resource.",
     href: governanceUrl,
     label: "Sunrun governance documents",
   },
@@ -142,7 +122,7 @@ const structuredData = {
       description: "An independent, source-first guide to Sunrun's current ethics and compliance resources.",
       url: canonicalUrl,
       datePublished: "2026-09-06",
-      dateModified: "2026-09-06",
+      dateModified: "2026-09-07",
       author: { "@id": "https://solarcomplaint.com/#publisher" },
       publisher: { "@id": "https://solarcomplaint.com/#publisher" },
       isPartOf: { "@id": "https://solarcomplaint.com/#website" },
@@ -186,7 +166,7 @@ export default function SunrunEthicsCompliancePage() {
         <div className={styles.publicationLine}>
           <strong>SolarComplaint.com Research Desk</strong>
           <span>Published September 6, 2026</span>
-          <span>Last reviewed September 6, 2026</span>
+          <span>Last reviewed September 7, 2026</span>
         </div>
         <p className={styles.independenceNote}>
           SolarComplaint.com is an independent consumer research and editorial publication. It is not affiliated with, endorsed by or sponsored by Sunrun.
@@ -203,9 +183,8 @@ export default function SunrunEthicsCompliancePage() {
         <section className={styles.atGlance} aria-labelledby="at-glance-title">
           <div className={styles.sectionLabel}>At a glance</div>
           <h2 id="at-glance-title">Current ethics reporting information</h2>
-          <div className={styles.factStrip}>
+          <div className={styles.factStrip} style={{ gridTemplateColumns: "repeat(2, minmax(0, 1fr))" }}>
             <div><span>Reporting portal</span><strong>AllVoices</strong><a href={allVoicesUrl} target="_blank" rel="noreferrer">sunrun.allvoices.co ↗</a></div>
-            <div><span>Ethics hotline</span><strong>{ethicsHotline}</strong><a href="tel:+18666026613">Call hotline</a></div>
             <div><span>Current policy set</span><strong>October 2025</strong><a href={governanceUrl} target="_blank" rel="noreferrer">Verify with Sunrun ↗</a></div>
           </div>
         </section>
@@ -214,7 +193,7 @@ export default function SunrunEthicsCompliancePage() {
           <div className={styles.sectionLabel}>Reporting guide</div>
           <h2>How to report a Sunrun ethics or compliance concern</h2>
           <p>
-            Sunrun’s current Code of Business Conduct and Ethics and Whistleblower Policy identify <strong>AllVoices</strong> and an ethics hotline as reporting resources. Those resources are different from ordinary customer-service channels.
+            Sunrun’s current governance library publishes an October 2025 Code of Business Conduct and Ethics and an October 2025 Whistleblower Policy. The Code identifies <strong>AllVoices</strong> as a reporting resource. Consumers should verify the live reporting route against Sunrun’s current governance materials before submitting.
           </p>
           <div className={styles.reportRow}>
             <div>
@@ -251,7 +230,7 @@ export default function SunrunEthicsCompliancePage() {
           <h2>Sunrun’s published ethics documents</h2>
           <div className={styles.sourceList}>
             <div className={styles.sourceItem}><span>Primary source</span><div><strong>Code of Business Conduct and Ethics</strong><p>Sunrun’s October 2025 company ethics code.</p></div><a href={codeUrl} target="_blank" rel="noreferrer">Open ↗</a></div>
-            <div className={styles.sourceItem}><span>Primary source</span><div><strong>Whistleblower Policy</strong><p>Sunrun’s October 2025 policy identifying current reporting resources.</p></div><a href={whistleblowerUrl} target="_blank" rel="noreferrer">Open ↗</a></div>
+            <div className={styles.sourceItem}><span>Current company source</span><div><strong>Whistleblower Policy</strong><p>Sunrun’s live governance library currently lists an October 2025 Whistleblower Policy.</p></div><a href={governanceUrl} target="_blank" rel="noreferrer">Verify current policy ↗</a></div>
             <div className={styles.sourceItem}><span>Primary source</span><div><strong>Vendor Code of Conduct</strong><p>Separately published standards for Sunrun vendors and third-party relationships.</p></div><a href={vendorCodeUrl} target="_blank" rel="noreferrer">Open ↗</a></div>
             <div className={styles.sourceItem}><span>Company library</span><div><strong>Governance documents</strong><p>The current Sunrun index for governance and ethics materials.</p></div><a href={governanceUrl} target="_blank" rel="noreferrer">Open ↗</a></div>
             <div className={styles.sourceItem}><span>Public LinkedIn</span><div><strong>Sunrun Ethics &amp; Compliance Week post</strong><p>A public company statement about integrity, accountability and transparency.</p></div><a href={ethicsLinkedInPost} target="_blank" rel="noreferrer">Open ↗</a></div>
@@ -312,7 +291,7 @@ export default function SunrunEthicsCompliancePage() {
           <div className={styles.sectionLabel}>The latest</div>
           <h2>Current Sunrun research on SolarComplaint.com</h2>
           <div className={styles.latestList}>
-            <article><time dateTime="2026-09-06">Sep. 6, 2026</time><div><strong>Sunrun ethics and compliance source guide</strong><p>Current AllVoices reporting route, ethics documents, vendor standards and leadership responsibilities reviewed.</p></div></article>
+            <article><time dateTime="2026-09-07">Sep. 7, 2026</time><div><strong>Sunrun ethics and compliance source guide</strong><p>Current AllVoices reporting, ethics documents, vendor standards and leadership responsibilities reviewed.</p></div></article>
             <article><time dateTime="2026-09-06">Sep. 6, 2026</time><div><Link href="/states/florida">Florida Sunrun roof dispute and consumer resource hub</Link><p>Expanded with the federal court source, Florida solar disclosure rules and reciprocal Sunrun research links.</p></div></article>
             <article><time dateTime="2026-04-03">Apr. 3, 2026</time><div><a href={texasSource.url} target="_blank" rel="noreferrer">Texas announces residential-solar investigation involving Sunrun ↗</a><p>Primary Attorney General source; investigation status is kept separate from any finding.</p></div></article>
           </div>
@@ -333,7 +312,7 @@ export default function SunrunEthicsCompliancePage() {
           <div className={styles.sectionLabel}>Editorial note</div>
           <h2>Source and update standard</h2>
           <p>
-            Reviewed September 6, 2026. Sunrun can change reporting systems, phone numbers, policies and executive roles. Before filing, verify current information against Sunrun’s governance page and live AllVoices portal. Primary sources control if a SolarComplaint.com summary differs from the underlying record.
+            Reviewed September 7, 2026. Sunrun can change reporting systems, policies and executive roles. Before filing, verify current information against Sunrun’s governance page and live AllVoices portal. Primary sources control if a SolarComplaint.com summary differs from the underlying record.
           </p>
           <p>Read the <Link href="/methodology">research methodology</Link> and <Link href="/corrections">corrections policy</Link>.</p>
         </section>
