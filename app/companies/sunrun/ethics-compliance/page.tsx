@@ -39,7 +39,6 @@ export const metadata: Metadata = {
     "Chance Allred Sunrun sales",
     "Paul Dickson Sunrun sales",
     "Patrick Kent Sunrun operations",
-    "Becki Berkeley Sunrun compliance",
   ],
   alternates: { canonical: "/companies/sunrun/ethics-compliance" },
   openGraph: {
@@ -295,11 +294,6 @@ export default function SunrunEthicsCompliancePage() {
                 <a href={person.source} target="_blank" rel="noreferrer">Verify role ↗</a>
               </article>
             ))}
-            <article>
-              <div><span>Public compliance profile</span><h3>Becki Berkeley, MS, CCEP</h3></div>
-              <p>Her public LinkedIn profile describes compliance experience at Sunrun. This is included as public organizational context only.</p>
-              <a href="https://www.linkedin.com/in/becki-berkeley-ms-ccep-a4255ba1" target="_blank" rel="noreferrer">Public LinkedIn profile ↗</a>
-            </article>
           </div>
           <p><a href={leadershipUrl} target="_blank" rel="noreferrer">Sunrun executive management source ↗</a></p>
         </section>
