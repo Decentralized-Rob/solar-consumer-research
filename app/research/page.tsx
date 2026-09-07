@@ -99,7 +99,7 @@ export default function ResearchPage() {
                 <span>Source-backed analysis</span>
                 <h3><Link href={story.href}>{story.title}</Link></h3>
                 <p>{story.deck}</p>
-                <small>Published {story.publishedAt} · Michigan · Texas · Arizona</small>
+                <small>Published {story.publishedAt}{story.companies.length ? ` · ${story.companies.join(" · ")}` : ""}</small>
                 <Link href={story.href}>Read the source-backed breakdown →</Link>
               </article>
             ))}

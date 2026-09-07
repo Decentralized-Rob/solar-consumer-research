@@ -71,6 +71,7 @@ export default async function UpdatesPage() {
         <h2 id="featured-research-title">Featured research</h2>
         <p><Link href={featuredResearchStory.href}>{featuredResearchStory.title} →</Link></p>
         <p>{featuredResearchStory.deck}</p>
+        <p><Link href="/research/solar-sales-financing-after-complaint">Solar Sales, Financing and What Happens After a Complaint →</Link></p>
         <p><Link href="/research">Browse all source-backed solar consumer research →</Link></p>
       </section>
 

@@ -2,8 +2,9 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { InfoPage } from "../../../components/info-page";
 import { featuredStateSources } from "../../../lib/featured-state-sources";
-import { featuredResearchStory } from "../../../lib/research-stories";
+import { researchStories } from "../../../lib/research-stories";
 
+const featuredResearchStory = researchStories.find((story) => story.id === "solar-sales-financing-after-complaint")!;
 const michiganSource = featuredStateSources.MI[0];
 const texasSource = featuredStateSources.TX[0];
 const arizonaAgreement = featuredStateSources.AZ[0];
