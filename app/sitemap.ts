@@ -5,6 +5,7 @@ import { titanStateBankruptcyByCode } from "../lib/titan-state-research";
 
 const baseUrl = "https://solarcomplaint.com";
 const stateLastModifiedByCode: Record<string, string> = {
+  CT: "2026-09-07",
   MI: "2026-09-05",
   ME: "2026-08-29",
   ...Object.fromEntries(Object.keys(titanStateBankruptcyByCode).map((code) => [code, "2026-08-28"])),
@@ -48,7 +49,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${baseUrl}/cases/titan-solar-power`, lastModified: new Date("2026-08-28"), changeFrequency: "weekly", priority: 0.9 },
     { url: `${baseUrl}/cases/titan-solar-power/customer-help`, lastModified: new Date("2026-08-28"), changeFrequency: "monthly", priority: 0.8 },
     { url: `${baseUrl}/cases/titan-solar-power/warranty-after-bankruptcy`, lastModified: new Date("2026-08-28"), changeFrequency: "monthly", priority: 0.85 },
-    { url: `${baseUrl}/cases/connecticut-attorney-general-sunrun-lawsuit`, lastModified: new Date("2026-08-18"), changeFrequency: "monthly", priority: 0.8 },
+    { url: `${baseUrl}/cases/connecticut-attorney-general-sunrun-lawsuit`, lastModified: new Date("2026-09-07"), changeFrequency: "monthly", priority: 0.8 },
     ...statePages,
   ];
 }

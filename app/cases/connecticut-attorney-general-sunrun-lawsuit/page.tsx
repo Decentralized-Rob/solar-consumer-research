@@ -37,10 +37,18 @@ export default function ConnecticutSunrunCasePage() {
     headline: "What does Connecticut's lawsuit against Sunrun allege?",
     description: "A source-based summary of Connecticut's lawsuit against Sunrun and other solar companies.",
     datePublished: "2024-07-19",
-    dateModified: "2026-08-18",
+    dateModified: "2026-09-07",
     mainEntityOfPage: "https://solarcomplaint.com/cases/connecticut-attorney-general-sunrun-lawsuit",
     author: { "@type": "Organization", name: "Solar Consumer Research" },
     publisher: { "@type": "Organization", name: "Solar Consumer Research" },
+    about: [
+      { "@type": "Organization", name: "Sunrun" },
+      { "@type": "AdministrativeArea", name: "Connecticut" },
+    ],
+    relatedLink: [
+      "https://solarcomplaint.com/states/connecticut",
+      "https://solarcomplaint.com/companies/sunrun",
+    ],
   };
 
   return (
@@ -85,8 +93,9 @@ export default function ConnecticutSunrunCasePage() {
         </section>
 
         <section className="info-section">
-          <h2>Looking for Connecticut solar complaint resources?</h2>
-          <p><Link href="/#start">Choose Connecticut on the homepage</Link> to view the state-specific resource collection.</p>
+          <h2>Related Connecticut and Sunrun resources</h2>
+          <p><Link href="/states/connecticut">Connecticut solar complaint and consumer resources →</Link></p>
+          <p><Link href="/companies/sunrun">Sunrun lawsuits, investigations and consumer resources →</Link></p>
         </section>
       </InfoPage>
     </>
