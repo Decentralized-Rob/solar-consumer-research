@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { InfoPage } from "../../../components/info-page";
+import { SunrunEthicsSpotlight } from "../../../components/sunrun-ethics-spotlight";
 import { featuredStateSources } from "../../../lib/featured-state-sources";
 import { featuredResearchStory } from "../../../lib/research-stories";
 
@@ -134,13 +135,7 @@ export default function SunrunCompanyPage() {
           </p>
         </section>
 
-        <section className="info-section">
-          <h2>Sunrun ethics &amp; compliance</h2>
-          <p>
-            SolarComplaint.com maintains a separate source guide to Sunrun’s current AllVoices reporting route, Code of Business Conduct and Ethics, Whistleblower Policy, Vendor Code of Conduct, and publicly identified leadership responsibilities.
-          </p>
-          <p><Link href="/companies/sunrun/ethics-compliance">Open the Sunrun ethics and compliance guide →</Link></p>
-        </section>
+        <SunrunEthicsSpotlight context="New Sunrun research" />
 
         <section className="state-source-section" aria-labelledby="sunrun-actions-title">
           <div className="state-source-section-heading">
