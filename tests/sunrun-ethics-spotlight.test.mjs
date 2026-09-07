@@ -12,8 +12,24 @@ const env = { ASSETS: { fetch: async () => new Response("Not found", { status: 4
 const ctx = { waitUntil() {}, passThroughOnException() {} };
 const ethicsHref = "/companies/sunrun/ethics-compliance";
 
+test("uses the existing homepage Featured Research slot for the current Sunrun promotion", async () => {
+  const worker = await loadWorker();
+  const response = await worker.fetch(
+    new Request("http://localhost/", { headers: { accept: "text/html" } }),
+    env,
+    ctx,
+  );
+
+  assert.equal(response.status, 200);
+  const html = await response.text();
+  assert.match(html, /Featured Research/i);
+  assert.match(html, /Sunrun Ethics &amp; Compliance: reporting, policies and public record/i);
+  assert.match(html, new RegExp(`href=["']${ethicsHref.replaceAll("/", "\\/")}["']`, "i"));
+  assert.doesNotMatch(html, /Featured company watch/i);
+  assert.doesNotMatch(html, /New research guide/i);
+});
+
 for (const [label, path] of [
-  ["homepage", "/"],
   ["research hub", "/research"],
   ["Sunrun company hub", "/companies/sunrun"],
   ["Connecticut Sunrun case", "/cases/connecticut-attorney-general-sunrun-lawsuit"],
