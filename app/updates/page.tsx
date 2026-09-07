@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { InfoPage } from "../../components/info-page";
 import { updates as fallbackUpdates } from "../../lib/content";
 import { createSupabaseServerClient } from "../../lib/supabase/server";
@@ -44,6 +45,17 @@ export default async function UpdatesPage() {
       title="Changes in the public record."
       lede="Short summaries of program notices, consumer alerts, enforcement actions, and procedural changes."
     >
+      <section className="info-section" aria-labelledby="sunrun-research-title">
+        <h2 id="sunrun-research-title">Sunrun research</h2>
+        <p><Link href="/companies/sunrun">Sunrun lawsuits, investigations, settlements and consumer resources →</Link></p>
+        <p><Link href="/cases/connecticut-attorney-general-sunrun-lawsuit">Connecticut Attorney General lawsuit involving Sunrun →</Link></p>
+        <p><Link href="/states/connecticut">Connecticut solar complaint and consumer resources →</Link></p>
+        <p><Link href="/states/florida">Florida Sunrun roof dispute and consumer resources →</Link></p>
+        <p><Link href="/states/arizona">Arizona Sunrun settlement and consumer resources →</Link></p>
+        <p><Link href="/states/texas">Texas residential-solar investigation and consumer resources →</Link></p>
+        <p><Link href="/states/massachusetts">Massachusetts Sunrun litigation and consumer resources →</Link></p>
+      </section>
+
       <div className="updates-page-list">
         {items.map((item) => (
           <a className="updates-page-row" href={item.url} target="_blank" rel="noreferrer" key={item.id}>
