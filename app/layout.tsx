@@ -6,15 +6,6 @@ export const metadata: Metadata = {
   title: "Solar Consumer Research",
   description:
     "Verified public resources, practical guides, and updates for residential solar consumers.",
-  keywords: [
-    "residential solar consumer resources",
-    "solar consumer resources by state",
-    "solar policies by state",
-    "solar consumer protection",
-    "solar company complaints",
-    "solar financing complaint",
-    "solar public records",
-  ],
   openGraph: {
     title: "Solar Consumer Research",
     description: "Verified public resources and source-based guides for residential solar consumers.",
