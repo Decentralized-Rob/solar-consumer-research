@@ -29,7 +29,7 @@ export function StateResourcePage({ state }: { state: { code: string; name: stri
     name: consumerProtection.title,
     description: `${consumerProtection.summary} ${hasExpandedSources ? "Additional source-reviewed state resources are included." : "This page is a starting directory with one documented solar reference, not a complete state research file."}`,
     url: `https://solarcomplaint.com/states/${stateSlug(state.name)}`,
-    dateModified: titanBankruptcy ? "2026-08-28" : relatedResearch.length > 0 ? "2026-08-27" : "2026-08-21",
+    dateModified: state.code === "CT" ? "2026-09-07" : titanBankruptcy ? "2026-08-28" : relatedResearch.length > 0 ? "2026-08-27" : "2026-08-21",
     spatialCoverage: { "@type": "AdministrativeArea", name: state.name },
     about: [
       { "@type": "Thing", name: `${state.name} consumer complaint route` },
@@ -37,6 +37,10 @@ export function StateResourcePage({ state }: { state: { code: string; name: stri
       titanBankruptcy && { "@type": "Thing", name: `Titan Solar Power ${state.name}` },
     ].filter(Boolean),
     relatedLink: [
+      ...(state.code === "CT" ? [
+        "https://solarcomplaint.com/cases/connecticut-attorney-general-sunrun-lawsuit",
+        "https://solarcomplaint.com/companies/sunrun",
+      ] : []),
       ...relatedResearch.map((story) => `https://solarcomplaint.com${story.href}`),
       ...(titanBankruptcy ? [
         "https://solarcomplaint.com/cases/titan-solar-power",
@@ -178,6 +182,12 @@ export function StateResourcePage({ state }: { state: { code: string; name: stri
           <p>{displayedSolarCase.summary}</p>
           <small>{displayedSolarCase.publisher} · Source dated {displayedSolarCase.publishedAt}</small>
           <a href={displayedSolarCase.url} target="_blank" rel="noreferrer">Read the source and case details ↗</a>
+          {state.code === "CT" && (
+            <>
+              <Link href="/cases/connecticut-attorney-general-sunrun-lawsuit">Read the SolarComplaint.com Connecticut Attorney General v. Sunrun case summary →</Link>
+              <Link href="/companies/sunrun">Browse Sunrun lawsuits, investigations and consumer resources →</Link>
+            </>
+          )}
         </section>
       )}
 
