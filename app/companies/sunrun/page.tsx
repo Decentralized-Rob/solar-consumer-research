@@ -161,6 +161,7 @@ export default function SunrunCompanyPage() {
           <h3><Link href={featuredResearchStory.href}>{featuredResearchStory.title}</Link></h3>
           <p>{featuredResearchStory.deck}</p>
           <p><Link href={featuredResearchStory.href}>Read the source-backed breakdown →</Link></p>
+          <p><Link href="/research/solar-sales-financing-after-complaint">Solar Sales, Financing and What Happens After a Complaint →</Link></p>
         </section>
 
         <section className="info-section">
