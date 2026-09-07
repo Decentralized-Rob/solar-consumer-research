@@ -105,7 +105,7 @@ export function HomeHeader({
         </div>
         <a href="/about" onClick={closeMenu}>About</a>
       </nav>
-      <Link className="home-header-action" href="/#questions">Ask for free research help</Link>
+      <Link className="home-header-action" href="/#questions">Always Free Research Assistance</Link>
     </header>
   );
 }
