@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
+import styles from "./home-priority.module.css";
 
 export function HomeHeader({
   menuOpen,
@@ -23,7 +24,7 @@ export function HomeHeader({
   };
 
   return (
-    <header className="home-header">
+    <header className={`home-header ${styles.compactHeader}`}>
       <a className="home-wordmark" href="#top" aria-label="Solar Consumer Research home">
         <Image className="brand-logo" src="/brand/solar-consumer-research.svg" alt="" width={690} height={104} priority unoptimized />
       </a>
