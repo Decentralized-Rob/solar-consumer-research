@@ -1,5 +1,4 @@
 import { stateSlug, states } from "../../lib/content";
-import { featuredResearchStory } from "../../lib/research-stories";
 import type { Guide, Resource } from "../../lib/types";
 import { ArrowIcon, type State, type TopicFilter } from "./shared";
 
@@ -34,6 +33,14 @@ const standaloneGuideHrefById: Record<string, string> = {
   "organize-record": "/guides/solar-complaint-record-checklist",
   "ma-ago-complaint-guide": "/guides/massachusetts-solar-complaint",
   "ma-30-day-information": "/guides/massachusetts-30-day-demand-letter",
+};
+
+const currentFeaturedResearch = {
+  href: "/companies/sunrun/ethics-compliance",
+  meta: "Sunrun · Ethics & Compliance · September 7, 2026",
+  title: "Sunrun Ethics & Compliance: reporting, policies and public record",
+  deck: "A source-backed guide to Sunrun's current AllVoices reporting route, Code of Business Conduct and Ethics, Whistleblower Policy, Vendor Code of Conduct and related public records.",
+  caution: "This is a company research guide, not a finding of wrongdoing. Reporting systems and policies can change, so current Sunrun sources control.",
 };
 
 export function HeroSection({
@@ -155,18 +162,16 @@ export function CaseFeature() {
       <div className="home-wrap home-case-feature-grid">
         <div className="home-case-label">
           <p className="home-card-label">Featured Research</p>
-          <span>Michigan · Texas · Arizona · {featuredResearchStory.publishedAt}</span>
+          <span>{currentFeaturedResearch.meta}</span>
         </div>
         <div className="home-case-copy">
           <h2 id="case-feature-title">
-            <a href={featuredResearchStory.href}>{featuredResearchStory.title}</a>
+            <a href={currentFeaturedResearch.href}>{currentFeaturedResearch.title}</a>
           </h2>
-          <p>{featuredResearchStory.deck}</p>
-          <p className="home-case-caution">
-            Three separate state actions with different facts and procedural status, connected only where the primary records support the comparison.
-          </p>
+          <p>{currentFeaturedResearch.deck}</p>
+          <p className="home-case-caution">{currentFeaturedResearch.caution}</p>
           <div className="home-case-actions">
-            <a href={featuredResearchStory.href}>Read the source-backed breakdown →</a>
+            <a href={currentFeaturedResearch.href}>Read the featured guide →</a>
             <a href="/research">Browse research <ArrowIcon /></a>
           </div>
         </div>
