@@ -57,13 +57,17 @@ test("connects Sunrun-relevant state hubs to the company research hub", async ()
   }
 });
 
-test("uses the updates page as an internal Sunrun discovery surface", async () => {
+test("uses the updates page as an internal research discovery surface", async () => {
   const html = await render("/updates");
+  assert.match(html, /Solar Consumer Protection, Lawsuit (?:&amp;|&) Enforcement Updates/i);
   assertInternalLink(html, "/companies/sunrun");
   assertInternalLink(html, "/cases/connecticut-attorney-general-sunrun-lawsuit");
+  assertInternalLink(html, "/cases/titan-solar-power");
   assertInternalLink(html, "/states/connecticut");
   assertInternalLink(html, "/states/massachusetts");
   assertInternalLink(html, "/states/florida");
   assertInternalLink(html, "/states/texas");
   assertInternalLink(html, "/states/arizona");
+  assertInternalLink(html, "/research/solar-sales-financing-after-complaint");
+  assertInternalLink(html, "/research");
 });
