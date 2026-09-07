@@ -2,7 +2,7 @@
 
 ## Product boundary
 
-Solar Consumer Research is a public research utility for residential solar consumers. It organizes source-backed state and federal resources, documented cases, guides, and a private research-help intake.
+Solar Consumer Research is a public research utility for residential solar consumers. It organizes source-backed state and federal resources, documented cases, company research, guides, and a private research-help intake.
 
 The product does not automatically evaluate individual claims, interpret contracts, recommend legal action, draft legal documents, or connect users with attorneys, contractors, or paid service providers. Research-help submissions are reviewed by a person and are not published automatically.
 
@@ -10,6 +10,11 @@ The product does not automatically evaluate individual claims, interpret contrac
 
 ```text
 Browser
+  |
+  v
+Cloudflare Worker
+  - Vinext application runtime
+  - GET /api/search edge rate limit: 45 requests / 60 seconds / client IP
   |
   v
 React 19 application with Next-compatible routing through Vinext
@@ -38,11 +43,11 @@ Read APIs                    Submission APIs
                          - private contact requests
                          - private source submissions
                          - administrative and audit data
-
-Production runtime: Cloudflare Worker-compatible Vinext output
 ```
 
 The contact route records a valid research-help request before making a best-effort notification request through FormSubmit using the submitted email, state, city, and question. A notification failure does not discard a request that was already saved. The public privacy page identifies Supabase, FormSubmit, and Cloudflare as service providers involved in this flow.
+
+The Cloudflare Worker applies the native `SEARCH_RATE_LIMITER` binding before application routing for `GET /api/search`. The current binding allows 45 requests per 60 seconds per client IP. When the limit is exceeded, the Worker returns HTTP 429 with `Retry-After: 60` and does not forward that request to the application or Supabase.
 
 ## Trust and publishing model
 
@@ -80,7 +85,7 @@ The Supabase URL, publishable key, and Turnstile site key are public client conf
 - `lib/state-research.ts` and related research modules: structured state and research data used by public pages.
 - `lib/supabase/`: browser and server Supabase configuration and clients.
 - `supabase/migrations/`: reproducible database schema and access-control history.
-- `worker/`: Cloudflare Worker entry point for the Vinext application.
+- `worker/`: Cloudflare Worker entry point for the Vinext application and edge request controls.
 - `docs/`: architecture and operating documentation.
 
 ## Current API surface
@@ -91,11 +96,11 @@ The Supabase URL, publishable key, and Turnstile site key are public client conf
 | GET | `/api/resources?state=MA&topic=complaints` | Public | Published official resources |
 | GET | `/api/guides?state=MA` | Public | Published guides |
 | GET | `/api/updates?state=MA` | Public | Published source-backed updates |
-| GET | `/api/search?state=MA&q=financing` | Public | Full-text search across published database content |
+| GET | `/api/search?state=MA&q=financing` | Public, edge-rate-limited | Full-text search across published database content |
 | POST | `/api/contact` | Public, Turnstile protected | Store a private research-help request and attempt a team notification |
 | POST | `/api/source-submissions` | Public, Turnstile protected | Store a private proposed public-source link for review |
 
-The search endpoint exists, but the public site search interface remains intentionally disabled while the content and update process are refined.
+The search endpoint exists and is rate-limited at the Cloudflare edge, but the public site search interface remains intentionally disabled while the content and update process are refined.
 
 ## Earlier authenticated intake code
 
@@ -111,7 +116,7 @@ AI output is not treated as a source of truth. Research claims are checked again
 
 ## Verification and release controls
 
-Pull requests run the repository `Verify` workflow, which installs dependencies, runs linting, and runs the test suite. The default branch is protected by a repository ruleset requiring a pull request and the `verify` status check before changes can enter `main`.
+Pull requests run the repository `Verify` workflow, which installs dependencies, runs linting, and runs the test suite. The default branch is protected by the active `Protect Main` repository ruleset, which requires changes to enter through a pull request and requires the `verify` status check.
 
 ## Known cleanup items
 
@@ -119,4 +124,4 @@ Pull requests run the repository `Verify` workflow, which installs dependencies,
 - move editorial dates and page metadata closer to the content records they describe
 - continue separating large research datasets from page-rendering components
 - keep private submission writes behind server-side validation and access controls
-- expose the existing search infrastructure publicly only when the research update process is ready for it
+- expose a public search interface only when the research update process is ready for it
