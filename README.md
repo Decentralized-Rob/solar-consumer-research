@@ -1,12 +1,12 @@
 # Solar Consumer Research
 
-Solar Consumer Research is a public research project for residential solar consumers. It organizes official complaint routes, regulatory resources, documented cases, practical guides, and a private research-help intake by state.
+Solar Consumer Research is a public research project for residential solar consumers. It organizes official complaint routes, regulatory resources, documented cases, company research, practical guides, and a private research-help intake by state.
 
 ## What the application does
 
 - Provides an official consumer-protection starting point and documented solar reference for every state
 - Separates state resources from federal complaint and consumer-protection resources
-- Publishes source-backed research, documented cases, and practical guides
+- Publishes source-backed research, documented cases, company research, and practical guides
 - Shows the publisher and direct source for public research, with verification dates where an individual review date is recorded
 - Accepts private research-help requests with an email address, state, city or town, and a short description; no account is required
 - Uses a reviewed local content snapshot if the content API is unavailable
@@ -42,6 +42,7 @@ Public-source corrections and focused website improvements are welcome. Read [CO
 - Supabase Postgres for public research data and private intake
 - Server-side Cloudflare Turnstile verification for public submission routes
 - PostgreSQL full-text search infrastructure with weighted indexes
+- Cloudflare-native edge rate limiting for `GET /api/search` at 45 requests per 60 seconds per client IP
 - Cloudflare Worker-compatible production output
 - SQL migrations for schema, access controls, source enforcement, intake, and search
 
@@ -82,4 +83,4 @@ Migrations live in `supabase/migrations/` and should be applied in timestamp ord
 
 ## Status
 
-The public site is live at [solarcomplaint.com](https://solarcomplaint.com). State pages, federal resources, public guides, research pages, and the private research-help flow are active. Site search remains intentionally unavailable in the public interface while the underlying content and update process are refined.
+The public site is live at [solarcomplaint.com](https://solarcomplaint.com). State pages, federal resources, public guides, research pages, company and case research, and the private research-help flow are active. The public `GET /api/search` endpoint exists and is rate-limited at the Cloudflare edge, but site search remains intentionally unavailable in the public interface while the content and update process are refined.
