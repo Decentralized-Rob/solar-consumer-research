@@ -40,6 +40,7 @@ export default function SunrunContractsEditorial() {
     <InfoPage className="research-story-page" eyebrow="Editorial Analysis · September 7, 2026" title="Sunrun’s 25-Year Solar Contracts" lede="The homeowner view and the investor view are two sides of the same agreement. Sunrun’s own filings make the financial side unusually clear.">
       <nav className="case-question-links" aria-label="Breadcrumb"><Link href="/">Home</Link><Link href="/research">Research</Link><Link href="/companies/sunrun">Sunrun</Link><span aria-current="page">25-year contracts</span></nav>
       <nav className="case-question-links" aria-label="Article navigation"><a href="#term">How long?</a><a href="#homeowner">Homeowner view</a><a href="#investor">Investor view</a><a href="#transfer">Selling the home</a><a href="#questions">Contract checklist</a><a href="#sources">Primary sources</a></nav>
+      <p>This editorial looks at the same Sunrun contract from two sides: what the homeowner signs, and how Sunrun describes that long-term relationship to investors.</p>
 
       <section className="info-section case-notice"><strong>The key fact</strong><p>Sunrun tells the SEC that its Customer Agreements, meaning solar leases and power purchase agreements, typically have initial terms of 20 or 25 years. Its 2025 Form 10-K also says rates can be fixed for the contract term or increase at a predetermined annual percentage.</p></section>
 
