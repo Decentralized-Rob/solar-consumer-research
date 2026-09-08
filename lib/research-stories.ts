@@ -15,6 +15,20 @@ export type ResearchStory = {
 
 export const researchStories: ResearchStory[] = [
   {
+    id: "sunrun-sales-training-consumer-protection",
+    slug: "sunrun-sales-training-consumer-protection",
+    href: "/research/sunrun-sales-training-consumer-protection",
+    title: "Sunrun Sales Training, Ethics and Consumer Protection: 2015-2026",
+    deck: "Sunrun's filings document years of sales training and consumer-protection controls. The public record also exposes Power Play 2.0, later RunX onboarding, a SUNRUN Way sales process and a new 2026 Sales Integrity Program, with important limits on what can be connected across those eras.",
+    summary: "A source-backed timeline of Sunrun direct-sales training, consumer-protection rules, Power Play 2.0, the Sales Code of Conduct, RunX, SUNRUN Way and the 2026 Sales Integrity Program.",
+    publishedAt: "September 8, 2026",
+    datePublished: "2026-09-08",
+    dateModified: "2026-09-08",
+    stateCodes: [],
+    companies: ["Sunrun"],
+    topics: ["Sunrun sales training", "sales ethics", "consumer protection", "Power Play 2.0", "RunX", "SUNRUN Way"],
+  },
+  {
     id: "sunrun-25-year-solar-contracts",
     slug: "sunrun-25-year-solar-contracts",
     href: "/research/sunrun-25-year-solar-contracts",
