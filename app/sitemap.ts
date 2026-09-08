@@ -32,7 +32,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   return [
     { url: baseUrl, lastModified: new Date("2026-08-27"), changeFrequency: "weekly", priority: 1 },
-    { url: `${baseUrl}/research`, lastModified: new Date("2026-08-27"), changeFrequency: "weekly", priority: 0.95 },
+    { url: `${baseUrl}/research`, lastModified: new Date("2026-09-08"), changeFrequency: "weekly", priority: 0.95 },
     ...researchPages,
     { url: `${baseUrl}/companies/sunrun`, lastModified: new Date("2026-09-06"), changeFrequency: "weekly", priority: 0.9 },
     { url: `${baseUrl}/companies/sunrun/ethics-compliance`, lastModified: new Date("2026-09-07"), changeFrequency: "weekly", priority: 0.95 },
