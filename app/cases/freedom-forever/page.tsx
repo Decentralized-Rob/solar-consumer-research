@@ -130,8 +130,7 @@ export default function FreedomForeverHub() {
         "@id": `${canonicalUrl}#breadcrumb`,
         itemListElement: [
           { "@type": "ListItem", position: 1, name: "Home", item: "https://solarcomplaint.com/" },
-          { "@type": "ListItem", position: 2, name: "Cases", item: "https://solarcomplaint.com/cases" },
-          { "@type": "ListItem", position: 3, name: "Freedom Forever", item: canonicalUrl },
+          { "@type": "ListItem", position: 2, name: "Freedom Forever", item: canonicalUrl },
         ],
       },
       {
@@ -242,7 +241,7 @@ export default function FreedomForeverHub() {
                 <ExternalLink href="https://www.reuters.com/sustainability/climate-energy/us-rooftop-solar-installers-cut-jobs-restructure-homeowner-subsidy-expires-2026-02-05/">Reuters · Feb. 5 ↗</ExternalLink>
                 <ExternalLink href="https://www.solarpowerworldonline.com/2026/04/residential-solar-installer-freedom-forever-files-bankruptcy/">Solar Power World · Apr. 15 ↗</ExternalLink>
                 <ExternalLink href="https://www.latitudemedia.com/news/what-freedom-forevers-bankruptcy-says-about-residential-solar-today/">Latitude Media · June 1 ↗</ExternalLink>
-                <ExternalLink href="https://chapter11cases.com/blogs/news/project-sunshine-freedom-forever-pivots-from-survival-to-sale">Stretto · June 21 ↗</ExternalLink>
+                <ExternalLink href="https://chapter11cases.com/blogs/news/project-sunshine-freedom-forever-pivots-from-survival-to-sale">Stretto Intelligence · June 21 ↗</ExternalLink>
               </div>
             </aside>
           </div>
@@ -270,7 +269,7 @@ export default function FreedomForeverHub() {
         <section className="ff-section ff-muted" id="finance-partners">
           <div className="ff-section-heading">
             <div><p>Stranded projects</p><h2>Financing partners are part of the next chapter.</h2></div>
-            <span>September 9 reporting says the bankruptcy court granted former financing partners relief allowing contractual remedies on unfinished projects. The exact path still depends on the homeowner's agreement.</span>
+            <span>September 9 reporting says the bankruptcy court granted former financing partners relief allowing contractual remedies on unfinished projects. The exact path still depends on the homeowner&apos;s agreement.</span>
           </div>
           <div className="ff-partner-grid">
             {financePartners.map((partner) => <div className="ff-partner" key={partner}><span>Reported finance / project partner</span><strong>{partner}</strong></div>)}
@@ -292,7 +291,7 @@ export default function FreedomForeverHub() {
             <i>→</i>
             <div><small>Money / ownership</small><strong>Lender or system owner</strong><p>May control financing, lease, PPA or post-bankruptcy project decisions.</p></div>
           </div>
-          <p className="ff-source-note">The dealer structure is documented in Freedom Forever's historical dealer materials and bankruptcy reporting. A dedicated dealer-network investigation is part of this series.</p>
+          <p className="ff-source-note">The dealer structure is documented in Freedom Forever&apos;s historical dealer materials and bankruptcy reporting. A dedicated dealer-network investigation is part of this series.</p>
         </section>
 
         <section className="ff-section" id="warranty-service">
@@ -314,7 +313,7 @@ export default function FreedomForeverHub() {
             <span>These are government records, not crowdsourced complaints. Each state action has a different posture and should be read on its own terms.</span>
           </div>
           <div className="ff-reg-grid">
-            <ExternalLink href={californiaOrderUrl} className="ff-reg-card"><small>California</small><h3>Contractor disciplinary order</h3><p>CSLB stipulated settlement and disciplinary order involving Freedom Forever's contractor license.</p><b>Open official order ↗</b></ExternalLink>
+            <ExternalLink href={californiaOrderUrl} className="ff-reg-card"><small>California</small><h3>Contractor disciplinary order</h3><p>CSLB stipulated settlement and disciplinary order involving Freedom Forever&apos;s contractor license.</p><b>Open official order ↗</b></ExternalLink>
             <ExternalLink href={texasAgUrl} className="ff-reg-card"><small>Texas</small><h3>2026 solar investigation</h3><p>The Attorney General named Freedom Forever among companies receiving Civil Investigative Demands.</p><b>Open AG announcement ↗</b></ExternalLink>
             <ExternalLink href={massSmartUrl} className="ff-reg-card"><small>Massachusetts</small><h3>SMART compliance history</h3><p>State records say Freedom Forever previously received warnings and remedied the identified instances by January 31, 2023.</p><b>Open state record ↗</b></ExternalLink>
           </div>
@@ -346,7 +345,7 @@ export default function FreedomForeverHub() {
           </div>
           <div className="ff-preferred-action">
             <div {...preferredSourceAttributes} />
-            <small>Google's official Preferred Sources control</small>
+            <small>Google&apos;s official Preferred Sources control</small>
           </div>
         </section>
       </main>
