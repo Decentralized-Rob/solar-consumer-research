@@ -5,7 +5,7 @@ const productTitle = /<title>Solar Complaints and Consumer Resources \| Solar Co
 const productDescription =
   /<meta(?=[^>]*\bname=["']description["'])(?=[^>]*\bcontent=["']Find official solar complaint channels, source-backed research, lawsuits, investigations, public records, and consumer resources by state\.["'])[^>]*>/i;
 const featuredResearchTitle = /Solar Sales, Financing and What Happens After a Complaint/i;
-const researchMenuTitle = /Solar Sales &amp; Financing/i;
+const researchMenuTitle = /Solar Sales, Financing and What Happens After a Complaint/i;
 
 async function loadWorker() {
   const workerUrl = new URL("../dist/server/index.js", import.meta.url);
