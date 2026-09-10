@@ -20,24 +20,20 @@ export type PublishedDestination = {
   };
 };
 
-const solarSalesFinancingStory = researchStories.find(
-  (story) => story.id === "solar-sales-financing-after-complaint",
-);
-
-if (!solarSalesFinancingStory) {
-  throw new Error("Missing solar-sales-financing-after-complaint research story");
-}
+const researchStoryMenuDestinations: PublishedDestination[] = researchStories
+  .filter((story) => story.showInResearchMenu || story.researchMenuOrder !== undefined)
+  .map((story) => ({
+    id: story.id,
+    href: story.href,
+    title: story.title,
+    kind: "research" as const,
+    published: true,
+    menuLabel: story.title,
+    researchMenuOrder: story.researchMenuOrder,
+  }));
 
 export const publishedDestinations: PublishedDestination[] = [
-  {
-    id: solarSalesFinancingStory.id,
-    href: solarSalesFinancingStory.href,
-    title: solarSalesFinancingStory.title,
-    kind: "research",
-    published: true,
-    menuLabel: "Solar Sales & Financing",
-    researchMenuOrder: 10,
-  },
+  ...researchStoryMenuDestinations,
   {
     id: "sunrun",
     href: "/companies/sunrun",
@@ -120,6 +116,14 @@ function validatePublishedDestinations() {
   const ids = new Set<string>();
   const hrefs = new Set<string>();
   const menuOrders = new Set<number>();
+
+  for (const story of researchStories) {
+    const hasMenuFlag = Boolean(story.showInResearchMenu);
+    const hasMenuOrder = story.researchMenuOrder !== undefined;
+    if (hasMenuFlag !== hasMenuOrder) {
+      throw new Error(`Research story menu metadata needs both opt-in and order: ${story.id}`);
+    }
+  }
 
   for (const item of publishedDestinations) {
     if (ids.has(item.id)) throw new Error(`Duplicate published destination id: ${item.id}`);
