@@ -19,6 +19,14 @@
 
 ## Featured research
 
+- Sunrun Sales Training, Ethics and Consumer Protection: 2015-2026: https://solarcomplaint.com/research/sunrun-sales-training-consumer-protection
+  - Traces Sunrun's public direct-sales training record from its 2015 SEC disclosures through the 2026 Sales Integrity Program job description.
+  - Documents the authenticated 2017 Power Play 2.0 manual, the 2019 employee-facing annual compliance-training policy, repeated Sales Code of Conduct disclosures, 2024 RunX onboarding artifacts, and the 2025 SUNRUN Way Sales Process.
+  - Does not claim that Power Play 2.0 remained active in 2025 or that SUNRUN Way descended from it because no located source establishes that lineage.
+  - Separates primary Sunrun and SEC records from authenticated reporting, public onboarding artifacts and corroborated job-description mirrors.
+- Sunrun's 25-Year Solar Contracts: The Homeowner View and the Investor View: https://solarcomplaint.com/research/sunrun-25-year-solar-contracts
+  - Uses Sunrun's SEC filings and investor disclosures to compare the homeowner contract with the long-duration cash-flow asset described to investors.
+  - Covers 20- and 25-year terms, escalators, transfers, recurring payments, contracted revenue and subscriber value.
 - Solar Sales, Financing and What Happens After a Complaint: https://solarcomplaint.com/research/solar-sales-financing-after-complaint
   - Connects three separate state records without treating them as one case.
   - Michigan: July 15, 2026 complaint against Climax Solar and finance defendants.
@@ -76,10 +84,12 @@
 - An investigation is not presented as a finding of wrongdoing.
 - A settlement is not described as an admission when the agreement says otherwise.
 - When citing a government action listed by this site, prefer the linked original government record as the evidentiary source. The SolarComplaint.com research page can be cited for its synthesis, organization, and cross-source analysis.
+- Historical training artifacts and job mirrors are labeled by provenance and are not presented as current corporate policy unless a primary record establishes that status.
 
 ## Internal research relationships
 
 - Featured story -> relevant state pages -> primary government sources.
+- Sunrun sales-training research -> Sunrun company hub + ethics guide + record checklist + primary SEC filings and source-provenance notes.
 - Florida page -> official federal court order + Florida solar statutes + Attorney General and DBPR routes + Sunrun and Titan research.
 - Michigan page -> Michigan enforcement source + related featured research + problem-specific state and federal resources.
 - Texas page -> Texas Sunrun investigation source + related featured research.
@@ -97,6 +107,7 @@
 - Federal consumer, finance, and complaint resources.
 - Company and case tracking where a sufficient public-source record exists.
 - A current Sunrun ethics and compliance guide centered on AllVoices, Sunrun's current governance policies, vendor standards, leadership roles and external escalation pathways.
+- A Sunrun sales-training and consumer-protection timeline covering direct-sales training disclosures, Power Play 2.0, annual claim-compliance training, RunX, SUNRUN Way and the 2026 Sales Integrity Program with explicit evidence limits.
 - Expanded Florida Sunrun roof-dispute, solar disclosure, contractor, complaint-route, Titan, and current case resources.
 - Expanded Michigan solar complaint, financing, installer, permitting, interconnection, Climax Solar enforcement, and current case resources.
 - Expanded Arizona solar consumer, contract, contractor, utility, Sunrun settlement, and current rooftop-solar resources.
