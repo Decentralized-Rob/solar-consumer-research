@@ -116,6 +116,42 @@ export const publishedDestinations: PublishedDestination[] = [
   },
 ];
 
+function validatePublishedDestinations() {
+  const ids = new Set<string>();
+  const hrefs = new Set<string>();
+  const menuOrders = new Set<number>();
+
+  for (const item of publishedDestinations) {
+    if (ids.has(item.id)) throw new Error(`Duplicate published destination id: ${item.id}`);
+    if (hrefs.has(item.href)) throw new Error(`Duplicate published destination href: ${item.href}`);
+    if (!item.href.startsWith("/")) throw new Error(`Published destination must use an internal path: ${item.href}`);
+
+    ids.add(item.id);
+    hrefs.add(item.href);
+
+    const hasMenuLabel = Boolean(item.menuLabel);
+    const hasMenuOrder = item.researchMenuOrder !== undefined;
+    if (hasMenuLabel !== hasMenuOrder) {
+      throw new Error(`Research menu destination needs both label and order: ${item.id}`);
+    }
+    if (item.researchMenuOrder !== undefined) {
+      if (menuOrders.has(item.researchMenuOrder)) {
+        throw new Error(`Duplicate Research menu order: ${item.researchMenuOrder}`);
+      }
+      menuOrders.add(item.researchMenuOrder);
+    }
+
+    if (item.showInTrackerDiscovery && !item.trackerLabel) {
+      throw new Error(`Tracker discovery destination needs a label: ${item.id}`);
+    }
+    if (item.sitemap && (item.sitemap.priority < 0 || item.sitemap.priority > 1)) {
+      throw new Error(`Invalid sitemap priority for ${item.id}`);
+    }
+  }
+}
+
+validatePublishedDestinations();
+
 export function getResearchMenuItems() {
   return publishedDestinations
     .filter(
