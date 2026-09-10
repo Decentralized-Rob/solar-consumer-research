@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { InfoPage } from "../../../components/info-page";
 import { AccountPanel } from "../../../components/account-panel";
 
@@ -87,6 +88,7 @@ export default function MaineHubPage() {
           </div>
           <div>
             <p>WGME reported in August 2026 that customers were trying to determine what service and warranty coverage remained after the installer entered liquidation. The story reports that the Maine Attorney General had received 72 Freedom Forever complaints since 2023.</p>
+            <p><Link href="/cases/freedom-forever">Freedom Forever bankruptcy, Chapter 7 and customer-help research →</Link></p>
             <a href={sources.wgmeFreedom} target="_blank" rel="noreferrer">Read the reporting ↗</a>
           </div>
         </section>
