@@ -100,7 +100,7 @@ export default function FreedomForeverWhatHappened() {
           <span aria-current="page">What happened</span>
         </nav>
 
-        <p className="ff-article-kicker">Freedom Forever investigation · Story 04 of 06</p>
+        <p className="ff-article-kicker">Freedom Forever investigation · Story 01 of 06</p>
         <h1>What Happened to Freedom Forever? From National Solar Installer to Chapter 7</h1>
         <p className="ff-article-deck">
           This 2026 bankruptcy timeline follows the public record from Freedom Forever&apos;s market exits and layoffs through Chapter 11, an unsuccessful sale process and Chapter 7 liquidation.
@@ -216,7 +216,7 @@ export default function FreedomForeverWhatHappened() {
 
           <div className="ff-article-return">
             <span>Freedom Forever research</span>
-            <strong>This is Story 04 in the six-part Freedom Forever source project.</strong>
+            <strong>This is Story 01 in the six-part Freedom Forever source project.</strong>
             <Link href="/cases/freedom-forever">Return to the Freedom Forever hub →</Link>
           </div>
         </article>
