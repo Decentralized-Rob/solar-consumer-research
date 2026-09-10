@@ -149,6 +149,7 @@ export default function TitanSolarPowerPage() {
             <Link className="tt-button tt-button-secondary" href="/cases/titan-solar-power/warranty-after-bankruptcy">Check Titan warranty coverage</Link>
           </div>
           <p>In Arizona, the state resource page also covers contractor complaints, Attorney General complaints and utility issues: <Link href="/states/arizona">Arizona solar complaint and consumer resources →</Link></p>
+          <p>Researching a different installer bankruptcy? <Link href="/cases/freedom-forever">Freedom Forever bankruptcy, Chapter 7 and customer-help research →</Link></p>
         </section>
 
         <section className="tt-section tt-muted" id="tt-resources">
