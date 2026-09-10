@@ -1,7 +1,6 @@
 "use client";
 
 import Script from "next/script";
-import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import styles from "./google-preferred-source.module.css";
 
@@ -23,17 +22,6 @@ function shouldShowPreferredSource(pathname: string) {
 export function GooglePreferredSource() {
   const pathname = usePathname();
   const shouldShow = shouldShowPreferredSource(pathname);
-  const [hasActivated, setHasActivated] = useState(shouldShow);
-
-  useEffect(() => {
-    if (shouldShow) setHasActivated(true);
-  }, [shouldShow]);
-
-  // Google's standard control initializes when its publisher script scans the DOM.
-  // Once initialized in a client-side session, keep the control mounted and only
-  // hide its wrapper on non-target routes so navigation away and back cannot
-  // leave a fresh control waiting on a script that Next.js has already loaded.
-  if (!hasActivated) return null;
 
   const preferredSourceAttributes = {
     "google-add-preferred-source-btn": "",
