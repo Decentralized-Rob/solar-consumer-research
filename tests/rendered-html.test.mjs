@@ -5,6 +5,7 @@ const productTitle = /<title>Solar Complaints and Consumer Resources \| Solar Co
 const productDescription =
   /<meta(?=[^>]*\bname=["']description["'])(?=[^>]*\bcontent=["']Find official solar complaint channels, source-backed research, lawsuits, investigations, public records, and consumer resources by state\.["'])[^>]*>/i;
 const featuredResearchTitle = /Solar Sales, Financing and What Happens After a Complaint/i;
+const researchMenuTitle = /Solar Sales &amp; Financing/i;
 
 async function loadWorker() {
   const workerUrl = new URL("../dist/server/index.js", import.meta.url);
@@ -41,7 +42,7 @@ test("renders product metadata and prominent featured research", async () => {
   assert.match(html, productTitle);
   assert.match(html, productDescription);
   assert.match(html, /Featured Research/i);
-  assert.match(html, featuredResearchTitle);
+  assert.match(html, researchMenuTitle);
   assert.match(html, /href=["']\/research\/solar-sales-financing-after-complaint["']/i);
 });
 
