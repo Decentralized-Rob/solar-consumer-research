@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { InfoPage } from "../../components/info-page";
 import { updates as fallbackUpdates } from "../../lib/content";
-import { getUpdateTrackerItems } from "../../lib/published-destinations";
+import { getTrackerDiscoveryItems } from "../../lib/published-destinations";
 import { featuredResearchStory } from "../../lib/research-stories";
 import { createSupabaseServerClient } from "../../lib/supabase/server";
 import type { Update } from "../../lib/types";
@@ -46,7 +46,7 @@ async function loadUpdates(): Promise<Update[]> {
 
 export default async function UpdatesPage() {
   const items = await loadUpdates();
-  const companyCaseTrackers = getUpdateTrackerItems();
+  const companyCaseTrackers = getTrackerDiscoveryItems();
 
   return (
     <InfoPage
