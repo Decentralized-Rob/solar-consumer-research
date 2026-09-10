@@ -2,7 +2,7 @@ import { InfoPage } from "../../components/info-page";
 
 export const metadata = {
   title: "Methodology | Solar Consumer Research",
-  description: "How Solar Consumer Research selects sources, verifies facts, labels editorial work, and maintains published residential solar research.",
+  description: "How Solar Consumer Research selects sources, verifies facts, and maintains published residential solar research.",
   alternates: { canonical: "/methodology" },
   openGraph: { url: "/methodology" },
 };
@@ -12,7 +12,7 @@ export default function MethodologyPage() {
     <InfoPage
       eyebrow="Research methodology"
       title="How information is selected, verified, and published."
-      lede="The site is built around primary records, a clear source hierarchy, visible editorial labels, and review before publication."
+      lede="The site is built around primary records, a clear source hierarchy, and review before publication."
     >
       <section className="info-section">
         <h2>Source priority</h2>
@@ -23,15 +23,6 @@ export default function MethodologyPage() {
           <li>Independent reporting for context when it adds useful information without replacing the controlling primary record</li>
         </ul>
         <p>Facebook, Reddit, complaint sites, and other user-generated material may identify a topic worth researching, but they are not treated as proof of a public factual claim.</p>
-      </section>
-      <section className="info-section">
-        <h2>Editorial labels</h2>
-        <ul>
-          <li><strong>Reporting</strong> presents sourced facts, records, and developments.</li>
-          <li><strong>Analysis</strong> connects records, explains context, and draws supported conclusions from the available evidence.</li>
-          <li><strong>Commentary</strong> presents a clearly identified author viewpoint and is labeled as opinion.</li>
-        </ul>
-        <p>Factual assertions should remain traceable to identifiable sources regardless of format. Allegations, investigations, settlements, dismissals, orders, and findings are described according to their actual procedural status.</p>
       </section>
       <section className="info-section">
         <h2>Publication controls</h2>
