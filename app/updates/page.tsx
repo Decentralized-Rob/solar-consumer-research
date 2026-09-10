@@ -56,6 +56,7 @@ export default async function UpdatesPage() {
         <p><Link href="/companies/sunrun">Sunrun lawsuits, investigations, settlements and consumer resources →</Link></p>
         <p><Link href="/cases/connecticut-attorney-general-sunrun-lawsuit">Connecticut Attorney General lawsuit involving Sunrun →</Link></p>
         <p><Link href="/cases/titan-solar-power">Titan Solar Power bankruptcy, closure and customer-help tracker →</Link></p>
+        <p><Link href="/cases/freedom-forever">Freedom Forever bankruptcy, Chapter 7 and customer-help tracker →</Link></p>
       </section>
 
       <section className="info-section" aria-labelledby="state-research-hubs-title">
@@ -71,6 +72,7 @@ export default async function UpdatesPage() {
         <h2 id="featured-research-title">Featured research</h2>
         <p><Link href={featuredResearchStory.href}>{featuredResearchStory.title} →</Link></p>
         <p>{featuredResearchStory.deck}</p>
+        <p><Link href="/cases/freedom-forever/what-happened">What happened to Freedom Forever? 2026 bankruptcy timeline →</Link></p>
         <p><Link href="/research/solar-sales-financing-after-complaint">Solar Sales, Financing and What Happens After a Complaint →</Link></p>
         <p><Link href="/research">Browse all source-backed solar consumer research →</Link></p>
       </section>
