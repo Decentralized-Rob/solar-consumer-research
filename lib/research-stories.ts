@@ -11,6 +11,8 @@ export type ResearchStory = {
   stateCodes: string[];
   companies: string[];
   topics: string[];
+  showInResearchMenu?: boolean;
+  researchMenuOrder?: number;
 };
 
 export const researchStories: ResearchStory[] = [
@@ -41,6 +43,8 @@ export const researchStories: ResearchStory[] = [
     stateCodes: ["MI", "TX", "AZ"],
     companies: ["Climax Solar", "Sunrun", "Vivint Solar"],
     topics: ["solar sales", "solar financing", "consumer complaints", "state enforcement"],
+    showInResearchMenu: true,
+    researchMenuOrder: 10,
   },
 ];
 
