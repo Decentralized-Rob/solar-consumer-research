@@ -2,7 +2,7 @@ import { InfoPage } from "../../components/info-page";
 
 export const metadata = {
   title: "Methodology | Solar Consumer Research",
-  description: "How Solar Consumer Research selects, verifies, labels, and maintains public-source information.",
+  description: "How Solar Consumer Research selects sources, verifies facts, labels editorial work, and maintains published residential solar research.",
   alternates: { canonical: "/methodology" },
   openGraph: { url: "/methodology" },
 };
@@ -11,32 +11,43 @@ export default function MethodologyPage() {
   return (
     <InfoPage
       eyebrow="Research methodology"
-      title="How information is selected and verified."
-      lede="The site is designed around original sources, clear labels, and visible verification dates."
+      title="How information is selected, verified, and published."
+      lede="The site is built around primary records, a clear source hierarchy, visible editorial labels, and review before publication."
     >
       <section className="info-section">
         <h2>Source priority</h2>
         <ul>
-          <li>Government agencies, regulators, courts, and official state programs</li>
-          <li>Original forms, rules, notices, enforcement records, and public guidance</li>
-          <li>Clearly identified institutional complaint channels, such as BBB, when relevant</li>
+          <li>Government agencies, regulators, courts, statutes, regulations, filed complaints, orders, judgments, and official state programs</li>
+          <li>Original forms, notices, enforcement records, licensing records, and public guidance from the responsible institution</li>
+          <li>Company filings and statements when they are relevant and clearly identified as company material</li>
+          <li>Independent reporting for context when it adds useful information without replacing the controlling primary record</li>
         </ul>
+        <p>Facebook, Reddit, complaint sites, and other user-generated material may identify a topic worth researching, but they are not treated as proof of a public factual claim.</p>
+      </section>
+      <section className="info-section">
+        <h2>Editorial labels</h2>
+        <ul>
+          <li><strong>Reporting</strong> presents sourced facts, records, and developments.</li>
+          <li><strong>Analysis</strong> connects records, explains context, and draws supported conclusions from the available evidence.</li>
+          <li><strong>Commentary</strong> presents a clearly identified author viewpoint and is labeled as opinion.</li>
+        </ul>
+        <p>Factual assertions should remain traceable to identifiable sources regardless of format. Allegations, investigations, settlements, dismissals, orders, and findings are described according to their actual procedural status.</p>
       </section>
       <section className="info-section">
         <h2>Publication controls</h2>
-        <p>Content moves through draft, review, and published states. A record must include its original URL, publisher, source type, state coverage, and last verification date before publication.</p>
+        <p>Content moves through draft, review, and published states. Public-source material should include the original URL, publisher, source type, relevant jurisdiction or state coverage, and last verification date before publication.</p>
       </section>
       <section className="info-section">
         <h2>How AI is used</h2>
-        <p>AI may help locate and organize public records or prepare a draft. Before anything is published, the editor opens the original source, checks the description against it, and decides whether the record meets the site’s standards. AI output is never used as evidence.</p>
+        <p>AI may help locate and organize public records or prepare a draft. Before anything is published, the editor reviews the underlying sources, checks factual claims against them, and decides whether the work meets the site’s standards. AI output is never used as evidence.</p>
       </section>
       <section className="info-section">
         <h2>What “verified” means</h2>
-        <p>Verified means the linked source was checked and the site description was compared with what that source published on the listed date. It does not mean that an agency will accept a particular complaint or produce a particular result.</p>
+        <p>Verified means the cited source was checked and the site’s description or factual use of that source was compared with what the publisher made available on the listed date. It does not mean that an agency will accept a particular complaint or produce a particular result.</p>
       </section>
       <section className="info-section">
         <h2>Boundaries</h2>
-        <p>The site reports and organizes public information. It does not evaluate personal claims, interpret contracts, calculate damages, recommend allegations, determine that conduct was unlawful, or predict what an agency or court may decide.</p>
+        <p>The site publishes and analyzes public information. It does not evaluate personal claims, interpret contracts, calculate damages, recommend allegations, determine that conduct was unlawful, or predict what an agency or court may decide.</p>
       </section>
       <section className="info-section">
         <h2>Public source corrections</h2>
