@@ -197,6 +197,19 @@ button, select { font: inherit; }
 .google-auth-button { display: flex; width: 100%; min-height: 46px; align-items: center; justify-content: center; gap: 10px; margin-top: 18px; border: 1px solid #ccd1cc; border-radius: 9px; background: white; color: #243127; font-size: 12px; font-weight: 800; cursor: pointer; }
 .google-auth-button span { display: grid; width: 20px; height: 20px; place-items: center; border-radius: 50%; background: #eef1ee; color: #3567c7; font-family: Arial, sans-serif; font-size: 13px; }
 .turnstile-widget { min-height: 65px; margin-top: 16px; }
+
+.link-submission-form { display: flex; flex-direction: column; gap: 9px; margin-top: 24px; padding: 24px; border: 1px solid var(--line); border-radius: 14px; background: var(--white); }
+.link-submission-form label { color: var(--ink); font-size: 12px; font-weight: 800; }
+.link-submission-form label span { color: var(--muted); font-weight: 500; }
+.link-submission-form input, .link-submission-form textarea { width: 100%; border: 1px solid #bfc3ba; border-radius: 10px; background: white; color: var(--ink); font: inherit; }
+.link-submission-form input { height: 48px; padding: 0 14px; }
+.link-submission-form textarea { min-height: 140px; padding: 13px 14px; resize: vertical; line-height: 1.5; }
+.link-submission-form input::placeholder { color: #767d76; }
+.link-submission-form .form-message { color: #8a2f23; }
+.link-submission-confirmation { display: grid; gap: 11px; margin-top: 24px; padding: 24px; border: 1px solid var(--line); border-radius: 14px; background: var(--white); }
+.link-submission-confirmation strong { font-family: Georgia, serif; font-size: 22px; font-weight: 500; }
+.link-submission-confirmation p { margin: 0; color: var(--muted); font-size: 13px; line-height: 1.6; }
+.link-submission-confirmation button { width: fit-content; padding: 0; border: 0; background: transparent; color: var(--green); font-size: 12px; font-weight: 800; text-decoration: underline; text-underline-offset: 4px; cursor: pointer; }
 .updates-preference { display: flex; align-items: center; justify-content: space-between; gap: 18px; margin-top: 18px; padding: 12px 14px; background: rgba(255, 255, 255, 0.07); color: #dce7de; font-size: 11px; }
 .updates-preference button { padding: 0; border: 0; background: transparent; color: var(--sun); font-size: 11px; font-weight: 800; cursor: pointer; }
 .button:disabled { cursor: wait; opacity: 0.65; }
