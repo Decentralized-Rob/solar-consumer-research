@@ -35,7 +35,7 @@ export const publishedDestinations: PublishedDestination[] = [
     title: solarSalesFinancingStory.title,
     kind: "research",
     published: true,
-    menuLabel: "Solar Sales & Financing",
+    menuLabel: "Solar Sales & Financing: What Happens After a Complaint",
     researchMenuOrder: 10,
   },
   {
