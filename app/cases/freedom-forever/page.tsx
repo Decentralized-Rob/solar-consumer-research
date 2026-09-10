@@ -58,24 +58,24 @@ const financePartners = ["Credit Human", "EnFin", "EverBright", "GoodLeap", "Par
 const stories = [
   {
     number: "01",
+    title: "What Happened to Freedom Forever? From National Solar Installer to Chapter 7",
+    status: "Published",
+    href: "/cases/freedom-forever/what-happened",
+  },
+  {
+    number: "02",
     title: "Before the Bankruptcy: The Freedom Forever Warning Signs Were Already Public",
     status: "Research queue",
   },
   {
-    number: "02",
+    number: "03",
     title: "Freedom Forever Solar Loans: Years of Homeowner Disputes Before the Collapse",
     status: "Research queue",
   },
   {
-    number: "03",
+    number: "04",
     title: "Inside the Freedom Forever Dealer Network: Who Actually Sold the Solar System?",
     status: "Research queue",
-  },
-  {
-    number: "04",
-    title: "What Happened to Freedom Forever? From National Solar Installer to Chapter 7",
-    status: "Published",
-    href: "/cases/freedom-forever/what-happened",
   },
   {
     number: "05",
@@ -223,7 +223,7 @@ export default function FreedomForeverHub() {
         </section>
 
         <section className="ff-section ff-featured" id="featured-investigation">
-          <div className="ff-featured-label"><span>Featured investigation</span><b>Story 04 of 06</b></div>
+          <div className="ff-featured-label"><span>Featured investigation</span><b>Story 01 of 06</b></div>
           <div className="ff-featured-grid">
             <div>
               <p className="ff-eyebrow">Published September 9, 2026</p>
