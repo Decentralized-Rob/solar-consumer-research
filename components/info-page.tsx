@@ -23,7 +23,7 @@ export function InfoPage({
         <Link className="wordmark" href="/" aria-label="Solar Consumer Research home">
           <Image className="brand-logo" src="/brand/solar-consumer-research.svg" alt="" width={690} height={104} unoptimized />
         </Link>
-        <Link className="info-back" href="/">Back to the library</Link>
+        <Link className="info-back" href="/">Back to home</Link>
       </header>
       <main className="info-main">
         <p className="eyebrow">{eyebrow}</p>
