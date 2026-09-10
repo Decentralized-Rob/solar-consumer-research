@@ -19,10 +19,6 @@ export default function AboutPage() {
         <p>We publish source-backed research, reporting, analysis, commentary, practical consumer resources, and primary-source records. Coverage includes government enforcement, litigation, corporate policies, financing, complaint systems, and other documented residential-solar issues.</p>
       </section>
       <section className="info-section">
-        <h2>How editorial work is labeled</h2>
-        <p>Reporting describes sourced facts and developments. Analysis connects records and explains context. Commentary presents a clearly labeled author viewpoint. Factual claims remain tied to identifiable sources, and allegations, investigations, settlements, and findings are treated as different things.</p>
-      </section>
-      <section className="info-section">
         <h2>What it is independent from</h2>
         <p>The project is not a solar company, government agency, law firm, contractor directory, or paid referral network. It does not represent consumers or decide whether a person or company acted unlawfully. Companies cannot pay for placement or a preferred position.</p>
       </section>
@@ -32,7 +28,7 @@ export default function AboutPage() {
       </section>
       <section className="info-section">
         <h2>Editorial responsibility</h2>
-        <p>Solar Consumer Research is independently operated. AI may assist with research and implementation, but source selection, editorial judgment, review, and publication remain human-owned. Published work is subject to the site’s methodology and correction process.</p>
+        <p>Solar Consumer Research is independently operated. Published work is reviewed against its underlying sources and maintained through the site’s methodology and correction process.</p>
       </section>
     </InfoPage>
   );
