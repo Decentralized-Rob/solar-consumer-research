@@ -51,6 +51,30 @@ test("published Research menu destinations are unique and resolve", async () => 
   }
 });
 
+test("published tracker destinations stay synchronized across discovery pages", async () => {
+  const worker = await loadWorker();
+  const research = await fetchHtml(worker, "/research");
+  const updates = await fetchHtml(worker, "/updates");
+
+  assert.equal(research.response.status, 200);
+  assert.equal(updates.response.status, 200);
+
+  const trackerHrefs = [
+    "/companies/sunrun",
+    "/companies/sunrun/ethics-compliance",
+    "/cases/freedom-forever",
+    "/cases/titan-solar-power",
+    "/cases/connecticut-attorney-general-sunrun-lawsuit",
+  ];
+
+  for (const href of trackerHrefs) {
+    const escapedHref = href.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    const linkPattern = new RegExp(`href=["']${escapedHref}["']`, "i");
+    assert.match(research.html, linkPattern, `${href} should be discoverable from /research`);
+    assert.match(updates.html, linkPattern, `${href} should be discoverable from /updates`);
+  }
+});
+
 test("major published destination sitemap URLs are emitted once", async () => {
   const worker = await loadWorker();
   const response = await worker.fetch(new Request("http://localhost/sitemap.xml"), env, ctx);
@@ -59,6 +83,7 @@ test("major published destination sitemap URLs are emitted once", async () => {
   const sitemap = await response.text();
   const urls = [
     "https://solarcomplaint.com/companies/sunrun",
+    "https://solarcomplaint.com/companies/sunrun/ethics-compliance",
     "https://solarcomplaint.com/cases/freedom-forever",
     "https://solarcomplaint.com/cases/titan-solar-power",
     "https://solarcomplaint.com/cases/connecticut-attorney-general-sunrun-lawsuit",
