@@ -3,14 +3,10 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
+import { getResearchMenuItems } from "../../lib/published-destinations";
 import styles from "./home-priority.module.css";
 
-const researchMenuItems = [
-  { href: "/research/solar-sales-financing-after-complaint", label: "Solar Sales & Financing" },
-  { href: "/companies/sunrun", label: "Sunrun Research" },
-  { href: "/cases/freedom-forever", label: "Freedom Forever Bankruptcy" },
-  { href: "/cases/titan-solar-power", label: "Titan Solar Power Bankruptcy" },
-];
+const researchMenuItems = getResearchMenuItems();
 
 export function HomeHeader({
   menuOpen,
