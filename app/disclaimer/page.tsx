@@ -2,7 +2,7 @@ import { InfoPage } from "../../components/info-page";
 
 export const metadata = {
   title: "Disclaimer | Solar Consumer Research",
-  description: "General-information and editorial limits for Solar Consumer Research reporting, analysis, commentary, and public-source research.",
+  description: "General-information limits for Solar Consumer Research reporting, analysis, commentary, and public-source research.",
   alternates: { canonical: "/disclaimer" },
   openGraph: { url: "/disclaimer" },
 };
@@ -18,14 +18,6 @@ export default function DisclaimerPage() {
       <section className="info-section">
         <h2>No legal advice or representation</h2>
         <p>This site is not a law firm and does not provide legal advice, legal representation, contract interpretation, or case evaluation. Using the site, submitting a question, or receiving a research response does not create an attorney-client or other professional relationship.</p>
-      </section>
-      <section className="info-section">
-        <h2>Editorial content</h2>
-        <p>Reporting and analysis may explain, compare, or connect public records. Commentary may state an author’s opinion. Editorial work is not a legal conclusion, finding of liability, or determination that any person or company violated a law, regulation, contract, or duty.</p>
-      </section>
-      <section className="info-section">
-        <h2>Allegations and procedural status</h2>
-        <p>The site may discuss complaints, allegations, investigations, lawsuits, settlements, orders, and findings. Those terms describe different procedural statuses and are not interchangeable. A cited allegation or complaint does not establish that wrongdoing occurred.</p>
       </section>
       <section className="info-section">
         <h2>Sources can change</h2>
