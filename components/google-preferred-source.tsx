@@ -21,8 +21,7 @@ function shouldShowPreferredSource(pathname: string) {
 
 export function GooglePreferredSource() {
   const pathname = usePathname();
-
-  if (!shouldShowPreferredSource(pathname)) return null;
+  const shouldShow = shouldShowPreferredSource(pathname);
 
   const preferredSourceAttributes = {
     "google-add-preferred-source-btn": "",
@@ -33,7 +32,7 @@ export function GooglePreferredSource() {
   return (
     <>
       <Script src="https://news.google.com/swg/js/v1/publisher.js" strategy="afterInteractive" />
-      <aside className={styles.wrap} aria-label="Google Preferred Sources">
+      <aside className={styles.wrap} aria-label="Google Preferred Sources" hidden={!shouldShow}>
         <div className={styles.inner}>
           <div className={styles.copy}>
             <p className={styles.eyebrow}>Follow SolarComplaint.com in Google</p>
