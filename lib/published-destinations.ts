@@ -11,8 +11,8 @@ export type PublishedDestination = {
   published: boolean;
   menuLabel?: string;
   researchMenuOrder?: number;
-  updatesLabel?: string;
-  showInUpdates?: boolean;
+  trackerLabel?: string;
+  showInTrackerDiscovery?: boolean;
   sitemap?: {
     lastModified: string;
     changeFrequency: SitemapChangeFrequency;
@@ -46,12 +46,26 @@ export const publishedDestinations: PublishedDestination[] = [
     published: true,
     menuLabel: "Sunrun Research",
     researchMenuOrder: 20,
-    updatesLabel: "Sunrun lawsuits, investigations, settlements and consumer resources",
-    showInUpdates: true,
+    trackerLabel: "Sunrun lawsuits, investigations, settlements and consumer resources",
+    showInTrackerDiscovery: true,
     sitemap: {
       lastModified: "2026-09-06",
       changeFrequency: "weekly",
       priority: 0.9,
+    },
+  },
+  {
+    id: "sunrun-ethics-compliance",
+    href: "/companies/sunrun/ethics-compliance",
+    title: "Sunrun ethics and compliance research",
+    kind: "research",
+    published: true,
+    trackerLabel: "Sunrun ethics & compliance: AllVoices, policies, leadership and reporting guide",
+    showInTrackerDiscovery: true,
+    sitemap: {
+      lastModified: "2026-09-07",
+      changeFrequency: "weekly",
+      priority: 0.95,
     },
   },
   {
@@ -62,8 +76,8 @@ export const publishedDestinations: PublishedDestination[] = [
     published: true,
     menuLabel: "Freedom Forever Bankruptcy",
     researchMenuOrder: 30,
-    updatesLabel: "Freedom Forever bankruptcy, Chapter 7 and customer-help tracker",
-    showInUpdates: true,
+    trackerLabel: "Freedom Forever bankruptcy, Chapter 7 and customer-help tracker",
+    showInTrackerDiscovery: true,
     sitemap: {
       lastModified: "2026-09-09",
       changeFrequency: "daily",
@@ -78,8 +92,8 @@ export const publishedDestinations: PublishedDestination[] = [
     published: true,
     menuLabel: "Titan Solar Power Bankruptcy",
     researchMenuOrder: 40,
-    updatesLabel: "Titan Solar Power bankruptcy, closure and customer-help tracker",
-    showInUpdates: true,
+    trackerLabel: "Titan Solar Power bankruptcy, closure and customer-help tracker",
+    showInTrackerDiscovery: true,
     sitemap: {
       lastModified: "2026-09-07",
       changeFrequency: "weekly",
@@ -92,8 +106,8 @@ export const publishedDestinations: PublishedDestination[] = [
     title: "Connecticut Attorney General lawsuit involving Sunrun",
     kind: "case",
     published: true,
-    updatesLabel: "Connecticut Attorney General lawsuit involving Sunrun",
-    showInUpdates: true,
+    trackerLabel: "Connecticut Attorney General lawsuit involving Sunrun",
+    showInTrackerDiscovery: true,
     sitemap: {
       lastModified: "2026-09-07",
       changeFrequency: "monthly",
@@ -112,10 +126,13 @@ export function getResearchMenuItems() {
     .map((item) => ({ href: item.href, label: item.menuLabel! }));
 }
 
-export function getUpdateTrackerItems() {
+export function getTrackerDiscoveryItems() {
   return publishedDestinations
-    .filter((item) => item.published && item.showInUpdates && item.updatesLabel)
-    .map((item) => ({ href: item.href, label: item.updatesLabel! }));
+    .filter(
+      (item) =>
+        item.published && item.showInTrackerDiscovery && item.trackerLabel,
+    )
+    .map((item) => ({ href: item.href, label: item.trackerLabel! }));
 }
 
 export function getPublicationSitemapEntries() {
