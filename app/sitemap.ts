@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 import { stateSlug, states } from "../lib/content";
+import { getPublicationSitemapEntries } from "../lib/published-destinations";
 import { researchStories } from "../lib/research-stories";
 import { titanStateBankruptcyByCode } from "../lib/titan-state-research";
 
@@ -30,12 +31,18 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.95,
   }));
 
+  const publicationPages = getPublicationSitemapEntries().map((item) => ({
+    url: `${baseUrl}${item.href}`,
+    lastModified: new Date(item.lastModified),
+    changeFrequency: item.changeFrequency,
+    priority: item.priority,
+  }));
+
   return [
     { url: baseUrl, lastModified: new Date("2026-08-27"), changeFrequency: "weekly", priority: 1 },
     { url: `${baseUrl}/research`, lastModified: new Date("2026-08-27"), changeFrequency: "weekly", priority: 0.95 },
     ...researchPages,
-    { url: `${baseUrl}/companies/sunrun`, lastModified: new Date("2026-09-06"), changeFrequency: "weekly", priority: 0.9 },
-    { url: `${baseUrl}/companies/sunrun/ethics-compliance`, lastModified: new Date("2026-09-07"), changeFrequency: "weekly", priority: 0.95 },
+    ...publicationPages,
     { url: `${baseUrl}/resources`, lastModified: new Date("2026-09-07"), changeFrequency: "weekly", priority: 0.9 },
     { url: `${baseUrl}/federal-resources`, lastModified: new Date("2026-08-21"), changeFrequency: "monthly", priority: 0.9 },
     { url: `${baseUrl}/guides`, lastModified: new Date("2026-09-04"), changeFrequency: "monthly", priority: 0.8 },
@@ -49,12 +56,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${baseUrl}/corrections`, lastModified: new Date("2026-08-16"), changeFrequency: "yearly", priority: 0.3 },
     { url: `${baseUrl}/privacy`, lastModified: new Date("2026-08-16"), changeFrequency: "yearly", priority: 0.2 },
     { url: `${baseUrl}/disclaimer`, lastModified: new Date("2026-08-16"), changeFrequency: "yearly", priority: 0.2 },
-    { url: `${baseUrl}/cases/titan-solar-power`, lastModified: new Date("2026-09-07"), changeFrequency: "weekly", priority: 0.9 },
     { url: `${baseUrl}/cases/titan-solar-power/customer-help`, lastModified: new Date("2026-08-28"), changeFrequency: "monthly", priority: 0.8 },
     { url: `${baseUrl}/cases/titan-solar-power/warranty-after-bankruptcy`, lastModified: new Date("2026-08-28"), changeFrequency: "monthly", priority: 0.85 },
-    { url: `${baseUrl}/cases/freedom-forever`, lastModified: new Date("2026-09-09"), changeFrequency: "daily", priority: 0.95 },
     { url: `${baseUrl}/cases/freedom-forever/what-happened`, lastModified: new Date("2026-09-09"), changeFrequency: "weekly", priority: 0.95 },
-    { url: `${baseUrl}/cases/connecticut-attorney-general-sunrun-lawsuit`, lastModified: new Date("2026-09-07"), changeFrequency: "monthly", priority: 0.8 },
     ...statePages,
   ];
 }

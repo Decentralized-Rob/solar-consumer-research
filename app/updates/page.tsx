@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { InfoPage } from "../../components/info-page";
 import { updates as fallbackUpdates } from "../../lib/content";
+import { getTrackerDiscoveryItems } from "../../lib/published-destinations";
 import { featuredResearchStory } from "../../lib/research-stories";
 import { createSupabaseServerClient } from "../../lib/supabase/server";
 import type { Update } from "../../lib/types";
@@ -45,6 +46,8 @@ async function loadUpdates(): Promise<Update[]> {
 
 export default async function UpdatesPage() {
   const items = await loadUpdates();
+  const companyCaseTrackers = getTrackerDiscoveryItems();
+
   return (
     <InfoPage
       eyebrow="News and updates"
@@ -53,10 +56,9 @@ export default async function UpdatesPage() {
     >
       <section className="info-section" aria-labelledby="company-case-trackers-title">
         <h2 id="company-case-trackers-title">Company and case trackers</h2>
-        <p><Link href="/companies/sunrun">Sunrun lawsuits, investigations, settlements and consumer resources →</Link></p>
-        <p><Link href="/cases/connecticut-attorney-general-sunrun-lawsuit">Connecticut Attorney General lawsuit involving Sunrun →</Link></p>
-        <p><Link href="/cases/titan-solar-power">Titan Solar Power bankruptcy, closure and customer-help tracker →</Link></p>
-        <p><Link href="/cases/freedom-forever">Freedom Forever bankruptcy, Chapter 7 and customer-help tracker →</Link></p>
+        {companyCaseTrackers.map((item) => (
+          <p key={item.href}><Link href={item.href}>{item.label} →</Link></p>
+        ))}
       </section>
 
       <section className="info-section" aria-labelledby="state-research-hubs-title">

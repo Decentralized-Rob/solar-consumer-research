@@ -3,7 +3,10 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
+import { getResearchMenuItems } from "../../lib/published-destinations";
 import styles from "./home-priority.module.css";
+
+const researchMenuItems = getResearchMenuItems();
 
 export function HomeHeader({
   menuOpen,
@@ -65,16 +68,9 @@ export function HomeHeader({
             className="home-nav-submenu"
             style={{ display: researchOpen ? "block" : "none" }}
           >
-            <a href="/research/solar-sales-financing-after-complaint" onClick={closeMenu}>
-              Solar Sales, Financing and What Happens After a Complaint
-            </a>
-            <a href="/companies/sunrun" onClick={closeMenu}>Sunrun</a>
-            <a href="/research/sunrun-25-year-solar-contracts" onClick={closeMenu}>Sunrun’s 25-Year Solar Contracts</a>
-            <a href="/companies/sunrun/ethics-compliance" onClick={closeMenu}>Sunrun Ethics &amp; Compliance Guide</a>
-            <a href="/cases/titan-solar-power" onClick={closeMenu}>Titan Solar Power</a>
-            <a href="/cases/connecticut-attorney-general-sunrun-lawsuit" onClick={closeMenu}>
-              Connecticut AG v. Sunrun
-            </a>
+            {researchMenuItems.map((item) => (
+              <a href={item.href} onClick={closeMenu} key={item.href}>{item.label}</a>
+            ))}
           </div>
         </div>
         <a href="/resources" onClick={closeMenu}>States</a>

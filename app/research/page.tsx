@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { InfoPage } from "../../components/info-page";
 import { SunrunEthicsSpotlight } from "../../components/sunrun-ethics-spotlight";
+import { getTrackerDiscoveryItems } from "../../lib/published-destinations";
 import { researchStories } from "../../lib/research-stories";
 
 const canonicalUrl = "https://solarcomplaint.com/research";
@@ -27,6 +28,7 @@ export const metadata: Metadata = {
 };
 
 export default function ResearchPage() {
+  const trackerItems = getTrackerDiscoveryItems();
   const structuredData = {
     "@context": "https://schema.org",
     "@graph": [
@@ -108,10 +110,9 @@ export default function ResearchPage() {
 
         <section className="info-section">
           <h2>Company and case trackers</h2>
-          <p><Link href="/companies/sunrun">Sunrun: investigations, enforcement, settlements, and documented cases →</Link></p>
-          <p><Link href="/companies/sunrun/ethics-compliance">Sunrun ethics &amp; compliance: AllVoices, policies, leadership and reporting guide →</Link></p>
-          <p><Link href="/cases/titan-solar-power">Titan Solar Power: closure, bankruptcy, customer resources, and updates →</Link></p>
-          <p><Link href="/cases/connecticut-attorney-general-sunrun-lawsuit">Connecticut Attorney General lawsuit involving Sunrun →</Link></p>
+          {trackerItems.map((item) => (
+            <p key={item.href}><Link href={item.href}>{item.label} →</Link></p>
+          ))}
         </section>
 
         <section className="info-section">
