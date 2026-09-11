@@ -29,8 +29,8 @@ export const sunrunResearchItems: SunrunResearchItem[] = [
     jurisdiction: "Texas",
     date: "2026-04-03",
     summary:
-      "Texas opened a residential-solar investigation involving Sunrun and other companies. An investigation is not a finding of wrongdoing.",
-    sourceUrl: "https://www.texasattorneygeneral.gov/news/releases/attorney-general-ken-paxton-launches-investigation-solar-companies-over-potential-consumer-protection",
+      "Texas issued Civil Investigative Demands to Sunrun and other companies while examining possible misrepresentations involving electric-bill savings, system performance, equipment, company terms and policies, warranties, service plans, marketing materials and contracts. An investigation is not a finding of wrongdoing.",
+    sourceUrl: "https://www.texasattorneygeneral.gov/news/releases/attorney-general-ken-paxton-launches-major-initiative-combat-widespread-fraud-companies-selling",
     sourceLabel: "Texas Attorney General",
     sourceType: "government",
     topics: ["sales", "consumer-protection"],
@@ -43,9 +43,9 @@ export const sunrunResearchItems: SunrunResearchItem[] = [
     jurisdiction: "Arizona",
     date: "2025-05-22",
     summary:
-      "Arizona resolved allegations concerning solar sales practices through a court-approved agreement that includes consumer-relief and complaint-handling requirements. The agreement is not an admission of wrongdoing.",
-    sourceUrl: "https://www.azag.gov/consumer/sunrun",
-    sourceLabel: "Arizona Attorney General",
+      "Arizona resolved allegations concerning solar sales practices through a court-approved agreement that includes consumer-relief and complaint-handling requirements. Sunrun and Vivint Solar denied the allegations, and the agreement is not an admission of wrongdoing.",
+    sourceUrl: "https://www.azag.gov/sites/default/files/2025-06/2025-05-22%20SUNRUN%20STIPULATED%20CONSENT%20AGREEMENT.pdf",
+    sourceLabel: "Arizona stipulated consent agreement",
     sourceType: "government",
     topics: ["sales", "complaint-handling"],
   },
