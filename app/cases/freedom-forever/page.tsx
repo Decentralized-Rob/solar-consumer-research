@@ -65,7 +65,8 @@ const stories = [
   {
     number: "02",
     title: "Before the Bankruptcy: The Freedom Forever Warning Signs Were Already Public",
-    status: "Research queue",
+    status: "Published",
+    href: "/cases/freedom-forever/warning-signs",
   },
   {
     number: "03",
@@ -119,7 +120,7 @@ export default function FreedomForeverHub() {
         description:
           "Source-backed consumer research covering Freedom Forever's Chapter 7 bankruptcy, unfinished solar projects, financing partners, regulatory records and customer-help paths.",
         inLanguage: "en-US",
-        dateModified: "2026-09-09",
+        dateModified: "2026-09-13",
         isPartOf: { "@id": "https://solarcomplaint.com/#website" },
         publisher: { "@id": "https://solarcomplaint.com/#publisher" },
         about: { "@type": "Organization", name: "Freedom Forever LLC" },
@@ -167,7 +168,7 @@ export default function FreedomForeverHub() {
 
       <main>
         <section className="ff-hero">
-          <div className="ff-kicker"><span>Freedom Forever consumer research</span><i /><span>Last reviewed September 9, 2026</span></div>
+          <div className="ff-kicker"><span>Freedom Forever consumer research</span><i /><span>Last reviewed September 13, 2026</span></div>
           <div className="ff-hero-grid">
             <div>
               <div className="ff-status-pill"><span /> Chapter 7 liquidation</div>
@@ -177,7 +178,7 @@ export default function FreedomForeverHub() {
               </p>
               <div className="ff-actions">
                 <a className="ff-button ff-button-primary" href="#project-status">Find your situation</a>
-                <Link className="ff-button ff-button-secondary" href="/cases/freedom-forever/what-happened">Read what happened</Link>
+                <Link className="ff-button ff-button-secondary" href="/cases/freedom-forever/warning-signs">Read the latest investigation</Link>
               </div>
             </div>
             <aside className="ff-status-card" aria-label="Current Freedom Forever bankruptcy status">
@@ -223,25 +224,25 @@ export default function FreedomForeverHub() {
         </section>
 
         <section className="ff-section ff-featured" id="featured-investigation">
-          <div className="ff-featured-label"><span>Featured investigation</span><b>Story 01 of 06</b></div>
+          <div className="ff-featured-label"><span>Featured investigation</span><b>Story 02 of 06</b></div>
           <div className="ff-featured-grid">
             <div>
-              <p className="ff-eyebrow">Published September 9, 2026</p>
-              <h2>What Happened to Freedom Forever?</h2>
-              <p className="ff-featured-deck">From national solar installer to Chapter 11, a failed sale process and Chapter 7 liquidation.</p>
+              <p className="ff-eyebrow">Published September 13, 2026</p>
+              <h2>Before the Bankruptcy: The Warning Signs Were Already Public</h2>
+              <p className="ff-featured-deck">Government records, regulatory action, market exits and layoffs that were public before Freedom Forever filed Chapter 11.</p>
               <p>
-                The story begins before the bankruptcy filing. Reuters documented market exits and layoffs in February. Bankruptcy records then showed a company carrying far more estimated liabilities than assets. A later sale process failed to produce a buyer or restructuring sponsor.
+                Massachusetts recorded earlier compliance warnings. California later placed Freedom Forever under formal contractor-license discipline. By February 2026, the company was leaving markets and cutting staff. Texas named Freedom Forever in a solar-industry investigation twelve days before the bankruptcy filing.
               </p>
-              <Link className="ff-button ff-button-primary" href="/cases/freedom-forever/what-happened">Read the investigation</Link>
+              <Link className="ff-button ff-button-primary" href="/cases/freedom-forever/warning-signs">Read Story 02</Link>
             </div>
             <aside>
-              <span>Why this story is first</span>
-              <p>Its core chronology is largely settled, making it the best anchor article while newer customer and court developments continue to change.</p>
+              <span>Why this story is next</span>
+              <p>Most of its evidence predates the bankruptcy and comes from completed government records, making the core story less likely to change as the Chapter 7 case moves forward.</p>
               <div className="ff-source-stack">
+                <ExternalLink href={californiaOrderUrl}>California CSLB order ↗</ExternalLink>
+                <ExternalLink href={texasAgUrl}>Texas Attorney General ↗</ExternalLink>
+                <ExternalLink href={massSmartUrl}>Massachusetts SMART record ↗</ExternalLink>
                 <ExternalLink href="https://www.reuters.com/sustainability/climate-energy/us-rooftop-solar-installers-cut-jobs-restructure-homeowner-subsidy-expires-2026-02-05/">Reuters · Feb. 5 ↗</ExternalLink>
-                <ExternalLink href="https://www.solarpowerworldonline.com/2026/04/residential-solar-installer-freedom-forever-files-bankruptcy/">Solar Power World · Apr. 15 ↗</ExternalLink>
-                <ExternalLink href="https://www.latitudemedia.com/news/what-freedom-forevers-bankruptcy-says-about-residential-solar-today/">Latitude Media · June 1 ↗</ExternalLink>
-                <ExternalLink href="https://chapter11cases.com/blogs/news/project-sunshine-freedom-forever-pivots-from-survival-to-sale">Stretto Intelligence · June 21 ↗</ExternalLink>
               </div>
             </aside>
           </div>
