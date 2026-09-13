@@ -49,7 +49,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${baseUrl}/guides/massachusetts-solar-complaint`, lastModified: new Date("2026-09-04"), changeFrequency: "monthly", priority: 0.9 },
     { url: `${baseUrl}/guides/massachusetts-30-day-demand-letter`, lastModified: new Date("2026-09-04"), changeFrequency: "monthly", priority: 0.9 },
     { url: `${baseUrl}/guides/solar-complaint-record-checklist`, lastModified: new Date("2026-09-04"), changeFrequency: "monthly", priority: 0.85 },
-    { url: `${baseUrl}/updates`, lastModified: new Date("2026-09-07"), changeFrequency: "weekly", priority: 0.7 },
+    { url: `${baseUrl}/updates`, lastModified: new Date("2026-09-13"), changeFrequency: "weekly", priority: 0.7 },
     { url: `${baseUrl}/about`, lastModified: new Date("2026-08-21"), changeFrequency: "yearly", priority: 0.4 },
     { url: `${baseUrl}/methodology`, lastModified: new Date("2026-08-21"), changeFrequency: "yearly", priority: 0.5 },
     { url: `${baseUrl}/technology`, lastModified: new Date("2026-08-23"), changeFrequency: "monthly", priority: 0.4 },
@@ -59,6 +59,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${baseUrl}/cases/titan-solar-power/customer-help`, lastModified: new Date("2026-08-28"), changeFrequency: "monthly", priority: 0.8 },
     { url: `${baseUrl}/cases/titan-solar-power/warranty-after-bankruptcy`, lastModified: new Date("2026-08-28"), changeFrequency: "monthly", priority: 0.85 },
     { url: `${baseUrl}/cases/freedom-forever/what-happened`, lastModified: new Date("2026-09-09"), changeFrequency: "weekly", priority: 0.95 },
+    { url: `${baseUrl}/cases/freedom-forever/warning-signs`, lastModified: new Date("2026-09-13"), changeFrequency: "weekly", priority: 0.95 },
     ...statePages,
   ];
 }
