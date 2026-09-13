@@ -65,6 +65,11 @@
 .ffr-menu > summary span:first-child { font-size: 28px; line-height: 1; }
 .ffr-menu-label { display: none; }
 
+.ffr-menu[open] > summary { position: fixed; top: 18px; right: 18px; z-index: 120; background: var(--ffr-paper); }
+.ffr-menu[open] > summary span:first-child { font-size: 0; }
+.ffr-menu[open] > summary span:first-child::after { content: "×"; font-size: 34px; font-weight: 400; line-height: 1; }
+.ffr-menu[open] > summary .ffr-menu-label { display: none; }
+
 .ffr-menu-panel {
   position: fixed;
   inset: 0;
@@ -84,7 +89,7 @@
 }
 .ffr-menu-top > a { width: min(235px, 68vw); }
 .ffr-menu-top img { display: block; width: 100%; height: auto; }
-.ffr-menu-top > span { font-size: 13px; font-weight: 800; }
+.ffr-menu-top > span { visibility: hidden; font-size: 13px; font-weight: 800; }
 
 .ffr-menu-panel nav { padding: 10px 0 0; }
 .ffr-menu-panel nav > details,
