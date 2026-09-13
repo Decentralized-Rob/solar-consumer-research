@@ -2,6 +2,7 @@ import { researchStories } from "./research-stories";
 
 export type PublicationKind = "research" | "company" | "bankruptcy" | "case";
 export type SitemapChangeFrequency = "daily" | "weekly" | "monthly" | "yearly";
+export type PreferredSourceMode = "shared" | "embedded";
 
 export type PublishedDestination = {
   id: string;
@@ -9,6 +10,7 @@ export type PublishedDestination = {
   title: string;
   kind: PublicationKind;
   published: boolean;
+  preferredSource?: PreferredSourceMode;
   menuLabel?: string;
   researchMenuOrder?: number;
   trackerLabel?: string;
@@ -35,6 +37,7 @@ export const publishedDestinations: PublishedDestination[] = [
     title: solarSalesFinancingStory.title,
     kind: "research",
     published: true,
+    preferredSource: "shared",
     menuLabel: "Solar Sales & Financing",
     researchMenuOrder: 10,
   },
@@ -44,6 +47,7 @@ export const publishedDestinations: PublishedDestination[] = [
     title: "Sunrun lawsuits, investigations and consumer resources",
     kind: "company",
     published: true,
+    preferredSource: "shared",
     menuLabel: "Sunrun Research",
     researchMenuOrder: 20,
     trackerLabel: "Sunrun lawsuits, investigations, settlements and consumer resources",
@@ -60,6 +64,7 @@ export const publishedDestinations: PublishedDestination[] = [
     title: "Sunrun ethics and compliance research",
     kind: "research",
     published: true,
+    preferredSource: "shared",
     trackerLabel: "Sunrun ethics & compliance: AllVoices, policies, leadership and reporting guide",
     showInTrackerDiscovery: true,
     sitemap: {
@@ -74,6 +79,7 @@ export const publishedDestinations: PublishedDestination[] = [
     title: "Freedom Forever bankruptcy and customer help",
     kind: "bankruptcy",
     published: true,
+    preferredSource: "embedded",
     menuLabel: "Freedom Forever Bankruptcy",
     researchMenuOrder: 30,
     trackerLabel: "Freedom Forever bankruptcy, Chapter 7 and customer-help tracker",
@@ -90,6 +96,7 @@ export const publishedDestinations: PublishedDestination[] = [
     title: "Titan Solar Power bankruptcy, closure and customer help",
     kind: "bankruptcy",
     published: true,
+    preferredSource: "shared",
     menuLabel: "Titan Solar Power Bankruptcy",
     researchMenuOrder: 40,
     trackerLabel: "Titan Solar Power bankruptcy, closure and customer-help tracker",
@@ -106,6 +113,7 @@ export const publishedDestinations: PublishedDestination[] = [
     title: "Connecticut Attorney General lawsuit involving Sunrun",
     kind: "case",
     published: true,
+    preferredSource: "shared",
     trackerLabel: "Connecticut Attorney General lawsuit involving Sunrun",
     showInTrackerDiscovery: true,
     sitemap: {
@@ -169,6 +177,12 @@ export function getTrackerDiscoveryItems() {
         item.published && item.showInTrackerDiscovery && item.trackerLabel,
     )
     .map((item) => ({ href: item.href, label: item.trackerLabel! }));
+}
+
+export function getSharedPreferredSourcePaths() {
+  return publishedDestinations
+    .filter((item) => item.published && item.preferredSource === "shared")
+    .map((item) => item.href);
 }
 
 export function getPublicationSitemapEntries() {
