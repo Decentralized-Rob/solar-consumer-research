@@ -40,9 +40,9 @@ export function GooglePreferredSource() {
         <div className={styles.inner}>
           <div className={styles.copy}>
             <p className={styles.eyebrow}>Follow SolarComplaint.com in Google</p>
-            <h2>Add SolarComplaint.com as a Preferred Source.</h2>
+            <h2>Choose SolarComplaint.com as a Preferred Source.</h2>
             <p>
-              See more of our reporting in Google Top Stories and have it highlighted when relevant in AI Overviews and AI Mode.
+              Choosing SolarComplaint.com tells Google you want to see more of our reporting. Google can show it more prominently to you in Top Stories and mark it as preferred when relevant in AI Overviews and AI Mode.
             </p>
           </div>
           <div className={styles.action}>
