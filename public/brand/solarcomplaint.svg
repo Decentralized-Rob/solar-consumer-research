@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 650 110" role="img" aria-labelledby="title description">
+  <title id="title">SolarComplaint Consumer Research</title>
+  <desc id="description">SolarComplaint wordmark with a gold C and sun rays</desc>
+  <g fill="#0b4d3b">
+    <text x="0" y="62" font-family="Georgia, 'Times New Roman', serif" font-size="58" font-weight="700" letter-spacing="-2">Solar</text>
+    <text x="196" y="62" font-family="Georgia, 'Times New Roman', serif" font-size="58" font-weight="700" letter-spacing="-2">omplaint</text>
+    <text x="2" y="99" font-family="Arial, Helvetica, sans-serif" font-size="17" font-weight="700" letter-spacing="7">CONSUMER RESEARCH</text>
+  </g>
+  <text x="158" y="62" fill="#e6aa18" font-family="Georgia, 'Times New Roman', serif" font-size="58" font-weight="700" letter-spacing="-2">C</text>
+  <g stroke="#e6aa18" stroke-width="4" stroke-linecap="round">
+    <line x1="180" y1="10" x2="180" y2="0"/>
+    <line x1="161" y1="15" x2="154" y2="7"/>
+    <line x1="199" y1="15" x2="206" y2="7"/>
+    <line x1="150" y1="29" x2="140" y2="26"/>
+    <line x1="210" y1="29" x2="220" y2="26"/>
+  </g>
+</svg>
