@@ -1,18 +1,16 @@
 "use client";
 
 import { usePathname } from "next/navigation";
+import { getSharedPreferredSourcePaths } from "../lib/published-destinations";
 import styles from "./google-preferred-source.module.css";
 
-const exactPaths = new Set([
-  "/",
-  "/research",
-  "/companies/sunrun",
-  "/companies/sunrun/ethics-compliance",
-  "/updates",
-]);
+const exactPaths = new Set(["/", "/research", "/updates"]);
+const publishedPreferredSourcePaths = new Set(getSharedPreferredSourcePaths());
 
 function shouldShowPreferredSource(pathname: string) {
   if (exactPaths.has(pathname)) return true;
+
+  if (publishedPreferredSourcePaths.has(pathname)) return true;
 
   if (pathname.startsWith("/research/")) return true;
 
