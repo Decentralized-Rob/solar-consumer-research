@@ -1,6 +1,5 @@
 "use client";
 
-import Script from "next/script";
 import { usePathname } from "next/navigation";
 import styles from "./google-preferred-source.module.css";
 
@@ -30,27 +29,23 @@ export function GooglePreferredSource() {
   const preferredSourceAttributes = {
     "google-add-preferred-source-btn": "",
     "data-theme": "light",
-    "data-lang": "en",
   };
 
   return (
-    <>
-      <Script src="https://news.google.com/swg/js/v1/publisher.js" strategy="afterInteractive" />
-      <aside className={styles.wrap} aria-label="Google Preferred Sources" hidden={!shouldShow}>
-        <div className={styles.inner}>
-          <div className={styles.copy}>
-            <p className={styles.eyebrow}>Follow SolarComplaint.com in Google</p>
-            <h2>Choose SolarComplaint.com as a Preferred Source.</h2>
-            <p>
-              Choosing SolarComplaint.com tells Google you want to see more of our reporting. Google can show it more prominently to you in Top Stories and mark it as preferred when relevant in AI Overviews and AI Mode.
-            </p>
-          </div>
-          <div className={styles.action}>
-            <div {...preferredSourceAttributes} />
-            <small>Google&apos;s official Preferred Sources control</small>
-          </div>
+    <aside className={styles.wrap} aria-label="Google Preferred Sources" hidden={!shouldShow}>
+      <div className={styles.inner}>
+        <div className={styles.copy}>
+          <p className={styles.eyebrow}>Follow SolarComplaint.com in Google</p>
+          <h2>Choose SolarComplaint.com as a Preferred Source.</h2>
+          <p>
+            Choosing SolarComplaint.com tells Google you want to see more of our reporting. Google can show it more prominently to you in Top Stories and mark it as preferred when relevant in AI Overviews and AI Mode.
+          </p>
         </div>
-      </aside>
-    </>
+        <div className={styles.action}>
+          <div {...preferredSourceAttributes} />
+          <small>Google&apos;s official Preferred Sources control</small>
+        </div>
+      </div>
+    </aside>
   );
 }
