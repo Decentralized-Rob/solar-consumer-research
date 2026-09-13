@@ -148,9 +148,9 @@ export default function FreedomForeverHub() {
     <div className="ff-shell ffr-shell" id="top">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }} />
 
-      <a className="ffr-assistance" href="/#questions">
+      <Link className="ffr-assistance" href="/#questions">
         Need help with a solar issue? <strong>Free research assistance</strong> <span aria-hidden="true">→</span>
-      </a>
+      </Link>
 
       <header className="ffr-header">
         <Link className="ffr-wordmark" href="/" aria-label="SolarComplaint home">
