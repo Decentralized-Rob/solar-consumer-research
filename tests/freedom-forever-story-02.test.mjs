@@ -25,9 +25,9 @@ test("publishes Freedom Forever Story 02 with source-backed search structure", a
 test("Freedom Forever hub marks Story 02 published and featured", async () => {
   const hub = await readFile(hubPath, "utf8");
 
-  assert.match(hub, /number: "02"[\s\S]*?status: "Published"[\s\S]*?href: "\/cases\/freedom-forever\/warning-signs"/);
-  assert.match(hub, /Featured investigation[\s\S]*?Story 02 of 06/);
-  assert.match(hub, /Read Story 02/);
+  assert.match(hub, /number: "02"[\s\S]*?published: "September 13, 2026"[\s\S]*?href: "\/cases\/freedom-forever\/warning-signs"/);
+  assert.match(hub, /2 of 6 stories published/);
+  assert.match(hub, /href="\/cases\/freedom-forever\/warning-signs">Read the latest investigation/);
 });
 
 test("sitemap includes Freedom Forever Story 02", async () => {
