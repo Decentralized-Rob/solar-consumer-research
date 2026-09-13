@@ -5,18 +5,22 @@ import { usePathname } from "next/navigation";
 import styles from "./google-preferred-source.module.css";
 
 const exactPaths = new Set([
+  "/",
+  "/research",
   "/companies/sunrun",
   "/companies/sunrun/ethics-compliance",
-  "/cases/titan-solar-power",
   "/updates",
 ]);
 
 function shouldShowPreferredSource(pathname: string) {
   if (exactPaths.has(pathname)) return true;
 
+  if (pathname.startsWith("/research/")) return true;
+
   // The Freedom Forever hub already has its own embedded Google control.
-  // Show the shared component on its published story pages instead.
-  return pathname.startsWith("/cases/freedom-forever/");
+  if (pathname === "/cases/freedom-forever") return false;
+
+  return pathname.startsWith("/cases/");
 }
 
 export function GooglePreferredSource() {
