@@ -40,7 +40,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   return [
     { url: baseUrl, lastModified: new Date("2026-08-27"), changeFrequency: "weekly", priority: 1 },
-    { url: `${baseUrl}/research`, lastModified: new Date("2026-08-27"), changeFrequency: "weekly", priority: 0.95 },
+    { url: `${baseUrl}/research`, lastModified: new Date("2026-09-08"), changeFrequency: "weekly", priority: 0.95 },
     ...researchPages,
     ...publicationPages,
     { url: `${baseUrl}/resources`, lastModified: new Date("2026-09-07"), changeFrequency: "weekly", priority: 0.9 },
