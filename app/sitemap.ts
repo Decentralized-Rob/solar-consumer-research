@@ -51,6 +51,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${baseUrl}/guides/solar-complaint-record-checklist`, lastModified: new Date("2026-09-04"), changeFrequency: "monthly", priority: 0.85 },
     { url: `${baseUrl}/updates`, lastModified: new Date("2026-09-07"), changeFrequency: "weekly", priority: 0.7 },
     { url: `${baseUrl}/about`, lastModified: new Date("2026-08-21"), changeFrequency: "yearly", priority: 0.4 },
+    { url: `${baseUrl}/authors/jules-young`, lastModified: new Date("2026-09-16"), changeFrequency: "monthly", priority: 0.5 },
     { url: `${baseUrl}/methodology`, lastModified: new Date("2026-08-21"), changeFrequency: "yearly", priority: 0.5 },
     { url: `${baseUrl}/technology`, lastModified: new Date("2026-08-23"), changeFrequency: "monthly", priority: 0.4 },
     { url: `${baseUrl}/corrections`, lastModified: new Date("2026-08-16"), changeFrequency: "yearly", priority: 0.3 },
