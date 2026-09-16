@@ -37,11 +37,11 @@ export default function JulesYoungPage() {
       <section className="info-section">
         <h2>About Jules</h2>
         <p>Jules Young is the editorial byline Solar Consumer Research uses for short-form reporting and lighter consumer stories. Jules is a house voice, not a separate human reporter.</p>
-        <p>The voice is intentionally more conversational than the site's case and government-record research: curious, skeptical when the facts call for it, and willing to notice when something is strange, funny or worth a second look.</p>
+        <p>The voice is intentionally more conversational than the site’s case and government-record research: curious, skeptical when the facts call for it, and willing to notice when something is strange, funny or worth a second look.</p>
       </section>
 
       <section className="info-section">
-        <h2>The reporting standard doesn't change</h2>
+        <h2>The reporting standard doesn’t change</h2>
         <p>Stories published under this byline are sourced and reviewed under the same Solar Consumer Research standards as the rest of the site. Primary records come first when they are available. Claims are attributed. Sources are linked so readers can check the work.</p>
         <p><Link href="/methodology">Read the research methodology →</Link><br/><Link href="/corrections">Corrections policy →</Link></p>
       </section>
