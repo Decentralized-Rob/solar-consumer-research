@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import Script from "next/script";
 import { GooglePreferredSource } from "../components/google-preferred-source";
 import "./globals.css";
+import "./site-skin.css";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://solarcomplaint.com"),
@@ -48,7 +49,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#171717",
+  themeColor: "#0b4d3b",
 };
 
 export default function RootLayout({

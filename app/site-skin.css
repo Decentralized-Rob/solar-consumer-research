@@ -1,0 +1,78 @@
+/* SolarComplaint visual skin
+   Carries the Freedom Forever prototype's visual language sitewide without
+   changing page structure, routing, content hierarchy, or page-specific layouts. */
+
+:root {
+  --ink: #18201d;
+  --muted: #68716d;
+  --paper: #f7f5ee;
+  --white: #fbfaf6;
+  --line: #d8d7cf;
+  --sun: #e6aa18;
+  --sun-soft: #f4e7bd;
+  --sage: #e6ebe4;
+  --green: #0b4d3b;
+}
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+}
+
+/* Shared chrome only. Individual page information architecture stays intact. */
+.home-header,
+.info-header,
+.topbar {
+  border-bottom-color: var(--line);
+  background: rgba(247, 245, 238, 0.97);
+  backdrop-filter: blur(12px);
+}
+
+.home-header-action,
+.button--primary,
+.search-control button {
+  background: var(--green);
+}
+
+.home-header-action:hover,
+.button--primary:hover,
+.search-control button:hover {
+  background: #073d30;
+}
+
+.home-footer {
+  background: var(--green);
+}
+
+.info-page,
+.home-shell {
+  background: var(--paper);
+}
+
+.info-section,
+.state-panel,
+.path-card:not(.path-card--dark) {
+  border-color: var(--line);
+}
+
+.eyebrow,
+.text-link,
+.info-main a,
+.home-nav a:hover,
+.home-nav button:hover {
+  color: var(--green);
+}
+
+.button--sun,
+.topic-tabs button.active,
+.topic-tabs button:hover {
+  background: var(--sun);
+}
+
+@media (max-width: 760px) {
+  .home-header,
+  .info-header,
+  .topbar {
+    background: rgba(247, 245, 238, 0.98);
+  }
+}
