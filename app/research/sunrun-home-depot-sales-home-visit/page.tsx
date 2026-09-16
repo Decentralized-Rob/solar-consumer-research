@@ -11,6 +11,7 @@ const sunrunHomeDepot = "https://www.sunrun.com/go-solar-center/solar-articles/s
 const missionViejoReviews = "https://www.homedepot.com/l/Mission-Viejo/CA/Mission-Viejo/92692/614/reviews/1";
 const burbankReviews = "https://www.homedepot.com/l/Burbank/CA/Burbank/91502/6654/reviews/";
 const yuccaValleyReviews = "https://www.homedepot.com/l/Yucca-Valley/CA/Yucca-Valley/92284/6971/reviews/1";
+const placervilleReviews = "https://www.homedepot.com/l/Placerville/CA/Placerville/95667/1085/reviews/homedepot.com/";
 
 export const metadata: Metadata = {
   title: "Sunrun at Home Depot: Shopper Says Store Pitch Followed Him Home",
@@ -47,7 +48,7 @@ export default function SunrunHomeDepotShortRead() {
         author: { "@type": "Organization", name: "Jules Young, an editorial byline of Solar Consumer Research", url: authorUrl },
         publisher: { "@id": "https://solarcomplaint.com/#publisher" },
         about: [{ "@type": "Organization", name: "Sunrun Inc." }, { "@type": "Organization", name: "The Home Depot" }, { "@type": "Thing", name: "Residential solar sales" }],
-        citation: [coolDownSource, sunrun10k, homeDepotPartnership, sunrunHomeDepot, missionViejoReviews, burbankReviews, yuccaValleyReviews],
+        citation: [coolDownSource, sunrun10k, homeDepotPartnership, sunrunHomeDepot, missionViejoReviews, burbankReviews, yuccaValleyReviews, placervilleReviews],
       },
       {
         "@type": "BreadcrumbList",
@@ -89,7 +90,7 @@ export default function SunrunHomeDepotShortRead() {
         <p>The Reddit story isn't the only recent sign of Sunrun salespeople inside Home Depot stores.</p>
         <p>Home Depot's own store-review pages contain 2026 comments from shoppers in California mentioning Sunrun salespeople in Mission Viejo, Burbank, Yucca Valley and Placerville. The reactions aren't all the same. Some shoppers complained about being approached. One Placerville reviewer described a Home Depot-Sunrun salesperson as professional and not pushy.</p>
         <p>That mix is more useful than pretending every store encounter goes the same way. What it does show is that the Sunrun pitch inside Home Depot is still very much a thing shoppers are encountering in 2026.</p>
-        <p><a href={missionViejoReviews} target="_blank" rel="noreferrer">Mission Viejo Home Depot reviews ↗</a><br/><a href={burbankReviews} target="_blank" rel="noreferrer">Burbank Home Depot reviews ↗</a><br/><a href={yuccaValleyReviews} target="_blank" rel="noreferrer">Yucca Valley Home Depot reviews ↗</a></p>
+        <p><a href={missionViejoReviews} target="_blank" rel="noreferrer">Mission Viejo Home Depot reviews ↗</a><br/><a href={burbankReviews} target="_blank" rel="noreferrer">Burbank Home Depot reviews ↗</a><br/><a href={yuccaValleyReviews} target="_blank" rel="noreferrer">Yucca Valley Home Depot reviews ↗</a><br/><a href={placervilleReviews} target="_blank" rel="noreferrer">Placerville Home Depot reviews ↗</a></p>
       </section>
 
       <section className="info-section">
@@ -108,7 +109,7 @@ export default function SunrunHomeDepotShortRead() {
         <p><strong>Sunrun annual report / SEC.</strong> <a href={sunrun10k} target="_blank" rel="noreferrer">Sunrun 2025 annual report ↗</a> — current description of retail, field and in-home customer-acquisition channels.</p>
         <p><strong>The Home Depot.</strong> <a href={homeDepotPartnership} target="_blank" rel="noreferrer">2019 Sunrun retail expansion announcement ↗</a>.</p>
         <p><strong>Sunrun.</strong> <a href={sunrunHomeDepot} target="_blank" rel="noreferrer">2021 Home Depot expansion announcement ↗</a>.</p>
-        <p><strong>The Home Depot store reviews.</strong> 2026 shopper reviews from Mission Viejo, Burbank and Yucca Valley mentioning Sunrun salespeople in stores.</p>
+        <p><strong>The Home Depot store reviews.</strong> 2026 shopper reviews from Mission Viejo, Burbank, Yucca Valley and Placerville mentioning Sunrun salespeople in stores.</p>
       </section>
 
       <section className="info-section">
