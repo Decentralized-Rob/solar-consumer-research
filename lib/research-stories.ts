@@ -15,6 +15,20 @@ export type ResearchStory = {
 
 export const researchStories: ResearchStory[] = [
   {
+    id: "sunrun-home-depot-sales-home-visit",
+    slug: "sunrun-home-depot-sales-home-visit",
+    href: "/research/sunrun-home-depot-sales-home-visit",
+    title: "Sunrun at Home Depot: Shopper Says Store Pitch Followed Him Home",
+    deck: "A shopper tried a fake phone number and email to dodge the follow-up. The address was real. That turned out to matter.",
+    summary: "A September 2026 Sunrun sales story, backed by Sunrun and Home Depot records plus current Home Depot store reviews showing shoppers are still encountering Sunrun salespeople in 2026.",
+    publishedAt: "September 16, 2026",
+    datePublished: "2026-09-16",
+    dateModified: "2026-09-16",
+    stateCodes: [],
+    companies: ["Sunrun", "Home Depot"],
+    topics: ["Sunrun sales", "Home Depot solar", "retail solar sales", "solar sales representatives"],
+  },
+  {
     id: "sunrun-25-year-solar-contracts",
     slug: "sunrun-25-year-solar-contracts",
     href: "/research/sunrun-25-year-solar-contracts",
