@@ -3,25 +3,31 @@ import Link from "next/link";
 import { InfoPage } from "../../../components/info-page";
 
 const canonicalUrl = "https://solarcomplaint.com/research/sunrun-home-depot-sales-home-visit";
+const authorUrl = "https://solarcomplaint.com/authors/jules-young";
 const coolDownSource = "https://www.thecooldown.com/green-home/home-depot-shopper-sunrun-fake-number/";
-const sunrun10k = "https://www.sec.gov/Archives/edgar/data/1469367/000162828026012289/run-20251231.htm";
+const sunrun10k = "https://www.sec.gov/Archives/edgar/data/1469367/000114036126014729/ef20070408_formars.pdf";
+const homeDepotPartnership = "https://corporate.homedepot.com/news/sustainability/its-bright-new-day-residential-solar-home-depot-sunrun-and-vivint-solar";
+const sunrunHomeDepot = "https://www.sunrun.com/go-solar-center/solar-articles/sunrun-brings-solar-and-home-batteries-to-home-depot-stores-across-the-united-states";
+const missionViejoReviews = "https://www.homedepot.com/l/Mission-Viejo/CA/Mission-Viejo/92692/614/reviews/1";
+const burbankReviews = "https://www.homedepot.com/l/Burbank/CA/Burbank/91502/6654/reviews/";
+const yuccaValleyReviews = "https://www.homedepot.com/l/Yucca-Valley/CA/Yucca-Valley/92284/6971/reviews/1";
 
 export const metadata: Metadata = {
-  title: "Sunrun at Home Depot: Shopper Says Store Pitch Led to Home Visit",
-  description: "A Home Depot shopper told Reddit that a Sunrun sales encounter was followed by a visit to the shopper's home. Here is what was reported and what Sunrun says about its retail sales channels.",
+  title: "Sunrun at Home Depot: Shopper Says Store Pitch Followed Him Home",
+  description: "A Home Depot shopper says a Sunrun sales encounter followed him home. Current Home Depot reviews show the in-store Sunrun pitch is still getting noticed in 2026.",
   alternates: { canonical: "/research/sunrun-home-depot-sales-home-visit" },
   openGraph: {
-    title: "Sunrun at Home Depot: Shopper Says Store Pitch Led to Home Visit",
-    description: "A short read on a September 2026 Sunrun sales story and the company's established retail sales channel.",
+    title: "Sunrun at Home Depot: Shopper Says Store Pitch Followed Him Home",
+    description: "A shopper tried a fake phone number and email. The address was real. Then, he says, someone showed up at his house.",
     url: "/research/sunrun-home-depot-sales-home-visit",
     type: "article",
     publishedTime: "2026-09-16",
     modifiedTime: "2026-09-16",
-    authors: ["https://solarcomplaint.com/about"],
+    authors: [authorUrl],
     section: "Short Read",
     images: [{ url: "https://solarcomplaint.com/og.png", width: 1200, height: 630, alt: "SolarComplaint.com short read about Sunrun sales at Home Depot" }],
   },
-  twitter: { card: "summary_large_image", title: "Sunrun at Home Depot: Shopper Says Store Pitch Led to Home Visit", description: "What was reported, plus context on Sunrun's retail sales channel.", images: ["https://solarcomplaint.com/og.png"] },
+  twitter: { card: "summary_large_image", title: "Sunrun at Home Depot: Shopper Says Store Pitch Followed Him Home", description: "He gave the Sunrun rep a fake number. The address was real.", images: ["https://solarcomplaint.com/og.png"] },
 };
 
 export default function SunrunHomeDepotShortRead() {
@@ -31,17 +37,17 @@ export default function SunrunHomeDepotShortRead() {
       {
         "@type": "Article",
         "@id": `${canonicalUrl}#article`,
-        headline: "Sunrun at Home Depot: Shopper Says Store Pitch Led to Home Visit",
-        description: "A short read on a reported Sunrun sales encounter at Home Depot and Sunrun's established retail sales channel.",
+        headline: "Sunrun at Home Depot: Shopper Says Store Pitch Followed Him Home",
+        description: "A source-backed short read on a reported Sunrun sales encounter at Home Depot and the retail sales channel behind it.",
         datePublished: "2026-09-16",
         dateModified: "2026-09-16",
         inLanguage: "en-US",
         articleSection: "Short Read",
         mainEntityOfPage: { "@type": "WebPage", "@id": canonicalUrl },
-        author: { "@type": "Organization", name: "Solar Consumer Research", url: "https://solarcomplaint.com/about" },
+        author: { "@type": "Organization", name: "Jules Young, an editorial byline of Solar Consumer Research", url: authorUrl },
         publisher: { "@id": "https://solarcomplaint.com/#publisher" },
         about: [{ "@type": "Organization", name: "Sunrun Inc." }, { "@type": "Organization", name: "The Home Depot" }, { "@type": "Thing", name: "Residential solar sales" }],
-        citation: [coolDownSource, sunrun10k],
+        citation: [coolDownSource, sunrun10k, homeDepotPartnership, sunrunHomeDepot, missionViejoReviews, burbankReviews, yuccaValleyReviews],
       },
       {
         "@type": "BreadcrumbList",
@@ -56,32 +62,53 @@ export default function SunrunHomeDepotShortRead() {
 
   return <>
     <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }} />
-    <InfoPage className="research-story-page" eyebrow="Short Read · September 16, 2026" title="Sunrun at Home Depot: Shopper Says Store Pitch Led to Home Visit" lede="A shopper says a Sunrun sales conversation inside Home Depot did not end at the store.">
+    <InfoPage className="research-story-page" eyebrow="Short Read · September 16, 2026" title="Sunrun at Home Depot: Shopper Says Store Pitch Followed Him Home" lede="A shopper tried a fake phone number and email to dodge the follow-up. The address was real. That turned out to matter.">
       <nav className="case-question-links" aria-label="Breadcrumb"><Link href="/">Home</Link><Link href="/research">Research</Link><Link href="/companies/sunrun">Sunrun</Link><span aria-current="page">Home Depot sales</span></nav>
 
+      <p className="page-updated">By <Link href="/authors/jules-young">Jules Young</Link></p>
+
       <section className="info-section">
-        <p>The Cool Down reported September 16 on a Reddit user's encounter with a Sunrun salesperson inside a Home Depot. According to the account, the shopper gave a real home address but a fake phone number and email address. The shopper said someone later showed up at the home.</p>
-        <p>The report does not establish who arranged the visit, what information was entered into a sales system, or whether the visit followed a standard Sunrun process. The original Reddit account is the source of the claim.</p>
-        <p><a href={coolDownSource} target="_blank" rel="noreferrer">Read the September 16 report from The Cool Down ↗</a></p>
+        <p>He just wanted out of the conversation.</p>
+        <p>A Home Depot shopper says he was in the plumbing section when a Sunrun salesperson approached him about solar. So he tried an old trick: real address, fake phone number, fake email.</p>
+        <p>Problem solved, right?</p>
+        <p>Apparently not.</p>
+        <p>The shopper later wrote on Reddit that someone showed up at his house while he was sleeping. The story was picked up September 16 by The Cool Down, where it turned into a debate over an increasingly familiar part of shopping at big-box stores: getting pitched on home services when you came in for something else.</p>
+        <p><a href={coolDownSource} target="_blank" rel="noreferrer">Read The Cool Down's September 16 report ↗</a></p>
       </section>
 
       <section className="info-section">
-        <h2>Why are Sunrun salespeople at Home Depot?</h2>
-        <p>Sunrun's retail presence is not unusual for the company. In its 2025 annual filing with the SEC, Sunrun said it reaches customers through several sales channels, including retail, canvassing, field marketing, in-home sales and strategic retail partnerships.</p>
-        <p>That broader sales model helps explain why a homeowner may first encounter Sunrun while shopping rather than while actively looking for a solar company.</p>
-        <p><a href={sunrun10k} target="_blank" rel="noreferrer">Read Sunrun's 2025 Form 10-K at the SEC ↗</a></p>
+        <h2>This wasn't a random place to meet Sunrun</h2>
+        <p>Home Depot announced in 2019 that Sunrun would become its leading home-solar vendor in 15 states, with representatives planned for nearly 700 stores. Sunrun said in 2021 that its Home Depot presence had expanded further.</p>
+        <p>And the retail strategy is bigger than one hardware chain. In its latest annual filing, Sunrun says it finds customers through retail, canvassing, field marketing, in-home sales and strategic retail partnerships.</p>
+        <p>In other words, meeting Sunrun while shopping is part of the sales model, not an accident.</p>
+        <p><a href={homeDepotPartnership} target="_blank" rel="noreferrer">Read Home Depot's partnership announcement ↗</a><br/><a href={sunrun10k} target="_blank" rel="noreferrer">Read Sunrun's latest annual filing at the SEC ↗</a></p>
       </section>
 
       <section className="info-section">
-        <h2>Considering Sunrun after a retail sales pitch?</h2>
-        <p>A store conversation can be the beginning of a much longer decision. Sunrun offers solar leases and power purchase agreements that can run for decades. Before moving forward, homeowners can compare the sales pitch with the contract terms, research the company and check consumer resources in their state.</p>
+        <h2>And shoppers are still noticing in 2026</h2>
+        <p>The Reddit story isn't the only recent sign of Sunrun salespeople inside Home Depot stores.</p>
+        <p>Home Depot's own store-review pages contain 2026 comments from shoppers in California mentioning Sunrun salespeople in Mission Viejo, Burbank, Yucca Valley and Placerville. The reactions aren't all the same. Some shoppers complained about being approached. One Placerville reviewer described a Home Depot-Sunrun salesperson as professional and not pushy.</p>
+        <p>That mix is more useful than pretending every store encounter goes the same way. What it does show is that the Sunrun pitch inside Home Depot is still very much a thing shoppers are encountering in 2026.</p>
+        <p><a href={missionViejoReviews} target="_blank" rel="noreferrer">Mission Viejo Home Depot reviews ↗</a><br/><a href={burbankReviews} target="_blank" rel="noreferrer">Burbank Home Depot reviews ↗</a><br/><a href={yuccaValleyReviews} target="_blank" rel="noreferrer">Yucca Valley Home Depot reviews ↗</a></p>
+      </section>
+
+      <section className="info-section">
+        <h2>The plumbing aisle can be the start of a 25-year relationship</h2>
+        <p>That's the part worth remembering.</p>
+        <p>The conversation may be casual. The product isn't.</p>
+        <p>Sunrun's leases and power purchase agreements can run for decades. We've spent considerably more time looking at what happens on the other end of those conversations: the contracts, complaints, investigations and court cases that can come years later.</p>
+        <p>So if someone approaches you about solar while you're shopping, there's no emergency.</p>
+        <p>Finish buying the faucet. Then do the homework.</p>
         <p><Link href="/research/sunrun-25-year-solar-contracts">See how Sunrun's long-term solar contracts work →</Link><br/><Link href="/companies/sunrun">Research Sunrun complaints, investigations and consumer resources →</Link><br/><Link href="/states">Find solar consumer resources in your state →</Link></p>
       </section>
 
       <section className="info-section">
         <h2>Sources</h2>
         <p><strong>The Cool Down.</strong> <a href={coolDownSource} target="_blank" rel="noreferrer">Home Depot shopper gives Sunrun fake number, says a rep showed up at his house anyway ↗</a>, September 16, 2026.</p>
-        <p><strong>U.S. Securities and Exchange Commission.</strong> <a href={sunrun10k} target="_blank" rel="noreferrer">Sunrun Inc. 2025 Form 10-K ↗</a> — Sunrun's description of its sales and customer-acquisition channels.</p>
+        <p><strong>Sunrun annual report / SEC.</strong> <a href={sunrun10k} target="_blank" rel="noreferrer">Sunrun 2025 annual report ↗</a> — current description of retail, field and in-home customer-acquisition channels.</p>
+        <p><strong>The Home Depot.</strong> <a href={homeDepotPartnership} target="_blank" rel="noreferrer">2019 Sunrun retail expansion announcement ↗</a>.</p>
+        <p><strong>Sunrun.</strong> <a href={sunrunHomeDepot} target="_blank" rel="noreferrer">2021 Home Depot expansion announcement ↗</a>.</p>
+        <p><strong>The Home Depot store reviews.</strong> 2026 shopper reviews from Mission Viejo, Burbank and Yucca Valley mentioning Sunrun salespeople in stores.</p>
       </section>
 
       <section className="info-section">
