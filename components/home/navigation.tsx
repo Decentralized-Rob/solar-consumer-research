@@ -102,7 +102,7 @@ export function HomeHeader({
         </div>
         <a href="/about" onClick={closeMenu}>About</a>
       </nav>
-      <Link className="home-header-action" href="/#questions">Always Free Research Assistance</Link>
+      <Link className="home-header-action" href="/#questions" style={{ color: "#f4f1e9" }}>Always Free Research Assistance</Link>
     </header>
   );
 }
