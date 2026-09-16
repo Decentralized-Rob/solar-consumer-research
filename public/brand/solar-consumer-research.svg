@@ -1,9 +1,17 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 690 104" role="img" aria-labelledby="title description">
-  <title id="title">Solar Consumer Research</title>
-  <desc id="description">Solar Consumer Research editorial wordmark</desc>
-  <g fill="#171717">
-    <text x="2" y="22" font-family="Arial, Helvetica, sans-serif" font-size="19" font-weight="700" letter-spacing="7">SOLAR</text>
-    <text x="0" y="76" font-family="Georgia, 'Times New Roman', serif" font-size="50" font-weight="700" letter-spacing="-1.25">CONSUMER RESEARCH</text>
+  <title id="title">SolarComplaint Consumer Research</title>
+  <desc id="description">SolarComplaint wordmark with a gold C and sun rays</desc>
+  <g fill="#0b4d3b">
+    <text x="0" y="58" font-family="Georgia, 'Times New Roman', serif" font-size="54" font-weight="700" letter-spacing="-2">Solar</text>
+    <text x="183" y="58" font-family="Georgia, 'Times New Roman', serif" font-size="54" font-weight="700" letter-spacing="-2">omplaint</text>
+    <text x="2" y="94" font-family="Arial, Helvetica, sans-serif" font-size="16" font-weight="700" letter-spacing="7">CONSUMER RESEARCH</text>
   </g>
-  <rect x="321" y="88" width="364" height="6" fill="#A44732"/>
+  <text x="147" y="58" fill="#e6aa18" font-family="Georgia, 'Times New Roman', serif" font-size="54" font-weight="700" letter-spacing="-2">C</text>
+  <g stroke="#e6aa18" stroke-width="4" stroke-linecap="round">
+    <line x1="168" y1="10" x2="168" y2="1"/>
+    <line x1="150" y1="14" x2="143" y2="7"/>
+    <line x1="186" y1="14" x2="193" y2="7"/>
+    <line x1="140" y1="28" x2="131" y2="25"/>
+    <line x1="196" y1="28" x2="205" y2="25"/>
+  </g>
 </svg>
