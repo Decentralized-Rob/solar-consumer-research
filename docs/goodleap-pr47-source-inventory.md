@@ -1,0 +1,1 @@
+PR #47 reference inventory reviewed for v2: GoodLeap layout/CSS, hub, state tracker, Minnesota page, Virginia page, resources page, company/event/license/state-priority data and Texas source file. V2 carries forward only material needed for the public launch and verification.
