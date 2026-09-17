@@ -1,0 +1,14 @@
+- [x] branch from current main
+- [x] public GoodLeap hub
+- [x] state tracker
+- [x] Minnesota source page
+- [x] Virginia source page
+- [x] official resources
+- [x] current skin/mobile CSS
+- [x] source ledger/tests
+- [ ] sitemap integrated
+- [ ] Research inbound link
+- [ ] reciprocal state-hub links
+- [ ] current-head CI/build
+- [ ] Cloudflare preview/mobile review
+- [ ] final diff review

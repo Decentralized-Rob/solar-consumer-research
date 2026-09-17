@@ -1,0 +1,1 @@
+Every public GoodLeap claim should remain traceable to a cited primary/official record. If a source cannot support the exact quantity, party, procedural posture or date, narrow the copy rather than infer.

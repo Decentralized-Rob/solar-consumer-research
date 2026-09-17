@@ -1,0 +1,1 @@
+GoodLeap v2 intentionally keeps the public experience simple: story, state, sources, next useful route. The old PR's deeper data files are not copied unless they support a public page or future verified research.

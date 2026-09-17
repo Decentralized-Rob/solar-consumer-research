@@ -1,0 +1,1 @@
+import test from "node:test";import assert from "node:assert/strict";import fs from "node:fs";test("only source-reviewed GoodLeap state pages ship in v2",()=>{const dir=new URL("../app/goodleap/states/",import.meta.url);const dirs=fs.readdirSync(dir,{withFileTypes:true}).filter(x=>x.isDirectory()).map(x=>x.name).sort();assert.deepEqual(dirs,["minnesota","virginia"])});

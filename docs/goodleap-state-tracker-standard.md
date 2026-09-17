@@ -1,0 +1,1 @@
+The state tracker answers three things only: which state, why GoodLeap is being researched there, and whether the company-specific page is Published or Reviewing. General state resources remain on the existing state hub.
