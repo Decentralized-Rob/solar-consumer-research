@@ -5,13 +5,10 @@ export function LatestResearchSection() {
   const stories = researchStories.slice(0, 3);
 
   return (
-    <section className={`home-wrap ${styles.section}`} aria-labelledby="latest-research-title">
+    <section className={`home-wrap ${styles.section}`} aria-label="Latest solar research">
       <div className={styles.heading}>
         <span aria-hidden="true" />
-        <div>
-          <h1 id="latest-research-title">Latest solar research</h1>
-          <p>The homeowner’s guide to residential solar.</p>
-        </div>
+        <p>The homeowner’s guide to residential solar.</p>
       </div>
       <div className={styles.list}>
         {stories.map((story, index) => (
