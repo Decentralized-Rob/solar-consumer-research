@@ -1,7 +1,12 @@
-# GoodLeap section
+# GoodLeap research section
 
-Public homeowner-facing research cluster built on current `main`.
+Public homeowner-facing research cluster for GoodLeap solar financing.
 
-Routes: hub, state tracker, Minnesota, Virginia, consumer resources.
+Public routes:
+- `/goodleap`
+- `/goodleap/states`
+- `/goodleap/states/minnesota`
+- `/goodleap/states/virginia`
+- `/goodleap/resources`
 
-The cluster uses the current SolarComplaint visual language and links outward to existing state hubs rather than duplicating state-resource content. New GoodLeap state pages should be created only after primary-source review supports enough homeowner-facing material for a substantive page.
+The section uses SolarComplaint.com's shared visual language and links to existing state hubs rather than duplicating state-resource content. New GoodLeap state pages should be published only after primary-source review supports a substantive homeowner-facing page. Allegations, procedural rulings, merits rulings, and company-filed litigation remain clearly distinguished.
