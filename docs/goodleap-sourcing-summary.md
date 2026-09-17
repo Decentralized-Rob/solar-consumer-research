@@ -1,0 +1,1 @@
+Published GoodLeap state pages rely on official Attorney General records and primary filings. Federal context uses CFPB/FTC/DOE. New 2026 court material is held in review until the exact docket/holding is verified. This branch does not promote secondary reporting over primary records.
