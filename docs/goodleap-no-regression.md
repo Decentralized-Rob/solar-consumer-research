@@ -1,0 +1,1 @@
+Shared production files on current main are authoritative. GoodLeap integration may add links/discovery but must not restore older PR #47 versions of navigation, state pages, research pages, sitemap, global styling or site metadata.
