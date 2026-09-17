@@ -1,0 +1,136 @@
+/* Mobile-first type-density pass.
+   Keeps form controls at 16px to avoid iOS input zoom while reducing display,
+   card and supporting type proportionately across the site. */
+
+@media (max-width: 900px) {
+  :root { --radius: 14px; }
+
+  .section-wrap { width: min(100% - 28px, 1180px); }
+  .topbar { min-height: 60px; }
+  .brand-logo { width: 220px; }
+  .mobile-menu-toggle,
+  .account-button,
+  .desktop-nav { font-size: 12px; }
+
+  .hero { gap: 38px; padding-top: 44px; padding-bottom: 56px; }
+  .hero h1 { font-size: clamp(42px, 9vw, 60px); line-height: 1; }
+  .hero-lede { margin-top: 22px; font-size: 18px; line-height: 1.45; }
+  .eyebrow,
+  .hero-search > label,
+  .select-label { font-size: 10px; }
+  .button { min-height: 44px; padding-inline: 18px; font-size: 12px; }
+
+  .section-heading { margin-bottom: 24px; }
+  .section-heading h2 { font-size: clamp(31px, 6vw, 43px); }
+  .compact-heading h2,
+  .search-results-heading h2 { font-size: 32px; }
+  .split-heading > p,
+  .search-results-heading > p { font-size: 13px; line-height: 1.55; }
+
+  .path-card,
+  .resource-card,
+  .library-card { padding: 20px; }
+  .path-card { min-height: 205px; }
+  .path-card h3 { margin-top: 26px; font-size: 23px; }
+  .path-card p { font-size: 13px; line-height: 1.55; }
+  .text-link,
+  .path-footnote,
+  .topic-tabs button { font-size: 12px; }
+
+  .resource-card { min-height: 250px; }
+  .resource-card h3 { margin-top: 25px; font-size: 23px; }
+  .resource-card > p { font-size: 13px; line-height: 1.55; }
+
+  .guide-title-block strong { font-size: 19px; }
+  .guide-title-block span,
+  .update-copy span,
+  .guide-content li p { font-size: 12px; }
+  .update-copy strong,
+  .updates-page-row strong { font-size: 19px; }
+
+  .question-panel { gap: 32px; padding: 34px; }
+  .question-panel h2 { font-size: clamp(32px, 7vw, 46px); }
+  .question-panel .question-intro { margin-top: 18px; font-size: 14px; line-height: 1.55; }
+  .question-example p { font-size: 17px; }
+
+  .info-main > h1,
+  .resources-editorial-page .info-main > h1 { font-size: clamp(40px, 8vw, 58px); }
+  .info-lede,
+  .resources-editorial-page .info-lede { font-size: 17px; line-height: 1.5; }
+  .resource-level-header h2,
+  .resources-editorial-page .resource-level-header h2 { font-size: 29px; }
+  .library-card h2,
+  .library-card h3,
+  .guide-page-item h2,
+  .resources-editorial-page .library-card h3 { font-size: 23px; }
+
+  .resources-editorial-page .resource-starts-heading h2 { font-size: 32px; }
+  .resources-editorial-page .resource-start-story h3 { font-size: 25px; }
+  .resources-editorial-page .resource-start-story { min-height: 245px; padding: 20px; }
+}
+
+@media (max-width: 620px) {
+  body { font-size: 14px; }
+  .section-wrap { width: min(100% - 24px, 1180px); }
+  .topbar { min-height: 56px; padding: 6px 12px; }
+  .wordmark .brand-logo { width: 170px; }
+  .mobile-menu-toggle { min-height: 36px; padding-inline: 10px; font-size: 11px; }
+  .account-button { padding: 8px 11px; font-size: 11px; }
+
+  .hero { padding-top: 32px; padding-bottom: 48px; }
+  .hero h1 { font-size: 43px; }
+  .hero-lede { font-size: 16px; }
+  .hero-actions { margin-top: 26px; }
+  .state-panel { padding: 18px; border-radius: 18px; }
+  .state-panel h2 { margin-bottom: 20px; font-size: 24px; }
+
+  .quick-paths,
+  .guides-section,
+  .question-section { padding-top: 54px; padding-bottom: 54px; }
+  .resource-section,
+  .updates-section { padding-top: 54px; padding-bottom: 58px; }
+
+  .section-heading h2,
+  .compact-heading h2,
+  .search-results-heading h2 { font-size: 29px; }
+  .path-card { min-height: 176px; padding: 18px; }
+  .path-card h3 { margin: 20px 0 9px; font-size: 21px; }
+
+  .resource-card { min-height: 220px; padding: 18px; }
+  .resource-card h3 { margin: 21px 0 10px; font-size: 21px; }
+  .resource-card-bottom { padding-top: 20px; }
+
+  .guide-trigger { padding: 19px 0; }
+  .guide-title-block strong { font-size: 18px; }
+  .guide-content li,
+  .guide-page-item li { min-height: 0; }
+
+  .question-panel { padding: 24px 18px; border-radius: 16px; }
+  .question-panel h2 { font-size: 34px; }
+  .question-panel .question-intro { font-size: 13px; }
+
+  /* Preserve 16px on editable controls to prevent mobile browser zoom. */
+  input,
+  select,
+  textarea,
+  .search-control input { font-size: 16px; }
+
+  .info-main,
+  .resources-editorial-page .info-main { width: min(100% - 24px, 1160px); padding-top: 42px; }
+  .info-main > h1,
+  .resources-editorial-page .info-main > h1 { font-size: 42px; }
+  .info-lede,
+  .resources-editorial-page .info-lede { font-size: 16px; }
+  .resource-level { padding-block: 42px 52px; }
+  .resource-level-header h2,
+  .resources-editorial-page .resource-level-header h2 { font-size: 27px; }
+  .library-card h2,
+  .library-card h3,
+  .guide-page-item h2,
+  .resources-editorial-page .library-card h3 { font-size: 21px; }
+
+  .resources-editorial-page .resource-starts-heading h2 { font-size: 28px; }
+  .resources-editorial-page .resource-start-story { min-height: 215px; padding: 18px; }
+  .resources-editorial-page .resource-start-story h3 { margin-top: 24px; font-size: 22px; }
+  .resources-editorial-page .resource-directory-nav a { font-size: 10px; }
+}
