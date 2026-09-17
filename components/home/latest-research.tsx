@@ -8,7 +8,7 @@ export function LatestResearchSection() {
     <section className={`home-wrap ${styles.section}`} aria-label="Latest solar research">
       <div className={styles.heading}>
         <span aria-hidden="true" />
-        <p>The homeowner’s guide to residential solar.</p>
+        <h1>The homeowner’s guide to residential solar.</h1>
       </div>
       <div className={styles.list}>
         {stories.map((story, index) => (
