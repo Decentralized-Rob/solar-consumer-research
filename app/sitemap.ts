@@ -17,15 +17,15 @@ const stateLastModifiedByCode: Record<string, string> = {
 };
 
 const goodLeapPages = [
-  { path: "/goodleap", priority: 0.95 },
-  { path: "/goodleap/states", priority: 0.9 },
-  { path: "/goodleap/states/minnesota", priority: 0.9 },
-  { path: "/goodleap/states/virginia", priority: 0.9 },
-  { path: "/goodleap/resources", priority: 0.8 },
+  { path: "/goodleap", changeFrequency: "weekly" as const, priority: 0.95 },
+  { path: "/goodleap/states", changeFrequency: "weekly" as const, priority: 0.9 },
+  { path: "/goodleap/states/minnesota", changeFrequency: "monthly" as const, priority: 0.9 },
+  { path: "/goodleap/states/virginia", changeFrequency: "monthly" as const, priority: 0.9 },
+  { path: "/goodleap/resources", changeFrequency: "monthly" as const, priority: 0.85 },
 ].map((item) => ({
   url: `${baseUrl}${item.path}`,
   lastModified: new Date("2026-09-16"),
-  changeFrequency: "weekly" as const,
+  changeFrequency: item.changeFrequency,
   priority: item.priority,
 }));
 
