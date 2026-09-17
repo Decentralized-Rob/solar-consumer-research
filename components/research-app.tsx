@@ -1,16 +1,13 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { states } from "../lib/content";
+import { stateSlug, states } from "../lib/content";
 import { featuredStateSources } from "../lib/featured-state-sources";
 import { consumerProtectionByState, getStateSolarCase } from "../lib/state-research";
 import type { Resource } from "../lib/types";
-import {
-  CaseFeature,
-  FeaturedSection,
-  HeroSection,
-  PathSection,
-} from "./home/discovery-sections";
+import { FeaturedSection, PathSection } from "./home/discovery-sections";
+import { LatestResearchSection } from "./home/latest-research";
+import styles from "./home/latest-research.module.css";
 import { HomeFooter, HomeHeader } from "./home/navigation";
 import {
   QuestionsSection,
@@ -36,43 +33,27 @@ export function ResearchApp() {
 
     if (consumerProtection) {
       primaryResources.push({
-        id: `${stateCode.toLowerCase()}-consumer-protection`,
-        stateCode,
-        title: consumerProtection.title,
-        summary: consumerProtection.summary,
-        publisher: consumerProtection.publisher,
-        publisherType: "government",
-        topic: "complaints",
-        url: consumerProtection.url,
+        id: `${stateCode.toLowerCase()}-consumer-protection`, stateCode, title: consumerProtection.title,
+        summary: consumerProtection.summary, publisher: consumerProtection.publisher,
+        publisherType: "government", topic: "complaints", url: consumerProtection.url,
       });
     }
 
     currentEnforcementSources.forEach((source) => {
       if (source.url === solarCase?.url) return;
       primaryResources.push({
-        id: source.id,
-        stateCode,
-        title: source.title,
-        summary: source.summary,
-        publisher: source.publisher,
-        publisherType: "government",
-        topic: "complaints",
-        url: source.url,
-        sourceDate: source.publishedAt,
+        id: source.id, stateCode, title: source.title, summary: source.summary,
+        publisher: source.publisher, publisherType: "government", topic: "complaints",
+        url: source.url, sourceDate: source.publishedAt,
       });
     });
 
     if (solarCase) {
       primaryResources.push({
-        id: `${stateCode.toLowerCase()}-${solarCase.id}`,
-        stateCode,
-        title: solarCase.title,
-        summary: solarCase.summary,
-        publisher: solarCase.publisher,
+        id: `${stateCode.toLowerCase()}-${solarCase.id}`, stateCode, title: solarCase.title,
+        summary: solarCase.summary, publisher: solarCase.publisher,
         publisherType: solarCase.publisher === "GBH News" ? "private_nonprofit" : "government",
-        topic: "complaints",
-        url: solarCase.url,
-        sourceDate: solarCase.publishedAt,
+        topic: "complaints", url: solarCase.url, sourceDate: solarCase.publishedAt,
       });
     }
 
@@ -81,9 +62,9 @@ export function ResearchApp() {
         && resource.id !== "ma-electric-company"
         && !primaryResources.some((primary) => primary.url === resource.url),
     );
-
     return [...primaryResources, ...additionalResources];
   }, [resourceItems, stateCode]);
+
   const filteredResources = useMemo(
     () => availableResources.filter((resource) => topic === "all" || resource.topic === topic),
     [availableResources, topic],
@@ -109,8 +90,28 @@ export function ResearchApp() {
     <div className="home-shell">
       <HomeHeader menuOpen={menuOpen} onMenuToggle={() => setMenuOpen((current) => !current)} onMenuClose={() => setMenuOpen(false)} />
       <main id="top">
-        <HeroSection stateCode={stateCode} selectedState={selectedState} resourceCount={availableResources.length} onStateChange={changeState} />
-        <CaseFeature />
+        <LatestResearchSection />
+
+        <section id="start" className={`home-wrap ${styles.stateFinder}`} aria-labelledby="home-state-finder-title">
+          <div className={styles.stateCopy}>
+            <p className="home-card-label">Who are you researching?</p>
+            <h2 id="home-state-finder-title">Find your state.</h2>
+            <p>Go directly to complaint channels, consumer agencies, public records, and state-specific solar research.</p>
+          </div>
+          <div className={styles.stateControl}>
+            <label htmlFor="home-state-select">State</label>
+            <select id="home-state-select" value={stateCode} onChange={(event) => changeState(event.target.value)}>
+              <option value="" disabled>Choose a state</option>
+              {states.map((state) => <option key={state.code} value={state.code}>{state.name}</option>)}
+            </select>
+            {selectedState ? (
+              <a className="home-state-page-link" href={`/states/${stateSlug(selectedState.name)}`}>
+                Open the {selectedState.name} page →
+              </a>
+            ) : null}
+          </div>
+        </section>
+
         <FeaturedSection guides={featuredGuides} resources={availableResources.slice(0, 4)} />
         <PathSection onChoosePath={choosePath} />
         {selectedState ? (

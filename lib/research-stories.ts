@@ -24,7 +24,7 @@ export const researchStories: ResearchStory[] = [
     publishedAt: "September 16, 2026",
     datePublished: "2026-09-16",
     dateModified: "2026-09-16",
-    stateCodes: [],
+    stateCodes: ["CA"],
     companies: ["Sunrun", "Home Depot"],
     topics: ["Sunrun sales", "Home Depot solar", "retail solar sales", "solar sales representatives"],
   },

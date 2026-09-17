@@ -12,7 +12,7 @@ const env = { ASSETS: { fetch: async () => new Response("Not found", { status: 4
 const ctx = { waitUntil() {}, passThroughOnException() {} };
 const ethicsHref = "/companies/sunrun/ethics-compliance";
 
-test("uses the existing homepage Featured Research slot for the current Sunrun promotion", async () => {
+test("uses the redesigned homepage for the latest research collection", async () => {
   const worker = await loadWorker();
   const response = await worker.fetch(
     new Request("http://localhost/", { headers: { accept: "text/html" } }),
@@ -22,9 +22,10 @@ test("uses the existing homepage Featured Research slot for the current Sunrun p
 
   assert.equal(response.status, 200);
   const html = await response.text();
-  assert.match(html, /Featured Research/i);
-  assert.match(html, /Sunrun Ethics &amp; Compliance: reporting, policies and public record/i);
-  assert.match(html, new RegExp(`href=["']${ethicsHref.replaceAll("/", "\\/")}["']`, "i"));
+  assert.match(html, /Latest solar research/i);
+  assert.match(html, /Sunrun at Home Depot: Shopper Says Store Pitch Followed Him Home/i);
+  assert.match(html, /Sunrun’s 25-Year Solar Contracts: The Homeowner View and the Investor View/i);
+  assert.match(html, /Solar Sales, Financing and What Happens After a Complaint/i);
   assert.doesNotMatch(html, /Featured company watch/i);
   assert.doesNotMatch(html, /New research guide/i);
 });
