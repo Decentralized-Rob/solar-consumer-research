@@ -1,0 +1,1 @@
+Source hierarchy for GoodLeap publication: 1 official government records, 2 primary court/filing documents, 3 company statements clearly labeled, 4 independent reporting for context. Social posts and reviews can identify leads but do not replace the primary record.
