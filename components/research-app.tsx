@@ -5,12 +5,8 @@ import { states } from "../lib/content";
 import { featuredStateSources } from "../lib/featured-state-sources";
 import { consumerProtectionByState, getStateSolarCase } from "../lib/state-research";
 import type { Resource } from "../lib/types";
-import {
-  CaseFeature,
-  FeaturedSection,
-  HeroSection,
-  PathSection,
-} from "./home/discovery-sections";
+import { FeaturedSection, PathSection } from "./home/discovery-sections";
+import { LatestResearchSection } from "./home/latest-research";
 import { HomeFooter, HomeHeader } from "./home/navigation";
 import {
   QuestionsSection,
@@ -36,43 +32,27 @@ export function ResearchApp() {
 
     if (consumerProtection) {
       primaryResources.push({
-        id: `${stateCode.toLowerCase()}-consumer-protection`,
-        stateCode,
-        title: consumerProtection.title,
-        summary: consumerProtection.summary,
-        publisher: consumerProtection.publisher,
-        publisherType: "government",
-        topic: "complaints",
-        url: consumerProtection.url,
+        id: `${stateCode.toLowerCase()}-consumer-protection`, stateCode, title: consumerProtection.title,
+        summary: consumerProtection.summary, publisher: consumerProtection.publisher,
+        publisherType: "government", topic: "complaints", url: consumerProtection.url,
       });
     }
 
     currentEnforcementSources.forEach((source) => {
       if (source.url === solarCase?.url) return;
       primaryResources.push({
-        id: source.id,
-        stateCode,
-        title: source.title,
-        summary: source.summary,
-        publisher: source.publisher,
-        publisherType: "government",
-        topic: "complaints",
-        url: source.url,
-        sourceDate: source.publishedAt,
+        id: source.id, stateCode, title: source.title, summary: source.summary,
+        publisher: source.publisher, publisherType: "government", topic: "complaints",
+        url: source.url, sourceDate: source.publishedAt,
       });
     });
 
     if (solarCase) {
       primaryResources.push({
-        id: `${stateCode.toLowerCase()}-${solarCase.id}`,
-        stateCode,
-        title: solarCase.title,
-        summary: solarCase.summary,
-        publisher: solarCase.publisher,
+        id: `${stateCode.toLowerCase()}-${solarCase.id}`, stateCode, title: solarCase.title,
+        summary: solarCase.summary, publisher: solarCase.publisher,
         publisherType: solarCase.publisher === "GBH News" ? "private_nonprofit" : "government",
-        topic: "complaints",
-        url: solarCase.url,
-        sourceDate: solarCase.publishedAt,
+        topic: "complaints", url: solarCase.url, sourceDate: solarCase.publishedAt,
       });
     }
 
@@ -81,9 +61,9 @@ export function ResearchApp() {
         && resource.id !== "ma-electric-company"
         && !primaryResources.some((primary) => primary.url === resource.url),
     );
-
     return [...primaryResources, ...additionalResources];
   }, [resourceItems, stateCode]);
+
   const filteredResources = useMemo(
     () => availableResources.filter((resource) => topic === "all" || resource.topic === topic),
     [availableResources, topic],
@@ -94,12 +74,6 @@ export function ResearchApp() {
     .filter((guide) => guide.stateCode === null || guide.stateCode === stateCode);
   const filteredUpdates = updateItems.filter((update) => update.stateCode === null || update.stateCode === stateCode);
 
-  function changeState(nextStateCode: string) {
-    if (!states.some((state) => state.code === nextStateCode)) return;
-    setStateCode(nextStateCode);
-    setTopic("all");
-  }
-
   function choosePath(nextTopic: Exclude<TopicFilter, "all">) {
     setTopic(nextTopic);
     document.getElementById(selectedState ? "resource-directory" : "start")?.scrollIntoView({ behavior: "smooth" });
@@ -109,8 +83,7 @@ export function ResearchApp() {
     <div className="home-shell">
       <HomeHeader menuOpen={menuOpen} onMenuToggle={() => setMenuOpen((current) => !current)} onMenuClose={() => setMenuOpen(false)} />
       <main id="top">
-        <HeroSection stateCode={stateCode} selectedState={selectedState} resourceCount={availableResources.length} onStateChange={changeState} />
-        <CaseFeature />
+        <LatestResearchSection />
         <FeaturedSection guides={featuredGuides} resources={availableResources.slice(0, 4)} />
         <PathSection onChoosePath={choosePath} />
         {selectedState ? (
