@@ -16,6 +16,19 @@ const stateLastModifiedByCode: Record<string, string> = {
   FL: "2026-09-06",
 };
 
+const goodLeapPages = [
+  { path: "/goodleap", priority: 0.95 },
+  { path: "/goodleap/states", priority: 0.9 },
+  { path: "/goodleap/states/minnesota", priority: 0.9 },
+  { path: "/goodleap/states/virginia", priority: 0.9 },
+  { path: "/goodleap/resources", priority: 0.8 },
+].map((item) => ({
+  url: `${baseUrl}${item.path}`,
+  lastModified: new Date("2026-09-16"),
+  changeFrequency: "weekly" as const,
+  priority: item.priority,
+}));
+
 export default function sitemap(): MetadataRoute.Sitemap {
   const statePages = states.filter((state) => state.available).map((state) => ({
     url: `${baseUrl}/states/${stateSlug(state.name)}`,
@@ -43,6 +56,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${baseUrl}/research`, lastModified: new Date("2026-09-16"), changeFrequency: "weekly", priority: 0.95 },
     ...researchPages,
     ...publicationPages,
+    ...goodLeapPages,
     { url: `${baseUrl}/resources`, lastModified: new Date("2026-09-07"), changeFrequency: "weekly", priority: 0.9 },
     { url: `${baseUrl}/federal-resources`, lastModified: new Date("2026-08-21"), changeFrequency: "monthly", priority: 0.9 },
     { url: `${baseUrl}/guides`, lastModified: new Date("2026-09-04"), changeFrequency: "monthly", priority: 0.8 },
