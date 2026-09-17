@@ -7,6 +7,7 @@ import { consumerProtectionByState, getStateSolarCase } from "../lib/state-resea
 import type { Resource } from "../lib/types";
 import { FeaturedSection, PathSection } from "./home/discovery-sections";
 import { LatestResearchSection } from "./home/latest-research";
+import styles from "./home/latest-research.module.css";
 import { HomeFooter, HomeHeader } from "./home/navigation";
 import {
   QuestionsSection,
@@ -91,13 +92,13 @@ export function ResearchApp() {
       <main id="top">
         <LatestResearchSection />
 
-        <section id="start" className="home-wrap home-state-finder" aria-labelledby="home-state-finder-title">
-          <div className="home-state-finder-copy">
+        <section id="start" className={`home-wrap ${styles.stateFinder}`} aria-labelledby="home-state-finder-title">
+          <div className={styles.stateCopy}>
             <p className="home-card-label">Who are you researching?</p>
             <h2 id="home-state-finder-title">Find your state.</h2>
             <p>Go directly to complaint channels, consumer agencies, public records, and state-specific solar research.</p>
           </div>
-          <div className="home-state-finder-control">
+          <div className={styles.stateControl}>
             <label htmlFor="home-state-select">State</label>
             <select id="home-state-select" value={stateCode} onChange={(event) => changeState(event.target.value)}>
               <option value="" disabled>Choose a state</option>
