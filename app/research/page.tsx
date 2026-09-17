@@ -90,6 +90,16 @@ export default function ResearchPage() {
 
         <SunrunEthicsSpotlight variant="feature" context="New company research" />
 
+        <section className="info-section">
+          <h2>GoodLeap solar financing research</h2>
+          <p>
+            Follow GoodLeap-specific court records, Attorney General actions, arbitration disputes, state research, and
+            official consumer resources. The hub connects lender records to the broader state and installer research where
+            the public record overlaps.
+          </p>
+          <p><Link href="/goodleap">Open the GoodLeap research hub →</Link></p>
+        </section>
+
         <section className="state-source-section" aria-labelledby="featured-research-title">
           <div className="state-source-section-heading">
             <span>{String(researchStories.length).padStart(2, "0")} featured stor{researchStories.length === 1 ? "y" : "ies"}</span>
