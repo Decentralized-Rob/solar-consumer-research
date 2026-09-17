@@ -3,6 +3,7 @@ import Script from "next/script";
 import { GooglePreferredSource } from "../components/google-preferred-source";
 import "./globals.css";
 import "./site-skin.css";
+import "./mobile-app-scale.css";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://solarcomplaint.com"),
