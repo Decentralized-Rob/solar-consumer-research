@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { states } from "../lib/content";
+import { stateSlug, states } from "../lib/content";
 import { featuredStateSources } from "../lib/featured-state-sources";
 import { consumerProtectionByState, getStateSolarCase } from "../lib/state-research";
 import type { Resource } from "../lib/types";
@@ -74,6 +74,12 @@ export function ResearchApp() {
     .filter((guide) => guide.stateCode === null || guide.stateCode === stateCode);
   const filteredUpdates = updateItems.filter((update) => update.stateCode === null || update.stateCode === stateCode);
 
+  function changeState(nextStateCode: string) {
+    if (!states.some((state) => state.code === nextStateCode)) return;
+    setStateCode(nextStateCode);
+    setTopic("all");
+  }
+
   function choosePath(nextTopic: Exclude<TopicFilter, "all">) {
     setTopic(nextTopic);
     document.getElementById(selectedState ? "resource-directory" : "start")?.scrollIntoView({ behavior: "smooth" });
@@ -84,6 +90,27 @@ export function ResearchApp() {
       <HomeHeader menuOpen={menuOpen} onMenuToggle={() => setMenuOpen((current) => !current)} onMenuClose={() => setMenuOpen(false)} />
       <main id="top">
         <LatestResearchSection />
+
+        <section id="start" className="home-wrap home-state-finder" aria-labelledby="home-state-finder-title">
+          <div className="home-state-finder-copy">
+            <p className="home-card-label">Who are you researching?</p>
+            <h2 id="home-state-finder-title">Find your state.</h2>
+            <p>Go directly to complaint channels, consumer agencies, public records, and state-specific solar research.</p>
+          </div>
+          <div className="home-state-finder-control">
+            <label htmlFor="home-state-select">State</label>
+            <select id="home-state-select" value={stateCode} onChange={(event) => changeState(event.target.value)}>
+              <option value="" disabled>Choose a state</option>
+              {states.map((state) => <option key={state.code} value={state.code}>{state.name}</option>)}
+            </select>
+            {selectedState ? (
+              <a className="home-state-page-link" href={`/states/${stateSlug(selectedState.name)}`}>
+                Open the {selectedState.name} page →
+              </a>
+            ) : null}
+          </div>
+        </section>
+
         <FeaturedSection guides={featuredGuides} resources={availableResources.slice(0, 4)} />
         <PathSection onChoosePath={choosePath} />
         {selectedState ? (
