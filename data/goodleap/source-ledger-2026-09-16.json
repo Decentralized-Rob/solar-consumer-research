@@ -1,0 +1,16 @@
+{
+  "reviewed": "2026-09-16",
+  "purpose": "Primary-source ledger for GoodLeap v2 public research.",
+  "records": [
+    {"state":"Minnesota","type":"attorney_general","title":"Minnesota Attorney General solar-lending lawsuit","url":"https://www.ag.state.mn.us/Office/Communications/2024/03/08_SolarLending.asp","status":"published","boundary":"About $35 million and nearly 5,000 loans are collective across four lender defendants, not GoodLeap-only."},
+    {"state":"Minnesota","type":"complaint","title":"Minnesota filed complaint","url":"https://www.ag.state.mn.us/Office/Communications/2024/docs/SolarLending_Complaint.pdf","status":"published"},
+    {"state":"Virginia","type":"attorney_general","title":"Virginia Attorney General lawsuits and settlements index","url":"https://www.oag.state.va.us/consumer-protection/index.php/laws-cases/lawsuits-settlements","status":"published"},
+    {"state":"Virginia","type":"complaint","title":"Virginia First Amended Complaint","url":"https://www.oag.state.va.us/consumer-protection/files/Lawsuits/Com-v-Waller-First-Amended-Complaint.pdf","status":"published","boundary":"Broader 4,000-consumer/$200M allegations cover all lender defendants; complaint separately alleges GoodLeap loans to more than 1,000 Virginia households."},
+    {"scope":"federal","type":"agency_report","title":"CFPB Solar Financing Issue Spotlight","url":"https://www.consumerfinance.gov/data-research/research-reports/issue-spotlight-solar-financing/","status":"published"},
+    {"scope":"federal","type":"consumer_guidance","title":"FTC solar consumer alert","url":"https://consumer.ftc.gov/consumer-alerts/2024/09/solar-energy-rising-popularity-so-are-scams","status":"published"},
+    {"scope":"federal","type":"consumer_guidance","title":"DOE Homeowner's Guide to Solar","url":"https://www.energy.gov/cmei/systems/homeowners-guide-solar","status":"published"},
+    {"state":"Maryland","type":"court_record","title":"Arias v. GoodLeap","status":"reviewing","boundary":"Describe arbitration/contract-formation ruling only; do not imply merits finding."},
+    {"state":"Texas","type":"court_record","title":"GoodLeap solar financing litigation including Quayle / Lopez research","status":"reviewing","boundary":"Verify current docket and exact holding before a full state page."},
+    {"state":"Florida","type":"court_record","title":"GoodLeap 2026 solar-cancellation litigation","status":"reviewing","boundary":"Keep GoodLeap-as-plaintiff litigation separate from homeowner claims against GoodLeap."}
+  ]
+}
