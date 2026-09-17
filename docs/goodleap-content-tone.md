@@ -1,0 +1,1 @@
+GoodLeap public copy is written for homeowners first, around a ninth-grade reading level. The story and what the source says come before docket numbers. Avoid law-library framing and repetitive disclaimers.
