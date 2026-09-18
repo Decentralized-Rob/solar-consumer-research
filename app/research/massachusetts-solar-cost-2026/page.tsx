@@ -1,80 +1,44 @@
-import type { Metadata } from "next";
 import Link from "next/link";
 import { InfoPage } from "../../../components/info-page";
+import { buildResearchMetadata, buildResearchStructuredData, researchEyebrow } from "../../../lib/research-article";
+import { getResearchStory } from "../../../lib/research-stories";
 
-const canonicalUrl = "https://solarcomplaint.com/research/massachusetts-solar-cost-2026";
-const authorUrl = "https://solarcomplaint.com/authors/jules-young";
+const story = getResearchStory("massachusetts-solar-cost-2026")!;
 const energySage = "https://www.energysage.com/local-data/solar-panel-cost/ma/";
 const maTaxCredit = "https://www.mass.gov/info-details/massachusetts-residential-property-tax-credits";
 const smart = "https://www.mass.gov/info-details/smart-30-program-details";
 const sunrunMa = "https://www.sunrun.com/solar-by-state/ma";
 const sunrunPpa = "https://www.sunrun.com/go-solar-center/solar-terms/definition/power-purchase-agreement";
 
-export const metadata: Metadata = {
-  title: "Massachusetts Solar Cost 2026: What Solar Costs Right Now",
-  description: "Massachusetts solar averages $31,910 in September 2026. Compare cash, financing, Sunrun leases and PPAs, state tax credits and SMART 3.0.",
-  alternates: { canonical: "/research/massachusetts-solar-cost-2026" },
-  openGraph: {
-    title: "What Solar Costs in Massachusetts Right Now",
-    description: "A typical Massachusetts solar system is running about $32,000 this fall. Here is what changes when you buy, finance, lease or sign a PPA.",
-    url: "/research/massachusetts-solar-cost-2026",
-    type: "article",
-    publishedTime: "2026-09-18",
-    modifiedTime: "2026-09-18",
-    authors: [authorUrl],
-    section: "Short Read",
-    images: [{ url: "https://solarcomplaint.com/og.png", width: 1200, height: 630, alt: "Massachusetts solar cost research from SolarComplaint.com" }],
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "What Solar Costs in Massachusetts Right Now",
-    description: "Massachusetts solar averages about $32,000 this fall. Compare buying, financing, leasing and Sunrun PPAs.",
-    images: ["https://solarcomplaint.com/og.png"],
-  },
-};
+export const metadata = buildResearchMetadata({
+  story,
+  seoTitle: story.seoTitle,
+  seoDescription: story.seoDescription,
+  socialDescription: story.socialDescription,
+  twitterDescription: story.twitterDescription,
+  imageAlt: "Massachusetts solar cost research from SolarComplaint.com",
+});
 
 export default function MassachusettsSolarCost2026() {
-  const structuredData = {
-    "@context": "https://schema.org",
-    "@graph": [
-      {
-        "@type": "Article",
-        "@id": `${canonicalUrl}#article`,
-        headline: "What Solar Costs in Massachusetts Right Now",
-        description: "A September 2026 look at Massachusetts solar costs, state incentives, financing, leases and Sunrun power purchase agreements.",
-        datePublished: "2026-09-18",
-        dateModified: "2026-09-18",
-        inLanguage: "en-US",
-        articleSection: "Short Read",
-        mainEntityOfPage: { "@type": "WebPage", "@id": canonicalUrl },
-        author: { "@type": "Organization", name: "Jules Young, an editorial byline of Solar Consumer Research", url: authorUrl },
-        publisher: { "@id": "https://solarcomplaint.com/#publisher" },
-        about: [
-          { "@type": "Thing", name: "Massachusetts solar cost" },
-          { "@type": "Thing", name: "Massachusetts solar incentives" },
-          { "@type": "Organization", name: "Sunrun Inc." },
-          { "@type": "Thing", name: "Solar power purchase agreements" },
-          { "@type": "Thing", name: "SMART 3.0" },
-        ],
-        citation: [energySage, maTaxCredit, smart, sunrunMa, sunrunPpa],
-      },
-      {
-        "@type": "BreadcrumbList",
-        itemListElement: [
-          { "@type": "ListItem", position: 1, name: "Home", item: "https://solarcomplaint.com/" },
-          { "@type": "ListItem", position: 2, name: "Research", item: "https://solarcomplaint.com/research" },
-          { "@type": "ListItem", position: 3, name: "Massachusetts solar cost", item: canonicalUrl },
-        ],
-      },
+  const structuredData = buildResearchStructuredData({
+    story,
+    seoDescription: "A September 2026 look at Massachusetts solar costs, state incentives, financing, leases and Sunrun power purchase agreements.",
+    breadcrumbLabel: "Massachusetts solar cost",
+    sources: [
+      { name: "EnergySage Massachusetts solar cost", url: energySage },
+      { name: "Massachusetts residential renewable energy tax credit", url: maTaxCredit },
+      { name: "SMART 3.0 program details", url: smart },
+      { name: "Sunrun Massachusetts solar plans", url: sunrunMa },
+      { name: "Sunrun PPA explainer", url: sunrunPpa },
     ],
-  };
+  });
 
   return <>
     <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }} />
-    <InfoPage className="research-story-page" eyebrow="Short Read · September 18, 2026" title="What Solar Costs in Massachusetts Right Now" lede="A typical Massachusetts solar system is running about $32,000 this fall. The way you pay can change the deal just as much as the equipment.">
+    <InfoPage className="research-story-page" eyebrow={researchEyebrow(story)} title={story.title} lede={story.lede ?? story.deck}>
       <nav className="case-question-links" aria-label="Breadcrumb"><Link href="/">Home</Link><Link href="/research">Research</Link><Link href="/states/massachusetts">Massachusetts</Link><span aria-current="page">Solar cost</span></nav>
 
-      <p className="page-updated">By <Link href="/authors/jules-young">Jules Young</Link></p>
+      <p className="page-updated">By <Link href={`/authors/${story.authorSlug}`}>{story.author}</Link></p>
 
       <section className="info-section">
         <p>If you take a snapshot of the Massachusetts solar market this fall, a typical residential system lands around $31,910.</p>
