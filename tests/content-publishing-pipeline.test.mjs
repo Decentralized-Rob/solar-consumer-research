@@ -8,7 +8,7 @@ const statePath = new URL("../components/state-resource-page.tsx", import.meta.u
 const sitemapPath = new URL("../app/sitemap.ts", import.meta.url);
 const authorPath = new URL("../app/authors/jules-young/page.tsx", import.meta.url);
 const articleHelperPath = new URL("../lib/research-article.ts", import.meta.url);
-const pilotArticlePath = new URL("../app/research/massachusetts-solar-cost-2026/page.tsx", import.meta.url);
+const dynamicArticlePath = new URL("../app/research/[slug]/page.tsx", import.meta.url);\nconst pilotContentPath = new URL("../content/research/massachusetts-solar-cost-2026.tsx", import.meta.url);\nconst contentRegistryPath = new URL("../content/research/index.ts", import.meta.url);
 
 test("research registry owns discovery metadata and selectors", async () => {
   const registry = await readFile(registryPath, "utf8");
@@ -38,21 +38,22 @@ test("homepage, state pages, author page and sitemap discover stories from regis
 });
 
 
-test("pilot article derives repeated SEO and schema fields from its story record", async () => {
-  const [helper, pilot] = await Promise.all([
+test("dynamic research route renders the pilot from the content layer", async () => {
+  const [helper, route, content, contentRegistry] = await Promise.all([
     readFile(articleHelperPath, "utf8"),
-    readFile(pilotArticlePath, "utf8"),
+    readFile(dynamicArticlePath, "utf8"),
+    readFile(pilotContentPath, "utf8"),
+    readFile(contentRegistryPath, "utf8"),
   ]);
 
   assert.match(helper, /buildResearchMetadata/);
   assert.match(helper, /buildResearchStructuredData/);
-  assert.match(helper, /story\.datePublished/);
-  assert.match(helper, /story\.dateModified/);
-  assert.match(helper, /story\.topics/);
-  assert.match(pilot, /getResearchStory\("massachusetts-solar-cost-2026"\)/);
-  assert.match(pilot, /buildResearchMetadata/);
-  assert.match(pilot, /buildResearchStructuredData/);
-  assert.doesNotMatch(pilot, /export const metadata: Metadata = \{/);
-  assert.doesNotMatch(pilot, /const canonicalUrl =/);
-  assert.doesNotMatch(pilot, /const authorUrl =/);
+  assert.match(route, /generateMetadata/);
+  assert.match(route, /generateStaticParams/);
+  assert.match(route, /getResearchStory\(slug\)/);
+  assert.match(route, /getResearchContent\(slug\)/);
+  assert.match(route, /buildResearchMetadata/);
+  assert.match(route, /buildResearchStructuredData/);
+  assert.match(contentRegistry, /massachusetts-solar-cost-2026/);
+  assert.match(content, /What Solar Costs|Massachusetts solar panel cost/);
 });
