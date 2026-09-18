@@ -30,7 +30,7 @@ export function StateResourcePage({ state }: { state: { code: string; name: stri
     name: consumerProtection.title,
     description: `${consumerProtection.summary} ${hasExpandedSources ? "Additional source-reviewed state resources are included." : "This page is a starting directory with one documented solar reference, not a complete state research file."}`,
     url: `https://solarcomplaint.com/states/${stateSlug(state.name)}`,
-    dateModified: sunrunHubState ? "2026-09-07" : titanBankruptcy ? "2026-08-28" : relatedResearch.length > 0 ? "2026-08-27" : "2026-08-21",
+    dateModified: state.code === "MA" ? "2026-09-18" : sunrunHubState ? "2026-09-07" : titanBankruptcy ? "2026-08-28" : relatedResearch.length > 0 ? "2026-08-27" : "2026-08-21",
     spatialCoverage: { "@type": "AdministrativeArea", name: state.name },
     about: [
       { "@type": "Thing", name: `${state.name} consumer complaint route` },
