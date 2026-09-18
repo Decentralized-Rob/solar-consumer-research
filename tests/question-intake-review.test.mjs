@@ -12,6 +12,16 @@ test("city migration accepts historical rows without a city", async () => {
   assert.doesNotMatch(migration, /city text not null default ''/);
 });
 
+test("Supabase configuration fails closed without explicit environment values", async () => {
+  const config = await read("lib/supabase/config.ts");
+
+  assert.match(config, /process\.env\.NEXT_PUBLIC_SUPABASE_URL\?\.trim\(\)/);
+  assert.match(config, /process\.env\.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY\?\.trim\(\)/);
+  assert.doesNotMatch(config, /zuwxlbcdpvijnkzxmftc\.supabase\.co/);
+  assert.doesNotMatch(config, /sb_publishable_Sga6OrGH5zRDgL_6UtyOsw_OlmJE1B6/);
+  assert.match(config, /throw new Error\("Supabase public configuration is missing\."\)/);
+});
+
 test("direct contact intake records the request and notifies the research team", async () => {
   const accountPanel = await read("components/account-panel.tsx");
   const contactRoute = await read("app/api/contact/route.ts");
