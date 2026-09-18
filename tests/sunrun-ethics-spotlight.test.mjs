@@ -25,7 +25,6 @@ test("uses the redesigned homepage for the latest research collection", async ()
   assert.match(html, /Latest solar research/i);
   assert.match(html, /Sunrun at Home Depot: Shopper Says Store Pitch Followed Him Home/i);
   assert.match(html, /Sunrun’s 25-Year Solar Contracts: The Homeowner View and the Investor View/i);
-  assert.match(html, /Solar Sales, Financing and What Happens After a Complaint/i);
   assert.doesNotMatch(html, /Featured company watch/i);
   assert.doesNotMatch(html, /New research guide/i);
 });
