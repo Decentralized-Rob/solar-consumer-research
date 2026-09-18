@@ -15,6 +15,20 @@ export type ResearchStory = {
 
 export const researchStories: ResearchStory[] = [
   {
+    id: "massachusetts-solar-cost-2026",
+    slug: "massachusetts-solar-cost-2026",
+    href: "/research/massachusetts-solar-cost-2026",
+    title: "What Solar Costs in Massachusetts Right Now",
+    deck: "A typical Massachusetts solar system is running about $32,000 this fall. Cash, financing, leases and PPAs put very different contracts underneath the panels.",
+    summary: "September 2026 Massachusetts solar pricing, state incentives, financing, leases and Sunrun PPA research built around current primary and marketplace sources.",
+    publishedAt: "September 18, 2026",
+    datePublished: "2026-09-18",
+    dateModified: "2026-09-18",
+    stateCodes: ["MA"],
+    companies: ["Sunrun"],
+    topics: ["Massachusetts solar cost", "Massachusetts solar incentives", "SMART 3.0", "Sunrun Massachusetts", "solar financing", "solar leases", "power purchase agreements"],
+  },
+  {
     id: "sunrun-home-depot-sales-home-visit",
     slug: "sunrun-home-depot-sales-home-visit",
     href: "/research/sunrun-home-depot-sales-home-visit",
