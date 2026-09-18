@@ -1,7 +1,7 @@
 import type { MetadataRoute } from "next";
 import { stateSlug, states } from "../lib/content";
 import { getPublicationSitemapEntries } from "../lib/published-destinations";
-import { researchStories } from "../lib/research-stories";
+import { getLatestResearchModifiedDate, researchStories } from "../lib/research-stories";
 import { titanStateBankruptcyByCode } from "../lib/titan-state-research";
 
 const baseUrl = "https://solarcomplaint.com";
@@ -53,7 +53,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   return [
     { url: baseUrl, lastModified: new Date("2026-08-27"), changeFrequency: "weekly", priority: 1 },
-    { url: `${baseUrl}/research`, lastModified: new Date("2026-09-18"), changeFrequency: "weekly", priority: 0.95 },
+    { url: `${baseUrl}/research`, lastModified: new Date(getLatestResearchModifiedDate()), changeFrequency: "weekly", priority: 0.95 },
     ...researchPages,
     ...publicationPages,
     ...goodLeapPages,
@@ -65,7 +65,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${baseUrl}/guides/solar-complaint-record-checklist`, lastModified: new Date("2026-09-04"), changeFrequency: "monthly", priority: 0.85 },
     { url: `${baseUrl}/updates`, lastModified: new Date("2026-09-18"), changeFrequency: "weekly", priority: 0.7 },
     { url: `${baseUrl}/about`, lastModified: new Date("2026-08-21"), changeFrequency: "yearly", priority: 0.4 },
-    { url: `${baseUrl}/authors/jules-young`, lastModified: new Date("2026-09-18"), changeFrequency: "monthly", priority: 0.5 },
+    { url: `${baseUrl}/authors/jules-young`, lastModified: new Date(getLatestResearchModifiedDate()), changeFrequency: "monthly", priority: 0.5 },
     { url: `${baseUrl}/methodology`, lastModified: new Date("2026-08-21"), changeFrequency: "yearly", priority: 0.5 },
     { url: `${baseUrl}/technology`, lastModified: new Date("2026-08-23"), changeFrequency: "monthly", priority: 0.4 },
     { url: `${baseUrl}/corrections`, lastModified: new Date("2026-08-16"), changeFrequency: "yearly", priority: 0.3 },
