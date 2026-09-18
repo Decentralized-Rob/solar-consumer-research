@@ -48,6 +48,7 @@ export default function JulesYoungPage() {
 
       <section className="info-section">
         <h2>Latest from Jules</h2>
+        <p><Link href="/research/massachusetts-solar-cost-2026">What Solar Costs in Massachusetts Right Now →</Link></p>
         <p><Link href="/research/sunrun-home-depot-sales-home-visit">Sunrun at Home Depot: Shopper Says Store Pitch Followed Him Home →</Link></p>
       </section>
     </InfoPage>

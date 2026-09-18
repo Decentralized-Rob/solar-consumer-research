@@ -19,6 +19,10 @@
 
 ## Featured research
 
+- What Solar Costs in Massachusetts Right Now: https://solarcomplaint.com/research/massachusetts-solar-cost-2026
+  - Uses September 2026 EnergySage Massachusetts pricing, Massachusetts Department of Revenue tax-credit guidance, SMART 3.0 program details, and current Sunrun Massachusetts plan information.
+  - Connects current Massachusetts solar cost research to the Massachusetts state hub, Sunrun research hub, long-term contract research, financing research, and federal resources.
+
 - Solar Sales, Financing and What Happens After a Complaint: https://solarcomplaint.com/research/solar-sales-financing-after-complaint
   - Connects three separate state records without treating them as one case.
   - Michigan: July 15, 2026 complaint against Climax Solar and finance defendants.
