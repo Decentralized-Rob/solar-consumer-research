@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { InfoPage } from "../../../components/info-page";
+import { getResearchStoriesForAuthor } from "../../../lib/research-stories";
 
 const canonicalUrl = "https://solarcomplaint.com/authors/jules-young";
 
@@ -12,6 +13,7 @@ export const metadata: Metadata = {
 };
 
 export default function JulesYoungPage() {
+  const stories = getResearchStoriesForAuthor("jules-young");
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "ProfilePage",
@@ -48,8 +50,9 @@ export default function JulesYoungPage() {
 
       <section className="info-section">
         <h2>Latest from Jules</h2>
-        <p><Link href="/research/massachusetts-solar-cost-2026">What Solar Costs in Massachusetts Right Now →</Link></p>
-        <p><Link href="/research/sunrun-home-depot-sales-home-visit">Sunrun at Home Depot: Shopper Says Store Pitch Followed Him Home →</Link></p>
+        {stories.map((story) => (
+          <p key={story.id}><Link href={story.href}>{story.title} →</Link></p>
+        ))}
       </section>
     </InfoPage>
   </>;
