@@ -21,7 +21,9 @@ export const articleConfig = {
 
 export function MassachusettsSolarCostBody() {
   return <>
-    <nav className="case-question-links" aria-label="Breadcrumb"><Link href="/">Home</Link><Link href="/research">Research</Link><Link href="/states/massachusetts">Massachusetts</Link><span aria-current="page">Solar cost</span></nav>\n\n    <p className="page-updated">By <Link href="/authors/jules-young">Jules Young</Link></p>
+    <nav className="case-question-links" aria-label="Breadcrumb"><Link href="/">Home</Link><Link href="/research">Research</Link><Link href="/states/massachusetts">Massachusetts</Link><span aria-current="page">Solar cost</span></nav>
+
+    <p className="page-updated">By <Link href="/authors/jules-young">Jules Young</Link></p>
 
     <section className="info-section">
       <p>If you take a snapshot of the Massachusetts solar market this fall, a typical residential system lands around $31,910.</p>
