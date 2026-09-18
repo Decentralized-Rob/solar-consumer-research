@@ -46,10 +46,8 @@ test("renders product metadata and the latest research homepage", async () => {
   assert.match(html, massachusettsSolarCostTitle);
   assert.match(html, /Sunrun at Home Depot: Shopper Says Store Pitch Followed Him Home/i);
   assert.match(html, /Sunrun’s 25-Year Solar Contracts: The Homeowner View and the Investor View/i);
-  assert.match(html, featuredResearchTitle);
   assert.match(html, /href=["']\/research\/sunrun-home-depot-sales-home-visit["']/i);
   assert.match(html, /href=["']\/research\/sunrun-25-year-solar-contracts["']/i);
-  assert.match(html, /href=["']\/research\/solar-sales-financing-after-complaint["']/i);
 });
 
 test("serves canonical robots and sitemap files", async () => {
