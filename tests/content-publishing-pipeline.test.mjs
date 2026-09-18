@@ -8,7 +8,9 @@ const statePath = new URL("../components/state-resource-page.tsx", import.meta.u
 const sitemapPath = new URL("../app/sitemap.ts", import.meta.url);
 const authorPath = new URL("../app/authors/jules-young/page.tsx", import.meta.url);
 const articleHelperPath = new URL("../lib/research-article.ts", import.meta.url);
-const dynamicArticlePath = new URL("../app/research/[slug]/page.tsx", import.meta.url);\nconst pilotContentPath = new URL("../content/research/massachusetts-solar-cost-2026.tsx", import.meta.url);\nconst contentRegistryPath = new URL("../content/research/index.ts", import.meta.url);
+const dynamicArticlePath = new URL("../app/research/[slug]/page.tsx", import.meta.url);
+const pilotContentPath = new URL("../content/research/massachusetts-solar-cost-2026.tsx", import.meta.url);
+const contentRegistryPath = new URL("../content/research/index.ts", import.meta.url);
 
 test("research registry owns discovery metadata and selectors", async () => {
   const registry = await readFile(registryPath, "utf8");
