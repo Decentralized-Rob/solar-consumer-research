@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import { InfoPage } from "../../../components/info-page";
 import { getResearchContent, researchContent } from "../../../content/research";
@@ -47,7 +46,6 @@ export default async function ResearchArticlePage({ params }: ResearchPageProps)
   return <>
     <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }} />
     <InfoPage className="research-story-page" eyebrow={researchEyebrow(story)} title={story.title} lede={story.lede ?? story.deck}>
-      {story.author && story.authorSlug ? <p className="page-updated">By <Link href={`/authors/${story.authorSlug}`}>{story.author}</Link></p> : null}
       <Body />
     </InfoPage>
   </>;
