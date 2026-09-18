@@ -48,7 +48,7 @@ export function HomeHeader({
         <Link href="/#start" onClick={closeMenu}>Start here</Link>
         <div className={`home-nav-group ${researchOpen ? "is-expanded" : ""}`}>
           <div className="home-nav-group-label">
-            <a href="/research" onClick={closeMenu}>Research</a>
+            <Link href="/research" onClick={closeMenu}>Research</Link>
             <button
               type="button"
               aria-label="Show research pages"
@@ -116,7 +116,7 @@ export function HomeFooter() {
           <p>Independent public-source research for residential solar consumers.</p>
         </div>
         <nav aria-label="Footer navigation">
-          <a href="/research">Research</a>
+          <Link href="/research">Research</Link>
           <a href="/resources">Resources</a>
           <a href="/federal-resources">Federal</a>
           <a href="/guides">Guides</a>
