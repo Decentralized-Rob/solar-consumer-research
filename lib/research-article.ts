@@ -19,6 +19,7 @@ export type ResearchArticleConfig = {
   twitterDescription?: string;
   twitterTitle?: string;
   schemaHeadline?: string;
+  mentions?: Array<{ "@type": "Organization" | "AdministrativeArea"; name: string }>;
   sources?: ResearchSource[];
   breadcrumbLabel?: string;
   imageAlt?: string;
@@ -72,6 +73,7 @@ export function buildResearchStructuredData({
   story,
   seoDescription,
   schemaHeadline,
+  mentions,
   sources = [],
   breadcrumbLabel,
 }: ResearchArticleConfig) {
@@ -111,6 +113,7 @@ export function buildResearchStructuredData({
         author,
         publisher: { "@id": `${baseUrl}/#publisher` },
         about,
+        ...(mentions ? { mentions } : {}),
         citation: sources.map((source) =>
           source.datePublished || source.publisher
             ? {
