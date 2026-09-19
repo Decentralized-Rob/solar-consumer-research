@@ -101,7 +101,7 @@ export function buildResearchMetadata({
     },
     twitter: {
       card: "summary_large_image",
-      title: twitterTitle ?? story.title,
+      title: twitterTitle ?? story.twitterTitle ?? story.title,
       description: twitterDescription ?? social,
       images: [defaultImage],
     },
@@ -141,7 +141,7 @@ export function buildResearchStructuredData({
       {
         "@type": "Article",
         "@id": `${canonicalUrl}#article`,
-        headline: schemaHeadline ?? story.title,
+        headline: schemaHeadline ?? story.schemaHeadline ?? story.title,
         description: seoDescription ?? story.summary,
         image: [defaultImage],
         datePublished: story.datePublished,
