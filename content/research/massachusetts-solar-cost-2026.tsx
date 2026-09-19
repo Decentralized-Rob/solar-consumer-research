@@ -1,4 +1,24 @@
 import Link from "next/link";
+import { defineResearchArticle, type ResearchStory } from "../../lib/research-article";
+
+
+export const story = {
+  id: "massachusetts-solar-cost-2026",
+  slug: "massachusetts-solar-cost-2026",
+  href: "/research/massachusetts-solar-cost-2026",
+  title: "What Solar Costs in Massachusetts Right Now",
+  deck: "A typical Massachusetts solar system is running about $32,000 this fall. Cash, financing, leases and PPAs put very different contracts underneath the panels.",
+  summary: "September 2026 Massachusetts solar pricing, state incentives, financing, leases and Sunrun PPA research built around current primary and marketplace sources.",
+  seoTitle: "Massachusetts Solar Cost 2026: What Solar Costs Right Now",
+  seoDescription: "Massachusetts solar averages $31,910 in September 2026. Compare cash, financing, Sunrun leases and PPAs, state tax credits and SMART 3.0.",
+  socialDescription: "A typical Massachusetts solar system is running about $32,000 this fall. Here is what changes when you buy, finance, lease or sign a PPA.",
+  twitterDescription: "Massachusetts solar averages about $32,000 this fall. Compare buying, financing, leasing and Sunrun PPAs.",
+  lede: "A typical Massachusetts solar system is running about $32,000 this fall. The way you pay can change the deal just as much as the equipment.",
+  publishedAt: "September 18, 2026", datePublished: "2026-09-18", dateModified: "2026-09-18",
+  stateCodes: ["MA"], companies: ["Sunrun"],
+  topics: ["Massachusetts solar cost", "Massachusetts solar incentives", "SMART 3.0", "Sunrun Massachusetts", "solar financing", "solar leases", "power purchase agreements"],
+  author: "Jules Young", authorSlug: "jules-young", section: "Short Read", featured: true,
+} satisfies ResearchStory;
 
 export const energySage = "https://www.energysage.com/local-data/solar-panel-cost/ma/";
 export const maTaxCredit = "https://www.mass.gov/info-details/massachusetts-residential-property-tax-credits";
@@ -66,3 +86,6 @@ export function MassachusettsSolarCostBody() {
     </section>
   </>;
 }
+
+
+export const article = defineResearchArticle({ story, config: articleConfig, Body: MassachusettsSolarCostBody });
