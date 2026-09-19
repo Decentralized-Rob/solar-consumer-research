@@ -45,7 +45,7 @@ export default async function ResearchArticlePage({ params }: ResearchPageProps)
 
   return <>
     <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }} />
-    <InfoPage className="research-story-page" eyebrow={researchEyebrow(story)} title={story.title} lede={story.lede ?? story.deck}>
+    <InfoPage className="research-story-page" eyebrow={researchEyebrow(story)} title={story.displayTitle ?? story.title} lede={story.lede ?? story.deck}>
       <Body />
     </InfoPage>
   </>;
