@@ -1,16 +1,32 @@
 import Link from "next/link";
+import { defineResearchArticle, type ResearchStory } from "../../lib/research-article";
 import { featuredStateSources } from "../../lib/featured-state-sources";
-import { researchStories } from "../../lib/research-stories";
 
-const featuredResearchStory = researchStories.find((story) => story.id === "solar-sales-financing-after-complaint")!;
+
+export const story = {
+  id: "solar-sales-financing-after-complaint",
+  slug: "solar-sales-financing-after-complaint",
+  href: "/research/solar-sales-financing-after-complaint",
+  title: "Solar Sales, Financing and What Happens After a Complaint",
+  deck: "Michigan is testing how far responsibility extends after a solar sale. Separate actions in Texas and Arizona show why Sunrun customers should be paying attention.",
+  summary: "A source-backed look at Michigan's Climax Solar lawsuit, Texas's residential-solar investigation involving Sunrun, and Arizona's settlement with Sunrun and Vivint Solar.",
+  seoDescription: "Michigan's Climax Solar lawsuit, Texas's Sunrun investigation, and Arizona's Sunrun settlement show how states are examining solar sales, financing, service, and complaint handling.",
+  keywords: ["solar financing complaints", "Sunrun investigation", "Michigan solar lawsuit", "Arizona Sunrun settlement", "residential solar complaints", "solar consumer protection"],
+  articleSection: "Featured Research",
+  publishedAt: "August 27, 2026", datePublished: "2026-08-27", dateModified: "2026-08-27",
+  stateCodes: ["MI", "TX", "AZ"], companies: ["Climax Solar", "Sunrun", "Vivint Solar"],
+  topics: ["solar sales", "solar financing", "consumer complaints", "state enforcement"],
+  section: "Research", featured: true,
+} satisfies ResearchStory;
+
 const michiganSource = featuredStateSources.MI[0];
 const texasSource = featuredStateSources.TX[0];
 const arizonaAgreement = featuredStateSources.AZ[0];
 const arizonaSettlementPage = "https://www.azag.gov/consumer/sunrun";
 
 export const articleConfig = {
-  schemaDescription: featuredResearchStory.deck,
-  breadcrumbLabel: featuredResearchStory.title,
+  schemaDescription: story.deck,
+  breadcrumbLabel: story.title,
   imageAlt: "Solar Consumer Research",
   mentions: [
     { "@type": "Organization" as const, name: "Climax Solar" },
@@ -32,7 +48,7 @@ export function SolarSalesFinancingBody() {
     <nav className="case-question-links" aria-label="Breadcrumb">
           <Link href="/">Home</Link>
           <Link href="/research">Research</Link>
-          <span aria-current="page">{featuredResearchStory.title}</span>
+          <span aria-current="page">{story.title}</span>
         </nav>
 
         <nav className="case-question-links" aria-label="Article navigation">
@@ -227,3 +243,6 @@ export function SolarSalesFinancingBody() {
         </section>
   </>;
 }
+
+
+export const article = defineResearchArticle({ story, config: articleConfig, Body: SolarSalesFinancingBody });

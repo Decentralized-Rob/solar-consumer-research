@@ -1,8 +1,37 @@
+import type React from "react";
 import type { Metadata } from "next";
-import type { ResearchStory } from "./research-stories";
-
 const baseUrl = "https://solarcomplaint.com";
 const defaultImage = `${baseUrl}/og.png`;
+
+export type ResearchStory = {
+  id: string;
+  slug: string;
+  href: string;
+  title: string;
+  deck: string;
+  summary: string;
+  seoTitle?: string;
+  seoDescription?: string;
+  keywords?: string[];
+  openGraphTitle?: string;
+  articleSection?: string;
+  socialDescription?: string;
+  twitterDescription?: string;
+  twitterTitle?: string;
+  schemaHeadline?: string;
+  lede?: string;
+  displayTitle?: string;
+  publishedAt: string;
+  datePublished: string;
+  dateModified: string;
+  stateCodes: string[];
+  companies: string[];
+  topics: string[];
+  author?: string;
+  authorSlug?: string;
+  section?: "Short Read" | "Research";
+  featured?: boolean;
+};
 
 export type ResearchSource = {
   name: string;
@@ -24,6 +53,16 @@ export type ResearchArticleConfig = {
   breadcrumbLabel?: string;
   imageAlt?: string;
 };
+
+export type ResearchArticleDefinition = {
+  story: ResearchStory;
+  config: Omit<ResearchArticleConfig, "story">;
+  Body: React.ComponentType;
+};
+
+export function defineResearchArticle(article: ResearchArticleDefinition) {
+  return article;
+}
 
 export function buildResearchMetadata({
   story,

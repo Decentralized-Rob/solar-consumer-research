@@ -1,4 +1,27 @@
 import Link from "next/link";
+import { defineResearchArticle, type ResearchStory } from "../../lib/research-article";
+
+
+export const story = {
+  id: "sunrun-25-year-solar-contracts",
+  slug: "sunrun-25-year-solar-contracts",
+  href: "/research/sunrun-25-year-solar-contracts",
+  title: "Sunrun’s 25-Year Solar Contracts: The Homeowner View and the Investor View",
+  deck: "Sunrun’s own filings show why a 20- or 25-year solar agreement looks very different from the roof than it does in the financial statements.",
+  summary: "A source-backed analysis of Sunrun solar leases and PPAs, recurring customer payments, subscriber value, transfers, escalators and the terms homeowners should examine.",
+  seoTitle: "Sunrun 25-Year Contract: Lease, PPA, Transfer & Buyout Terms",
+  seoDescription: "Researching a Sunrun 25-year solar contract? See current 2026 SEC records on lease and PPA terms, performance guarantees, home-sale transfers, buyout options and how Sunrun values long-term customer agreements.",
+  keywords: ["Sunrun 25 year contract", "Sunrun solar contract", "Sunrun lease 25 years", "Sunrun PPA", "Sunrun contract terms", "Sunrun solar lease", "Sunrun contract transfer", "Sunrun buyout", "Sunrun performance guarantee", "Sunrun Flex"],
+  openGraphTitle: "Sunrun 25-Year Contracts: What Homeowners Should Know in 2026",
+  socialDescription: "Current SEC records explain the term, performance guarantees, transfers and financial value behind Sunrun leases and PPAs.",
+  twitterDescription: "Current 2026 records on what a long-term Sunrun agreement means for homeowners.",
+  lede: "A Sunrun lease or power purchase agreement can last longer than many homeowners stay in the same house. New 2026 SEC records add unusually specific details about what those agreements contain and how Sunrun values them.",
+  displayTitle: "Sunrun 25-Year Solar Contracts",
+  publishedAt: "September 7, 2026", datePublished: "2026-09-07", dateModified: "2026-09-16",
+  stateCodes: [], companies: ["Sunrun"],
+  topics: ["Sunrun contracts", "solar leases", "power purchase agreements", "subscriber value", "contract transfers"],
+  section: "Research", featured: true,
+} satisfies ResearchStory;
 
 const sec10k = "https://www.sec.gov/Archives/edgar/data/1469367/000162828026012289/run-20251231.htm";
 const q2Results = "https://www.sec.gov/Archives/edgar/data/1469367/000162828026053349/exhibit991q226.htm";
@@ -9,6 +32,8 @@ const sunrunTransfer = "https://www.sunrun.com/go-solar-center/solar-terms/defin
 const ftcSolar = "https://consumer.ftc.gov/articles/solar-power-your-home";
 
 export const articleConfig = {
+  twitterTitle: story.seoTitle,
+  schemaHeadline: story.seoTitle,
   schemaDescription: "Current 2026 research on Sunrun solar leases and PPAs, including contract length, performance guarantees, transfers, end-of-term options and investor valuation.",
   breadcrumbLabel: "Sunrun 25-Year Solar Contracts",
   imageAlt: "Sunrun 25-year solar contract research",
@@ -51,3 +76,6 @@ export function SunrunContractsBody() {
       <section className="info-section"><h2>Continue researching Sunrun</h2><p><Link href="/companies/sunrun">Sunrun complaints, investigations and consumer resources →</Link><br/><Link href="/research/sunrun-home-depot-sales-home-visit">Sunrun at Home Depot: shopper says store pitch followed him home →</Link><br/><Link href="/research/solar-sales-financing-after-complaint">Solar sales, financing and what happens after a complaint →</Link><br/><Link href="/research">More Solar Consumer Research →</Link><br/><Link href="/methodology">Research methodology and sourcing standards →</Link></p></section>
   </>;
 }
+
+
+export const article = defineResearchArticle({ story, config: articleConfig, Body: SunrunContractsBody });

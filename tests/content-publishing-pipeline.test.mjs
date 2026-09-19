@@ -11,14 +11,16 @@ const articleHelperPath = new URL("../lib/research-article.ts", import.meta.url)
 const dynamicArticlePath = new URL("../app/research/[slug]/page.tsx", import.meta.url);
 const pilotContentPath = new URL("../content/research/massachusetts-solar-cost-2026.tsx", import.meta.url);
 const contentRegistryPath = new URL("../content/research/index.ts", import.meta.url);
-const homeDepotContentPath = new URL("../content/research/sunrun-home-depot-sales-home-visit.tsx", import.meta.url);
-const contractsContentPath = new URL("../content/research/sunrun-25-year-solar-contracts.tsx", import.meta.url);
-const financingContentPath = new URL("../content/research/solar-sales-financing-after-complaint.tsx", import.meta.url);
+const generatorPath = new URL("../scripts/generate-research-metadata.mjs", import.meta.url);
+const packagePath = new URL("../package.json", import.meta.url);
 
-test("research registry owns discovery metadata and selectors", async () => {
-  const registry = await readFile(registryPath, "utf8");
-  assert.match(registry, /authorSlug\?: string/);
-  assert.match(registry, /section\?: "Short Read" \| "Research"/);
+test("research metadata registry exposes discovery selectors while the story type stays canonical", async () => {
+  const [registry, helper] = await Promise.all([
+    readFile(registryPath, "utf8"),
+    readFile(articleHelperPath, "utf8"),
+  ]);
+  assert.match(helper, /authorSlug\?: string/);
+  assert.match(helper, /section\?: "Short Read" \| "Research"/);
   assert.match(registry, /getResearchStoriesForState/);
   assert.match(registry, /getResearchStoriesForCompany/);
   assert.match(registry, /getResearchStoriesForAuthor/);
@@ -33,7 +35,6 @@ test("homepage, state pages, author page and sitemap discover stories from regis
     readFile(sitemapPath, "utf8"),
     readFile(authorPath, "utf8"),
   ]);
-
   assert.match(home, /getLatestResearchStories\(3\)/);
   assert.doesNotMatch(home, /index === 0/);
   assert.match(state, /getResearchStoriesForState\(state\.code\)/);
@@ -42,47 +43,34 @@ test("homepage, state pages, author page and sitemap discover stories from regis
   assert.match(sitemap, /getLatestResearchModifiedDate\(\)/);
 });
 
-
-test("dynamic research route renders the pilot from the content layer", async () => {
+test("dynamic research route renders discovered content", async () => {
   const [helper, route, content, contentRegistry] = await Promise.all([
     readFile(articleHelperPath, "utf8"),
     readFile(dynamicArticlePath, "utf8"),
     readFile(pilotContentPath, "utf8"),
     readFile(contentRegistryPath, "utf8"),
   ]);
-
   assert.match(helper, /buildResearchMetadata/);
   assert.match(helper, /buildResearchStructuredData/);
-  assert.match(helper, /formatResearchDate\(story\.dateModified\)/);
   assert.match(route, /generateMetadata/);
   assert.match(route, /generateStaticParams/);
-  assert.match(route, /getResearchStory\(slug\)/);
-  assert.match(route, /getResearchContent\(slug\)/);
-  assert.match(route, /buildResearchMetadata/);
-  assert.match(route, /buildResearchStructuredData/);
-  assert.match(contentRegistry, /massachusetts-solar-cost-2026/);
-  assert.match(content, /What Solar Costs|Massachusetts solar panel cost/);
+  assert.match(route, /researchArticles\.keys\(\)/);
+  assert.match(route, /getResearchArticle\(slug\)/);
+  assert.match(contentRegistry, /new Map/);
+  assert.match(content, /defineResearchArticle/);
+  assert.match(content, /export const story/);
 });
 
-
-test("all normal research articles are registered with the shared route", async () => {
-  const [registry, homeDepot, contracts, financing] = await Promise.all([
-    readFile(contentRegistryPath, "utf8"),
-    readFile(homeDepotContentPath, "utf8"),
-    readFile(contractsContentPath, "utf8"),
-    readFile(financingContentPath, "utf8"),
+test("research publishing discovers article files without a hand-maintained registry", async () => {
+  const [generator, pkg] = await Promise.all([
+    readFile(generatorPath, "utf8"),
+    readFile(packagePath, "utf8"),
   ]);
-
-  for (const slug of [
-    "massachusetts-solar-cost-2026",
-    "sunrun-home-depot-sales-home-visit",
-    "sunrun-25-year-solar-contracts",
-    "solar-sales-financing-after-complaint",
-  ]) {
-    assert.match(registry, new RegExp(slug));
-  }
-
-  assert.match(homeDepot, /SunrunHomeDepotBody/);
-  assert.match(contracts, /SunrunContractsBody/);
-  assert.match(financing, /SolarSalesFinancingBody/);
+  assert.ok(generator.includes("readdir(contentDir)"));
+  assert.ok(generator.includes('extname(file) === ".tsx"'));
+  assert.ok(generator.includes('writeFile(resolve(contentDir, "index.ts")'));
+  assert.ok(generator.includes("Duplicate research slug"));
+  assert.ok(!generator.includes("massachusetts-solar-cost-2026.tsx"));
+  assert.ok(!generator.includes("sunrun-25-year-solar-contracts.tsx"));
+  assert.ok(pkg.includes('"dev": "npm run generate:research-metadata &&'));
 });
