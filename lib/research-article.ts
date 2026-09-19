@@ -46,7 +46,7 @@ export function buildResearchMetadata({
       publishedTime: story.datePublished,
       modifiedTime: story.dateModified,
       authors: authorUrl ? [authorUrl] : undefined,
-      section: story.section ?? "Research",
+      section: story.articleSection ?? story.section ?? "Research",
       images: [{
         url: defaultImage,
         width: 1200,
@@ -99,7 +99,7 @@ export function buildResearchStructuredData({
         datePublished: story.datePublished,
         dateModified: story.dateModified,
         inLanguage: "en-US",
-        articleSection: story.section ?? "Research",
+        articleSection: story.articleSection ?? story.section ?? "Research",
         mainEntityOfPage: { "@type": "WebPage", "@id": canonicalUrl },
         author,
         publisher: { "@id": `${baseUrl}/#publisher` },
@@ -128,7 +128,7 @@ function formatResearchDate(date: string) {
 }
 
 export function researchEyebrow(story: ResearchStory) {
-  const section = story.section ?? "Research";
+  const section = story.articleSection ?? story.section ?? "Research";
   const updated = story.dateModified !== story.datePublished;
   const displayDate = updated ? formatResearchDate(story.dateModified) : story.publishedAt;
   return `${section} · ${updated ? "Updated " : ""}${displayDate}`;
