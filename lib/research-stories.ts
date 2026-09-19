@@ -13,6 +13,7 @@ export type ResearchStory = {
   socialDescription?: string;
   twitterDescription?: string;
   lede?: string;
+  displayTitle?: string;
   publishedAt: string;
   datePublished: string;
   dateModified: string;
@@ -84,6 +85,7 @@ const stories: ResearchStory[] = [
     socialDescription: "Current SEC records explain the term, performance guarantees, transfers and financial value behind Sunrun leases and PPAs.",
     twitterDescription: "Current 2026 records on what a long-term Sunrun agreement means for homeowners.",
     lede: "A Sunrun lease or power purchase agreement can last longer than many homeowners stay in the same house. New 2026 SEC records add unusually specific details about what those agreements contain and how Sunrun values them.",
+    displayTitle: "Sunrun 25-Year Solar Contracts",
     publishedAt: "September 7, 2026",
     datePublished: "2026-09-07",
     dateModified: "2026-09-16",
