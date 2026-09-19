@@ -7,16 +7,15 @@ const michiganSource = featuredStateSources.MI[0];
 const texasSource = featuredStateSources.TX[0];
 const arizonaAgreement = featuredStateSources.AZ[0];
 const arizonaSettlementPage = "https://www.azag.gov/consumer/sunrun";
-const canonicalUrl = "https://solarcomplaint.com/research/solar-sales-financing-after-complaint";
 
 export const articleConfig = {
   schemaDescription: featuredResearchStory.deck,
   breadcrumbLabel: featuredResearchStory.title,
   imageAlt: "Solar Consumer Research",
   sources: [
-    { name: michiganSource.title, url: michiganSource.url },
-    { name: texasSource.title, url: texasSource.url },
-    { name: arizonaAgreement.title, url: arizonaAgreement.url },
+    { name: michiganSource.title, url: michiganSource.url, datePublished: michiganSource.datePublished, publisher: michiganSource.publisher },
+    { name: texasSource.title, url: texasSource.url, datePublished: texasSource.datePublished, publisher: texasSource.publisher },
+    { name: arizonaAgreement.title, url: arizonaAgreement.url, datePublished: arizonaAgreement.datePublished, publisher: arizonaAgreement.publisher },
   ],
 };
 
