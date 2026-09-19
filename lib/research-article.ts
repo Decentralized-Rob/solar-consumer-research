@@ -118,8 +118,18 @@ export function buildResearchStructuredData({
   };
 }
 
+function formatResearchDate(date: string) {
+  return new Intl.DateTimeFormat("en-US", {
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+    timeZone: "UTC",
+  }).format(new Date(`${date}T00:00:00Z`));
+}
+
 export function researchEyebrow(story: ResearchStory) {
   const section = story.section ?? "Research";
-  const prefix = story.dateModified !== story.datePublished ? "Updated " : "";
-  return `${section} · ${prefix}${story.publishedAt}`;
+  const updated = story.dateModified !== story.datePublished;
+  const displayDate = updated ? formatResearchDate(story.dateModified) : story.publishedAt;
+  return `${section} · ${updated ? "Updated " : ""}${displayDate}`;
 }
