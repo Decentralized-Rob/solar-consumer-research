@@ -9,7 +9,7 @@ type ResearchPageProps = {
 };
 
 export function generateStaticParams() {
-  return Object.keys(researchArticles).map((slug) => ({ slug }));
+  return Array.from(researchArticles.keys(), (slug) => ({ slug }));
 }
 
 export async function generateMetadata({ params }: ResearchPageProps): Promise<Metadata> {
