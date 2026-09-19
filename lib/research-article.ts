@@ -36,10 +36,10 @@ export function buildResearchMetadata({
   return {
     title,
     description,
-    keywords: story.topics,
+    keywords: story.keywords ?? story.topics,
     alternates: { canonical: story.href },
     openGraph: {
-      title: story.title,
+      title: story.openGraphTitle ?? story.title,
       description: social,
       url: story.href,
       type: "article",
