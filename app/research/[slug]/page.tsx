@@ -24,7 +24,7 @@ export async function generateMetadata({ params }: ResearchPageProps): Promise<M
     seoDescription: story.seoDescription,
     socialDescription: story.socialDescription,
     twitterDescription: story.twitterDescription,
-    twitterTitle: config.twitterTitle,
+    twitterTitle: config.twitterTitle ?? story.twitterTitle,
     imageAlt: config.imageAlt,
   });
 }
@@ -38,7 +38,7 @@ export default async function ResearchArticlePage({ params }: ResearchPageProps)
   const structuredData = buildResearchStructuredData({
     story,
     seoDescription: config.schemaDescription,
-    schemaHeadline: config.schemaHeadline,
+    schemaHeadline: config.schemaHeadline ?? story.schemaHeadline,
     mentions: config.mentions,
     breadcrumbLabel: config.breadcrumbLabel,
     sources: config.sources,
