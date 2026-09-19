@@ -10,6 +10,7 @@ export type ResearchContent = {
   schemaDescription?: string;
   breadcrumbLabel?: string;
   imageAlt?: string;
+  mentions?: Array<{ "@type": "Organization" | "AdministrativeArea"; name: string }>;
   sources?: ResearchSource[];
 };
 
