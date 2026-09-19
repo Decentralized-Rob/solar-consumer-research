@@ -1,17 +1,18 @@
-import type { ResearchArticleDefinition } from "../../lib/research-article";
+import { article as massachusettsSolarCost } from "./massachusetts-solar-cost-2026";
+import { article as solarSalesFinancing } from "./solar-sales-financing-after-complaint";
+import { article as sunrunContracts } from "./sunrun-25-year-solar-contracts";
+import { article as sunrunHomeDepot } from "./sunrun-home-depot-sales-home-visit";
 
-type ResearchModule = { article?: ResearchArticleDefinition };
-
-const articleContext = require.context("./", false, /^(?!\.\/index).*\.tsx$/);
-
-const discoveredArticles = articleContext
-  .keys()
-  .map((key) => (articleContext(key) as ResearchModule).article)
-  .filter((article): article is ResearchArticleDefinition => Boolean(article));
+const discoveredArticles = [
+  massachusettsSolarCost,
+  solarSalesFinancing,
+  sunrunContracts,
+  sunrunHomeDepot,
+];
 
 export const researchArticles = Object.fromEntries(
   discoveredArticles.map((article) => [article.story.slug, article]),
-) as Record<string, ResearchArticleDefinition>;
+);
 
 export const researchStories = discoveredArticles
   .map((article) => article.story)
