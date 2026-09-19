@@ -14,6 +14,7 @@ const contentRegistryPath = new URL("../content/research/index.ts", import.meta.
 const homeDepotContentPath = new URL("../content/research/sunrun-home-depot-sales-home-visit.tsx", import.meta.url);
 const contractsContentPath = new URL("../content/research/sunrun-25-year-solar-contracts.tsx", import.meta.url);
 const financingContentPath = new URL("../content/research/solar-sales-financing-after-complaint.tsx", import.meta.url);
+const generatorPath = new URL("../scripts/generate-research-metadata.mjs", import.meta.url);
 
 test("research registry owns discovery metadata and selectors", async () => {
   const registry = await readFile(registryPath, "utf8");
@@ -68,7 +69,7 @@ test("dynamic research route renders the pilot from the content layer", async ()
 
 
 test("research publishing discovers article files without a hand-maintained registry", async () => {
-  const generator = await read("scripts/generate-research-metadata.mjs");
+  const generator = await readFile(generatorPath, "utf8");
   assert.match(generator, /readdir\(contentDir\)/);
   assert.match(generator, /extname\(file\) === "\\.tsx"/);
   assert.match(generator, /writeFile\(resolve\(contentDir, "index\\.ts"\)/);
