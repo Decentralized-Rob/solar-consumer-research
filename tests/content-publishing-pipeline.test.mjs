@@ -50,6 +50,7 @@ test("dynamic research route renders the pilot from the content layer", async ()
 
   assert.match(helper, /buildResearchMetadata/);
   assert.match(helper, /buildResearchStructuredData/);
+  assert.match(helper, /formatResearchDate\(story\.dateModified\)/);
   assert.match(route, /generateMetadata/);
   assert.match(route, /generateStaticParams/);
   assert.match(route, /getResearchStory\(slug\)/);
