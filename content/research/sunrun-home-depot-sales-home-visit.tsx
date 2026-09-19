@@ -1,4 +1,22 @@
 import Link from "next/link";
+import { defineResearchArticle, type ResearchStory } from "../../lib/research-article";
+
+
+export const story = {
+  id: "sunrun-home-depot-sales-home-visit",
+  slug: "sunrun-home-depot-sales-home-visit",
+  href: "/research/sunrun-home-depot-sales-home-visit",
+  title: "Sunrun at Home Depot: Shopper Says Store Pitch Followed Him Home",
+  deck: "A shopper tried a fake phone number and email to dodge the follow-up. The address was real. That turned out to matter.",
+  summary: "A September 2026 Sunrun sales story, backed by Sunrun and Home Depot records plus current Home Depot store reviews showing shoppers are still encountering Sunrun salespeople in 2026.",
+  seoDescription: "A Home Depot shopper says a Sunrun sales encounter followed him home. Current Home Depot reviews show the in-store Sunrun pitch is still getting noticed in 2026.",
+  socialDescription: "A shopper tried a fake phone number and email. The address was real. Then, he says, someone showed up at his house.",
+  twitterDescription: "He gave the Sunrun rep a fake number. The address was real.",
+  publishedAt: "September 16, 2026", datePublished: "2026-09-16", dateModified: "2026-09-16",
+  stateCodes: ["CA"], companies: ["Sunrun", "Home Depot"],
+  topics: ["Sunrun sales", "Home Depot solar", "retail solar sales", "solar sales representatives"],
+  author: "Jules Young", authorSlug: "jules-young", section: "Short Read", featured: true,
+} satisfies ResearchStory;
 
 const coolDownSource = "https://www.thecooldown.com/green-home/home-depot-shopper-sunrun-fake-number/";
 const sunrun10k = "https://www.sec.gov/Archives/edgar/data/1469367/000114036126014729/ef20070408_formars.pdf";
@@ -81,3 +99,6 @@ export function SunrunHomeDepotBody() {
       </section>
   </>;
 }
+
+
+export const article = defineResearchArticle({ story, config: articleConfig, Body: SunrunHomeDepotBody });
