@@ -56,11 +56,13 @@ test("dynamic research route renders the pilot from the content layer", async ()
   assert.match(helper, /formatResearchDate\(story\.dateModified\)/);
   assert.match(route, /generateMetadata/);
   assert.match(route, /generateStaticParams/);
-  assert.match(route, /getResearchStory\(slug\)/);
-  assert.match(route, /getResearchContent\(slug\)/);
+  assert.match(route, /getResearchArticle\(slug\)/);
+  assert.match(route, /researchArticles/);
   assert.match(route, /buildResearchMetadata/);
   assert.match(route, /buildResearchStructuredData/);
-  assert.match(contentRegistry, /massachusetts-solar-cost-2026/);\n  assert.match(content, /defineResearchArticle/);\n  assert.match(content, /export const story/);
+  assert.match(contentRegistry, /massachusetts-solar-cost-2026/);
+  assert.match(content, /defineResearchArticle/);
+  assert.match(content, /export const story/);
   assert.match(content, /What Solar Costs|Massachusetts solar panel cost/);
 });
 
