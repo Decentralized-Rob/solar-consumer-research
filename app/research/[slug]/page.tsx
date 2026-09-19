@@ -1,23 +1,22 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { InfoPage } from "../../../components/info-page";
-import { getResearchContent, researchContent } from "../../../content/research";
+import { getResearchArticle, researchArticles } from "../../../content/research";
 import { buildResearchMetadata, buildResearchStructuredData, researchEyebrow } from "../../../lib/research-article";
-import { getResearchStory } from "../../../lib/research-stories";
 
 type ResearchPageProps = {
   params: Promise<{ slug: string }>;
 };
 
 export function generateStaticParams() {
-  return Object.keys(researchContent).map((slug) => ({ slug }));
+  return Object.keys(researchArticles).map((slug) => ({ slug }));
 }
 
 export async function generateMetadata({ params }: ResearchPageProps): Promise<Metadata> {
   const { slug } = await params;
-  const story = getResearchStory(slug);
-  const content = getResearchContent(slug);
-  if (!story || !content) return {};
+  const article = getResearchArticle(slug);
+  if (!article) return {};
+  const { story, config } = article;
 
   return buildResearchMetadata({
     story,
@@ -25,26 +24,25 @@ export async function generateMetadata({ params }: ResearchPageProps): Promise<M
     seoDescription: story.seoDescription,
     socialDescription: story.socialDescription,
     twitterDescription: story.twitterDescription,
-    twitterTitle: story.slug === "sunrun-25-year-solar-contracts" ? story.seoTitle : undefined,
-    imageAlt: content.imageAlt,
+    twitterTitle: config.twitterTitle,
+    imageAlt: config.imageAlt,
   });
 }
 
 export default async function ResearchArticlePage({ params }: ResearchPageProps) {
   const { slug } = await params;
-  const story = getResearchStory(slug);
-  const content = getResearchContent(slug);
-  if (!story || !content) notFound();
+  const article = getResearchArticle(slug);
+  if (!article) notFound();
+  const { story, config, Body } = article;
 
   const structuredData = buildResearchStructuredData({
     story,
-    seoDescription: content.schemaDescription,
-    schemaHeadline: story.slug === "sunrun-25-year-solar-contracts" ? story.seoTitle : undefined,
-    mentions: content.mentions,
-    breadcrumbLabel: content.breadcrumbLabel,
-    sources: content.sources,
+    seoDescription: config.schemaDescription,
+    schemaHeadline: config.schemaHeadline,
+    mentions: config.mentions,
+    breadcrumbLabel: config.breadcrumbLabel,
+    sources: config.sources,
   });
-  const Body = content.Body;
 
   return <>
     <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }} />
