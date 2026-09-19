@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { stateSlug, states } from "../../lib/content";
 import type { Guide, Resource } from "../../lib/types";
 import { ArrowIcon, type State, type TopicFilter } from "./shared";
@@ -178,7 +179,7 @@ export function CaseFeature() {
           <p className="home-case-caution">{currentFeaturedResearch.caution}</p>
           <div className="home-case-actions">
             <a href={currentFeaturedResearch.href}>Read the featured guide →</a>
-            <a href="/research">Browse research <ArrowIcon /></a>
+            <Link href="/research">Browse research <ArrowIcon /></Link>
           </div>
         </div>
       </div>
