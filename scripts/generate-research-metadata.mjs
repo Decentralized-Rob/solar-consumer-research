@@ -78,12 +78,12 @@ const discoveredArticles = [
   ${articleNames},
 ];
 
-export const researchArticles = Object.fromEntries(
+export const researchArticles = new Map(
   discoveredArticles.map((article) => [article.story.slug, article]),
 );
 
 export function getResearchArticle(slug: string) {
-  return researchArticles[slug];
+  return researchArticles.get(slug);
 }
 
 export function getResearchContent(slug: string) {
