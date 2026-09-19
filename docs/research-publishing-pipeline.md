@@ -1,17 +1,25 @@
 # Research publishing pipeline
 
-Research stories use `lib/research-stories.ts` as the discovery registry.
+Research articles are self-contained files in `content/research/*.tsx`. The generated registries are outputs, not publishing inputs.
 
 ## Publishing rule
 
-Adding or updating a normal research story should not require hand-editing the homepage, research index, state-page related research, author-page story lists, or research sitemap entries.
+Adding or updating a normal research story should require editing one article file only.
 
-1. Add the story page under `app/research/<slug>/page.tsx`.
-2. Add one matching record to `lib/research-stories.ts`.
-3. Set the story metadata: dates, states, companies, topics, author/byline, section and featured status.
-4. Run the normal build/tests and review the preview.
+1. Create or update `content/research/<slug>.tsx`.
+2. Export one `story` record containing discovery and SEO metadata.
+3. Keep the article-specific config, sources and body in the same file.
+4. Export the complete article with `defineResearchArticle({ story, config, Body })`.
+5. Run the normal development/build/tests and review the preview.
 
-The registry automatically drives:
+The generator discovers every research `.tsx` article, rejects duplicate slugs, and writes:
+
+- `lib/research-stories.ts`, the metadata-only registry used by discovery surfaces
+- `content/research/index.ts`, the server-side article registry used by the dynamic research route
+
+Generation runs before development, build, lint and tests.
+
+The metadata registry automatically drives:
 
 - homepage latest research
 - `/research` story discovery and CollectionPage schema
@@ -19,8 +27,10 @@ The registry automatically drives:
 - author story listings for registered bylines
 - research sitemap URLs and research-index freshness
 
-## Guardrail
+## Guardrails
 
-Do not add a new story by hard-coding its title or URL into those discovery surfaces. If a new destination needs story discovery, add a reusable selector to the registry and make the destination query metadata.
+Do not hand-edit the generated registry files. Do not add a normal research article by creating a dedicated `app/research/<slug>/page.tsx` route or by hard-coding its title or URL into discovery surfaces.
 
-Company hubs are the next migration target. Existing hand-curated company/case tracker content is intentionally unchanged by this first infrastructure pass.
+If a new destination needs story discovery, add a reusable metadata selector and make that destination query the generated metadata registry.
+
+Company hubs and existing hand-curated company/case tracker content remain outside this article-publishing migration.
