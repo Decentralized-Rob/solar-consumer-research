@@ -7,6 +7,8 @@ const defaultImage = `${baseUrl}/og.png`;
 export type ResearchSource = {
   name: string;
   url: string;
+  datePublished?: string;
+  publisher?: string;
 };
 
 export type ResearchArticleConfig = {
@@ -104,7 +106,19 @@ export function buildResearchStructuredData({
         author,
         publisher: { "@id": `${baseUrl}/#publisher` },
         about,
-        citation: sources.map((source) => source.url),
+        citation: sources.map((source) =>
+          source.datePublished || source.publisher
+            ? {
+                "@type": "CreativeWork",
+                name: source.name,
+                url: source.url,
+                ...(source.datePublished ? { datePublished: source.datePublished } : {}),
+                ...(source.publisher
+                  ? { publisher: { "@type": "GovernmentOrganization", name: source.publisher } }
+                  : {}),
+              }
+            : source.url,
+        ),
       },
       {
         "@type": "BreadcrumbList",
