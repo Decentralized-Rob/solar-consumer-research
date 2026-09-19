@@ -25,6 +25,7 @@ export async function generateMetadata({ params }: ResearchPageProps): Promise<M
     seoDescription: story.seoDescription,
     socialDescription: story.socialDescription,
     twitterDescription: story.twitterDescription,
+    twitterTitle: story.slug === "sunrun-25-year-solar-contracts" ? story.seoTitle : undefined,
     imageAlt: content.imageAlt,
   });
 }
@@ -38,6 +39,7 @@ export default async function ResearchArticlePage({ params }: ResearchPageProps)
   const structuredData = buildResearchStructuredData({
     story,
     seoDescription: content.schemaDescription,
+    schemaHeadline: story.slug === "sunrun-25-year-solar-contracts" ? story.seoTitle : undefined,
     breadcrumbLabel: content.breadcrumbLabel,
     sources: content.sources,
   });
