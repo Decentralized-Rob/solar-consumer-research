@@ -65,24 +65,11 @@ test("dynamic research route renders the pilot from the content layer", async ()
 });
 
 
-test("all normal research articles are registered with the shared route", async () => {
-  const [registry, homeDepot, contracts, financing] = await Promise.all([
-    readFile(contentRegistryPath, "utf8"),
-    readFile(homeDepotContentPath, "utf8"),
-    readFile(contractsContentPath, "utf8"),
-    readFile(financingContentPath, "utf8"),
-  ]);
-
-  for (const slug of [
-    "massachusetts-solar-cost-2026",
-    "sunrun-home-depot-sales-home-visit",
-    "sunrun-25-year-solar-contracts",
-    "solar-sales-financing-after-complaint",
-  ]) {
-    assert.match(registry, new RegExp(slug));
-  }
-
-  assert.match(homeDepot, /SunrunHomeDepotBody/);
-  assert.match(contracts, /SunrunContractsBody/);
-  assert.match(financing, /SolarSalesFinancingBody/);
+test("research publishing discovers article files without a hand-maintained registry", async () => {
+  const generator = await read("scripts/generate-research-metadata.mjs");
+  assert.match(generator, /readdir\(contentDir\)/);
+  assert.match(generator, /extname\(file\) === "\\.tsx"/);
+  assert.match(generator, /writeFile\(resolve\(contentDir, "index\\.ts"\)/);
+  assert.doesNotMatch(generator, /massachusetts-solar-cost-2026\\.tsx/);
+  assert.doesNotMatch(generator, /sunrun-25-year-solar-contracts\\.tsx/);
 });
