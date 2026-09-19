@@ -52,6 +52,8 @@ test("dynamic research route renders discovered content", async () => {
   ]);
   assert.match(helper, /buildResearchMetadata/);
   assert.match(helper, /buildResearchStructuredData/);
+  assert.match(helper, /twitterTitle \\?\\? story\\.twitterTitle \\?\\? story\\.title/);
+  assert.match(helper, /schemaHeadline \\?\\? story\\.schemaHeadline \\?\\? story\\.title/);
   assert.match(route, /generateMetadata/);
   assert.match(route, /generateStaticParams/);
   assert.match(route, /researchArticles\.keys\(\)/);
