@@ -33,7 +33,7 @@ export function buildResearchMetadata({
   const title = seoTitle ?? story.title;
   const description = seoDescription ?? story.summary;
   const social = socialDescription ?? story.deck;
-  const authorUrl = story.authorSlug ? `${baseUrl}/authors/${story.authorSlug}` : undefined;
+  const authorUrl = story.authorSlug ? `${baseUrl}/authors/${story.authorSlug}` : `${baseUrl}/about`;
 
   return {
     title,
@@ -47,7 +47,7 @@ export function buildResearchMetadata({
       type: "article",
       publishedTime: story.datePublished,
       modifiedTime: story.dateModified,
-      authors: authorUrl ? [authorUrl] : undefined,
+      authors: [authorUrl],
       section: story.articleSection ?? story.section ?? "Research",
       images: [{
         url: defaultImage,
@@ -58,7 +58,7 @@ export function buildResearchMetadata({
     },
     twitter: {
       card: "summary_large_image",
-      title: story.title,
+      title,
       description: twitterDescription ?? social,
       images: [defaultImage],
     },
@@ -98,6 +98,7 @@ export function buildResearchStructuredData({
         "@id": `${canonicalUrl}#article`,
         headline: story.title,
         description: seoDescription ?? story.summary,
+        image: [defaultImage],
         datePublished: story.datePublished,
         dateModified: story.dateModified,
         inLanguage: "en-US",
