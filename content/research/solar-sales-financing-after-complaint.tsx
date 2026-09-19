@@ -12,6 +12,14 @@ export const articleConfig = {
   schemaDescription: featuredResearchStory.deck,
   breadcrumbLabel: featuredResearchStory.title,
   imageAlt: "Solar Consumer Research",
+  mentions: [
+    { "@type": "Organization" as const, name: "Climax Solar" },
+    { "@type": "Organization" as const, name: "Sunrun" },
+    { "@type": "Organization" as const, name: "Vivint Solar" },
+    { "@type": "AdministrativeArea" as const, name: "Michigan" },
+    { "@type": "AdministrativeArea" as const, name: "Texas" },
+    { "@type": "AdministrativeArea" as const, name: "Arizona" },
+  ],
   sources: [
     { name: michiganSource.title, url: michiganSource.url, datePublished: michiganSource.datePublished, publisher: michiganSource.publisher },
     { name: texasSource.title, url: texasSource.url, datePublished: texasSource.datePublished, publisher: texasSource.publisher },
