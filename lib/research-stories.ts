@@ -9,6 +9,7 @@ export type ResearchStory = {
   seoDescription?: string;
   keywords?: string[];
   openGraphTitle?: string;
+  articleSection?: string;
   socialDescription?: string;
   twitterDescription?: string;
   lede?: string;
@@ -20,7 +21,7 @@ export type ResearchStory = {
   topics: string[];
   author?: string;
   authorSlug?: string;
-  section?: "Short Read" | "Research" | "Featured Research";
+  section?: "Short Read" | "Research";
   featured?: boolean;
 };
 
@@ -99,13 +100,16 @@ const stories: ResearchStory[] = [
     title: "Solar Sales, Financing and What Happens After a Complaint",
     deck: "Michigan is testing how far responsibility extends after a solar sale. Separate actions in Texas and Arizona show why Sunrun customers should be paying attention.",
     summary: "A source-backed look at Michigan's Climax Solar lawsuit, Texas's residential-solar investigation involving Sunrun, and Arizona's settlement with Sunrun and Vivint Solar.",
+    seoDescription: "Michigan's Climax Solar lawsuit, Texas's Sunrun investigation, and Arizona's Sunrun settlement show how states are examining solar sales, financing, service, and complaint handling.",
+    keywords: ["solar financing complaints", "Sunrun investigation", "Michigan solar lawsuit", "Arizona Sunrun settlement", "residential solar complaints", "solar consumer protection"],
+    articleSection: "Featured Research",
     publishedAt: "August 27, 2026",
     datePublished: "2026-08-27",
     dateModified: "2026-08-27",
     stateCodes: ["MI", "TX", "AZ"],
     companies: ["Climax Solar", "Sunrun", "Vivint Solar"],
     topics: ["solar sales", "solar financing", "consumer complaints", "state enforcement"],
-    section: "Featured Research",
+    section: "Research",
     featured: true,
   },
 ];
