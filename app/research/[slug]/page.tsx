@@ -40,6 +40,7 @@ export default async function ResearchArticlePage({ params }: ResearchPageProps)
     story,
     seoDescription: content.schemaDescription,
     schemaHeadline: story.slug === "sunrun-25-year-solar-contracts" ? story.seoTitle : undefined,
+    mentions: content.mentions,
     breadcrumbLabel: content.breadcrumbLabel,
     sources: content.sources,
   });
