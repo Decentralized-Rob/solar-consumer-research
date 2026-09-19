@@ -11,6 +11,9 @@ const articleHelperPath = new URL("../lib/research-article.ts", import.meta.url)
 const dynamicArticlePath = new URL("../app/research/[slug]/page.tsx", import.meta.url);
 const pilotContentPath = new URL("../content/research/massachusetts-solar-cost-2026.tsx", import.meta.url);
 const contentRegistryPath = new URL("../content/research/index.ts", import.meta.url);
+const homeDepotContentPath = new URL("../content/research/sunrun-home-depot-sales-home-visit.tsx", import.meta.url);
+const contractsContentPath = new URL("../content/research/sunrun-25-year-solar-contracts.tsx", import.meta.url);
+const financingContentPath = new URL("../content/research/solar-sales-financing-after-complaint.tsx", import.meta.url);
 
 test("research registry owns discovery metadata and selectors", async () => {
   const registry = await readFile(registryPath, "utf8");
@@ -59,4 +62,27 @@ test("dynamic research route renders the pilot from the content layer", async ()
   assert.match(route, /buildResearchStructuredData/);
   assert.match(contentRegistry, /massachusetts-solar-cost-2026/);
   assert.match(content, /What Solar Costs|Massachusetts solar panel cost/);
+});
+
+
+test("all normal research articles are registered with the shared route", async () => {
+  const [registry, homeDepot, contracts, financing] = await Promise.all([
+    readFile(contentRegistryPath, "utf8"),
+    readFile(homeDepotContentPath, "utf8"),
+    readFile(contractsContentPath, "utf8"),
+    readFile(financingContentPath, "utf8"),
+  ]);
+
+  for (const slug of [
+    "massachusetts-solar-cost-2026",
+    "sunrun-home-depot-sales-home-visit",
+    "sunrun-25-year-solar-contracts",
+    "solar-sales-financing-after-complaint",
+  ]) {
+    assert.match(registry, new RegExp(slug));
+  }
+
+  assert.match(homeDepot, /SunrunHomeDepotBody/);
+  assert.match(contracts, /SunrunContractsBody/);
+  assert.match(financing, /SolarSalesFinancingBody/);
 });

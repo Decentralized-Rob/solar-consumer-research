@@ -1,132 +1,35 @@
-import type { Metadata } from "next";
 import Link from "next/link";
-import { InfoPage } from "../../../components/info-page";
-import { featuredStateSources } from "../../../lib/featured-state-sources";
-import { researchStories } from "../../../lib/research-stories";
+import { featuredStateSources } from "../../lib/featured-state-sources";
+import { researchStories } from "../../lib/research-stories";
 
 const featuredResearchStory = researchStories.find((story) => story.id === "solar-sales-financing-after-complaint")!;
 const michiganSource = featuredStateSources.MI[0];
 const texasSource = featuredStateSources.TX[0];
 const arizonaAgreement = featuredStateSources.AZ[0];
 const arizonaSettlementPage = "https://www.azag.gov/consumer/sunrun";
-const canonicalUrl = "https://solarcomplaint.com/research/solar-sales-financing-after-complaint";
 
-export const metadata: Metadata = {
-  title: "Solar Sales, Financing and What Happens After a Complaint",
-  description:
-    "Michigan's Climax Solar lawsuit, Texas's Sunrun investigation, and Arizona's Sunrun settlement show how states are examining solar sales, financing, service, and complaint handling.",
-  keywords: [
-    "solar financing complaints",
-    "Sunrun investigation",
-    "Michigan solar lawsuit",
-    "Arizona Sunrun settlement",
-    "residential solar complaints",
-    "solar consumer protection",
+export const articleConfig = {
+  schemaDescription: featuredResearchStory.deck,
+  breadcrumbLabel: featuredResearchStory.title,
+  imageAlt: "Solar Consumer Research",
+  mentions: [
+    { "@type": "Organization" as const, name: "Climax Solar" },
+    { "@type": "Organization" as const, name: "Sunrun" },
+    { "@type": "Organization" as const, name: "Vivint Solar" },
+    { "@type": "AdministrativeArea" as const, name: "Michigan" },
+    { "@type": "AdministrativeArea" as const, name: "Texas" },
+    { "@type": "AdministrativeArea" as const, name: "Arizona" },
   ],
-  alternates: { canonical: "/research/solar-sales-financing-after-complaint" },
-  openGraph: {
-    title: featuredResearchStory.title,
-    description: featuredResearchStory.deck,
-    url: "/research/solar-sales-financing-after-complaint",
-    type: "article",
-    publishedTime: "2026-08-27",
-    modifiedTime: "2026-08-27",
-    authors: ["https://solarcomplaint.com/about"],
-    section: "Featured Research",
-    images: [
-      {
-        url: "https://solarcomplaint.com/og.png",
-        width: 1200,
-        height: 630,
-        alt: "Solar Consumer Research",
-      },
-    ],
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: featuredResearchStory.title,
-    description: featuredResearchStory.deck,
-    images: ["https://solarcomplaint.com/og.png"],
-  },
+  sources: [
+    { name: michiganSource.title, url: michiganSource.url, datePublished: michiganSource.datePublished, publisher: michiganSource.publisher },
+    { name: texasSource.title, url: texasSource.url, datePublished: texasSource.datePublished, publisher: texasSource.publisher },
+    { name: arizonaAgreement.title, url: arizonaAgreement.url, datePublished: arizonaAgreement.datePublished, publisher: arizonaAgreement.publisher },
+  ],
 };
 
-export default function SolarSalesFinancingResearchPage() {
-  const structuredData = {
-    "@context": "https://schema.org",
-    "@graph": [
-      {
-        "@type": "Article",
-        "@id": `${canonicalUrl}#article`,
-        headline: featuredResearchStory.title,
-        description: featuredResearchStory.deck,
-        image: ["https://solarcomplaint.com/og.png"],
-        datePublished: featuredResearchStory.datePublished,
-        dateModified: featuredResearchStory.dateModified,
-        inLanguage: "en-US",
-        articleSection: "Featured Research",
-        mainEntityOfPage: { "@type": "WebPage", "@id": canonicalUrl },
-        isPartOf: { "@id": "https://solarcomplaint.com/#website" },
-        author: {
-          "@type": "Organization",
-          name: "Solar Consumer Research",
-          url: "https://solarcomplaint.com/about",
-        },
-        publisher: { "@id": "https://solarcomplaint.com/#publisher" },
-        about: featuredResearchStory.topics.map((name) => ({ "@type": "Thing", name })),
-        mentions: [
-          { "@type": "Organization", name: "Climax Solar" },
-          { "@type": "Organization", name: "Sunrun" },
-          { "@type": "Organization", name: "Vivint Solar" },
-          { "@type": "AdministrativeArea", name: "Michigan" },
-          { "@type": "AdministrativeArea", name: "Texas" },
-          { "@type": "AdministrativeArea", name: "Arizona" },
-        ],
-        citation: [
-          {
-            "@type": "CreativeWork",
-            name: michiganSource.title,
-            url: michiganSource.url,
-            datePublished: michiganSource.datePublished,
-            publisher: { "@type": "GovernmentOrganization", name: michiganSource.publisher },
-          },
-          {
-            "@type": "CreativeWork",
-            name: texasSource.title,
-            url: texasSource.url,
-            datePublished: texasSource.datePublished,
-            publisher: { "@type": "GovernmentOrganization", name: texasSource.publisher },
-          },
-          {
-            "@type": "CreativeWork",
-            name: arizonaAgreement.title,
-            url: arizonaAgreement.url,
-            datePublished: arizonaAgreement.datePublished,
-            publisher: { "@type": "GovernmentOrganization", name: arizonaAgreement.publisher },
-          },
-        ],
-      },
-      {
-        "@type": "BreadcrumbList",
-        "@id": `${canonicalUrl}#breadcrumb`,
-        itemListElement: [
-          { "@type": "ListItem", position: 1, name: "Home", item: "https://solarcomplaint.com/" },
-          { "@type": "ListItem", position: 2, name: "Research", item: "https://solarcomplaint.com/research" },
-          { "@type": "ListItem", position: 3, name: featuredResearchStory.title, item: canonicalUrl },
-        ],
-      },
-    ],
-  };
-
-  return (
-    <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }} />
-      <InfoPage
-        className="research-story-page"
-        eyebrow={`Featured Research · ${featuredResearchStory.publishedAt}`}
-        title={featuredResearchStory.title}
-        lede={featuredResearchStory.deck}
-      >
-        <nav className="case-question-links" aria-label="Breadcrumb">
+export function SolarSalesFinancingBody() {
+  return <>
+    <nav className="case-question-links" aria-label="Breadcrumb">
           <Link href="/">Home</Link>
           <Link href="/research">Research</Link>
           <span aria-current="page">{featuredResearchStory.title}</span>
@@ -322,7 +225,5 @@ export default function SolarSalesFinancingResearchPage() {
             Read <Link href="/methodology">how Solar Consumer Research selects, verifies, and labels sources</Link>.
           </p>
         </section>
-      </InfoPage>
-    </>
-  );
+  </>;
 }

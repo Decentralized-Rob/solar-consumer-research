@@ -7,6 +7,8 @@ const defaultImage = `${baseUrl}/og.png`;
 export type ResearchSource = {
   name: string;
   url: string;
+  datePublished?: string;
+  publisher?: string;
 };
 
 export type ResearchArticleConfig = {
@@ -15,6 +17,9 @@ export type ResearchArticleConfig = {
   seoDescription?: string;
   socialDescription?: string;
   twitterDescription?: string;
+  twitterTitle?: string;
+  schemaHeadline?: string;
+  mentions?: Array<{ "@type": "Organization" | "AdministrativeArea"; name: string }>;
   sources?: ResearchSource[];
   breadcrumbLabel?: string;
   imageAlt?: string;
@@ -26,27 +31,28 @@ export function buildResearchMetadata({
   seoDescription,
   socialDescription,
   twitterDescription,
+  twitterTitle,
   imageAlt,
 }: ResearchArticleConfig): Metadata {
   const title = seoTitle ?? story.title;
   const description = seoDescription ?? story.summary;
   const social = socialDescription ?? story.deck;
-  const authorUrl = story.authorSlug ? `${baseUrl}/authors/${story.authorSlug}` : undefined;
+  const authorUrl = story.authorSlug ? `${baseUrl}/authors/${story.authorSlug}` : `${baseUrl}/about`;
 
   return {
     title,
     description,
-    keywords: story.topics,
+    keywords: story.keywords ?? story.topics,
     alternates: { canonical: story.href },
     openGraph: {
-      title: story.title,
+      title: story.openGraphTitle ?? story.title,
       description: social,
       url: story.href,
       type: "article",
       publishedTime: story.datePublished,
       modifiedTime: story.dateModified,
-      authors: authorUrl ? [authorUrl] : undefined,
-      section: story.section ?? "Research",
+      authors: [authorUrl],
+      section: story.articleSection ?? story.section ?? "Research",
       images: [{
         url: defaultImage,
         width: 1200,
@@ -56,7 +62,7 @@ export function buildResearchMetadata({
     },
     twitter: {
       card: "summary_large_image",
-      title: story.title,
+      title: twitterTitle ?? story.title,
       description: twitterDescription ?? social,
       images: [defaultImage],
     },
@@ -66,6 +72,8 @@ export function buildResearchMetadata({
 export function buildResearchStructuredData({
   story,
   seoDescription,
+  schemaHeadline,
+  mentions,
   sources = [],
   breadcrumbLabel,
 }: ResearchArticleConfig) {
@@ -94,17 +102,31 @@ export function buildResearchStructuredData({
       {
         "@type": "Article",
         "@id": `${canonicalUrl}#article`,
-        headline: story.title,
+        headline: schemaHeadline ?? story.title,
         description: seoDescription ?? story.summary,
+        image: [defaultImage],
         datePublished: story.datePublished,
         dateModified: story.dateModified,
         inLanguage: "en-US",
-        articleSection: story.section ?? "Research",
+        articleSection: story.articleSection ?? story.section ?? "Research",
         mainEntityOfPage: { "@type": "WebPage", "@id": canonicalUrl },
         author,
         publisher: { "@id": `${baseUrl}/#publisher` },
         about,
-        citation: sources.map((source) => source.url),
+        ...(mentions ? { mentions } : {}),
+        citation: sources.map((source) =>
+          source.datePublished || source.publisher
+            ? {
+                "@type": "CreativeWork",
+                name: source.name,
+                url: source.url,
+                ...(source.datePublished ? { datePublished: source.datePublished } : {}),
+                ...(source.publisher
+                  ? { publisher: { "@type": "GovernmentOrganization", name: source.publisher } }
+                  : {}),
+              }
+            : source.url,
+        ),
       },
       {
         "@type": "BreadcrumbList",
@@ -128,7 +150,7 @@ function formatResearchDate(date: string) {
 }
 
 export function researchEyebrow(story: ResearchStory) {
-  const section = story.section ?? "Research";
+  const section = story.articleSection ?? story.section ?? "Research";
   const updated = story.dateModified !== story.datePublished;
   const displayDate = updated ? formatResearchDate(story.dateModified) : story.publishedAt;
   return `${section} · ${updated ? "Updated " : ""}${displayDate}`;

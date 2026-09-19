@@ -1,9 +1,5 @@
-import type { Metadata } from "next";
 import Link from "next/link";
-import { InfoPage } from "../../../components/info-page";
 
-const canonicalUrl = "https://solarcomplaint.com/research/sunrun-home-depot-sales-home-visit";
-const authorUrl = "https://solarcomplaint.com/authors/jules-young";
 const coolDownSource = "https://www.thecooldown.com/green-home/home-depot-shopper-sunrun-fake-number/";
 const sunrun10k = "https://www.sec.gov/Archives/edgar/data/1469367/000114036126014729/ef20070408_formars.pdf";
 const homeDepotPartnership = "https://corporate.homedepot.com/news/sustainability/its-bright-new-day-residential-solar-home-depot-sunrun-and-vivint-solar";
@@ -13,58 +9,25 @@ const burbankReviews = "https://www.homedepot.com/l/Burbank/CA/Burbank/91502/665
 const yuccaValleyReviews = "https://www.homedepot.com/l/Yucca-Valley/CA/Yucca-Valley/92284/6971/reviews/1";
 const placervilleReviews = "https://www.homedepot.com/l/Placerville/CA/Placerville/95667/1085/reviews/homedepot.com/";
 
-export const metadata: Metadata = {
-  title: "Sunrun at Home Depot: Shopper Says Store Pitch Followed Him Home",
-  description: "A Home Depot shopper says a Sunrun sales encounter followed him home. Current Home Depot reviews show the in-store Sunrun pitch is still getting noticed in 2026.",
-  alternates: { canonical: "/research/sunrun-home-depot-sales-home-visit" },
-  openGraph: {
-    title: "Sunrun at Home Depot: Shopper Says Store Pitch Followed Him Home",
-    description: "A shopper tried a fake phone number and email. The address was real. Then, he says, someone showed up at his house.",
-    url: "/research/sunrun-home-depot-sales-home-visit",
-    type: "article",
-    publishedTime: "2026-09-16",
-    modifiedTime: "2026-09-16",
-    authors: [authorUrl],
-    section: "Short Read",
-    images: [{ url: "https://solarcomplaint.com/og.png", width: 1200, height: 630, alt: "SolarComplaint.com short read about Sunrun sales at Home Depot" }],
-  },
-  twitter: { card: "summary_large_image", title: "Sunrun at Home Depot: Shopper Says Store Pitch Followed Him Home", description: "He gave the Sunrun rep a fake number. The address was real.", images: ["https://solarcomplaint.com/og.png"] },
+export const articleConfig = {
+  schemaDescription: "A source-backed short read on a reported Sunrun sales encounter at Home Depot and the retail sales channel behind it.",
+  breadcrumbLabel: "Sunrun at Home Depot",
+  imageAlt: "SolarComplaint.com short read about Sunrun sales at Home Depot",
+  sources: [
+    { name: "The Cool Down report", url: coolDownSource },
+    { name: "Sunrun annual report", url: sunrun10k },
+    { name: "Home Depot partnership announcement", url: homeDepotPartnership },
+    { name: "Sunrun Home Depot announcement", url: sunrunHomeDepot },
+    { name: "Mission Viejo Home Depot reviews", url: missionViejoReviews },
+    { name: "Burbank Home Depot reviews", url: burbankReviews },
+    { name: "Yucca Valley Home Depot reviews", url: yuccaValleyReviews },
+    { name: "Placerville Home Depot reviews", url: placervilleReviews },
+  ],
 };
 
-export default function SunrunHomeDepotShortRead() {
-  const structuredData = {
-    "@context": "https://schema.org",
-    "@graph": [
-      {
-        "@type": "Article",
-        "@id": `${canonicalUrl}#article`,
-        headline: "Sunrun at Home Depot: Shopper Says Store Pitch Followed Him Home",
-        description: "A source-backed short read on a reported Sunrun sales encounter at Home Depot and the retail sales channel behind it.",
-        datePublished: "2026-09-16",
-        dateModified: "2026-09-16",
-        inLanguage: "en-US",
-        articleSection: "Short Read",
-        mainEntityOfPage: { "@type": "WebPage", "@id": canonicalUrl },
-        author: { "@type": "Organization", name: "Jules Young, an editorial byline of Solar Consumer Research", url: authorUrl },
-        publisher: { "@id": "https://solarcomplaint.com/#publisher" },
-        about: [{ "@type": "Organization", name: "Sunrun Inc." }, { "@type": "Organization", name: "The Home Depot" }, { "@type": "Thing", name: "Residential solar sales" }],
-        citation: [coolDownSource, sunrun10k, homeDepotPartnership, sunrunHomeDepot, missionViejoReviews, burbankReviews, yuccaValleyReviews, placervilleReviews],
-      },
-      {
-        "@type": "BreadcrumbList",
-        itemListElement: [
-          { "@type": "ListItem", position: 1, name: "Home", item: "https://solarcomplaint.com/" },
-          { "@type": "ListItem", position: 2, name: "Research", item: "https://solarcomplaint.com/research" },
-          { "@type": "ListItem", position: 3, name: "Sunrun at Home Depot", item: canonicalUrl },
-        ],
-      },
-    ],
-  };
-
+export function SunrunHomeDepotBody() {
   return <>
-    <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }} />
-    <InfoPage className="research-story-page" eyebrow="Short Read · September 16, 2026" title="Sunrun at Home Depot: Shopper Says Store Pitch Followed Him Home" lede="A shopper tried a fake phone number and email to dodge the follow-up. The address was real. That turned out to matter.">
-      <nav className="case-question-links" aria-label="Breadcrumb"><Link href="/">Home</Link><Link href="/research">Research</Link><Link href="/companies/sunrun">Sunrun</Link><span aria-current="page">Home Depot sales</span></nav>
+    <nav className="case-question-links" aria-label="Breadcrumb"><Link href="/">Home</Link><Link href="/research">Research</Link><Link href="/companies/sunrun">Sunrun</Link><span aria-current="page">Home Depot sales</span></nav>
 
       <p className="page-updated">By <Link href="/authors/jules-young">Jules Young</Link></p>
 
@@ -116,6 +79,5 @@ export default function SunrunHomeDepotShortRead() {
         <h2>More Sunrun research</h2>
         <p><Link href="/companies/sunrun">Sunrun Consumer Resource Center →</Link><br/><Link href="/research/sunrun-25-year-solar-contracts">Sunrun’s 25-year solar contracts →</Link><br/><Link href="/research/solar-sales-financing-after-complaint">Solar sales, financing and what happens after a complaint →</Link></p>
       </section>
-    </InfoPage>
   </>;
 }
