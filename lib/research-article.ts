@@ -17,6 +17,8 @@ export type ResearchArticleConfig = {
   seoDescription?: string;
   socialDescription?: string;
   twitterDescription?: string;
+  twitterTitle?: string;
+  schemaHeadline?: string;
   sources?: ResearchSource[];
   breadcrumbLabel?: string;
   imageAlt?: string;
@@ -28,6 +30,7 @@ export function buildResearchMetadata({
   seoDescription,
   socialDescription,
   twitterDescription,
+  twitterTitle,
   imageAlt,
 }: ResearchArticleConfig): Metadata {
   const title = seoTitle ?? story.title;
@@ -58,7 +61,7 @@ export function buildResearchMetadata({
     },
     twitter: {
       card: "summary_large_image",
-      title,
+      title: twitterTitle ?? story.title,
       description: twitterDescription ?? social,
       images: [defaultImage],
     },
@@ -68,6 +71,7 @@ export function buildResearchMetadata({
 export function buildResearchStructuredData({
   story,
   seoDescription,
+  schemaHeadline,
   sources = [],
   breadcrumbLabel,
 }: ResearchArticleConfig) {
@@ -96,7 +100,7 @@ export function buildResearchStructuredData({
       {
         "@type": "Article",
         "@id": `${canonicalUrl}#article`,
-        headline: story.title,
+        headline: schemaHeadline ?? story.title,
         description: seoDescription ?? story.summary,
         image: [defaultImage],
         datePublished: story.datePublished,
