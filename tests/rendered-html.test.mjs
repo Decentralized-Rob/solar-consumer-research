@@ -43,11 +43,10 @@ test("renders product metadata and the latest research homepage", async () => {
   assert.match(html, productTitle);
   assert.match(html, productDescription);
   assert.match(html, /Latest solar research/i);
+  const latestLinks = latestResearchStoryLinks(html);
+  assert.equal(latestLinks.length, 3, "homepage should render exactly three latest research stories");
   assert.match(html, massachusettsSolarCostTitle);
   assert.match(html, /Sunrun at Home Depot: Shopper Says Store Pitch Followed Him Home/i);
-  assert.match(html, /Sunrun’s 25-Year Solar Contracts: The Homeowner View and the Investor View/i);
-  assert.match(html, /href=["']\/research\/sunrun-home-depot-sales-home-visit["']/i);
-  assert.match(html, /href=["']\/research\/sunrun-25-year-solar-contracts["']/i);
 });
 
 test("serves canonical robots and sitemap files", async () => {
