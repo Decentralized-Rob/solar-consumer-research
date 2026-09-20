@@ -1,1 +1,0 @@
-V2 exists because PR #47 diverged too far from current main to merge safely. Rebuilding the GoodLeap-specific public work on current main preserves all newer site changes and produces a small, reviewable launch diff.
