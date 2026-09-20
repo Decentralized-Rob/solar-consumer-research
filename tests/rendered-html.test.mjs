@@ -8,6 +8,15 @@ const featuredResearchTitle = /Solar Sales, Financing and What Happens After a C
 const massachusettsSolarCostTitle = /What Solar Costs in Massachusetts Right Now/i;
 const researchMenuTitle = /Solar Sales &amp; Financing/i;
 
+function latestResearchStoryLinks(html) {
+  const start = html.indexOf('aria-label="Latest solar research"');
+  assert.ok(start >= 0, "latest research section should render");
+  const end = html.indexOf('id="start"', start);
+  assert.ok(end > start, "latest research section should end before the state finder");
+  const section = html.slice(start, end);
+  return [...new Set([...section.matchAll(/href=["'](\/research\/[^"'#?]+)["']/gi)].map((match) => match[1]))];
+}
+
 async function loadWorker() {
   const workerUrl = new URL("../dist/server/index.js", import.meta.url);
   workerUrl.searchParams.set("test", `${process.pid}-${Date.now()}-${Math.random()}`);
