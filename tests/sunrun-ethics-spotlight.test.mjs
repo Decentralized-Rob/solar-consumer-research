@@ -23,8 +23,8 @@ test("uses the redesigned homepage for the latest research collection", async ()
   assert.equal(response.status, 200);
   const html = await response.text();
   assert.match(html, /Latest solar research/i);
-  assert.match(html, /Sunrun at Home Depot: Shopper Says Store Pitch Followed Him Home/i);
-  assert.match(html, /Sunrun’s 25-Year Solar Contracts: The Homeowner View and the Investor View/i);
+  const latestLinks = latestResearchStoryLinks(html);
+  assert.equal(latestLinks.length, 3, "homepage should render exactly three latest research stories");
   assert.doesNotMatch(html, /Featured company watch/i);
   assert.doesNotMatch(html, /New research guide/i);
 });
