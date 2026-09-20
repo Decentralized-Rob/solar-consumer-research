@@ -1,1 +1,0 @@
-GoodLeap v2 is a clean current-main implementation of the useful PR47 research, with current styling, stronger source boundaries and current-site internal linking.

@@ -1,1 +1,0 @@
-GoodLeap pages explain GoodLeap-specific public records. They do not duplicate full state regulatory directories, generic solar guides, or installer case histories. Those remain separate site resources connected through internal links.

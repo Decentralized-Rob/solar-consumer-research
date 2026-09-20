@@ -1,1 +1,0 @@
-No separate GoodLeap brand. No giant hero. No map. No icon grid. No empty issue/case scaffolds. No state page from license data alone. Use the current SolarComplaint shell, readable source-backed stories and existing state hubs.

@@ -1,1 +1,0 @@
-QA targets: `/goodleap`, `/goodleap/states`, `/goodleap/states/minnesota`, `/goodleap/states/virginia`, `/goodleap/resources`; desktop + 360px mobile; all internal links; all official external source links; metadata/canonical; no horizontal overflow; no stale Solar Consumer Research mini-site branding.

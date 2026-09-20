@@ -1,1 +1,0 @@
-GoodLeap does not replace or fork a SolarComplaint state hub. A GoodLeap state page handles the company-specific story; the existing `/states/...` page remains the source for general state regulators and resources. Each links to the other when substantively relevant.

@@ -1,1 +1,0 @@
-2026-09-16: Do not reconcile stale PR #47 into main. Build GoodLeap v2 from current main. Preserve verified research concepts, not stale shared-site files. Publish Minnesota and Virginia; keep Maryland/Texas/Florida in review until full source passes. Use current site skin and state hubs.

@@ -1,1 +1,0 @@
-Fresh GoodLeap implementation is now on a branch based on current main. Draft PR creation is next; shared discovery integration remains before ready-to-merge.

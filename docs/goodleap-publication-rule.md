@@ -1,1 +1,0 @@
-A GoodLeap item moves from Reviewing to Published only when the page can identify the primary source, explain the record in plain language, state attribution/holding boundaries, link to the relevant state hub and provide enough substance to stand on its own.

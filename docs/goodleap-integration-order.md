@@ -1,1 +1,0 @@
-Integration order: sitemap -> Research discovery -> Minnesota/Virginia reciprocal state links -> contextual Maryland/Texas/Florida links after source check -> CI/build -> preview/mobile -> final diff -> ready-for-review.
