@@ -1,6 +1,15 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
+function latestResearchStoryLinks(html) {
+  const start = html.indexOf('aria-label="Latest solar research"');
+  assert.ok(start >= 0, "latest research section should render");
+  const end = html.indexOf('id="start"', start);
+  assert.ok(end > start, "latest research section should end before the state finder");
+  const section = html.slice(start, end);
+  return [...new Set([...section.matchAll(/href=["'](\/research\/[^"'#?]+)["']/gi)].map((match) => match[1]))];
+}
+
 async function loadWorker() {
   const workerUrl = new URL("../dist/server/index.js", import.meta.url);
   workerUrl.searchParams.set("test", `${process.pid}-${Date.now()}-${Math.random()}`);
