@@ -8,6 +8,15 @@ const featuredResearchTitle = /Solar Sales, Financing and What Happens After a C
 const massachusettsSolarCostTitle = /What Solar Costs in Massachusetts Right Now/i;
 const researchMenuTitle = /Solar Sales &amp; Financing/i;
 
+function latestResearchStoryLinks(html) {
+  const start = html.indexOf('aria-label="Latest solar research"');
+  assert.ok(start >= 0, "latest research section should render");
+  const end = html.indexOf('id="start"', start);
+  assert.ok(end > start, "latest research section should end before the state finder");
+  const section = html.slice(start, end);
+  return [...new Set([...section.matchAll(/href=["'](\/research\/[^"'#?]+)["']/gi)].map((match) => match[1]))];
+}
+
 async function loadWorker() {
   const workerUrl = new URL("../dist/server/index.js", import.meta.url);
   workerUrl.searchParams.set("test", `${process.pid}-${Date.now()}-${Math.random()}`);
@@ -43,11 +52,10 @@ test("renders product metadata and the latest research homepage", async () => {
   assert.match(html, productTitle);
   assert.match(html, productDescription);
   assert.match(html, /Latest solar research/i);
+  const latestLinks = latestResearchStoryLinks(html);
+  assert.equal(latestLinks.length, 3, "homepage should render exactly three latest research stories");
   assert.match(html, massachusettsSolarCostTitle);
   assert.match(html, /Sunrun at Home Depot: Shopper Says Store Pitch Followed Him Home/i);
-  assert.match(html, /Sunrun’s 25-Year Solar Contracts: The Homeowner View and the Investor View/i);
-  assert.match(html, /href=["']\/research\/sunrun-home-depot-sales-home-visit["']/i);
-  assert.match(html, /href=["']\/research\/sunrun-25-year-solar-contracts["']/i);
 });
 
 test("serves canonical robots and sitemap files", async () => {

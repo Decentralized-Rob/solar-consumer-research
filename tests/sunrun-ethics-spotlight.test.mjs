@@ -1,6 +1,15 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
+function latestResearchStoryLinks(html) {
+  const start = html.indexOf('aria-label="Latest solar research"');
+  assert.ok(start >= 0, "latest research section should render");
+  const end = html.indexOf('id="start"', start);
+  assert.ok(end > start, "latest research section should end before the state finder");
+  const section = html.slice(start, end);
+  return [...new Set([...section.matchAll(/href=["'](\/research\/[^"'#?]+)["']/gi)].map((match) => match[1]))];
+}
+
 async function loadWorker() {
   const workerUrl = new URL("../dist/server/index.js", import.meta.url);
   workerUrl.searchParams.set("test", `${process.pid}-${Date.now()}-${Math.random()}`);
@@ -23,8 +32,8 @@ test("uses the redesigned homepage for the latest research collection", async ()
   assert.equal(response.status, 200);
   const html = await response.text();
   assert.match(html, /Latest solar research/i);
-  assert.match(html, /Sunrun at Home Depot: Shopper Says Store Pitch Followed Him Home/i);
-  assert.match(html, /Sunrun’s 25-Year Solar Contracts: The Homeowner View and the Investor View/i);
+  const latestLinks = latestResearchStoryLinks(html);
+  assert.equal(latestLinks.length, 3, "homepage should render exactly three latest research stories");
   assert.doesNotMatch(html, /Featured company watch/i);
   assert.doesNotMatch(html, /New research guide/i);
 });
