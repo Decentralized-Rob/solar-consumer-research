@@ -1,1 +1,0 @@
-Do not merge based on page existence alone. Launch requires source review, discovery links, sitemap, current-head checks and preview. Do not close PR #47 until the replacement PR is confirmed to contain the needed public research.
