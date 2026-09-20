@@ -1,1 +1,0 @@
-GoodLeap state story standard: plain-language headline; short source-grounded deck; reviewed date; key facts; readable explanation; explicit source boundary when needed; primary-source list; link to state hub; research-assistance CTA. Avoid legal-library-first presentation.
