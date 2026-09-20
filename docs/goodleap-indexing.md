@@ -1,1 +1,0 @@
-Index the five substantive launch routes. Do not index internal review notes or create placeholder public state routes. Discovery should come from sitemap plus contextual internal links from Research and relevant state/case pages.
