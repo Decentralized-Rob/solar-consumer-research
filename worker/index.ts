@@ -31,9 +31,19 @@ const worker = {
     const url = new URL(request.url);
 
     // Facebook shares can append an invisible U+2060 WORD JOINER to this path.
-    // Redirect that contaminated URL to the canonical Sunrun ethics page.
-    if (url.pathname === "/companies/sunrun/ethics-compliance\u2060") {
-      url.pathname = "/companies/sunrun/ethics-compliance";
+    // URL.pathname may expose it either decoded or percent-encoded.
+    const ethicsPath = "/companies/sunrun/ethics-compliance";
+    let decodedPathname = url.pathname;
+    try {
+      decodedPathname = decodeURIComponent(url.pathname);
+    } catch {
+      // Leave malformed percent-encoding untouched and continue normally.
+    }
+    if (
+      decodedPathname === ethicsPath + "\u2060" ||
+      url.pathname.toLowerCase() === ethicsPath + "%e2%81%a0"
+    ) {
+      url.pathname = ethicsPath;
       return Response.redirect(url.toString(), 301);
     }
 
