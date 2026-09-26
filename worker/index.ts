@@ -30,6 +30,13 @@ const worker = {
   async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
     const url = new URL(request.url);
 
+    // Facebook shares can append an invisible U+2060 WORD JOINER to this path.
+    // Redirect that contaminated URL to the canonical Sunrun ethics page.
+    if (url.pathname === "/companies/sunrun/ethics-compliance\u2060") {
+      url.pathname = "/companies/sunrun/ethics-compliance";
+      return Response.redirect(url.toString(), 301);
+    }
+
     if (request.method === "GET" && url.pathname === "/api/search") {
       const clientIp = request.headers.get("cf-connecting-ip") ?? "unknown";
       const { success } = await env.SEARCH_RATE_LIMITER.limit({
