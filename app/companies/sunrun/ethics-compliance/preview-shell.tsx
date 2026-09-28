@@ -5,8 +5,8 @@ import { InfoPage } from "../../../../components/info-page";
 const governanceUrl = "https://investors.sunrun.com/leadership-governance/governance-documents";
 const leadershipUrl = "https://investors.sunrun.com/leadership-governance/executive-management";
 const allVoicesUrl = "https://sunrun.allvoices.co/";
-const codeUrl = "https://d1io3yog0oux5.cloudfront.net/_5069419c6c0a7a5b730d48e3b1411191/sunrun/db/405/3799/file/Code%2Bof%2BBusiness%2BConduct%2B%26%2BEthics_Oct_2025.pdf";
-const vendorCodeUrl = "https://d1io3yog0oux5.cloudfront.net/_c9159127ad06b657d37a299d3e74348a/sunrun/db/405/3803/file/6.25_Vendor%2BCode%2BOf%2BConduct_v2.pdf";
+const codeUrl = "https://d1io3yog0oux5.cloudfront.net/_7e67e719e37e47b605f03fc63a5eec7e/sunrun/db/405/3799/file/Code%2Bof%2BBusiness%2BConduct%2B%26%2BEthics_Oct_2025.pdf";
+const vendorCodeUrl = "https://d1io3yog0oux5.cloudfront.net/_7e67e719e37e47b605f03fc63a5eec7e/sunrun/db/405/3803/file/6.25_Vendor%2BCode%2BOf%2BConduct_v2.pdf";\nconst speakUpPolicyUrl = "https://d1io3yog0oux5.cloudfront.net/_7e67e719e37e47b605f03fc63a5eec7e/sunrun/db/405/3801/file/Speak-Up%2BPolicy%2B2026.pdf";
 const ethicsLinkedInPost = "https://www.linkedin.com/posts/sunrun_at-sunrun-were-committed-to-upholding-the-activity-7251577600949522435-tGOM";
 const texasSource = "https://www.texasattorneygeneral.gov/news/releases/attorney-general-ken-paxton-launches-major-initiative-combat-widespread-fraud-companies-selling";
 const connecticutSource = "https://portal.ct.gov/ag/press-releases/2024-press-releases/attorney-general-tong-sues-sunrun";
@@ -93,10 +93,10 @@ export function SunrunEthicsWebsitePreview({ variant }: { variant: "a" | "b" }) 
         <section style={sectionStyle}>
           <span style={labelStyle}>Report an ethics concern</span>
           <h2 style={{ fontSize: "clamp(24px, 3vw, 34px)", margin: "0 0 12px" }}>Current reporting information</h2>
-          <p style={{ maxWidth: 760, color: palette.muted, lineHeight: 1.65 }}>Sunrun’s current governance library lists its October 2025 ethics policy set, and the Code identifies AllVoices as a reporting resource. Consumers should verify the live route against Sunrun’s governance materials before submitting.</p>
+          <p style={{ maxWidth: 760, color: palette.muted, lineHeight: 1.65 }}>Sunrun’s current governance library lists an October 2025 Code of Business Conduct and Ethics and a 2026 Speak-Up Policy (Whistleblower Reporting). The Code identifies AllVoices as a reporting resource. Consumers should verify the live route against Sunrun’s governance materials before submitting.</p>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(210px,1fr))", gap: 12, marginTop: 20 }}>
             <a href={allVoicesUrl} target="_blank" rel="noreferrer" style={{ padding: 18, border: `1px solid ${palette.border}`, borderRadius: 12, background: palette.panel, color: palette.ink, textDecoration: "none" }}><small style={{ color: palette.muted }}>Reporting portal</small><strong style={{ display: "block", marginTop: 5, fontSize: 20 }}>AllVoices</strong><span>sunrun.allvoices.co ↗</span></a>
-            <a href={governanceUrl} target="_blank" rel="noreferrer" style={{ padding: 18, border: `1px solid ${palette.border}`, borderRadius: 12, background: palette.panel, color: palette.ink, textDecoration: "none" }}><small style={{ color: palette.muted }}>Current policy set</small><strong style={{ display: "block", marginTop: 5, fontSize: 20 }}>October 2025</strong><span>Verify with Sunrun ↗</span></a>
+            <a href={governanceUrl} target="_blank" rel="noreferrer" style={{ padding: 18, border: `1px solid ${palette.border}`, borderRadius: 12, background: palette.panel, color: palette.ink, textDecoration: "none" }}><small style={{ color: palette.muted }}>Current policy set</small><strong style={{ display: "block", marginTop: 5, fontSize: 20 }}>2025–2026</strong><span>Verify with Sunrun ↗</span></a>
           </div>
         </section>
 
@@ -119,7 +119,7 @@ export function SunrunEthicsWebsitePreview({ variant }: { variant: "a" | "b" }) 
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(220px,1fr))", gap: 12 }}>
             {[
               ["Code of Business Conduct and Ethics", "October 2025", codeUrl],
-              ["Whistleblower Policy", "Current listing in Sunrun governance library", governanceUrl],
+              ["Speak-Up Policy (Whistleblower Reporting)", "2026 policy", speakUpPolicyUrl],
               ["Vendor Code of Conduct", "Vendor and partner standards", vendorCodeUrl],
               ["Governance Documents", "Current company library", governanceUrl],
               ["Ethics & Compliance Week", "Public Sunrun LinkedIn post", ethicsLinkedInPost],
