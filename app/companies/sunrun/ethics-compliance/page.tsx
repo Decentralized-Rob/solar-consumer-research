@@ -7,7 +7,7 @@ import styles from "./sunrun-ethics.module.css";
 const canonicalUrl = "https://solarcomplaint.com/companies/sunrun/ethics-compliance";
 const governanceUrl = "https://investors.sunrun.com/leadership-governance/governance-documents";
 const leadershipUrl = "https://investors.sunrun.com/leadership-governance/executive-management";
-const codeUrl = "https://d1io3yog0oux5.cloudfront.net/_5069419c6c0a7a5b730d48e3b1411191/sunrun/db/405/3799/file/Code%2Bof%2BBusiness%2BConduct%2B%26%2BEthics_Oct_2025.pdf";
+const codeUrl = "https://d1io3yog0oux5.cloudfront.net/_7e67e719e37e47b605f03fc63a5eec7e/sunrun/db/405/3799/file/Code%2Bof%2BBusiness%2BConduct%2B%26%2BEthics_Oct_2025.pdf";\nconst speakUpPolicyUrl = "https://d1io3yog0oux5.cloudfront.net/_7e67e719e37e47b605f03fc63a5eec7e/sunrun/db/405/3801/file/Speak-Up%2BPolicy%2B2026.pdf";
 const vendorCodeUrl = "https://d1io3yog0oux5.cloudfront.net/_7e67e719e37e47b605f03fc63a5eec7e/sunrun/db/405/3803/file/6.25_Vendor%2BCode%2BOf%2BConduct_v2.pdf";
 const allVoicesUrl = "https://sunrun.allvoices.co/";
 const ethicsLinkedInPost = "https://www.linkedin.com/posts/sunrun_at-sunrun-were-committed-to-upholding-the-activity-7251577600949522435-tGOM";
@@ -122,7 +122,7 @@ const structuredData = {
       description: "An independent, source-first guide to Sunrun's current ethics and compliance resources.",
       url: canonicalUrl,
       datePublished: "2026-09-06",
-      dateModified: "2026-09-07",
+      dateModified: "2026-09-28",
       author: { "@id": "https://solarcomplaint.com/#publisher" },
       publisher: { "@id": "https://solarcomplaint.com/#publisher" },
       isPartOf: { "@id": "https://solarcomplaint.com/#website" },
@@ -185,7 +185,7 @@ export default function SunrunEthicsCompliancePage() {
           <h2 id="at-glance-title">Current ethics reporting information</h2>
           <div className={styles.factStrip} style={{ gridTemplateColumns: "repeat(2, minmax(0, 1fr))" }}>
             <div><span>Reporting portal</span><strong>AllVoices</strong><a href={allVoicesUrl} target="_blank" rel="noreferrer">sunrun.allvoices.co ↗</a></div>
-            <div><span>Current policy set</span><strong>October 2025</strong><a href={governanceUrl} target="_blank" rel="noreferrer">Verify with Sunrun ↗</a></div>
+            <div><span>Current policy set</span><strong>2025–2026</strong><a href={governanceUrl} target="_blank" rel="noreferrer">Verify with Sunrun ↗</a></div>
           </div>
         </section>
 
@@ -193,7 +193,7 @@ export default function SunrunEthicsCompliancePage() {
           <div className={styles.sectionLabel}>Reporting guide</div>
           <h2>How to report a Sunrun ethics or compliance concern</h2>
           <p>
-            Sunrun’s current governance library publishes an October 2025 Code of Business Conduct and Ethics and an October 2025 Whistleblower Policy. The Code identifies <strong>AllVoices</strong> as a reporting resource. Consumers should verify the live reporting route against Sunrun’s current governance materials before submitting.
+            Sunrun’s current governance library publishes an October 2025 Code of Business Conduct and Ethics and a 2026 <strong>Speak-Up Policy (Whistleblower Reporting)</strong>. The Code identifies <strong>AllVoices</strong> as a reporting resource. Consumers should verify the live reporting route against Sunrun’s current governance materials before submitting.
           </p>
           <div className={styles.reportRow}>
             <div>
@@ -230,7 +230,7 @@ export default function SunrunEthicsCompliancePage() {
           <h2>Sunrun’s published ethics documents</h2>
           <div className={styles.sourceList}>
             <div className={styles.sourceItem}><span>Primary source</span><div><strong>Code of Business Conduct and Ethics</strong><p>Sunrun’s October 2025 company ethics code.</p></div><a href={codeUrl} target="_blank" rel="noreferrer">Open ↗</a></div>
-            <div className={styles.sourceItem}><span>Current company source</span><div><strong>Whistleblower Policy</strong><p>Sunrun’s live governance library currently lists an October 2025 Whistleblower Policy.</p></div><a href={governanceUrl} target="_blank" rel="noreferrer">Verify current policy ↗</a></div>
+            <div className={styles.sourceItem}><span>Primary source</span><div><strong>Speak-Up Policy (Whistleblower Reporting)</strong><p>Sunrun’s governance library now publishes a 2026 Speak-Up Policy in place of the prior Whistleblower Policy listing.</p></div><a href={speakUpPolicyUrl} target="_blank" rel="noreferrer">Open ↗</a></div>
             <div className={styles.sourceItem}><span>Primary source</span><div><strong>Vendor Code of Conduct</strong><p>Separately published standards for Sunrun vendors and third-party relationships.</p></div><a href={vendorCodeUrl} target="_blank" rel="noreferrer">Open ↗</a></div>
             <div className={styles.sourceItem}><span>Company library</span><div><strong>Governance documents</strong><p>The current Sunrun index for governance and ethics materials.</p></div><a href={governanceUrl} target="_blank" rel="noreferrer">Open ↗</a></div>
             <div className={styles.sourceItem}><span>Public LinkedIn</span><div><strong>Sunrun Ethics &amp; Compliance Week post</strong><p>A public company statement about integrity, accountability and transparency.</p></div><a href={ethicsLinkedInPost} target="_blank" rel="noreferrer">Open ↗</a></div>
@@ -312,7 +312,7 @@ export default function SunrunEthicsCompliancePage() {
           <div className={styles.sectionLabel}>Editorial note</div>
           <h2>Source and update standard</h2>
           <p>
-            Reviewed September 7, 2026. Sunrun can change reporting systems, policies and executive roles. Before filing, verify current information against Sunrun’s governance page and live AllVoices portal. Primary sources control if a SolarComplaint.com summary differs from the underlying record.
+            Reviewed September 28, 2026. Sunrun can change reporting systems, policies and executive roles. Before filing, verify current information against Sunrun’s governance page and live AllVoices portal. Primary sources control if a SolarComplaint.com summary differs from the underlying record.
           </p>
           <p>Read the <Link href="/methodology">research methodology</Link> and <Link href="/corrections">corrections policy</Link>.</p>
         </section>
