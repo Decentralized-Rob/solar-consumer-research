@@ -128,6 +128,7 @@ export default function TitanSolarPowerPage() {
         <section className="tt-section" id="customer-help-now">
           <div className="tt-section-heading"><div><p>Quick answer</p><h2>What can former Titan customers do now?</h2></div><span>The right research path depends on whether the issue is service, warranty, financing, a home sale, unfinished work or the bankruptcy.</span></div>
           <p>Start by identifying the company named on each contract, loan, lease, warranty and equipment document. Then use the customer-help paths below to separate service and repair questions from warranty, financing, home-sale and bankruptcy issues.</p>
+          <p>If a Titan loan is still being billed, <Link href="/research/titan-solar-power-loan-holder-rule">see why the financing agreement and original sales records can matter</Link>.</p>
           <div className="tt-actions">
             <Link className="tt-button tt-button-primary" href="/cases/titan-solar-power/customer-help">Choose a Titan customer-help path</Link>
             <Link className="tt-button tt-button-secondary" href="/cases/titan-solar-power/warranty-after-bankruptcy">Check warranty information</Link>
