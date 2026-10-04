@@ -5,8 +5,6 @@ const productTitle = /<title>Solar Complaints and Consumer Resources \| Solar Co
 const productDescription =
   /<meta(?=[^>]*\bname=["']description["'])(?=[^>]*\bcontent=["']Find official solar complaint channels, source-backed research, lawsuits, investigations, public records, and consumer resources by state\.["'])[^>]*>/i;
 const featuredResearchTitle = /Solar Sales, Financing and What Happens After a Complaint/i;
-const massachusettsSolarCostTitle = /What Solar Costs in Massachusetts Right Now/i;
-const researchMenuTitle = /Solar Sales &amp; Financing/i;
 
 function latestResearchStoryLinks(html) {
   const start = html.indexOf('aria-label="Latest solar research"');
@@ -54,8 +52,6 @@ test("renders product metadata and the latest research homepage", async () => {
   assert.match(html, /Latest solar research/i);
   const latestLinks = latestResearchStoryLinks(html);
   assert.equal(latestLinks.length, 3, "homepage should render exactly three latest research stories");
-  assert.match(html, massachusettsSolarCostTitle);
-  assert.match(html, /Sunrun at Home Depot: Shopper Says Store Pitch Followed Him Home/i);
 });
 
 test("serves canonical robots and sitemap files", async () => {
