@@ -46,6 +46,7 @@ export default function TitanCustomerHelpPage() {
         <section className="th-section" id="paths">
           <div className="th-section-head"><div><p className="th-eyebrow">Choose a research path</p><h2>Three common situations</h2></div><p>This is general research help, not a legal eligibility test or advice about whether to make a payment, settle a debt, or file bankruptcy.</p></div>
           <div className="th-paths">{paths.map((path) => <article className="th-path" key={path.number}><b>{path.number}</b><h3>{path.title}</h3><p>{path.copy}</p><ul>{path.records.map((record) => <li key={record}>{record}</li>)}</ul></article>)}</div>
+          <p>If you are still paying a Titan loan, <Link href="/research/titan-solar-power-loan-holder-rule">read the financing research for the agreement language and records that can matter</Link>.</p>
         </section>
         <section className="th-note">
           <div><p className="th-eyebrow">Warranty question</p><h2>Titan is gone. Some equipment coverage may remain.</h2></div>
