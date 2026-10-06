@@ -14,7 +14,7 @@ const arizonaSource = "https://www.azag.gov/sites/default/files/2025-06/2025-05-
 
 const timeline = [
   ["2026", "April 3", "Texas announces residential-solar investigation involving Sunrun", "The Texas Attorney General announced an investigation involving Sunrun and other residential-solar companies. An investigation is not a finding of wrongdoing.", texasSource],
-  ["2025", "October", "Sunrun publishes current ethics policy set", "Sunrun’s governance library currently lists an October 2025 Code of Business Conduct and Ethics and an October 2025 Whistleblower Policy. The Code identifies AllVoices as a reporting resource.", governanceUrl],
+  ["2026", "Current", "Sunrun publishes 2026 Speak-Up Policy", "Sunrun’s governance library publishes an October 2025 Code of Business Conduct and Ethics and a 2026 Speak-Up Policy (Whistleblower Reporting). The Code identifies AllVoices as a reporting resource.", governanceUrl],
   ["2025", "May 22", "Arizona settlement involving Sunrun and Vivint Solar", "Arizona’s court-approved agreement resolved allegations concerning solar sales practices and included consumer-relief and complaint-handling terms. The companies denied the allegations.", arizonaSource],
   ["2024", "July 19", "Connecticut Attorney General files lawsuit naming Sunrun", "Connecticut alleged unlawful residential-solar sales conduct involving contracts, signatures, permits and non-functioning systems. Lawsuit allegations are not court findings.", connecticutSource],
 ] as const;
@@ -160,7 +160,7 @@ export function SunrunEthicsWebsitePreview({ variant }: { variant: "a" | "b" }) 
           <span style={labelStyle}>The latest</span>
           <h2 style={{ fontSize: "clamp(26px, 3vw, 36px)", margin: "0 0 18px" }}>Current Sunrun research</h2>
           <div>
-            <article style={{ padding: "16px 0", borderTop: `1px solid ${palette.border}` }}><small style={{ color: palette.muted }}>September 7, 2026</small><h3 style={{ margin: "5px 0" }}>Sunrun ethics and compliance source guide</h3><p style={{ color: palette.muted, margin: 0 }}>AllVoices reporting, ethics documents, vendor standards and leadership responsibilities.</p></article>
+            <article style={{ padding: "16px 0", borderTop: `1px solid ${palette.border}` }}><small style={{ color: palette.muted }}>September 28, 2026</small><h3 style={{ margin: "5px 0" }}>Sunrun ethics and compliance source guide</h3><p style={{ color: palette.muted, margin: 0 }}>AllVoices reporting, ethics documents, vendor standards and leadership responsibilities.</p></article>
             <article style={{ padding: "16px 0", borderTop: `1px solid ${palette.border}` }}><small style={{ color: palette.muted }}>September 6, 2026</small><h3 style={{ margin: "5px 0" }}><Link href="/states/florida">Florida Sunrun roof dispute and consumer resource hub</Link></h3><p style={{ color: palette.muted, margin: 0 }}>Federal court source, Florida disclosure rules and reciprocal Sunrun research links.</p></article>
             <article style={{ padding: "16px 0", borderTop: `1px solid ${palette.border}` }}><small style={{ color: palette.muted }}>April 3, 2026</small><h3 style={{ margin: "5px 0" }}><a href={texasSource} target="_blank" rel="noreferrer">Texas residential-solar investigation involving Sunrun ↗</a></h3><p style={{ color: palette.muted, margin: 0 }}>Primary Attorney General source. Investigation status is kept separate from any finding.</p></article>
           </div>
