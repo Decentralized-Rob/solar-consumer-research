@@ -166,7 +166,7 @@ export default function SunrunEthicsCompliancePage() {
         <div className={styles.publicationLine}>
           <strong>SolarComplaint.com Research Desk</strong>
           <span>Published September 6, 2026</span>
-          <span>Last reviewed September 7, 2026</span>
+          <span>Last reviewed September 28, 2026</span>
         </div>
         <p className={styles.independenceNote}>
           SolarComplaint.com is an independent consumer research and editorial publication. It is not affiliated with, endorsed by or sponsored by Sunrun.
@@ -291,7 +291,7 @@ export default function SunrunEthicsCompliancePage() {
           <div className={styles.sectionLabel}>The latest</div>
           <h2>Current Sunrun research on SolarComplaint.com</h2>
           <div className={styles.latestList}>
-            <article><time dateTime="2026-09-07">Sep. 7, 2026</time><div><strong>Sunrun ethics and compliance source guide</strong><p>Current AllVoices reporting, ethics documents, vendor standards and leadership responsibilities reviewed.</p></div></article>
+            <article><time dateTime="2026-09-28">Sep. 28, 2026</time><div><strong>Sunrun ethics and compliance source guide</strong><p>Current AllVoices reporting, ethics documents, vendor standards and leadership responsibilities reviewed.</p></div></article>
             <article><time dateTime="2026-09-06">Sep. 6, 2026</time><div><Link href="/states/florida">Florida Sunrun roof dispute and consumer resource hub</Link><p>Expanded with the federal court source, Florida solar disclosure rules and reciprocal Sunrun research links.</p></div></article>
             <article><time dateTime="2026-04-03">Apr. 3, 2026</time><div><a href={texasSource.url} target="_blank" rel="noreferrer">Texas announces residential-solar investigation involving Sunrun ↗</a><p>Primary Attorney General source; investigation status is kept separate from any finding.</p></div></article>
           </div>
