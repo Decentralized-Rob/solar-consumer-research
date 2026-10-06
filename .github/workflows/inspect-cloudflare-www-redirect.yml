@@ -1,0 +1,36 @@
+name: Inspect Cloudflare www redirect
+
+on:
+  push:
+    branches: [ops/cloudflare-www-redirect-fix]
+
+permissions:
+  contents: read
+
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_BUILDS_API_TOKEN }}
+    steps:
+      - name: Inspect redirect rules
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          api() {
+            curl --fail-with-body --silent --show-error \
+              --header "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
+              "https://api.cloudflare.com/client/v4$1"
+          }
+
+          zone_response="$(api '/zones?name=solarcomplaint.com&status=active')"
+          zone_id="$(jq -r '.result[0].id // empty' <<<"$zone_response")"
+          if [ -z "$zone_id" ]; then
+            echo "::error::Active solarcomplaint.com zone was not found."
+            exit 1
+          fi
+
+          echo "Zone: solarcomplaint.com ($zone_id)"
+          api "/zones/$zone_id/rulesets/phases/http_request_dynamic_redirect/entrypoint" \
+            | jq '{success, errors, result: {id: .result.id, name: .result.name, phase: .result.phase, rules: [.result.rules[]? | {id, version, action, expression, description, enabled, action_parameters}]}}'
