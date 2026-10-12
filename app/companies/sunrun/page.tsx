@@ -91,7 +91,7 @@ export default function SunrunCompanyPage() {
         name: "Sunrun Lawsuits, Investigations and Solar Consumer Resources",
         description: "A source-based hub for documented state actions and consumer research involving Sunrun.",
         url: canonicalUrl,
-        dateModified: "2026-09-06",
+        dateModified: "2026-10-12",
         isPartOf: { "@id": "https://solarcomplaint.com/#website" },
         publisher: { "@id": "https://solarcomplaint.com/#publisher" },
         about: { "@type": "Organization", name: "Sunrun" },
