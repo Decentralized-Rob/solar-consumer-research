@@ -86,7 +86,7 @@ test("Sunrun hub lists its own published research instead of a sitewide featured
   ]) {
     assertInternalLink(relatedSection, path);
   }
-  assert.doesNotMatch(relatedSection, /href=["']\\/research\\/titan-solar-power-loan-holder-rule["']/i);
+  assert.ok(!relatedSection.includes('href="/research/titan-solar-power-loan-holder-rule"'));
 });
 
 test("state source cards give official records descriptive link text", async () => {
