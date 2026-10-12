@@ -78,6 +78,7 @@ export function SunrunParraRoofArbitrationBody() {
       <p>The useful part for homeowners is not a prediction about who will win. It is what happened when the court had to untangle two solar projects on the same house. The companies were different, the contracts were different, the work was different and the alleged damage was different. Those distinctions mattered because Tesla had an arbitration agreement with Parra, while Sunrun could not use Tesla&apos;s agreement to move Parra&apos;s Sunrun claims out of court.</p>
 
       <p>SolarComplaint has been tracking <Link href={contractsResearch}>Sunrun&apos;s 25-year solar agreements and arbitration-related contract issues</Link> because the paperwork can matter long after the sales conversation ends. Parra&apos;s case shows another side of that problem. When several companies touch a solar project, who signed which agreement can determine something as basic as where a dispute gets heard.</p>
+      <p>A separate <Link href="/research/sunrun-mishler-roofing-lawsuit">Connecticut Sunrun roofing lawsuit</Link> raised questions about a salesperson&apos;s roofing referral and a contractor&apos;s role in the project. That case was settled and withdrawn in September 2026 without a trial ruling on responsibility.</p>
     </section>
 
     <section className="info-section">
