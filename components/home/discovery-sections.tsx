@@ -39,9 +39,9 @@ const standaloneGuideHrefById: Record<string, string> = {
 
 const currentFeaturedResearch = {
   href: "/companies/sunrun/ethics-compliance",
-  meta: "Sunrun · Ethics & Compliance · September 7, 2026",
+  meta: "Sunrun · Ethics & Compliance · September 28, 2026",
   title: "Sunrun Ethics & Compliance: reporting, policies and public record",
-  deck: "A source-backed guide to Sunrun's current AllVoices reporting route, Code of Business Conduct and Ethics, Whistleblower Policy, Vendor Code of Conduct and related public records.",
+  deck: "A source-backed guide to Sunrun's current AllVoices reporting route, Code of Business Conduct and Ethics, 2026 Speak-Up Policy, Vendor Code of Conduct and related public records.",
   caution: "This is a company research guide, not a finding of wrongdoing. Reporting systems and policies can change, so current Sunrun sources control.",
 };
 
