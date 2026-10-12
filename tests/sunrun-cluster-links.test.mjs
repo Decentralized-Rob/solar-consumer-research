@@ -93,3 +93,23 @@ test("state source cards give official records descriptive link text", async () 
   const html = await render("/states/texas");
   assert.match(html, /Read (?:<!-- -->)?Texas Attorney General residential solar investigation involving Sunrun/i);
 });
+
+test("indexes the Mishler Sunrun case with source links and reciprocal context", async () => {
+  const href = "/research/sunrun-mishler-roofing-lawsuit";
+  const article = await render(href);
+  assertInternalLink(article, "/companies/sunrun");
+  assertInternalLink(article, "/states/connecticut");
+  assertInternalLink(article, "/research/sunrun-parra-roof-arbitration");
+  assert.match(article, /DocumentNo=30177512/, "original complaint linked");
+  assert.match(article, /DocumentNo=31145839/, "Sunrun cross-complaint linked");
+  assert.match(article, /DocumentNo=32417267/, "Sunrun memorandum linked");
+  assert.match(article, /HHBCV256096501S/, "official court docket linked");
+  assert.match(article, /rel="canonical"[^>]*sunrun-mishler-roofing-lawsuit|sunrun-mishler-roofing-lawsuit[^>]*rel="canonical"/i, "canonical metadata");
+
+  const sunrunHub = await render("/companies/sunrun");
+  assertInternalLink(sunrunHub, href);
+  const connecticut = await render("/states/connecticut");
+  assertInternalLink(connecticut, href);
+  const parra = await render("/research/sunrun-parra-roof-arbitration");
+  assertInternalLink(parra, href);
+});
