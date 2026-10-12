@@ -63,22 +63,21 @@ export function SunrunMishlerRoofingBody() {
 
     <section className="info-section">
       <h2>How the roofing work was described</h2>
-      <p>Mishler alleges that on March 2, 2024, Celniker introduced Dennis Bubenheimer in a text message about a “complimentary roof upgrade,” calling him “our Roofing Projects Manager.” The language appears in the <a href={complaint} target="_blank" rel="noreferrer">homeowner’s complaint</a>; it does not by itself establish Bubenheimer’s employment or contractual relationship with Sunrun.</p>
-      <p>According to the complaint, New Creation replaced the roof on April 25, 2024. Sunrun installed the solar system the following month. Mishler said he noticed leaks on May 23 and later alleged improper roofing work and a missing permit. Those are allegations, not court findings.</p>
+      <p>In his <a href={complaint} target="_blank" rel="noreferrer">complaint</a>, Mishler alleges that on March 2, 2024, Sunrun salesperson Celniker introduced Dennis Bubenheimer in a text message about a “complimentary roof upgrade,” calling him “our Roofing Projects Manager.”</p>
+      <p>According to the complaint, New Creation replaced the roof on April 25, 2024. Sunrun installed the solar system the following month. Mishler said he noticed leaks on May 23 and later alleged improper roofing work and a missing permit.</p>
       <p>Mishler also alleges that Sunrun subsequently characterized Celniker’s introduction as a <a href={complaint} target="_blank" rel="noreferrer">personal referral to the roofer</a>. In its <a href={sunrunMemorandum} target="_blank" rel="noreferrer">April 10, 2026 summary-judgment memorandum</a>, Sunrun likewise argued that its salesperson provided a personal referral and that New Creation, rather than Sunrun, performed the roofing work.</p>
     </section>
 
     <section className="info-section">
       <h2>What Sunrun sought from New Creation</h2>
       <p>Sunrun denied liability for the alleged roof damage. Its <a href={crossComplaint} target="_blank" rel="noreferrer">October 17, 2025 cross-complaint against New Creation</a> argued that the roofer should indemnify Sunrun if Sunrun were held liable or settled Mishler’s claims. Sunrun also requested reimbursement for money it said it had paid New Creation for the roofing work.</p>
-      <p>The reimbursement request is part of Sunrun’s pleading. It does not independently establish the amounts paid, the contract governing those payments or who ultimately bore the roofing costs. The <a href={sunrunMemorandum} target="_blank" rel="noreferrer">summary-judgment memorandum</a> sets out Sunrun’s position that New Creation was responsible for the roofing installation.</p>
+      <p>Sunrun’s <a href={sunrunMemorandum} target="_blank" rel="noreferrer">summary-judgment memorandum</a> also argued that New Creation was responsible for the roofing installation.</p>
     </section>
 
     <section className="info-section">
       <h2>How the case ended</h2>
       <p>The <a href={docket} target="_blank" rel="noreferrer">court docket</a> records a settlement order dated August 11, a withdrawal of action filed September 15, <a href={withdrawal} target="_blank" rel="noreferrer">Sunrun’s withdrawal of its cross-complaint</a> on September 21 and a final withdrawal of action on September 22, 2026.</p>
-      <p>No trial verdict determined who hired the roofer or who was responsible for the alleged defects. The public docket does not disclose settlement terms, whether the solar lease was rescinded or how any repair costs were allocated. A settlement is not an admission of wrongdoing.</p>
-      <p>For homeowners researching similar arrangements, the documents identify the questions raised in this case: who arranged the roofing work, which agreements covered it and who paid the contractor. The publicly filed pleadings state the competing positions; they do not resolve those questions.</p>
+      <p>The case ended without a trial verdict on the disputed roofing work. The public docket does not disclose the settlement terms, whether the solar lease was canceled or how any repair costs were allocated.</p>
       <p>For related reporting, see <Link href="/research/sunrun-parra-roof-arbitration">another Sunrun roof-dispute case in California</Link> and <Link href="/research/sunrun-25-year-solar-contracts">SolarComplaint.com’s review of Sunrun’s long-term solar agreements</Link>.</p>
     </section>
 
