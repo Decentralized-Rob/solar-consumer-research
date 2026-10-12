@@ -6,7 +6,8 @@ const governanceUrl = "https://investors.sunrun.com/leadership-governance/govern
 const leadershipUrl = "https://investors.sunrun.com/leadership-governance/executive-management";
 const allVoicesUrl = "https://sunrun.allvoices.co/";
 const codeUrl = "https://d1io3yog0oux5.cloudfront.net/_7e67e719e37e47b605f03fc63a5eec7e/sunrun/db/405/3799/file/Code%2Bof%2BBusiness%2BConduct%2B%26%2BEthics_Oct_2025.pdf";
-const vendorCodeUrl = "https://d1io3yog0oux5.cloudfront.net/_7e67e719e37e47b605f03fc63a5eec7e/sunrun/db/405/3803/file/6.25_Vendor%2BCode%2BOf%2BConduct_v2.pdf";\nconst speakUpPolicyUrl = "https://d1io3yog0oux5.cloudfront.net/_7e67e719e37e47b605f03fc63a5eec7e/sunrun/db/405/3801/file/Speak-Up%2BPolicy%2B2026.pdf";
+const vendorCodeUrl = "https://d1io3yog0oux5.cloudfront.net/_7e67e719e37e47b605f03fc63a5eec7e/sunrun/db/405/3803/file/6.25_Vendor%2BCode%2BOf%2BConduct_v2.pdf";
+const speakUpPolicyUrl = "https://d1io3yog0oux5.cloudfront.net/_7e67e719e37e47b605f03fc63a5eec7e/sunrun/db/405/3801/file/Speak-Up%2BPolicy%2B2026.pdf";
 const ethicsLinkedInPost = "https://www.linkedin.com/posts/sunrun_at-sunrun-were-committed-to-upholding-the-activity-7251577600949522435-tGOM";
 const texasSource = "https://www.texasattorneygeneral.gov/news/releases/attorney-general-ken-paxton-launches-major-initiative-combat-widespread-fraud-companies-selling";
 const connecticutSource = "https://portal.ct.gov/ag/press-releases/2024-press-releases/attorney-general-tong-sues-sunrun";
