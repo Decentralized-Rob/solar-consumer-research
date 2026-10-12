@@ -3,7 +3,7 @@ import Link from "next/link";
 import { InfoPage } from "../../../components/info-page";
 import { SunrunEthicsSpotlight } from "../../../components/sunrun-ethics-spotlight";
 import { featuredStateSources } from "../../../lib/featured-state-sources";
-import { featuredResearchStory } from "../../../lib/research-stories";
+import { getResearchStoriesForCompany } from "../../../lib/research-stories";
 
 const texasSource = featuredStateSources.TX[0];
 const arizonaAgreement = featuredStateSources.AZ[0];
@@ -42,6 +42,7 @@ export const metadata: Metadata = {
 };
 
 export default function SunrunCompanyPage() {
+  const sunrunResearch = getResearchStoriesForCompany("Sunrun");
   const actions = [
     {
       type: "Investigation",
@@ -150,18 +151,27 @@ export default function SunrunCompanyPage() {
                 <p>{action.summary}</p>
                 <small>Source dated {action.date}</small>
                 <p><Link href={action.stateHref}>View the {action.state} solar resource page →</Link></p>
-                <a href={action.source} target="_blank" rel="noreferrer">Open official source ↗</a>
+                <a href={action.source} target="_blank" rel="noreferrer">Read the {action.state} {action.type.toLowerCase()} record ↗</a>
               </article>
             ))}
           </div>
         </section>
 
-        <section className="info-section">
-          <h2>Featured research</h2>
-          <h3><Link href={featuredResearchStory.href}>{featuredResearchStory.title}</Link></h3>
-          <p>{featuredResearchStory.deck}</p>
-          <p><Link href={featuredResearchStory.href}>Read the source-backed breakdown →</Link></p>
-          <p><Link href="/research/solar-sales-financing-after-complaint">Solar Sales, Financing and What Happens After a Complaint →</Link></p>
+        <section className="state-source-section" aria-labelledby="sunrun-research-title">
+          <div className="state-source-section-heading">
+            <span>{String(sunrunResearch.length).padStart(2, "0")} related stories</span>
+            <h2 id="sunrun-research-title">Sunrun research</h2>
+          </div>
+          <div className="state-source-grid">
+            {sunrunResearch.map((story) => (
+              <article key={story.id}>
+                <span>Source-backed research</span>
+                <h3><Link href={story.href}>{story.title}</Link></h3>
+                <p>{story.deck}</p>
+                <small>Published {story.publishedAt}</small>
+              </article>
+            ))}
+          </div>
         </section>
 
         <section className="info-section">
