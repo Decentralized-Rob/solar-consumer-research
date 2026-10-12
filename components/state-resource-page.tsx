@@ -137,7 +137,7 @@ export function StateResourcePage({ state }: { state: { code: string; name: stri
                 <h3>{item.title}</h3>
                 <p>{item.summary}</p>
                 <small>{item.publisher} · Source dated {item.publishedAt}</small>
-                <a href={item.url} target="_blank" rel="noreferrer">Open official source ↗</a>
+                <a href={item.url} target="_blank" rel="noreferrer">Read {item.title} ↗</a>
                 {state.code === "TX" && item.id === "tx-sunrun-solar-investigation-2026" && (
                   <Link href="/companies/sunrun">Browse related Sunrun investigations, lawsuits and settlements →</Link>
                 )}
@@ -208,7 +208,7 @@ export function StateResourcePage({ state }: { state: { code: string; name: stri
                 <h3>{item.title}</h3>
                 <p>{item.summary}</p>
                 <small>{item.publisher} · Verified {item.lastVerified}</small>
-                <a href={item.url} target="_blank" rel="noreferrer">Open official source ↗</a>
+                <a href={item.url} target="_blank" rel="noreferrer">Read {item.title} ↗</a>
               </article>
             ))}
           </div>

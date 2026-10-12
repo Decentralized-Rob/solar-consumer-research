@@ -53,7 +53,7 @@ export function ResourceDirectory({
               <span>{resource.lastVerified ? `Verified ${resource.lastVerified}` : resource.sourceDate ? `Source dated ${resource.sourceDate}` : "Official source"}</span>
             </div>
             <div className="home-resource-copy">
-              <h3>{resource.title}</h3>
+              <h3><a href={resource.url} target="_blank" rel="noreferrer">{resource.title}</a></h3>
               <p>{resource.summary}</p>
               <small>{resource.publisher}</small>
             </div>

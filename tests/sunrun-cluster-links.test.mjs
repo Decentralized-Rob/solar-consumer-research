@@ -71,3 +71,25 @@ test("uses the updates page as an internal research discovery surface", async ()
   assertInternalLink(html, "/research/solar-sales-financing-after-complaint");
   assertInternalLink(html, "/research");
 });
+
+test("Sunrun hub lists its own published research instead of a sitewide featured story", async () => {
+  const html = await render("/companies/sunrun");
+  const start = html.indexOf('id="sunrun-research-title"');
+  const end = html.indexOf("Detailed case page", start);
+  assert.ok(start >= 0 && end > start, "Sunrun research section renders");
+  const relatedSection = html.slice(start, end);
+  for (const path of [
+    "/research/sunrun-25-year-solar-contracts",
+    "/research/sunrun-home-depot-sales-home-visit",
+    "/research/sunrun-parra-roof-arbitration",
+    "/research/solar-sales-financing-after-complaint",
+  ]) {
+    assertInternalLink(relatedSection, path);
+  }
+  assert.ok(!relatedSection.includes('href="/research/titan-solar-power-loan-holder-rule"'));
+});
+
+test("state source cards give official records descriptive link text", async () => {
+  const html = await render("/states/texas");
+  assert.match(html, /Read (?:<!-- -->)?Texas Attorney General residential solar investigation involving Sunrun/i);
+});
