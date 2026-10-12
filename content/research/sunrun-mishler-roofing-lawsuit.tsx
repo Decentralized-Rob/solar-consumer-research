@@ -63,12 +63,12 @@ export function SunrunMishlerRoofingBody() {
 
     <section className="info-section">
       <h2>The roofing referral</h2>
-      <p>According to <a href={complaint} target="_blank" rel="noreferrer">Mishler's complaint</a>, Celniker sent a March 2, 2024 text about scheduling a “complimentary roof upgrade” and introduced Dennis Bubenheimer as “our Roofing Projects Manager.”</p>
+      <p>According to <a href={complaint} target="_blank" rel="noreferrer">Mishler&apos;s complaint</a>, Celniker sent a March 2, 2024 text about scheduling a “complimentary roof upgrade” and introduced Dennis Bubenheimer as “our Roofing Projects Manager.”</p>
       <p>Sunrun took a different position in its <a href={sunrunMemorandum} target="_blank" rel="noreferrer">April 10, 2026 summary-judgment memorandum</a>. It called the introduction a “personal referral” and argued that New Creation performed the roof work independently. Sunrun said its involvement was limited to scheduling so the solar installation could proceed after the roof was completed.</p>
     </section>
 
     <section className="info-section">
-      <h2>Sunrun's reimbursement request</h2>
+      <h2>Sunrun&apos;s reimbursement request</h2>
       <p>In an <a href={crossComplaint} target="_blank" rel="noreferrer">October 17, 2025 cross-complaint</a>, Sunrun denied responsibility for the alleged roofing damage and sought indemnification from New Creation if it became liable to Mishler.</p>
       <p>The filing also asked for <a href={crossComplaint} target="_blank" rel="noreferrer">reimbursement of money Sunrun said it had paid New Creation</a> for the roofing work. Its later <a href={sunrunMemorandum} target="_blank" rel="noreferrer">summary-judgment memorandum</a> sought a ruling that New Creation had a duty to indemnify Sunrun.</p>
       <p>The pleadings leave the underlying arrangement in dispute: who engaged New Creation, what agreement covered its work and who paid for it?</p>
@@ -77,18 +77,18 @@ export function SunrunMishlerRoofingBody() {
     <section className="info-section">
       <h2>Settled and withdrawn</h2>
       <p>The <a href={docket} target="_blank" rel="noreferrer">Connecticut Superior Court docket</a> records an <a href={settledOrder} target="_blank" rel="noreferrer">August 11, 2026 order marked settled</a>. Mishler filed a withdrawal on September 15. <a href={withdrawal} target="_blank" rel="noreferrer">Sunrun withdrew its cross-complaint</a> on September 21, and the action was withdrawn September 22.</p>
-      <p>The October 8 trial did not take place. The public docket does not disclose the settlement terms or resolve the parties' competing accounts of the roofing arrangement.</p>
-      <p>Related SolarComplaint.com research covers <Link href="/research/sunrun-parra-roof-arbitration">another Sunrun roof dispute in California</Link> and <Link href="/research/sunrun-25-year-solar-contracts">Sunrun's 25-year solar contracts</Link>.</p>
+      <p>The October 8 trial did not take place. The public docket does not disclose the settlement terms or resolve the parties&apos; competing accounts of the roofing arrangement.</p>
+      <p>Related SolarComplaint.com research covers <Link href="/research/sunrun-parra-roof-arbitration">another Sunrun roof dispute in California</Link> and <Link href="/research/sunrun-25-year-solar-contracts">Sunrun&apos;s 25-year solar contracts</Link>.</p>
     </section>
 
     <section className="info-section">
       <h2>Primary sources</h2>
       <p><strong>Connecticut Judicial Branch:</strong> <a href={docket} target="_blank" rel="noreferrer">Mishler v. Sunrun, docket HHB-CV25-6096501-S</a>, case history and withdrawals.</p>
-      <p><strong>June 5, 2025:</strong> <a href={complaint} target="_blank" rel="noreferrer">Mishler's complaint</a>, including the alleged March 2 salesperson text and roofing claims.</p>
-      <p><strong>October 17, 2025:</strong> <a href={crossComplaint} target="_blank" rel="noreferrer">Sunrun's cross-complaint against New Creation, entry 106.00</a>.</p>
-      <p><strong>April 10, 2026:</strong> <a href={sunrunMemorandum} target="_blank" rel="noreferrer">Sunrun's summary-judgment memorandum, entry 124.00</a>.</p>
+      <p><strong>June 5, 2025:</strong> <a href={complaint} target="_blank" rel="noreferrer">Mishler&apos;s complaint</a>, including the alleged March 2 salesperson text and roofing claims.</p>
+      <p><strong>October 17, 2025:</strong> <a href={crossComplaint} target="_blank" rel="noreferrer">Sunrun&apos;s cross-complaint against New Creation, entry 106.00</a>.</p>
+      <p><strong>April 10, 2026:</strong> <a href={sunrunMemorandum} target="_blank" rel="noreferrer">Sunrun&apos;s summary-judgment memorandum, entry 124.00</a>.</p>
       <p><strong>August 11, 2026:</strong> <a href={settledOrder} target="_blank" rel="noreferrer">Court order marked settled, entry 141.00</a>.</p>
-      <p><strong>September 21, 2026:</strong> <a href={withdrawal} target="_blank" rel="noreferrer">Sunrun's withdrawal of its cross-complaint, entry 143.00</a>.</p>
+      <p><strong>September 21, 2026:</strong> <a href={withdrawal} target="_blank" rel="noreferrer">Sunrun&apos;s withdrawal of its cross-complaint, entry 143.00</a>.</p>
     </section>
 
     <section className="info-section">
