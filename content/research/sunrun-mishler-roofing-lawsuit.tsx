@@ -58,7 +58,7 @@ export function SunrunMishlerRoofingBody() {
 
     <section className="info-section">
       <p>Christopher Mishler signed a 25-year Sunrun solar lease in January 2024. In his <a href={complaint} target="_blank" rel="noreferrer">June 2025 complaint</a>, he alleges the project included a new roof before the solar panels were installed. He says he never signed a separate roofing contract with New Creation Home Improvements.</p>
-      <p>New Creation replaced the roof on April 25, 2024. Sunrun installed the solar system the following month. Mishler says he discovered leaks on May 23. He sued Sunrun Installation Services, salesperson Jeffrey Celniker and New Creation, alleging defects in the roofing work and that a required permit had not been obtained.</p>
+      <p>According to Mishler&apos;s complaint, New Creation replaced the roof on April 25, 2024, and Sunrun installed the solar system the following month. Mishler says he discovered leaks on May 23. He sued Sunrun Installation Services, salesperson Jeffrey Celniker and New Creation, alleging defects in the roofing work and that a required permit had not been obtained.</p>
     </section>
 
     <section className="info-section">
