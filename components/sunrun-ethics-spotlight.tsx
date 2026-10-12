@@ -35,7 +35,7 @@ export function SunrunEthicsSpotlight({
         <div className={styles.sources} aria-label="Guide coverage">
           <span>AllVoices</span>
           <span>Code of Conduct</span>
-          <span>Whistleblower Policy</span>
+          <span>2026 Speak-Up Policy</span>
           <span>Vendor Code</span>
         </div>
       ) : null}
