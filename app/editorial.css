@@ -484,6 +484,7 @@
 .state-source-grid p { margin: 0; color: #5d655e; font-size: 13px; line-height: 1.65; }
 .state-source-grid small { margin-top: 18px; color: #777e77; font-size: 9px; }
 .state-source-grid a { margin-top: auto; padding-top: 26px; color: var(--green); font-size: 11px; font-weight: 900; }
+.sunrun-research-section .state-source-grid h3 a { margin-top: 0; padding-top: 0; color: inherit; font-size: inherit; font-weight: inherit; }
 .state-research-status { margin-top: 54px; padding: 25px; border: 1px solid var(--line); background: #eeece4; }
 .state-research-status strong { font-family: Georgia, serif; font-size: 22px; font-weight: 500; }
 .state-research-status p { margin: 10px 0 0; color: #626a63; font-size: 12px; line-height: 1.65; }
