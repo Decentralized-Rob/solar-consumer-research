@@ -5,9 +5,6 @@ import { InfoPage } from "../../../../components/info-page";
 const governanceUrl = "https://investors.sunrun.com/leadership-governance/governance-documents";
 const leadershipUrl = "https://investors.sunrun.com/leadership-governance/executive-management";
 const allVoicesUrl = "https://sunrun.allvoices.co/";
-const codeUrl = "https://d1io3yog0oux5.cloudfront.net/_7e67e719e37e47b605f03fc63a5eec7e/sunrun/db/405/3799/file/Code%2Bof%2BBusiness%2BConduct%2B%26%2BEthics_Oct_2025.pdf";
-const vendorCodeUrl = "https://d1io3yog0oux5.cloudfront.net/_7e67e719e37e47b605f03fc63a5eec7e/sunrun/db/405/3803/file/6.25_Vendor%2BCode%2BOf%2BConduct_v2.pdf";
-const speakUpPolicyUrl = "https://d1io3yog0oux5.cloudfront.net/_7e67e719e37e47b605f03fc63a5eec7e/sunrun/db/405/3801/file/Speak-Up%2BPolicy%2B2026.pdf";
 const ethicsLinkedInPost = "https://www.linkedin.com/posts/sunrun_at-sunrun-were-committed-to-upholding-the-activity-7251577600949522435-tGOM";
 const texasSource = "https://www.texasattorneygeneral.gov/news/releases/attorney-general-ken-paxton-launches-major-initiative-combat-widespread-fraud-companies-selling";
 const connecticutSource = "https://portal.ct.gov/ag/press-releases/2024-press-releases/attorney-general-tong-sues-sunrun";
@@ -117,11 +114,12 @@ export function SunrunEthicsWebsitePreview({ variant }: { variant: "a" | "b" }) 
         <section style={sectionStyle}>
           <span style={labelStyle}>Evidence</span>
           <h2 style={{ fontSize: "clamp(26px, 3vw, 36px)", margin: "0 0 20px" }}>Sunrun’s published ethics documents</h2>
+          <p style={{ color: palette.muted }}>Find the current PDFs in Sunrun’s official governance document library.</p>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(220px,1fr))", gap: 12 }}>
             {[
-              ["Code of Business Conduct and Ethics", "October 2025", codeUrl],
-              ["Speak-Up Policy (Whistleblower Reporting)", "2026 policy", speakUpPolicyUrl],
-              ["Vendor Code of Conduct", "Vendor and partner standards", vendorCodeUrl],
+              ["Code of Business Conduct and Ethics", "October 2025", governanceUrl],
+              ["Speak-Up Policy (Whistleblower Reporting)", "2026 policy", governanceUrl],
+              ["Vendor Code of Conduct", "Vendor and partner standards", governanceUrl],
               ["Governance Documents", "Current company library", governanceUrl],
               ["Ethics & Compliance Week", "Public Sunrun LinkedIn post", ethicsLinkedInPost],
             ].map(([title, meta, href]) => (
