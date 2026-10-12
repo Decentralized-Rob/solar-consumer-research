@@ -68,7 +68,7 @@ export const publishedDestinations: PublishedDestination[] = [
     trackerLabel: "Sunrun ethics & compliance: AllVoices, policies, leadership and reporting guide",
     showInTrackerDiscovery: true,
     sitemap: {
-      lastModified: "2026-09-07",
+      lastModified: "2026-09-28",
       changeFrequency: "weekly",
       priority: 0.95,
     },
