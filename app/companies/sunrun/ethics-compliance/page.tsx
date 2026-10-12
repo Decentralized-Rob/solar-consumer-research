@@ -7,9 +7,6 @@ import styles from "./sunrun-ethics.module.css";
 const canonicalUrl = "https://solarcomplaint.com/companies/sunrun/ethics-compliance";
 const governanceUrl = "https://investors.sunrun.com/leadership-governance/governance-documents";
 const leadershipUrl = "https://investors.sunrun.com/leadership-governance/executive-management";
-const codeUrl = "https://d1io3yog0oux5.cloudfront.net/_7e67e719e37e47b605f03fc63a5eec7e/sunrun/db/405/3799/file/Code%2Bof%2BBusiness%2BConduct%2B%26%2BEthics_Oct_2025.pdf";
-const speakUpPolicyUrl = "https://d1io3yog0oux5.cloudfront.net/_7e67e719e37e47b605f03fc63a5eec7e/sunrun/db/405/3801/file/Speak-Up%2BPolicy%2B2026.pdf";
-const vendorCodeUrl = "https://d1io3yog0oux5.cloudfront.net/_7e67e719e37e47b605f03fc63a5eec7e/sunrun/db/405/3803/file/6.25_Vendor%2BCode%2BOf%2BConduct_v2.pdf";
 const allVoicesUrl = "https://sunrun.allvoices.co/";
 const ethicsLinkedInPost = "https://www.linkedin.com/posts/sunrun_at-sunrun-were-committed-to-upholding-the-activity-7251577600949522435-tGOM";
 const connecticutSource = "https://portal.ct.gov/ag/press-releases/2024-press-releases/attorney-general-tong-sues-sunrun";
@@ -229,10 +226,11 @@ export default function SunrunEthicsCompliancePage() {
         <section className="info-section" id="evidence">
           <div className={styles.sectionLabel}>Evidence</div>
           <h2>Sunrun’s published ethics documents</h2>
+          <p>Sunrun may change direct PDF addresses. Open the latest documents through its official governance library.</p>
           <div className={styles.sourceList}>
-            <div className={styles.sourceItem}><span>Primary source</span><div><strong>Code of Business Conduct and Ethics</strong><p>Sunrun’s October 2025 company ethics code.</p></div><a href={codeUrl} target="_blank" rel="noreferrer">Open ↗</a></div>
-            <div className={styles.sourceItem}><span>Primary source</span><div><strong>Speak-Up Policy (Whistleblower Reporting)</strong><p>Sunrun’s governance library now publishes a 2026 Speak-Up Policy in place of the prior Whistleblower Policy listing.</p></div><a href={speakUpPolicyUrl} target="_blank" rel="noreferrer">Open ↗</a></div>
-            <div className={styles.sourceItem}><span>Primary source</span><div><strong>Vendor Code of Conduct</strong><p>Separately published standards for Sunrun vendors and third-party relationships.</p></div><a href={vendorCodeUrl} target="_blank" rel="noreferrer">Open ↗</a></div>
+            <div className={styles.sourceItem}><span>Official company library</span><div><strong>Code of Business Conduct and Ethics</strong><p>Sunrun’s October 2025 company ethics code.</p></div><a href={governanceUrl} target="_blank" rel="noreferrer">Find in Sunrun library ↗</a></div>
+            <div className={styles.sourceItem}><span>Official company library</span><div><strong>Speak-Up Policy (Whistleblower Reporting)</strong><p>Sunrun’s governance library now publishes a 2026 Speak-Up Policy in place of the prior Whistleblower Policy listing.</p></div><a href={governanceUrl} target="_blank" rel="noreferrer">Find in Sunrun library ↗</a></div>
+            <div className={styles.sourceItem}><span>Official company library</span><div><strong>Vendor Code of Conduct</strong><p>Separately published standards for Sunrun vendors and third-party relationships.</p></div><a href={governanceUrl} target="_blank" rel="noreferrer">Find in Sunrun library ↗</a></div>
             <div className={styles.sourceItem}><span>Company library</span><div><strong>Governance documents</strong><p>The current Sunrun index for governance and ethics materials.</p></div><a href={governanceUrl} target="_blank" rel="noreferrer">Open ↗</a></div>
             <div className={styles.sourceItem}><span>Public LinkedIn</span><div><strong>Sunrun Ethics &amp; Compliance Week post</strong><p>A public company statement about integrity, accountability and transparency.</p></div><a href={ethicsLinkedInPost} target="_blank" rel="noreferrer">Open ↗</a></div>
           </div>
@@ -244,7 +242,7 @@ export default function SunrunEthicsCompliancePage() {
           <p>
             A homeowner may deal with a salesperson, installer, roofer, dealer, contractor or other third party rather than a direct Sunrun employee. Sunrun publishes a separate Vendor Code of Conduct, so it is worth documenting the person’s company, role, how the relationship to Sunrun was represented and which documents identify the vendor or partner.
           </p>
-          <p><a href={vendorCodeUrl} target="_blank" rel="noreferrer">Read the Sunrun Vendor Code of Conduct ↗</a></p>
+          <p><a href={governanceUrl} target="_blank" rel="noreferrer">Read the Sunrun Vendor Code of Conduct ↗</a></p>
         </section>
 
         <section className="info-section" id="what-to-document">
