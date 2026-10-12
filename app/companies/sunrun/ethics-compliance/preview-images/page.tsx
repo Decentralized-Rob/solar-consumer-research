@@ -52,7 +52,7 @@ export default function SunrunEthicsImagePreviewPage() {
 
       <section className="info-section">
         <h2>Option B: premium source dossier</h2>
-        <p>Darker and more investigative. The visual centers the Code of Business Conduct, Whistleblower Policy, Vendor Code and AllVoices reporting route.</p>
+        <p>Darker and more investigative. The visual centers the Code of Business Conduct, 2026 Speak-Up Policy, Vendor Code and AllVoices reporting route.</p>
         <div style={optionStyle}>
           <Image
             src="/sunrun/ethics-hero-option-b.svg"
