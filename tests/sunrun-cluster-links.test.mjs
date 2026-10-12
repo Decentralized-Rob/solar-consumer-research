@@ -91,5 +91,5 @@ test("Sunrun hub lists its own published research instead of a sitewide featured
 
 test("state source cards give official records descriptive link text", async () => {
   const html = await render("/states/texas");
-  assert.match(html, /Read Texas Attorney General residential solar investigation involving Sunrun/i);
+  assert.match(html, /Read (?:<!-- -->)?Texas Attorney General residential solar investigation involving Sunrun/i);
 });
