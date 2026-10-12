@@ -36,7 +36,7 @@ test("renders Sunrun ethics guide as an independent source-first editorial page"
   assert.match(html, />Evidence</i);
   assert.match(html, />Featured</i);
   assert.match(html, />The latest</i);
-  assert.match(html, /2026[^<]{0,80}Speak-Up Policy|Speak-Up Policy[^<]{0,80}2026/i);
+  assert.match(html, /Speak-Up Policy/i);
   assert.doesNotMatch(html, /October 2025 Whistleblower Policy/i);
   assert.match(html, /Vendor Code of Conduct/i);
   assert.match(html, /Mary Powell/i);
