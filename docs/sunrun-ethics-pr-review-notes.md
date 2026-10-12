@@ -22,7 +22,7 @@ SolarComplaint.com remains the publisher. Sunrun is the subject. The page does n
 - AllVoices: `https://sunrun.allvoices.co/`
 - Sunrun live Governance Documents page
 - October 2025 Code of Business Conduct and Ethics
-- October 2025 Whistleblower Policy, sourced through the current Sunrun governance library rather than a stale direct CDN object
+- 2026 Speak-Up Policy (Whistleblower Reporting), sourced through the current Sunrun governance library rather than a stale direct CDN object
 - Vendor Code of Conduct
 
 The previously listed hotline has been removed because the number was not sufficiently verified against a current live Sunrun source. No EthicsPoint references are included.
