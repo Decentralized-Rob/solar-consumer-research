@@ -78,6 +78,9 @@ export function SunrunMishlerRoofingBody() {
       <h2>Settled and withdrawn</h2>
       <p>The <a href={docket} target="_blank" rel="noreferrer">Connecticut Superior Court docket</a> records an <a href={settledOrder} target="_blank" rel="noreferrer">August 11, 2026 order marked settled</a>. Mishler filed a withdrawal on September 15. <a href={withdrawal} target="_blank" rel="noreferrer">Sunrun withdrew its cross-complaint</a> on September 21, and the action was withdrawn September 22.</p>
       <p>The October 8 trial did not take place. The public docket does not disclose the settlement terms or resolve the parties&apos; competing accounts of the roofing arrangement.</p>
+      <h2>What homeowners should know</h2>
+      <p>When a solar company offers a roof upgrade with a solar lease, confirm who holds the roofing contract, who is named on the permits and which company is responsible for the roof warranty. In Mishler&apos;s case, Sunrun described the roofer as a personal referral and denied responsibility for the roofing work.</p>
+      <p>Before signing, obtain copies of the solar and roofing agreements, check contractor licensing and permit requirements, and get warranty responsibilities in writing. See the free <Link href="/states/connecticut">Connecticut solar consumer resources</Link> for official complaint and licensing information.</p>
       <p>Related SolarComplaint.com research covers <Link href="/research/sunrun-parra-roof-arbitration">another Sunrun roof dispute in California</Link> and <Link href="/research/sunrun-25-year-solar-contracts">Sunrun&apos;s 25-year solar contracts</Link>.</p>
     </section>
 
