@@ -157,7 +157,7 @@ export default function SunrunCompanyPage() {
           </div>
         </section>
 
-        <section className="state-source-section" aria-labelledby="sunrun-research-title">
+        <section className="state-source-section sunrun-research-section" aria-labelledby="sunrun-research-title">
           <div className="state-source-section-heading">
             <span>{String(sunrunResearch.length).padStart(2, "0")} related stories</span>
             <h2 id="sunrun-research-title">Sunrun research</h2>
