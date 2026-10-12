@@ -53,7 +53,7 @@ export const publishedDestinations: PublishedDestination[] = [
     trackerLabel: "Sunrun lawsuits, investigations, settlements and consumer resources",
     showInTrackerDiscovery: true,
     sitemap: {
-      lastModified: "2026-09-06",
+      lastModified: "2026-10-12",
       changeFrequency: "weekly",
       priority: 0.9,
     },
