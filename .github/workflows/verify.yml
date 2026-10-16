@@ -22,3 +22,44 @@ jobs:
       - run: npm ci
       - run: npm run lint
       - run: npm test
+
+      - name: Diagnose Cloudflare production trigger
+        if: github.event_name == 'pull_request' && github.head_ref == 'ops/cloudflare-diagnostic-2026-10-16'
+        shell: bash
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_BUILDS_API_TOKEN }}
+          CF_ACCOUNT_ID: 1f679a0e8989a1ba29030ff449b77fd3
+          WORKER_NAME: solar-consumer-research
+        run: |
+          set -euo pipefail
+          api() {
+            curl --fail --silent --show-error --connect-timeout 10 --max-time 20 \
+              -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
+              "https://api.cloudflare.com/client/v4$1"
+          }
+          echo "Cloudflare API credentials present: $(test -n "$CLOUDFLARE_API_TOKEN" && echo yes || echo no)"
+          scripts="$(api "/accounts/$CF_ACCOUNT_ID/workers/scripts")"
+          worker_tag="$(jq -r --arg worker "$WORKER_NAME" '
+            .result | if type == "array" then .
+            elif type == "object" and has("items") then .items
+            elif type == "object" and has("scripts") then .scripts
+            else [] end
+            | .[] | select(.id == $worker) | .tag
+          ' <<<"$scripts")"
+          test -n "$worker_tag"
+          echo "Cloudflare Worker tag located."
+          echo "Cloudflare build trigger configuration:"
+          triggers="$(api "/accounts/$CF_ACCOUNT_ID/builds/workers/$worker_tag/triggers")"
+          jq -c '.result | if type=="array" then . elif type=="object" and has("triggers") then .triggers else [] end
+            | .[] | {trigger_uuid, trigger_name, branch_includes, branch_excludes, path_includes, path_excludes, root_directory, repo_name, build_caching_enabled}' <<<"$triggers"
+          echo "Recent Cloudflare builds for this Worker:"
+          builds="$(api "/accounts/$CF_ACCOUNT_ID/builds/workers/$worker_tag/builds")"
+          jq -c '.result | if type=="array" then . elif type=="object" and has("builds") then .builds elif type=="object" and has("items") then .items else [] end
+            | .[:12] | .[] | {build_uuid, build_outcome, created_on, modified_on, build_trigger_source, commit_hash:.build_trigger_metadata.commit_hash, branch:.build_trigger_metadata.branch}' <<<"$builds"
+          echo "Cloudflare build-minute availability:"
+          limits="$(api "/accounts/$CF_ACCOUNT_ID/builds/account/limits" 2>/dev/null || true)"
+          if [ -n "$limits" ]; then
+            jq -c 'if .success then .result else {available:false,reason:"not_accessible"} end' <<<"$limits"
+          else
+            echo "Build-minute endpoint not accessible with this token."
+          fi
