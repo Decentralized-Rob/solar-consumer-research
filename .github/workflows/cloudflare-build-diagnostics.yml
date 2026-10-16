@@ -1,0 +1,43 @@
+name: Diagnose Cloudflare builds (read only)
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/cloudflare-build-diagnostics.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_BUILDS_API_TOKEN }}
+      CF_ACCOUNT_ID: "1f679a0e8989a1ba29030ff449b77fd3"
+      WORKER_NAME: solar-consumer-research
+    steps:
+      - name: Inspect trigger configuration and recent Cloudflare build outcomes
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "$CLOUDFLARE_API_TOKEN" || { echo "::error::Cloudflare token absent"; exit 1; }
+          cf() {
+            curl --silent --show-error --connect-timeout 10 --max-time 20 \
+              --header "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
+              "https://api.cloudflare.com/client/v4$1"
+          }
+          scripts="$(cf "/accounts/$CF_ACCOUNT_ID/workers/scripts")"
+          tag="$(jq -r --arg worker "$WORKER_NAME" '.result | (if type=="array" then . elif type=="object" then (.items // .scripts // []) else [] end) | .[] | select(.id==$worker) | .tag' <<<"$scripts" | head -1)"
+          if [ -z "$tag" ]; then echo "::error::Worker tag not found"; exit 1; fi
+          echo "::notice::Worker exists; inspecting the Git build configuration"
+          triggers="$(cf "/accounts/$CF_ACCOUNT_ID/builds/workers/$tag/triggers")"
+          echo "BUILD_TRIGGER_STATUS:"
+          jq -c '{success, errors: [.errors[]? | .message], triggers: ((.result | if type=="array" then . elif type=="object" then (.triggers // .items // []) else [] end) | map({trigger_uuid,branch_includes,branch_excludes,provider_type,repo_name,environment,build_command,deploy_command,enabled,production_branch,created_on,modified_on}))}' <<< "$triggers"
+          builds="$(cf "/accounts/$CF_ACCOUNT_ID/builds/workers/$tag/builds")"
+          echo "RECENT_BUILDS:"
+          jq -c '{success, errors: [.errors[]? | .message], builds: ((.result | if type=="array" then . elif type=="object" then (.builds // .items // []) else [] end) | .[:15] | map({build_uuid,created_on,build_outcome,build_status,build_trigger_metadata: {commit_hash:.build_trigger_metadata.commit_hash, branch:.build_trigger_metadata.branch, build_trigger_source:.build_trigger_metadata.build_trigger_source, repo_name:.build_trigger_metadata.repo_name}}))}' <<< "$builds"
+          echo "LATEST_BUILDS_RESPONSE:"
+          latest="$(cf "/accounts/$CF_ACCOUNT_ID/builds/builds/latest?external_script_ids=$tag")"
+          jq -c '{success, errors: [.errors[]? | .message], latest: (.result.builds // {})}' <<< "$latest" | cut -c 1-2500
