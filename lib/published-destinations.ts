@@ -30,6 +30,13 @@ if (!solarSalesFinancingStory) {
   throw new Error("Missing solar-sales-financing-after-complaint research story");
 }
 
+const latestSunrunResearchDate = researchStories
+  .filter((story) => story.companies.some((name) => name.toLowerCase() === "sunrun"))
+  .reduce(
+    (latest, story) => story.dateModified > latest ? story.dateModified : latest,
+    "2026-10-12",
+  );
+
 export const publishedDestinations: PublishedDestination[] = [
   {
     id: solarSalesFinancingStory.id,
@@ -53,7 +60,7 @@ export const publishedDestinations: PublishedDestination[] = [
     trackerLabel: "Sunrun lawsuits, investigations, settlements and consumer resources",
     showInTrackerDiscovery: true,
     sitemap: {
-      lastModified: "2026-10-12",
+      lastModified: latestSunrunResearchDate,
       changeFrequency: "weekly",
       priority: 0.9,
     },
