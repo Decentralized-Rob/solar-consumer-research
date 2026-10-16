@@ -16,7 +16,7 @@ export const story = {
   socialDescription: "Current SEC records explain the term, performance guarantees, transfers and financial value behind Sunrun leases and PPAs.",
   twitterDescription: "Current 2026 records on what a long-term Sunrun agreement means for homeowners.",
   lede: "A Sunrun lease or power purchase agreement can last longer than many homeowners stay in the same house. New 2026 SEC records add unusually specific details about what those agreements contain and how Sunrun values them.",
-  displayTitle: "Sunrun 25-Year Solar Contracts: What Happens Next?",
+  displayTitle: "Sunrun 25-Year Solar Lease: Transfers, Buyouts & Guarantees",
   publishedAt: "September 7, 2026", datePublished: "2026-09-07", dateModified: "2026-09-16",
   stateCodes: [], companies: ["Sunrun"],
   topics: ["Sunrun contracts", "solar leases", "power purchase agreements", "subscriber value", "contract transfers"],
