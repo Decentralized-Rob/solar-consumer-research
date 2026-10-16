@@ -1,7 +1,7 @@
 import type { MetadataRoute } from "next";
 import { stateSlug, states } from "../lib/content";
 import { getPublicationSitemapEntries } from "../lib/published-destinations";
-import { getLatestResearchModifiedDate, researchStories } from "../lib/research-stories";
+import { getLatestResearchModifiedDate, getResearchStoriesForState, researchStories } from "../lib/research-stories";
 import { titanStateBankruptcyByCode } from "../lib/titan-state-research";
 
 const baseUrl = "https://solarcomplaint.com";
@@ -30,12 +30,19 @@ const goodLeapPages = [
 }));
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const statePages = states.filter((state) => state.available).map((state) => ({
-    url: `${baseUrl}/states/${stateSlug(state.name)}`,
-    lastModified: new Date(stateLastModifiedByCode[state.code] ?? "2026-08-21"),
-    changeFrequency: "monthly" as const,
-    priority: 0.8,
-  }));
+  const statePages = states.filter((state) => state.available).map((state) => {
+    const reviewedDate = stateLastModifiedByCode[state.code] ?? "2026-08-21";
+    const newestRelatedStoryDate = getResearchStoriesForState(state.code).reduce(
+      (latest, story) => story.dateModified > latest ? story.dateModified : latest,
+      reviewedDate,
+    );
+    return {
+      url: `${baseUrl}/states/${stateSlug(state.name)}`,
+      lastModified: new Date(newestRelatedStoryDate),
+      changeFrequency: "monthly" as const,
+      priority: 0.8,
+    };
+  });
 
   const researchPages = researchStories.map((story) => ({
     url: `${baseUrl}${story.href}`,
