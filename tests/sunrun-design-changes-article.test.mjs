@@ -46,3 +46,15 @@ test("revised Sunrun report is linked from the research index and in the sitemap
   const sitemap = await render("/sitemap.xml");
   assert.ok(sitemap.includes(`https://solarcomplaint.com${path}`));
 });
+
+test("Sunrun and Massachusetts hub sitemaps reflect the linked investigation date", async () => {
+  const sitemap = await render("/sitemap.xml");
+  for (const path of ["/companies/sunrun", "/states/massachusetts"]) {
+    const url = `https://solarcomplaint.com${path}`;
+    const start = sitemap.indexOf(`<loc>${url}</loc>`);
+    assert.ok(start >= 0, `Sitemap includes ${path}`);
+    const end = sitemap.indexOf("</url>", start);
+    assert.ok(end > start, `Sitemap closes entry ${path}`);
+    assert.match(sitemap.slice(start, end), /<lastmod>2026-10-16/, `Fresh lastmod for ${path}`);
+  }
+});
