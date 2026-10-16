@@ -30,6 +30,7 @@ const sunrunInstallation = "https://www.sunrun.com/solar-panels";
 const sec2015 = "https://www.sec.gov/Archives/edgar/data/1469367/000119312515234545/d880891ds1.htm";
 const sunrunFaq = "https://www.sunrun.com/go-solar-center/solar-faq";
 const secReview2026 = "https://www.sec.gov/Archives/edgar/data/1469367/000119312526318223/d149204dex991.htm";
+const kpmgSecuritization = "https://kpmg.com/us/en/capabilities-services/audit-services/structured-finance/securitization.html";
 const secGuarantees2026 = "https://www.sec.gov/Archives/edgar/data/1469367/000119312526318237/d129330dex991.htm";
 const sunrun10q2026 = "https://www.sec.gov/Archives/edgar/data/1469367/000162828026053366/run-20260630.htm";
 const maHicGuidance = "https://www.mass.gov/info-details/home-improvement-contract-sample-language";
@@ -49,7 +50,8 @@ export const articleConfig = {
     { name: "Sunrun initial registration statement, June 25, 2015, customer service and operations", url: sec2015, datePublished: "2015-06-25" },
     { name: "Sunrun solar installation and design approval guidance", url: sunrunInstallation, publisher: "Sunrun" },
     { name: "Sunrun FAQ: final design in Contracts & Docs and performance guarantee", url: sunrunFaq, publisher: "Sunrun" },
-    { name: "KPMG agreed-upon procedures report dated July 24, 2026, filed with the SEC", url: secReview2026, datePublished: "2026-07-24" },
+    { name: "KPMG agreed-upon procedures report dated July 24, 2026, filed with the SEC", url: secReview2026, publisher: "KPMG LLP", datePublished: "2026-07-24" },
+    { name: "KPMG U.S. securitization services and agreed-upon procedures", url: kpmgSecuritization, publisher: "KPMG LLP" },
     { name: "Leidos Engineering report on Sunrun agreement performance guarantees, filed July 2026", url: secGuarantees2026, datePublished: "2026-07-24" },
     { name: "Sunrun Form 10-Q for quarter ended June 30, 2026", url: sunrun10q2026, datePublished: "2026-08-05" },
     { name: "Massachusetts OCABR home improvement contract sample language", url: maHicGuidance, publisher: "Massachusetts OCABR" },
@@ -71,7 +73,7 @@ export function SunrunSolarDesignChangesBody() {
 
     <section className="info-section">
       <h2>A 2026 review found discrepancies in solar-asset data</h2>
-      <p>In July 2026, KPMG published an <a href={secReview2026} target="_blank" rel="noreferrer">agreed-upon procedures report filed with the SEC</a> for Sunrun Quintus Issuer 2026-2, a solar-asset financing transaction. KPMG selected 300 assets from a file containing 37,599 systems. Sunrun subsequently supplied a final portfolio file containing 37,595 assets. For the selected systems, KPMG compared specified data fields with material Sunrun provided, including contracts, design plans, amendments and change-order documents where available.</p>
+      <p>In July 2026, <a href={kpmgSecuritization} target="_blank" rel="noreferrer">KPMG LLP</a>, an accounting firm whose structured-finance services include agreed-upon procedures, prepared a <a href={secReview2026} target="_blank" rel="noreferrer">report filed with the SEC</a> for Sunrun Quintus Issuer 2026-2, a solar-asset financing transaction. The SEC filing identifies Sunrun as the company that paid KPMG for the work. KPMG selected 300 assets from a file containing 37,599 systems. Sunrun subsequently supplied a final portfolio file containing 37,595 assets. For the selected systems, KPMG compared specified data fields with material Sunrun provided, including contracts, design plans, amendments and change-order documents where available.</p>
       <p>The report&apos;s Exhibit D lists discrepancies remaining after Sunrun revised the data. One selected system was recorded at <strong>1.84 kW</strong> in the final file, compared with <strong>2.28 kW</strong> in the supplied comparison information. Another was recorded at <strong>11.13 kW</strong> against <strong>10.92 kW</strong>. These figures describe differences in the records reviewed, rather than a count of panels on a homeowner&apos;s roof.</p>
       <p>Other differences concerned payment terms. For one sampled agreement, the first-year monthly payment was <strong>$95.72</strong> in the data file and <strong>$102.41</strong> in the supplied information. For another, an annual escalator appeared as <strong>2.90%</strong> in the data and <strong>3.90%</strong> in the comparison material. The original review also recorded 108 inverter-manufacturer exceptions that Sunrun attributed to an Excel formula error; those entries were absent from the final exception table.</p>
       <p>KPMG was hired to compare specified information used in the financing transaction. Its report says it made no representation about whether the customer contracts had been validly executed. It also did not inspect installed systems or determine whether individual homeowners had approved revised designs. The reported discrepancies establish differences between a financial data file and the material used to check it.</p>
