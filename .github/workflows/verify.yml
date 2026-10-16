@@ -63,3 +63,63 @@ jobs:
           else
             echo "Build-minute endpoint not accessible with this token."
           fi
+
+
+      - name: Retry terminated production build for PR 122
+        if: github.event_name == 'pull_request' && github.head_ref == 'ops/cloudflare-diagnostic-2026-10-16'
+        shell: bash
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_BUILDS_API_TOKEN }}
+          CF_ACCOUNT_ID: 1f679a0e8989a1ba29030ff449b77fd3
+          PRODUCTION_COMMIT: e14ecf9b11f01a1e338b6b473d3376d5d94e6316
+        run: |
+          set -euo pipefail
+          trigger_uuid="14fe11f1-9603-4e3a-b924-3ab7b5a56344"
+          endpoint="https://api.cloudflare.com/client/v4/accounts/$CF_ACCOUNT_ID/builds/triggers/$trigger_uuid/builds"
+          payload="$(jq -nc --arg branch "main" --arg sha "$PRODUCTION_COMMIT" '{branch:$branch,commit_hash:$sha}')"
+          echo "Retrying Cloudflare production build for approved and merged commit $PRODUCTION_COMMIT"
+          http_code="$(curl --silent --show-error --connect-timeout 10 --max-time 30 \
+            -o /tmp/cloudflare-trigger-result.json -w "%{http_code}" \
+            -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
+            -H "Content-Type: application/json" -X POST --data "$payload" "$endpoint")"
+          echo "Cloudflare build trigger HTTP $http_code"
+          jq -c '{success, result:{build_uuid:.result.build_uuid,status:.result.status,already_exists:.result.already_exists}, errors:[.errors[]? | {code,message}]}' /tmp/cloudflare-trigger-result.json
+          test "$http_code" -ge 200
+          test "$http_code" -lt 300
+          jq -e '.success == true' /tmp/cloudflare-trigger-result.json >/dev/null
+          uuid="$(jq -r '.result.build_uuid // empty' /tmp/cloudflare-trigger-result.json)"
+          if [ -z "$uuid" ]; then
+            echo "::error::Cloudflare did not return a build UUID."
+            exit 1
+          fi
+          echo "Build UUID: $uuid"
+          for attempt in $(seq 1 20); do
+            response="$(curl --fail --silent --show-error --connect-timeout 10 --max-time 20 \
+              -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
+              "https://api.cloudflare.com/client/v4/accounts/$CF_ACCOUNT_ID/builds/builds/$uuid")"
+            outcome="$(jq -r '.result.build_outcome // empty' <<<"$response")"
+            status="$(jq -r '.result.status // empty' <<<"$response")"
+            echo "Build attempt $attempt: status=$status outcome=$outcome"
+            if [ "$outcome" = "success" ]; then
+              for check in $(seq 1 8); do
+                code="$(curl --silent --show-error --connect-timeout 10 --max-time 20 \
+                  -o /dev/null -w "%{http_code}" \
+                  "https://solarcomplaint.com/research/sunrun-solar-design-changes-change-orders?verify=$uuid")"
+                echo "Live article HTTP $code"
+                if [ "$code" = "200" ]; then
+                  echo "PRODUCTION_RESTORED: article serves 200."
+                  exit 0
+                fi
+                sleep 8
+              done
+              echo "::error::Build succeeded but article not live."
+              exit 1
+            fi
+            if [ -n "$outcome" ] && [ "$outcome" != "success" ]; then
+              echo "::error::Cloudflare build failed: $outcome"
+              exit 1
+            fi
+            sleep 10
+          done
+          echo "::error::Cloudflare build did not finish within this verification window."
+          exit 1
