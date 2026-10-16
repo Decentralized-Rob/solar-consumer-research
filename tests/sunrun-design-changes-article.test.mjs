@@ -17,7 +17,7 @@ async function render(path) {
 test("Sunrun design-change investigation shows SEC exceptions without treating them as proof of unauthorized panel removal", async () => {
   const path = "/research/sunrun-solar-design-changes-change-orders";
   const html = await render(path);
-  assert.match(html, /<title>Sunrun Solar Panel Changes: SEC Findings/i);
+  assert.match(html, /<title>Sunrun Solar Panel Changes: SEC Records/i);
   assert.match(html, /rel="canonical"[^>]*sunrun-solar-design-changes-change-orders|sunrun-solar-design-changes-change-orders[^>]*rel="canonical"/i);
   assert.match(html, /"@type":"Article"/);
   assert.match(html, /<h1[^>]*>Sunrun SEC Filings Detail Solar Change Orders/i);
