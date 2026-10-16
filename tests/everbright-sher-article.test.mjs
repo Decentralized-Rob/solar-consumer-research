@@ -22,7 +22,7 @@ test("EverBright case gets a crawlable, source-backed search landing page", asyn
   assert.match(html, /"@type":"Article"/);
   assert.match(html, /"@type":"BreadcrumbList"/);
   assert.match(html, /September 10, 2026/);
-  assert.match(html, /did not sign or enter the PPA/i);
+  assert.match(html, /did not sign or enter the power purchase agreement/i);
   assert.match(html, /remaining claims in the lawsuit/i);
   assert.match(html, /law\.justia\.com\/cases\/federal\/district-courts\/california\/caedce\/1:2026cv04646\/492533\/20\//);
   assert.match(html, /href="\/states\/california"/);
