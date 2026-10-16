@@ -9,14 +9,14 @@ export const story = {
   title: "Sunrun’s 25-Year Solar Contracts: The Homeowner View and the Investor View",
   deck: "Sunrun’s own filings show why a 20- or 25-year solar agreement looks very different from the roof than it does in the financial statements.",
   summary: "A source-backed analysis of Sunrun solar leases and PPAs, recurring customer payments, subscriber value, transfers, escalators and the terms homeowners should examine.",
-  seoTitle: "Sunrun 25-Year Contract: Lease, PPA, Transfer & Buyout Terms",
-  seoDescription: "Researching a Sunrun 25-year solar contract? See current 2026 SEC records on lease and PPA terms, performance guarantees, home-sale transfers, buyout options and how Sunrun values long-term customer agreements.",
+  seoTitle: "Sunrun 25-Year Solar Lease: Transfers, Buyouts & Guarantees",
+  seoDescription: "Sunrun 25-year lease or PPA? See 2026 filings on home-sale transfers, end-of-term options and why some reviewed agreements have a 0% production guarantee.",
   keywords: ["Sunrun 25 year contract", "Sunrun solar contract", "Sunrun lease 25 years", "Sunrun PPA", "Sunrun contract terms", "Sunrun solar lease", "Sunrun contract transfer", "Sunrun buyout", "Sunrun performance guarantee", "Sunrun Flex"],
-  openGraphTitle: "Sunrun 25-Year Contracts: What Homeowners Should Know in 2026",
+  openGraphTitle: "Sunrun 25-Year Solar Contracts: Transfers, Buyouts & Guarantees",
   socialDescription: "Current SEC records explain the term, performance guarantees, transfers and financial value behind Sunrun leases and PPAs.",
   twitterDescription: "Current 2026 records on what a long-term Sunrun agreement means for homeowners.",
   lede: "A Sunrun lease or power purchase agreement can last longer than many homeowners stay in the same house. New 2026 SEC records add unusually specific details about what those agreements contain and how Sunrun values them.",
-  displayTitle: "Sunrun 25-Year Solar Contracts",
+  displayTitle: "Sunrun 25-Year Solar Contracts: What Happens Next?",
   publishedAt: "September 7, 2026", datePublished: "2026-09-07", dateModified: "2026-09-16",
   stateCodes: [], companies: ["Sunrun"],
   topics: ["Sunrun contracts", "solar leases", "power purchase agreements", "subscriber value", "contract transfers"],
@@ -34,7 +34,7 @@ const ftcSolar = "https://consumer.ftc.gov/articles/solar-power-your-home";
 export const articleConfig = {
   twitterTitle: story.seoTitle,
   schemaHeadline: story.seoTitle,
-  schemaDescription: "Current 2026 research on Sunrun solar leases and PPAs, including contract length, performance guarantees, transfers, end-of-term options and investor valuation.",
+  schemaDescription: "2026 source-backed guide to Sunrun 25-year leases and PPAs, including home-sale transfers, end-of-term options, variable production guarantees and SEC disclosures.",
   breadcrumbLabel: "Sunrun 25-Year Solar Contracts",
   imageAlt: "Sunrun 25-year solar contract research",
   sources: [
@@ -53,7 +53,15 @@ export function SunrunContractsBody() {
     <nav className="case-question-links" aria-label="Breadcrumb"><Link href="/">Home</Link><Link href="/research">Research</Link><Link href="/companies/sunrun">Sunrun</Link><span aria-current="page">25-year contracts</span></nav>
       <nav className="case-question-links" aria-label="Article navigation"><a href="#new">New in 2026</a><a href="#term">Contract length</a><a href="#guarantee">Performance guarantee</a><a href="#transfer">Selling the home</a><a href="#end">End of term</a><a href="#investor">Investor value</a><a href="#questions">Contract checklist</a><a href="#sources">Sources</a></nav>
 
-      <section className="info-section case-notice"><strong>The short version</strong><p>Sunrun says its Customer Agreements typically start with 20- or 25-year terms. A 2026 SEC-filed review says Sunrun’s newer SHIFT and Flex agreements typically run 25 years and that performance guarantees in reviewed agreements can vary. Sunrun’s own investor math can extend beyond the initial contract: for a 25-year agreement, it assumes a five-year renewal when calculating Subscriber Value.</p></section>
+      <section className="info-section case-notice">
+        <strong>The short version</strong>
+        <p>Sunrun says its solar leases and power purchase agreements typically start with 20- or 25-year terms. What happens after signing depends on the agreement.</p>
+        <ul>
+          <li><strong>Selling your home:</strong> Sunrun says a seller may purchase the system or assign an eligible agreement to a buyer who accepts it and meets applicable credit requirements. <a href="#transfer">Read the transfer terms</a>.</li>
+          <li><strong>End of the lease:</strong> Sunrun lists purchase at then fair-market value, annual renewal or removal. An early buyout is different. <a href="#end">Read the end-of-term options</a>.</li>
+          <li><strong>Production guarantee:</strong> A 2026 SEC-filed review found newer agreements with guarantee percentages of 90%, 85% or 0%. Your signed terms determine your coverage. <a href="#guarantee">Read the source details</a>.</li>
+        </ul>
+      </section>
 
       <section id="new" className="info-section"><p className="eyebrow">Fresh records</p><h2>What new 2026 SEC filings tell us about Sunrun contracts</h2><p>An April 2026 third-party review filed with the SEC examined Sunrun’s solar fleet and sample customer agreements. It says Sunrun began offering SHIFT, Flex and Storage Add-on agreements in 2024. The reviewed SHIFT and Flex agreements typically had 25-year terms. The storage-only lease was described as having a 10-year term.</p><p>The same filing says newer agreements reviewed for the report carried performance-guarantee percentages of 90%, 85% or 0%, depending on the agreement. That is important: the words <em>performance guarantee</em> do not by themselves tell a homeowner how much production is guaranteed. The percentage and calculation in the individual agreement matter.</p><p><a href={secFleetReview} target="_blank" rel="noreferrer">Read the April 2026 fleet review filed with the SEC ↗</a></p></section>
 
