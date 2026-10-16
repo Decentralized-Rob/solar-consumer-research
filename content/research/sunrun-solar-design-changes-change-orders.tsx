@@ -6,7 +6,7 @@ export const story = {
   slug: "sunrun-solar-design-changes-change-orders",
   href: "/research/sunrun-solar-design-changes-change-orders",
   title: "Can Sunrun Reduce Your Solar Panel Count Without Written Approval?",
-  deck: "Sunrun says homeowners give final design approval. Its 2026 SEC records also identify customer-approved plans and change-order documents. State law may require more than a phone call.",
+  deck: "Sunrun says it seeks final design approval before permitting. Its 2026 SEC records identify customer-approved plans and change-order documentation, while state laws determine when changes must be written.",
   summary: "What Sunrun says about final design approval, what its July 2026 SEC documents identify, and when Massachusetts and other states require written changes to covered home improvement contracts.",
   seoTitle: "Sunrun Panel Count Changes: Approval & Change Orders",
   seoDescription: "Can Sunrun change your panel count? Review its 2026 SEC records, design-approval statements and state written change-order requirements, including Massachusetts.",
@@ -14,7 +14,7 @@ export const story = {
   openGraphTitle: "Can Sunrun Change Your Solar Design Without Written Approval?",
   socialDescription: "Sunrun discusses final design approval. A 2026 SEC filing lists customer-approved plans and change-order records. See when state law requires written changes.",
   twitterDescription: "Sunrun solar panel count changes, final design approval, 2026 SEC filings and state written-change requirements.",
-  lede: "Sunrun says it gets a homeowner's final approval after changing a solar design. But if the revised plan has fewer panels, what did the homeowner approve? Sunrun's public documents and state contractor laws help explain what should be checked.",
+  lede: "Sunrun says homeowners approve final solar designs before permitting, and its 2026 SEC records identify change-order documents among customer records. When the panel count changes, what exactly was approved, and does state law require that approval in writing?",
   publishedAt: "October 16, 2026",
   datePublished: "2026-10-16",
   dateModified: "2026-10-16",
@@ -91,7 +91,7 @@ export function SunrunSolarDesignChangesBody() {
       <h2>Massachusetts requires written changes for covered home improvement contracts</h2>
       <p>Under <a href={ma142a2} target="_blank" rel="noreferrer">Massachusetts General Laws Chapter 142A, Section 2</a>, covered residential contracting work exceeding $1,000 requires a written, signed contract. The Massachusetts Office of Consumer Affairs and Business Regulation goes further in its <a href={maHicGuidance} target="_blank" rel="noreferrer">official home improvement contract guidance</a>: modifications to the original contract must be written and agreed to by both parties. <strong>Where that requirement applies, saying the homeowner agreed during a telephone call is not a substitute for the required written modification.</strong></p>
       <p>Another provision, <a href={ma142a17} target="_blank" rel="noreferrer">Chapter 142A, Section 17(2)</a>, prohibits covered contractors from materially departing from agreed plans or specifications without the owner&apos;s consent. Consent and a written contract modification are related questions, but the statute&apos;s consent provision does not itself say that every change requires a separately signed form bearing the words “change order.” The legal requirements depend on whether the work and agreement fall under the home improvement law. A Sunrun lease or power purchase agreement should not automatically be treated as the same thing as a covered construction contract.</p>
-      <p>Consider a hypothetical Massachusetts homeowner who agrees to a 24-panel system. After a site visit, the installer reduces the design to 20 panels and later says the homeowner consented by phone. If the reduction modifies a home improvement contract subject to OCABR&apos;s written-modification rule, that conversation alone does not meet the written requirement. The original agreement, revised design and written record of the change would matter, along with any revised production estimate. <em>This is an illustration, not an account of an actual homeowner or Sunrun project.</em></p>
+      <p>Consider a hypothetical Massachusetts homeowner who agrees to a 24-panel system. After a site visit, the installer reduces the design to 20 panels and later says the homeowner consented by phone. If the reduction modifies a home improvement contract subject to the written-modification requirement described in OCABR&apos;s guidance, that conversation alone does not meet the written requirement. The original agreement, revised design and written record of the change would matter, along with any revised production estimate. <em>This is an illustration, not an account of an actual homeowner or Sunrun project.</em></p>
     </section>
 
     <section className="info-section">
