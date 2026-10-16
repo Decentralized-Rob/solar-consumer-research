@@ -86,7 +86,7 @@ export default function TitanSolarPowerPage() {
           <div className="tt-hero-grid">
             <div>
               <div className="tt-status-pill"><span /> Closed · Chapter 7</div>
-              <h1>Titan Solar Power Bankruptcy: Closure, Loans and Customer Help</h1>
+              <h1>Titan Solar Power Bankruptcy: Who Took Over? Loans &amp; Warranties</h1>
               <p className="tt-deck">A sourced tracker for former Titan customers looking for bankruptcy records, warranty information, service resources, reporting and customer help after the company closed.</p>
               <div className="tt-actions"><Link className="tt-button tt-button-primary" href="/cases/titan-solar-power/customer-help">Find the right research path</Link><a className="tt-button tt-button-secondary" href="#who-took-over">Read the quick answers</a></div>
             </div>
