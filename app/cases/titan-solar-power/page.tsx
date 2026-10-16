@@ -5,12 +5,12 @@ import SubscribeForm from "./SubscribeForm";
 import "./titan-tracker.css";
 
 export const metadata: Metadata = {
-  title: "Titan Solar Power Bankruptcy, Closure & Customer Help",
-  description: "Titan Solar Power bankruptcy and closure information, who took over selected assets, warranty limits, court records, and customer-help resources for former Titan customers.",
+  title: "Titan Solar Power Bankruptcy: Who Took Over? Loans & Warranties",
+  description: "Titan closed and filed Chapter 7 in 2024. See who acquired selected assets, why warranties did not transfer, and where customers can research loans and service.",
   alternates: { canonical: "/cases/titan-solar-power" },
   openGraph: {
-    title: "Titan Solar Power Bankruptcy, Closure & Customer Help",
-    description: "A sourced tracker covering Titan Solar Power's Chapter 7 bankruptcy, closure, selected asset acquisition, warranty limits, and customer-help resources.",
+    title: "Titan Solar Power Bankruptcy: Who Took Over? Loans & Warranties",
+    description: "Titan Solar Power's Chapter 7 bankruptcy, EnergyAid's selected asset acquisition, warranty limits and links for customers with loans or service issues.",
     url: "/cases/titan-solar-power",
     type: "article",
   },
@@ -86,7 +86,7 @@ export default function TitanSolarPowerPage() {
           <div className="tt-hero-grid">
             <div>
               <div className="tt-status-pill"><span /> Closed · Chapter 7</div>
-              <h1>Titan Solar Power is gone. The systems, loans and questions are not.</h1>
+              <h1>Titan Solar Power Bankruptcy: Closure, Loans and Customer Help</h1>
               <p className="tt-deck">A sourced tracker for former Titan customers looking for bankruptcy records, warranty information, service resources, reporting and customer help after the company closed.</p>
               <div className="tt-actions"><Link className="tt-button tt-button-primary" href="/cases/titan-solar-power/customer-help">Find the right research path</Link><a className="tt-button tt-button-secondary" href="#who-took-over">Read the quick answers</a></div>
             </div>
