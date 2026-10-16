@@ -31,7 +31,7 @@ test("Titan tracker answers bankruptcy and takeover search intent", async () => 
   const html = await response.text();
 
   assert.match(html, /<title>Titan Solar Power Bankruptcy: Who Took Over\? Loans &amp; Warranties/i);
-  assert.match(html, /<h1>Titan Solar Power Bankruptcy: Closure, Loans and Customer Help<\/h1>/i);
+  assert.match(html, /<h1>Titan Solar Power Bankruptcy: Who Took Over\? Loans &amp; Warranties<\/h1>/i);
   assert.match(html, /Who took over Titan Solar Power\?/i);
   assert.match(html, /What happened to Titan Solar Power\?/i);
   assert.match(html, /Titan Solar Power bankruptcy status/i);
