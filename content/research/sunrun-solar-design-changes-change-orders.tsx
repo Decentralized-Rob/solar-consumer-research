@@ -72,35 +72,35 @@ export function SunrunSolarDesignChangesBody() {
 
     <section className="info-section case-notice">
       <strong>The short version</strong>
-      <p>Sunrun says it gets a homeowner's final approval after adjusting a solar design and before submitting it for permits. A July 2026 SEC-filed review identifies customer-approved plans and change-order documentation among Sunrun records supplied for a solar asset sample. Neither source tells us whether a particular homeowner approved a particular change.</p>
+      <p>Sunrun says it gets a homeowner&apos;s final approval after adjusting a solar design and before submitting it for permits. A July 2026 SEC-filed review identifies customer-approved plans and change-order documentation among Sunrun records supplied for a solar asset sample. Neither source tells us whether a particular homeowner approved a particular change.</p>
       <p><strong>Written means written.</strong> When an applicable state rule requires a written contract modification, a verbal conversation alone does not meet that requirement. Massachusetts, California, Connecticut, New York and New Jersey have written-change rules for covered home improvement contracts. Whether those rules apply to a particular solar lease, power purchase agreement or installation contract depends on the work and the contract.</p>
     </section>
 
     <section className="info-section">
       <h2>What does Sunrun say about design approval?</h2>
-      <p>On its <a href={sunrunInstallation} target="_blank" rel="noreferrer">solar installation page</a>, Sunrun says its design experts make necessary adjustments after a site assessment and seek the customer's final approval. Sunrun says the approved design is then submitted to the city for permitting.</p>
-      <p>That leaves a practical question if the system changes: which version was finally approved? Homeowners should compare the sales proposal, signed agreement, revised plans and final permit drawings. A design shown in a sales presentation is not necessarily the same as the design submitted for permits.</p>
+      <p>On its <a href={sunrunInstallation} target="_blank" rel="noreferrer">solar installation page</a>, Sunrun says its design experts make necessary adjustments after a site assessment and seek the customer&apos;s final approval. Sunrun says the approved design is then submitted to the city for permitting.</p>
+      <p>If the system changes, which version did the customer approve? Compare the sales proposal, signed agreement, revised plans and final permit drawings. The sales presentation may differ from the plan submitted for permits.</p>
     </section>
 
     <section className="info-section">
-      <h2>What do Sunrun's 2026 SEC records show about change orders?</h2>
+      <h2>What do Sunrun&apos;s 2026 SEC records show about change orders?</h2>
       <p>A <a href={secReview2026} target="_blank" rel="noreferrer">July 24, 2026 report by KPMG, filed with the SEC</a>, identifies the types of records Sunrun provided for a review of sampled solar assets. That list includes customer-approved plans, change-order documentation, solar roof plans and amendments to power purchase agreements. The report describes a portfolio of 37,595 solar assets and a sample used for agreed-upon procedures.</p>
       <p>Those records were described as some or all of the documents available for selected assets. The report does <strong>not</strong> establish that every Sunrun customer has a change order on file. KPMG also did not determine whether customer signatures were valid or whether Sunrun complied with state contract laws.</p>
-      <p>Sunrun's <a href={sunrun10q2026} target="_blank" rel="noreferrer">August 2026 Form 10-Q</a> separately names construction change orders, site changes and roof conditions as factors that can delay installations or raise costs. That disclosure recognizes change orders as an installation issue. It does not establish how any individual change must be approved.</p>
+      <p>Sunrun&apos;s <a href={sunrun10q2026} target="_blank" rel="noreferrer">August 2026 Form 10-Q</a> separately names construction change orders, site changes and roof conditions as factors that can delay installations or raise costs. That disclosure recognizes change orders as an installation issue. It does not establish how any individual change must be approved.</p>
     </section>
 
     <section className="info-section">
       <h2>Massachusetts: when must solar contract changes be written?</h2>
-      <p>Massachusetts <a href={ma142a2} target="_blank" rel="noreferrer">Chapter 142A, Section 2</a> requires a written, signed contract for covered residential contracting services over $1,000. The state's <a href={maHicGuidance} target="_blank" rel="noreferrer">Office of Consumer Affairs and Business Regulation (OCABR) guidance</a> says that any modification to the original home improvement contract must be written and agreed to by both parties.</p>
+      <p>Massachusetts <a href={ma142a2} target="_blank" rel="noreferrer">Chapter 142A, Section 2</a> requires a written, signed contract for covered residential contracting services over $1,000. The state&apos;s <a href={maHicGuidance} target="_blank" rel="noreferrer">Office of Consumer Affairs and Business Regulation (OCABR) guidance</a> says that any modification to the original home improvement contract must be written and agreed to by both parties.</p>
       <p><strong>That is a written requirement. A phone conversation alone does not satisfy it.</strong></p>
-      <p>Separately, <a href={ma142a17} target="_blank" rel="noreferrer">Chapter 142A, Section 17(2)</a> prohibits a covered contractor from departing in a material respect from contracted plans or specifications without the owner's consent. That provision requires consent; it does not, by itself, say every change requires a separate signed change-order form.</p>
+      <p>Separately, <a href={ma142a17} target="_blank" rel="noreferrer">Chapter 142A, Section 17(2)</a> prohibits a covered contractor from departing in a material respect from contracted plans or specifications without the owner&apos;s consent. That provision requires consent; it does not, by itself, say every change requires a separate signed change-order form.</p>
       <p>Massachusetts <a href={maHicHomeowners} target="_blank" rel="noreferrer">HIC guidance</a> specifically distinguishes solar panels from the exemption for many energy-conservation devices. Still, coverage turns on the actual residential contracting work and parties involved. It should not be assumed that every provision of a Sunrun lease or power purchase agreement is governed by Chapter 142A.</p>
     </section>
 
     <section className="info-section">
       <h2>A Massachusetts example</h2>
-      <p><em>Hypothetical example, not a report of an actual homeowner's dispute:</em> A homeowner agrees to a 24-panel solar design. After a site visit, the installer proposes 20 panels and says the homeowner agreed during a call. The homeowner later receives plans showing the smaller system.</p>
-      <p>If this is a modification to a covered Massachusetts home improvement contract, OCABR's written-modification requirement matters. The installer should not treat the phone conversation as a substitute for the required written agreement. The original contract, revised design and documentation of the agreed modification would be central records to examine.</p>
+      <p><em>Hypothetical example, not a report of an actual homeowner&apos;s dispute:</em> A homeowner agrees to a 24-panel solar design. After a site visit, the installer proposes 20 panels and says the homeowner agreed during a call. The homeowner receives plans showing the smaller system.</p>
+      <p>If this is a modification to a covered Massachusetts home improvement contract, OCABR&apos;s written-modification requirement matters. The installer should not treat the phone conversation as a substitute for the required written agreement. The original contract, revised design and documentation of the agreed modification would be central records to examine.</p>
       <p>The homeowner should also check the wattage of each panel, total system size in kilowatts and revised annual production estimate. Fewer panels can mean less generation, but panel count alone cannot tell you the production difference. The <a href={ftc} target="_blank" rel="noreferrer">FTC advises comparing written system size and expected production</a> before agreeing to solar terms.</p>
     </section>
 
@@ -125,7 +125,7 @@ export function SunrunSolarDesignChangesBody() {
       <p><strong>Sunrun:</strong> <a href={sunrunInstallation} target="_blank" rel="noreferrer">Installation process and final design approval</a>.</p>
       <p><strong>SEC, July 24, 2026:</strong> <a href={secReview2026} target="_blank" rel="noreferrer">KPMG agreed-upon procedures report covering Sunrun asset records</a>, including customer-approved plans and change-order documentation.</p>
       <p><strong>SEC, August 2026:</strong> <a href={sunrun10q2026} target="_blank" rel="noreferrer">Sunrun Form 10-Q for the quarter ended June 30, 2026</a>.</p>
-      <p><strong>Massachusetts:</strong> <a href={maHicGuidance} target="_blank" rel="noreferrer">OCABR's written modification guidance</a>; <a href={ma142a2} target="_blank" rel="noreferrer">Chapter 142A, Section 2</a>; <a href={ma142a17} target="_blank" rel="noreferrer">Section 17</a>; <a href={maHicHomeowners} target="_blank" rel="noreferrer">HIC homeowner guidance</a>.</p>
+      <p><strong>Massachusetts:</strong> <a href={maHicGuidance} target="_blank" rel="noreferrer">OCABR&apos;s written modification guidance</a>; <a href={ma142a2} target="_blank" rel="noreferrer">Chapter 142A, Section 2</a>; <a href={ma142a17} target="_blank" rel="noreferrer">Section 17</a>; <a href={maHicHomeowners} target="_blank" rel="noreferrer">HIC homeowner guidance</a>.</p>
       <p><strong>Other state requirements:</strong> <a href={caCslb} target="_blank" rel="noreferrer">California CSLB</a>; <a href={ctLaw} target="_blank" rel="noreferrer">Connecticut Section 20-429</a>; <a href={nyLaw} target="_blank" rel="noreferrer">New York Section 771</a>; <a href={njRule} target="_blank" rel="noreferrer">New Jersey 13:45A-16.2</a>.</p>
       <p><strong>Federal consumer guidance:</strong> <a href={ftc} target="_blank" rel="noreferrer">FTC: Solar Power for Your Home</a>.</p>
     </section>
@@ -133,7 +133,7 @@ export function SunrunSolarDesignChangesBody() {
     <section className="info-section">
       <h2>Related SolarComplaint.com research</h2>
       <p><Link href="/companies/sunrun">Sunrun research and consumer resources →</Link></p>
-      <p><Link href="/research/sunrun-25-year-solar-contracts">Sunrun's 25-year leases and power purchase agreements →</Link></p>
+      <p><Link href="/research/sunrun-25-year-solar-contracts">Sunrun&apos;s 25-year leases and power purchase agreements →</Link></p>
       <p><Link href="/states/massachusetts">Massachusetts solar consumer resources →</Link></p>
     </section>
   </>;
