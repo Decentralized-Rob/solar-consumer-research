@@ -27,7 +27,7 @@ test("high-impression Sunrun contract page gives an immediate sourced answer and
 
 test("GoodLeap Minnesota lawsuit page preserves allegation framing and primary sources", async () => {
   const html = await render("/goodleap/states/minnesota");
-  assert.match(html, /<title>GoodLeap Minnesota Lawsuit: Solar Loan Fee Allegations<\/title>/i);
+  assert.match(html, /<title>GoodLeap Minnesota Solar Loan Lawsuit \| SolarComplaint\.com<\/title>/i);
   assert.match(html, /<h1>GoodLeap Minnesota Solar Loan Lawsuit: What the State Alleges<\/h1>/i);
   assert.match(html, /four lender defendants collectively/);
   assert.match(html, /not GoodLeap-only totals/);
