@@ -5,16 +5,16 @@ export const story = {
   id: "sunrun-solar-design-changes-change-orders",
   slug: "sunrun-solar-design-changes-change-orders",
   href: "/research/sunrun-solar-design-changes-change-orders",
-  title: "Sunrun Solar Panel Changes: What Its SEC Records Actually Show",
-  deck: "Sunrun described reviewing design changes against signed contracts. A 2026 SEC-filed review found differences in system sizes, payments and escalators. Here is what those records establish.",
-  summary: "Sunrun’s 2015 filing described change orders. A 2026 SEC-filed KPMG report listed mismatches in sampled system-size, payment and escalator figures after data revisions; it did not test customer approval.",
-  seoTitle: "Sunrun Solar Panel Changes: SEC Findings & Approval",
-  seoDescription: "Sunrun SEC records document design-change procedures and 2026 system-size discrepancies. Read what KPMG checked, what it did not, and Massachusetts change-order rules.",
+  title: "Sunrun SEC Filings Detail Solar Change Orders and Data Discrepancies",
+  deck: "Sunrun described a formal process for revising solar designs in 2015. A 2026 KPMG report documented discrepancies in system sizes and contract-payment data.",
+  summary: "Sunrun’s 2015 SEC filing described plan reviews and change orders. A 2026 SEC-filed KPMG report documented discrepancies in sampled system sizes, monthly payments and escalators.",
+  seoTitle: "Sunrun Solar Panel Changes: SEC Records & Change Orders",
+  seoDescription: "Sunrun’s SEC filings describe solar design-change procedures and 2026 KPMG data discrepancies. See the figures, source records and Massachusetts written-change rules.",
   keywords: ["Sunrun change order", "Sunrun solar design changes", "Sunrun panel count reduced", "Sunrun fewer solar panels", "Sunrun homeowner approval", "Massachusetts solar change order", "solar panel contract changes"],
-  openGraphTitle: "Sunrun Solar Design Changes: What 2015 and 2026 SEC Filings Show",
-  socialDescription: "A KPMG report filed with the SEC lists differences in system capacity and contract-payment data. It did not verify customer signatures.",
-  twitterDescription: "Sunrun solar panel count changes, final design approval, 2026 SEC filings and state written-change requirements.",
-  lede: "Sunrun said it checked final solar designs against signed customer contracts. A 2026 SEC-filed report later recorded mismatches between some system sizes and payment terms in Sunrun’s financing data and the documents supplied for comparison. Neither record proves whether a homeowner approved a particular panel reduction.",
+  openGraphTitle: "Sunrun Solar Design Changes: SEC Records and Change Orders",
+  socialDescription: "Sunrun described final-plan reviews in 2015. A 2026 SEC-filed KPMG report records discrepancies in system capacity, payments and escalators.",
+  twitterDescription: "What Sunrun’s 2015 design-change process and 2026 KPMG asset-data report show about solar contracts and approvals.",
+  lede: "Sunrun told investors it checked final solar designs against signed contracts and processed change orders when needed. Eleven years later, an SEC-filed KPMG report documented discrepancies in the system sizes and payment terms of sampled solar assets. The records show why a homeowner’s approved design and final contract details matter.",
   publishedAt: "October 16, 2026",
   datePublished: "2026-10-16",
   dateModified: "2026-10-16",
@@ -63,46 +63,36 @@ export function SunrunSolarDesignChangesBody() {
   return <>
     <nav className="case-question-links" aria-label="Breadcrumb"><Link href="/">Home</Link><Link href="/research">Research</Link><Link href="/companies/sunrun">Sunrun</Link><span aria-current="page">Design changes</span></nav>
 
-    <section className="info-section case-notice">
-      <strong>What the documents establish</strong>
-      <p>Sunrun said in a <a href={sec2015} target="_blank" rel="noreferrer">2015 SEC filing</a> that it reviewed final solar plans against executed agreements and processed change orders when required. In a <a href={secReview2026} target="_blank" rel="noreferrer">July 2026 SEC-filed KPMG report</a>, selected system sizes, payment amounts and annual escalators did not match the comparison documents. Some differences remained in Sunrun&apos;s revised data file. KPMG did not authenticate customer signatures or determine whether a homeowner approved a design change.</p>
+    <section className="info-section">
+      <h2>Sunrun described a formal change-order process</h2>
+      <p>In a <a href={sec2015} target="_blank" rel="noreferrer">June 2015 registration statement filed with the SEC</a>, Sunrun described what happened after a homeowner signed a solar agreement. An installer inspected the roof and measured shading, then prepared a final system design. Sunrun said it reviewed those plans against the executed contract and processed a change order when required. It also prepared a second production estimate and modified the homeowner agreement when the expected output changed beyond specified thresholds.</p>
+      <p>Sunrun still describes a final-design approval step on its <a href={sunrunInstallation} target="_blank" rel="noreferrer">solar installation page</a>. The company says designers account for conditions identified at the property, make necessary adjustments and obtain the customer&apos;s final approval before plans go to permitting. The 2015 filing and current guidance both describe how revisions are supposed to enter the project record.</p>
     </section>
 
     <section className="info-section">
-      <h2>Sunrun described formal change orders in 2015</h2>
-      <p>In its <a href={sec2015} target="_blank" rel="noreferrer">June 2015 registration statement</a>, Sunrun explained that an installer inspected the roof and shading after a customer signed. The company then prepared a final design, reviewed it against the executed contract and processed a change order when required. It also generated a second production estimate, modifying the homeowner agreement if projected output changed beyond certain thresholds.</p>
-      <p>That was Sunrun&apos;s description of its procedures in 2015, not proof the procedure was followed at every home or remains unchanged today. On its <a href={sunrunInstallation} target="_blank" rel="noreferrer">current solar installation page</a>, Sunrun says its designers make necessary adjustments and obtain the customer&apos;s final approval before submitting plans for permits. That statement describes Sunrun&apos;s process; it does not itself establish what any specific homeowner approved.</p>
+      <h2>A 2026 review found discrepancies in solar-asset data</h2>
+      <p>In July 2026, KPMG published an <a href={secReview2026} target="_blank" rel="noreferrer">agreed-upon procedures report filed with the SEC</a> for Sunrun Quintus Issuer 2026-2, a solar-asset financing transaction. KPMG selected 300 assets from a file containing 37,599 systems. Sunrun subsequently supplied a final portfolio file containing 37,595 assets. For the selected systems, KPMG compared specified data fields with material Sunrun provided, including contracts, design plans, amendments and change-order documents where available.</p>
+      <p>The report&apos;s Exhibit D lists discrepancies remaining after Sunrun revised the data. One selected system was recorded at <strong>1.84 kW</strong> in the final file, compared with <strong>2.28 kW</strong> in the supplied comparison information. Another was recorded at <strong>11.13 kW</strong> against <strong>10.92 kW</strong>. These figures describe differences in the records reviewed, rather than a count of panels on a homeowner&apos;s roof.</p>
+      <p>Other differences concerned payment terms. For one sampled agreement, the first-year monthly payment was <strong>$95.72</strong> in the data file and <strong>$102.41</strong> in the supplied information. For another, an annual escalator appeared as <strong>2.90%</strong> in the data and <strong>3.90%</strong> in the comparison material. The original review also recorded 108 inverter-manufacturer exceptions that Sunrun attributed to an Excel formula error; those entries were absent from the final exception table.</p>
+      <p>KPMG was hired to compare specified information used in the financing transaction. Its report says it made no representation about whether the customer contracts had been validly executed. It also did not inspect installed systems or determine whether individual homeowners had approved revised designs. The reported discrepancies establish differences between a financial data file and the material used to check it.</p>
     </section>
 
     <section className="info-section">
-      <h2>KPMG found differences in the 2026 financing data</h2>
-      <p>On <a href={secReview2026} target="_blank" rel="noreferrer">July 24, 2026</a>, KPMG reported agreed-upon procedures for a Sunrun solar-asset financing transaction. Its final portfolio data file covered <strong>37,595 solar assets</strong>. KPMG had selected a random sample of 300 from an earlier 37,599-asset file. It compared selected data fields with documents supplied by Sunrun, including contracts, customer-approved plans, roof plans, design reports and change-order records where available.</p>
-      <p><strong>Exhibit D of the report still listed differences after Sunrun revised its data file.</strong> For example, KPMG reported:</p>
-      <ul>
-        <li>For one selected system, <strong>1.84 kW</strong> in the revised data versus <strong>2.28 kW</strong> in the provided information; for another, <strong>11.13 kW</strong> versus <strong>10.92 kW</strong>.</li>
-        <li>For a sampled agreement, a first-year monthly payment of <strong>$95.72</strong> in the data versus <strong>$102.41</strong> in the provided information.</li>
-        <li>For another sample, an annual payment escalator of <strong>2.90%</strong> in the data versus <strong>3.90%</strong> in the provided information.</li>
-      </ul>
-      <p>These are mismatches between a financing data file and supplied records. They are <strong>not evidence of how many panels were installed, who approved the system, or whether any individual customer was overcharged</strong>. The report also identified 108 initial inverter-manufacturer data exceptions attributed by Sunrun to an Excel formula error; those did not appear in its final exception table.</p>
-      <p>KPMG specifically said it made no representation about the validity or execution of the customer contracts it received. The work was not an audit of installation quality, consumer consent or compliance with state law. The distinction matters: a financing record can be checked for consistency without establishing that the homeowner agreed to the final design.</p>
+      <h2>Why the final design matters to homeowners</h2>
+      <p>Panel count is only one part of a solar design. Panel wattage, roof placement and the production model determine the system&apos;s capacity and expected annual generation. The final agreement also sets the payment terms and any production guarantee. In a <a href={secGuarantees2026} target="_blank" rel="noreferrer">separate 2026 engineering review filed with the SEC</a>, sampled newer Sunrun agreements carried guarantee percentages of 90%, 85% or 0%, depending on the contract.</p>
+      <p>That makes the approved layout, system capacity, projected production, guarantee and price important records to compare whenever a design changes. Sunrun&apos;s 2015 filing described an internal process for revising those documents. KPMG&apos;s 2026 report shows that some system and payment information supplied for financing still differed across records after revisions.</p>
     </section>
 
     <section className="info-section">
-      <h2>Panel count, system size and guaranteed production are different</h2>
-      <p>A system&apos;s capacity in kilowatts depends on panel count and each panel&apos;s wattage. A lower panel count does not necessarily establish the exact capacity or energy loss without knowing the equipment and layout. KPMG&apos;s system-size exceptions do not establish that panels were physically removed from any roof.</p>
-      <p>Projected annual generation is also different from a contract&apos;s production guarantee. A separate <a href={secGuarantees2026} target="_blank" rel="noreferrer">2026 engineering review filed with the SEC</a> reported guarantee percentages of 90%, 85% or 0% in samples of newer Sunrun agreements. A homeowner comparing an original proposal with a revised design needs the panel models, total capacity, annual production projection, guarantee formula and payment terms, not just the panel count.</p>
+      <h2>Massachusetts law requires written modifications for covered work</h2>
+      <p><a href={ma142a2} target="_blank" rel="noreferrer">Massachusetts General Laws Chapter 142A, Section 2</a> requires written, signed contracts for covered residential contracting work over $1,000. The state&apos;s <a href={maHicGuidance} target="_blank" rel="noreferrer">home improvement contract guidance</a> says modifications must be in writing and agreed to by both parties. For changes covered by that requirement, a phone conversation alone does not provide the written modification. <a href={ma142a17} target="_blank" rel="noreferrer">Section 17(2)</a> separately prohibits material departures from agreed plans or specifications without the homeowner&apos;s consent.</p>
+      <p>A written modification and the homeowner&apos;s consent address related requirements. The relevant contracts must first be identified: home improvement work and a solar lease or power purchase agreement can involve different agreements and parties. A document titled &ldquo;change order&rdquo; is one way of recording a modification, but the title of the document does not replace the need to show what was changed and what both parties agreed to.</p>
     </section>
 
     <section className="info-section">
-      <h2>Massachusetts requires written changes for covered home improvements</h2>
-      <p><a href={ma142a2} target="_blank" rel="noreferrer">Massachusetts General Laws Chapter 142A, Section 2</a> generally requires a written contract for covered residential contracting work over $1,000. The state&apos;s <a href={maHicGuidance} target="_blank" rel="noreferrer">home improvement contract guidance</a> says modifications to the original contract must be in writing and agreed to by both parties. Separately, <a href={ma142a17} target="_blank" rel="noreferrer">Section 17(2)</a> prohibits material deviations from plans or specifications without the owner&apos;s consent.</p>
-      <p>The two requirements are related but not identical: the written-modification guidance applies to covered home improvement contracts, while the consent provision does not itself say every type of solar lease amendment must be signed. Whether these protections apply depends on the work performed, the parties and the contracts involved. The SEC filings do not determine whether Massachusetts law was followed on any individual installation.</p>
-    </section>
-
-    <section className="info-section">
-      <h2>How to check whether your final solar design matches</h2>
-      <p>Start with the proposal and signed agreement. Then get the final panel layout, the building department&apos;s approved plans, the utility interconnection record and the as-built equipment list. Sunrun&apos;s <a href={sunrunFaq} target="_blank" rel="noreferrer">customer FAQ</a> describes access to agreements and final-design documents through its app or online account. A utility&apos;s permission to operate is not evidence that the homeowner approved the panel layout.</p>
-      <p>Compare panel count and model, system capacity in kW, projected annual generation, the guarantee and the payment terms across the original and final documents. If those changed, ask for the dated change order, amended agreement or other record of approval. Sunrun&apos;s descriptions of its process and the SEC-filed data review do not answer that homeowner-specific question without the actual records.</p>
+      <h2>Following the paper trail</h2>
+      <p>Homeowners can compare the original sales proposal and executed contract with the final layout, building permits, utility interconnection records and installed equipment list. Sunrun&apos;s <a href={sunrunFaq} target="_blank" rel="noreferrer">customer FAQ</a> directs customers to agreement and design documents in the app or online account. The comparison should cover panel models and quantities, total capacity in kilowatts, projected annual generation, production guarantees and payment terms.</p>
+      <p>When those details changed, the next record to locate is the dated modification or other written approval of the revised specifications. That document connects the proposed system to the design ultimately submitted and installed. It is the practical question raised by Sunrun&apos;s own process and the differences documented in the SEC-filed asset review.</p>
     </section>
 
     <section className="info-section">
