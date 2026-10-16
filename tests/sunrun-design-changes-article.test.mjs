@@ -34,7 +34,7 @@ test("Sunrun design-change investigation shows SEC exceptions without treating t
   assert.match(html, /writing and agreed to by both parties/i);
   assert.match(html, /home improvement work and a solar lease or power purchase agreement can involve different agreements/i);
   assert.match(html, /000119312526318223\/d149204dex991\.htm/);
-  assert.match(html, /kpmg\\.com\\/us\\/en\\/capabilities-services\\/audit-services\\/structured-finance\\/securitization\\.html/);
+  assert.ok(html.includes('https://kpmg.com/us/en/capabilities-services/audit-services/structured-finance/securitization.html'));
   assert.match(html, /Sunrun as the company that paid KPMG for the work/);
   assert.match(html, /Chapter142A\/Section17/);
   assert.ok(html.includes('href="/companies/sunrun"'));
