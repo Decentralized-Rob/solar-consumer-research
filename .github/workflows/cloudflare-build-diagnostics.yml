@@ -41,3 +41,12 @@ jobs:
           echo "LATEST_BUILDS_RESPONSE:"
           latest="$(cf "/accounts/$CF_ACCOUNT_ID/builds/builds/latest?external_script_ids=$tag")"
           jq -c '{success, errors: [.errors[]? | .message], latest: (.result.builds // {})}' <<< "$latest" | cut -c 1-2500
+
+          for build_id in 060a6873-8b65-441c-ba59-af2e7f02ab0a 4da1aede-6eb7-4d6c-a738-c34b6825d770; do
+            echo "BUILD_DETAIL_$build_id:"
+            details="$(cf "/accounts/$CF_ACCOUNT_ID/builds/builds/$build_id")"
+            jq -c '{success,errors:[.errors[]?.message],status:.result.status,outcome:.result.build_outcome,created_on:.result.created_on,modified_on:.result.modified_on,stopped_on:.result.stopped_on,trigger_source:.result.build_trigger_metadata.build_trigger_source,branch:.result.build_trigger_metadata.branch}' <<< "$details"
+            echo "BUILD_LOG_ERRORS_$build_id:"
+            logs="$(cf "/accounts/$CF_ACCOUNT_ID/builds/builds/$build_id/logs")"
+            jq -r '.. | strings | select(test("error|terminated|cancel|failed|timeout|exit code|fatal";"i"))' <<< "$logs" | tail -20 | cut -c1-350 || true
+          done
