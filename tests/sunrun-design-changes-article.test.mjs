@@ -20,7 +20,7 @@ test("Sunrun design-change investigation shows SEC exceptions without treating t
   assert.match(html, /<title>Sunrun Solar Panel Changes: SEC Findings/i);
   assert.match(html, /rel="canonical"[^>]*sunrun-solar-design-changes-change-orders|sunrun-solar-design-changes-change-orders[^>]*rel="canonical"/i);
   assert.match(html, /"@type":"Article"/);
-  assert.match(html, /<h1[^>]*>Sunrun Solar Panel Changes/i);
+  assert.match(html, /<h1[^>]*>Sunrun SEC Filings Detail Solar Change Orders/i);
   assert.match(html, /1\.84 kW/);
   assert.match(html, /2\.28 kW/);
   assert.match(html, /11\.13 kW/);
@@ -29,10 +29,10 @@ test("Sunrun design-change investigation shows SEC exceptions without treating t
   assert.match(html, /\$102\.41/);
   assert.match(html, /2\.90%/);
   assert.match(html, /3\.90%/);
-  assert.match(html, /not evidence of how many panels were installed/i);
-  assert.match(html, /no representation about the validity or execution/i);
+  assert.match(html, /These figures describe differences in the records reviewed/i);
+  assert.match(html, /no representation about whether the customer contracts had been validly executed/i);
   assert.match(html, /writing and agreed to by both parties/i);
-  assert.match(html, /does not itself say every type of solar lease amendment must be signed/i);
+  assert.match(html, /home improvement work and a solar lease or power purchase agreement can involve different agreements/i);
   assert.match(html, /000119312526318223\/d149204dex991\.htm/);
   assert.match(html, /Chapter142A\/Section17/);
   assert.ok(html.includes('href="/companies/sunrun"'));
