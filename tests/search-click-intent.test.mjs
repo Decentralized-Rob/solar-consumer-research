@@ -33,3 +33,23 @@ test("GoodLeap Minnesota lawsuit page preserves allegation framing and primary s
   assert.match(html, /not GoodLeap-only totals/);
   assert.match(html, /Minnesota Attorney General: filed complaint/);
 });
+
+test("GoodLeap subpages render unique search, Open Graph and Twitter metadata", async () => {
+  const cases = [
+    ["/goodleap/states", "GoodLeap Solar Financing by State: Lawsuits & Arbitration"],
+    ["/goodleap/states/minnesota", "GoodLeap Minnesota Solar Loan Lawsuit"],
+    ["/goodleap/states/virginia", "GoodLeap in Virginia: 2026 Solar Financing Lawsuit"],
+    ["/goodleap/resources", "GoodLeap Solar Financing Resources for Consumers"],
+  ];
+  for (const [path, expected] of cases) {
+    const html = await render(path);
+    const escaped = expected.replace(/&/g, "&amp;");
+    const title = `${escaped} | SolarComplaint.com`;
+    assert.ok(html.includes(`<title>${title}</title>`), `Page title on ${path}`);
+    const canonical = `https://solarcomplaint.com${path}`;
+    assert.match(html, new RegExp(`<link(?=[^>]*rel="canonical")(?=[^>]*href="${canonical}")[^>]*>`), `Canonical on ${path}`);
+    assert.ok(html.includes(`property="og:title" content="${escaped}"`), `Open Graph title on ${path}`);
+    assert.ok(html.includes(`name="twitter:title" content="${escaped}"`), `Twitter title on ${path}`);
+    assert.ok(!html.includes('<meta name="robots" content="noindex"'), `Indexable ${path}`);
+  }
+});
