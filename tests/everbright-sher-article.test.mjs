@@ -22,8 +22,13 @@ test("EverBright case gets a crawlable, source-backed search landing page", asyn
   assert.match(html, /"@type":"Article"/);
   assert.match(html, /"@type":"BreadcrumbList"/);
   assert.match(html, /September 10, 2026/);
-  assert.match(html, /did not sign or enter the power purchase agreement/i);
-  assert.match(html, /remaining claims in the lawsuit/i);
+  assert.match(html, /had not signed or entered the disputed power purchase agreement/i);
+  assert.match(html, /did not award damages or resolve the remaining claims/i);
+  assert.match(html, /25-year power purchase agreement/i);
+  assert.match(html, /\$784\.98/);
+  assert.match(html, /from the complaint as summarized in the order, not a court finding/i);
+  assert.match(html, /declining to provide that recording/i);
+  assert.match(html, /payments alone did not establish her consent/i);
   assert.match(html, /law\.justia\.com\/cases\/federal\/district-courts\/california\/caedce\/1:2026cv04646\/492533\/20\//);
   assert.match(html, /href="\/states\/california"/);
   assert.match(html, /href="\/guides\/solar-complaint-record-checklist"/);
