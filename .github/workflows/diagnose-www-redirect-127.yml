@@ -15,6 +15,8 @@ jobs:
     timeout-minutes: 3
     env:
       CF_TOKEN: ${{ secrets.CLOUDFLARE_BUILDS_API_TOKEN }}
+      CF_ZONE_TOKEN: ${{ secrets.CLOUDFLARE_ZONE_API_TOKEN }}
+      CF_GENERAL_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
       CF_ACCOUNT_ID: 1f679a0e8989a1ba29030ff449b77fd3
     steps:
       - name: Audit accessible Cloudflare zone redirects without modifying them
@@ -43,3 +45,24 @@ jobs:
           echo 'WORKERS_ROUTES:'
           routes="$(api "/zones/$zone_id/workers/routes")"
           jq -c '{success,errors: [.errors[]? | {code,message}],routes: [.result[]? | {pattern,script}]}' <<<"$routes"
+
+          echo 'REDIRECT_HEADERS:'
+          for path in /research /states/massachusetts /research/sunrun-solar-design-changes-change-orders; do
+            echo "Path: $path"
+            curl --silent --show-error --max-time 15 --head \
+              --output - \
+              "https://www.solarcomplaint.com$path?utm_source=case127" \
+              | sed -nE '/^(HTTP\/|[Ll]ocation:|[Ss]erver:|[Cc][Ff]-[Rr]ay:)/p'
+          done
+          for source in zone general; do
+            case "$source" in
+              zone) token="$CF_ZONE_TOKEN" ;;
+              general) token="$CF_GENERAL_TOKEN" ;;
+            esac
+            if [[ -z "$token" ]]; then echo "ALTERNATE_TOKEN_${source}: absent"; continue; fi
+            res="$(curl --silent --show-error --connect-timeout 10 --max-time 20 \
+              -H "Authorization: Bearer $token" \
+              "https://api.cloudflare.com/client/v4/zones/b0f32fad3deea684924046d5ea618a09/rulesets/phases/http_request_dynamic_redirect/entrypoint")"
+            echo "ALTERNATE_TOKEN_${source}:"
+            jq -c '{success,errors:[.errors[]? | {code,message}],rules: [.result.rules[]? | {id,enabled,description,expression,action,action_parameters}]}' <<< "$res"
+          done
