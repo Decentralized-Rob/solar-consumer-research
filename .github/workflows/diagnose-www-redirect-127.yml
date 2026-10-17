@@ -1,0 +1,45 @@
+name: Inspect www redirect routing for issue 127
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/diagnose-www-redirect-127.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    env:
+      CF_TOKEN: ${{ secrets.CLOUDFLARE_BUILDS_API_TOKEN }}
+      CF_ACCOUNT_ID: 1f679a0e8989a1ba29030ff449b77fd3
+    steps:
+      - name: Audit accessible Cloudflare zone redirects without modifying them
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [[ -z "$CF_TOKEN" ]]; then echo "No available Cloudflare token"; exit 0; fi
+          api() {
+            curl --silent --show-error --connect-timeout 10 --max-time 20 \
+              -H "Authorization: Bearer $CF_TOKEN" \
+              "https://api.cloudflare.com/client/v4$1"
+          }
+          echo 'ZONE_LOOKUP:'
+          zone_response="$(api '/zones?name=solarcomplaint.com')"
+          jq -c '{success, errors: [.errors[]? | {code,message}], zones: [.result[]? | {id,name,status}]}' <<<"$zone_response"
+          zone_id="$(jq -r '.result[0].id // empty' <<< "$zone_response")"
+          if [[ -z "$zone_id" ]]; then echo 'ZONE_NOT_ACCESSIBLE'; exit 0; fi
+          for name in http_request_dynamic_redirect http_request_redirect; do
+            echo "RULESET_${name}:"
+            res="$(api "/zones/$zone_id/rulesets/phases/$name/entrypoint")"
+            jq -c --arg phase "$name" '{phase:$phase,success,errors: [.errors[]? | {code,message}],rules: [.result.rules[]? | {id,enabled,description,expression,action,action_parameters}]}' <<< "$res"
+          done
+          echo 'PAGE_RULES:'
+          pages="$(api "/zones/$zone_id/pagerules?status=active")"
+          jq -c '{success,errors: [.errors[]? | {code,message}],rules: [.result[]? | {id,status,targets,actions}]}' <<< "$pages"
+          echo 'WORKERS_ROUTES:'
+          routes="$(api "/zones/$zone_id/workers/routes")"
+          jq -c '{success,errors: [.errors[]? | {code,message}],routes: [.result[]? | {pattern,script}]}' <<<"$routes"
