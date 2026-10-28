@@ -180,7 +180,11 @@ test("renders a Sunrun company hub that keeps enforcement statuses distinct", as
 
   assert.equal(response.status, 200);
   const html = await response.text();
-  assert.match(html, /Sunrun investigations, enforcement and documented cases/i);
+  assert.match(html, /Sunrun complaint resources, lawsuits and investigations/i);
+  assert.match(html, /Where can a Sunrun customer report a problem\?/i);
+  assert.match(html, /href=["']https:\/\/www\.sunrun\.com\/contact-us["']/i);
+  assert.match(html, /href=["']\/federal-resources["']/i);
+  assert.match(html, /href=["']\/research\/sunrun-25-year-solar-contracts["']/i);
   assert.match(html, /Texas residential solar investigation involving Sunrun/i);
   assert.match(html, /Arizona settlement with Sunrun and Vivint Solar/i);
   assert.match(html, /Connecticut Attorney General lawsuit naming Sunrun/i);

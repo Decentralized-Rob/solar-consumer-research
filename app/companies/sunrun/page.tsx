@@ -13,9 +13,9 @@ const floridaRoofOrder = "https://ecf.flmd.uscourts.gov/cgi-bin/show_public_doc?
 const canonicalUrl = "https://solarcomplaint.com/companies/sunrun";
 
 export const metadata: Metadata = {
-  title: "Sunrun Lawsuits, Investigations and Solar Consumer Resources",
+  title: "Sunrun Complaints: Reporting Routes, Lawsuits & Research",
   description:
-    "Track documented state lawsuits, investigations, settlements, ethics resources, and official consumer information involving Sunrun, with direct links to primary sources.",
+    "Find Sunrun customer support, official solar complaint routes by state, and source-backed research on lawsuits, investigations and settlements.",
   keywords: [
     "Sunrun lawsuit",
     "Sunrun investigation",
@@ -27,16 +27,16 @@ export const metadata: Metadata = {
   ],
   alternates: { canonical: "/companies/sunrun" },
   openGraph: {
-    title: "Sunrun Lawsuits, Investigations and Solar Consumer Resources",
-    description: "A source-based hub for documented state actions and consumer research involving Sunrun.",
+    title: "Sunrun Complaints: Reporting Routes, Lawsuits & Research",
+    description: "Find Sunrun customer support, official complaint routes and documented state actions involving Sunrun.",
     url: "/companies/sunrun",
     type: "website",
     images: [{ url: "https://solarcomplaint.com/og.png", width: 1200, height: 630, alt: "Solar Consumer Research" }],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Sunrun Lawsuits, Investigations and Solar Consumer Resources",
-    description: "A source-based hub for documented state actions and consumer research involving Sunrun.",
+    title: "Sunrun Complaints: Reporting Routes, Lawsuits & Research",
+    description: "Find Sunrun customer support, official complaint routes and documented state actions involving Sunrun.",
     images: ["https://solarcomplaint.com/og.png"],
   },
 };
@@ -88,10 +88,10 @@ export default function SunrunCompanyPage() {
       {
         "@type": "CollectionPage",
         "@id": `${canonicalUrl}#page`,
-        name: "Sunrun Lawsuits, Investigations and Solar Consumer Resources",
-        description: "A source-based hub for documented state actions and consumer research involving Sunrun.",
+        name: "Sunrun Complaints: Reporting Routes, Lawsuits & Research",
+        description: "Find Sunrun customer support, official complaint routes and documented state actions involving Sunrun.",
         url: canonicalUrl,
-        dateModified: "2026-10-12",
+        dateModified: "2026-10-28",
         isPartOf: { "@id": "https://solarcomplaint.com/#website" },
         publisher: { "@id": "https://solarcomplaint.com/#publisher" },
         about: { "@type": "Organization", name: "Sunrun" },
@@ -120,8 +120,8 @@ export default function SunrunCompanyPage() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }} />
       <InfoPage
         eyebrow="Company research · Sunrun"
-        title="Sunrun investigations, enforcement and documented cases"
-        lede="A source-based index of state actions involving Sunrun, with the procedural status of each matter kept separate and direct links to the government record."
+        title="Sunrun complaint resources, lawsuits and investigations"
+        lede="Find Sunrun customer support, official complaint routes and source-backed research on documented state actions involving the company."
       >
         <nav className="case-question-links" aria-label="Breadcrumb">
           <Link href="/">Home</Link>
@@ -134,6 +134,18 @@ export default function SunrunCompanyPage() {
           <p>
             An investigation is not a finding of wrongdoing. Lawsuit allegations are not court findings. A settlement can resolve disputed claims without an admission of wrongdoing. This page labels each action separately and does not treat them as one case.
           </p>
+        </section>
+
+        <section className="info-section" aria-labelledby="sunrun-complaint-routes">
+          <h2 id="sunrun-complaint-routes">Where can a Sunrun customer report a problem?</h2>
+          <p>Start with the records for your own system: the signed agreement, bills, production history and messages with the company. The right outside complaint route depends on the issue and where you live.</p>
+          <ul>
+            <li><a href="https://www.sunrun.com/contact-us" target="_blank" rel="noreferrer">Contact Sunrun customer support ↗</a> for its current account, billing and system-support options.</li>
+            <li><Link href="/states">Find your state&apos;s solar complaint resources →</Link> for consumer-protection, contractor or utility routes.</li>
+            <li><Link href="/federal-resources">Review federal complaint channels →</Link> for consumer-finance or fraud concerns.</li>
+            <li><Link href="/research/sunrun-25-year-solar-contracts">Read the Sunrun lease and PPA contract guide →</Link> for agreement terms, transfers, buyouts and production guarantees.</li>
+          </ul>
+          <p>Sunrun&apos;s corporate ethics reporting is a separate route for policy or conduct concerns; see the ethics guide below. These links describe published channels and do not determine which one applies to an individual situation.</p>
         </section>
 
         <SunrunEthicsSpotlight context="New Sunrun research" />
