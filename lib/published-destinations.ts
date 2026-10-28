@@ -51,13 +51,13 @@ export const publishedDestinations: PublishedDestination[] = [
   {
     id: "sunrun",
     href: "/companies/sunrun",
-    title: "Sunrun lawsuits, investigations and consumer resources",
+    title: "Sunrun complaint routes, lawsuits and research",
     kind: "company",
     published: true,
     preferredSource: "shared",
     menuLabel: "Sunrun Research",
     researchMenuOrder: 20,
-    trackerLabel: "Sunrun lawsuits, investigations, settlements and consumer resources",
+    trackerLabel: "Sunrun complaint routes, lawsuits, investigations and consumer resources",
     showInTrackerDiscovery: true,
     sitemap: {
       lastModified: latestSunrunResearchDate,
