@@ -39,7 +39,8 @@ test("aligns the Connecticut case with observed Sunrun and Bright Planet search 
   assert.match(html, /resolved within 120 days/i);
   assert.match(html, /Bright Planet.*remains pending/i);
   assert.match(html, /does.*not.*create a private right/i);
-  assert.doesNotMatch(html, /"author":/i);
+  assert.match(html, /By <a[^>]+href="\/authors\/jules-young"[^>]*>Jules Young<\/a>/i);
+  assert.match(html, /"author":\{"@type":"Organization","name":"Jules Young","url":"https:\/\/solarcomplaint\.com\/authors\/jules-young"\}/i);
   assert.match(html, /"@type":"Organization","name":"Bright Planet Solar"/i);
   assert.match(html, /rel=["']canonical["'][^>]*href=["']https:\/\/solarcomplaint\.com\/cases\/connecticut-attorney-general-sunrun-lawsuit["']/i);
   assert.doesNotMatch(html, /noindex/i);
