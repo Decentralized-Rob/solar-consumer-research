@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { InfoPage } from "../../../components/info-page";
+import { SunrunEthicsSpotlight } from "../../../components/sunrun-ethics-spotlight";
 
 const canonicalUrl = "https://solarcomplaint.com/cases/connecticut-attorney-general-sunrun-lawsuit";
 const settlementAnnouncement = "https://portal.ct.gov/ag/press-releases/2026-press-releases/attorney-general-tong-announces-settlements-with-sunrun-solar-and-others-to-require-consumer-relief";
@@ -99,6 +100,8 @@ export default function ConnecticutSunrunCasePage() {
           <p>The stipulation defines its <strong>effective date as the date judgment is entered</strong>, rather than the date of the press release. Deadlines expressed as days after the effective date should be calculated from court entry. The documents reviewed for this update establish the filing and settlement announcement; they do not establish the judgment-entry date.</p>
         </section>
 
+        <SunrunEthicsSpotlight context="Related Sunrun reporting guide" />
+
         <section className="info-section">
           <h2>What changed on October 23?</h2>
           <p>Connecticut&apos;s 2024 action accused multiple businesses and salespeople of putting consumers into long-term contracts without informed consent, failing to deliver copies of agreements, starting work before permits, and leaving some installed solar systems inactive. The <a href={originalComplaint} target="_blank" rel="noreferrer">original complaint</a> set out specific transactions in Windsor, Stafford Springs and Wethersfield.</p>
@@ -171,7 +174,7 @@ export default function ConnecticutSunrunCasePage() {
           <p><Link href="/companies/sunrun">Sunrun investigations, lawsuits and settlements →</Link></p>
           <p><Link href="/research/sunrun-25-year-solar-contracts">Sunrun&apos;s 25-year contracts and homeowner obligations →</Link></p>
           <p><Link href="/research/sunrun-mishler-roofing-lawsuit">Mishler v. Sunrun: a separate Connecticut roofing case →</Link></p>
-          <p><Link href="/companies/sunrun/ethics-compliance">Sunrun ethics and compliance reporting resources →</Link></p>
+          <p><a href="https://solarcomplaint.com/companies/sunrun/ethics-compliance">Sunrun ethics and compliance reporting resources →</a></p>
         </section>
       </InfoPage>
     </>
