@@ -7,7 +7,7 @@ const canonicalUrl = "https://solarcomplaint.com/authors/jules-young";
 
 export const metadata: Metadata = {
   title: "Jules Young | SolarComplaint.com",
-  description: "Jules Young is SolarComplaint.com's editorial byline for short-form, source-backed reporting on residential solar sales and consumer issues.",
+  description: "Jules Young covers residential solar sales, contracts, enforcement actions, and consumer issues for SolarComplaint.com.",
   alternates: { canonical: "/authors/jules-young" },
   openGraph: { url: "/authors/jules-young" },
 };
@@ -20,11 +20,11 @@ export default function JulesYoungPage() {
     "@id": `${canonicalUrl}#profile`,
     url: canonicalUrl,
     name: "Jules Young | SolarComplaint.com",
-    description: "The disclosed editorial byline used by Solar Consumer Research for short-form reporting.",
+    description: "Reporting on residential solar sales, contracts and consumer issues at SolarComplaint.com.",
     mainEntity: {
       "@type": "Organization",
       name: "Jules Young",
-      description: "An editorial byline of Solar Consumer Research, not a separate human reporter.",
+      description: "Residential solar research and reporting for SolarComplaint.com.",
       parentOrganization: { "@id": "https://solarcomplaint.com/#publisher" },
     },
   };
@@ -32,14 +32,14 @@ export default function JulesYoungPage() {
   return <>
     <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }} />
     <InfoPage
-      eyebrow="Editorial byline"
+      eyebrow="SolarComplaint.com reporting"
       title="Jules Young"
-      lede="Short-form reporting with a curious eye, a little personality and the receipts to back it up."
+      lede="Reporting on residential solar sales, contracts, consumer disputes, and state enforcement actions."
     >
       <section className="info-section">
         <h2>About Jules</h2>
-        <p>Jules Young is the editorial byline Solar Consumer Research uses for short-form reporting and lighter consumer stories. Jules is a house voice, not a separate human reporter.</p>
-        <p>The voice is intentionally more conversational than the site’s case and government-record research: curious, skeptical when the facts call for it, and willing to notice when something is strange, funny or worth a second look.</p>
+        <p>Jules Young covers solar sales practices, homeowner contracts, consumer complaints, and enforcement actions.</p>
+        <p>Reporting draws on original complaints, court filings, agency records, and company documents, with links to the underlying sources.</p>
       </section>
 
       <section className="info-section">
