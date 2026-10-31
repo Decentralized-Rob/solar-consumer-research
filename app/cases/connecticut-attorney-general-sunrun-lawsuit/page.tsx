@@ -62,6 +62,7 @@ export default function ConnecticutSunrunCasePage() {
     relatedLink: [
       "https://solarcomplaint.com/states/connecticut",
       "https://solarcomplaint.com/companies/sunrun",
+      "https://solarcomplaint.com/companies/sunrun/ethics-compliance",
       "https://solarcomplaint.com/research/sunrun-25-year-solar-contracts",
     ],
   };
