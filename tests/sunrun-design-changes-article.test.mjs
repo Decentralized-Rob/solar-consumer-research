@@ -57,6 +57,7 @@ test("Sunrun and Massachusetts hub sitemaps reflect the linked investigation dat
     assert.ok(start >= 0, `Sitemap includes ${path}`);
     const end = sitemap.indexOf("</url>", start);
     assert.ok(end > start, `Sitemap closes entry ${path}`);
-    assert.match(sitemap.slice(start, end), /<lastmod>2026-10-16/, `Fresh lastmod for ${path}`);
+    const expectedDate = path === "/companies/sunrun" ? "2026-10-31" : "2026-10-16";
+    assert.match(sitemap.slice(start, end), new RegExp(`<lastmod>${expectedDate}`), `Fresh lastmod for ${path}`);
   }
 });

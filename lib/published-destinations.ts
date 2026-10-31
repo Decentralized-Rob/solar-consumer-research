@@ -34,7 +34,7 @@ const latestSunrunResearchDate = researchStories
   .filter((story) => story.companies.some((name) => name.toLowerCase() === "sunrun"))
   .reduce(
     (latest, story) => story.dateModified > latest ? story.dateModified : latest,
-    "2026-10-12",
+    "2026-10-31",
   );
 
 export const publishedDestinations: PublishedDestination[] = [
@@ -117,16 +117,16 @@ export const publishedDestinations: PublishedDestination[] = [
   {
     id: "connecticut-ag-sunrun",
     href: "/cases/connecticut-attorney-general-sunrun-lawsuit",
-    title: "Connecticut Attorney General lawsuit involving Sunrun",
+    title: "Connecticut Sunrun settlement and continuing Bright Planet case",
     kind: "case",
     published: true,
     preferredSource: "shared",
-    trackerLabel: "Connecticut Attorney General lawsuit involving Sunrun",
+    trackerLabel: "Connecticut Sunrun settlement, contract-fraud relief and continuing Bright Planet case",
     showInTrackerDiscovery: true,
     sitemap: {
-      lastModified: "2026-09-07",
-      changeFrequency: "monthly",
-      priority: 0.8,
+      lastModified: "2026-10-31",
+      changeFrequency: "weekly",
+      priority: 0.9,
     },
   },
 ];

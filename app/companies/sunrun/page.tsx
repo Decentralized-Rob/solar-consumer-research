@@ -7,7 +7,7 @@ import { getResearchStoriesForCompany } from "../../../lib/research-stories";
 
 const texasSource = featuredStateSources.TX[0];
 const arizonaAgreement = featuredStateSources.AZ[0];
-const connecticutSource = "https://portal.ct.gov/ag/press-releases/2024-press-releases/attorney-general-tong-sues-sunrun";
+const connecticutSource = "https://portal.ct.gov/ag/press-releases/2026-press-releases/attorney-general-tong-announces-settlements-with-sunrun-solar-and-others-to-require-consumer-relief";
 const arizonaSettlementPage = "https://www.azag.gov/consumer/sunrun";
 const floridaRoofOrder = "https://ecf.flmd.uscourts.gov/cgi-bin/show_public_doc?2025-02459-10-8-cv=";
 const canonicalUrl = "https://solarcomplaint.com/companies/sunrun";
@@ -72,11 +72,11 @@ export default function SunrunCompanyPage() {
       stateHref: "/states/arizona",
     },
     {
-      type: "Lawsuit",
+      type: "Settlement",
       state: "Connecticut",
-      date: "July 19, 2024",
-      title: "Connecticut Attorney General lawsuit naming Sunrun",
-      summary: "Connecticut alleges unlawful residential-solar sales conduct involving contracts, signatures, permits, and non-functioning systems. The allegations remain allegations unless established through the court process.",
+      date: "October 23, 2026",
+      title: "Connecticut Sunrun settlement: contract-fraud claims and consumer relief",
+      summary: "Connecticut settled its 2024 claims against Sunrun without findings of liability. The agreement mandates fraud-complaint review, identity-verification controls and potential cancellation or removal. Bright Planet Solar remains a defendant in the unresolved case.",
       source: connecticutSource,
       stateHref: "/states/connecticut",
     },
@@ -91,7 +91,7 @@ export default function SunrunCompanyPage() {
         name: "Sunrun Lawsuits, Investigations and Solar Consumer Resources",
         description: "A source-based hub for documented state actions and consumer research involving Sunrun.",
         url: canonicalUrl,
-        dateModified: "2026-10-12",
+        dateModified: "2026-10-31",
         isPartOf: { "@id": "https://solarcomplaint.com/#website" },
         publisher: { "@id": "https://solarcomplaint.com/#publisher" },
         about: { "@type": "Organization", name: "Sunrun" },
@@ -176,7 +176,7 @@ export default function SunrunCompanyPage() {
 
         <section className="info-section">
           <h2>Detailed case page</h2>
-          <p><Link href="/cases/connecticut-attorney-general-sunrun-lawsuit">Read the Connecticut Attorney General lawsuit summary and allegations →</Link></p>
+          <p><Link href="/cases/connecticut-attorney-general-sunrun-lawsuit">Read the Connecticut Sunrun settlement investigation and court documents →</Link></p>
         </section>
 
         <section className="info-section">

@@ -9,6 +9,7 @@ const governanceUrl = "https://investors.sunrun.com/leadership-governance/govern
 const leadershipUrl = "https://investors.sunrun.com/leadership-governance/executive-management";
 const allVoicesUrl = "https://sunrun.allvoices.co/";
 const ethicsLinkedInPost = "https://www.linkedin.com/posts/sunrun_at-sunrun-were-committed-to-upholding-the-activity-7251577600949522435-tGOM";
+const connecticutSettlementSource = "https://portal.ct.gov/ag/press-releases/2026-press-releases/attorney-general-tong-announces-settlements-with-sunrun-solar-and-others-to-require-consumer-relief";
 const connecticutSource = "https://portal.ct.gov/ag/press-releases/2024-press-releases/attorney-general-tong-sues-sunrun";
 const floridaRoofOrder = "https://ecf.flmd.uscourts.gov/cgi-bin/show_public_doc?2025-02459-10-8-cv=";
 const texasSource = featuredStateSources.TX[0];
@@ -99,6 +100,14 @@ const timeline = [
     text: "Arizona's court-approved agreement resolves allegations concerning solar sales practices and includes consumer-relief and complaint-handling terms. The companies denied the allegations.",
     href: arizonaSource.url,
     label: "Arizona source",
+  },
+  {
+    year: "2026",
+    date: "October 23",
+    title: "Connecticut Sunrun settlement requires fraud review and verification safeguards",
+    text: "Sunrun settled without admitting liability. Connecticut announced relief for eligible contract-fraud claims, while Bright Planet remained in litigation.",
+    href: connecticutSettlementSource,
+    label: "Connecticut settlement announcement",
   },
   {
     year: "2024",
@@ -282,7 +291,7 @@ export default function SunrunEthicsCompliancePage() {
           <div className={styles.featuredGrid}>
             <Link href="/companies/sunrun"><span>Company tracker</span><strong>Sunrun investigations, enforcement and documented cases</strong><p>One source-based index for state actions and related SolarComplaint.com research.</p></Link>
             <Link href="/states/florida"><span>Florida</span><strong>Sunrun roof-removal and contract-buyout dispute</strong><p>A federal court order, later procedural history and Florida consumer resources.</p></Link>
-            <Link href="/cases/connecticut-attorney-general-sunrun-lawsuit"><span>Connecticut</span><strong>Connecticut Attorney General v. Sunrun</strong><p>A plain-language guide to the allegations and primary government record.</p></Link>
+            <Link href="/cases/connecticut-attorney-general-sunrun-lawsuit"><span>Connecticut</span><strong>Connecticut Attorney General v. Sunrun</strong><p>Read the settlement, 2024 complaint and consumer-relief conditions.</p></Link>
           </div>
         </section>
 
