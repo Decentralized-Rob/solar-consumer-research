@@ -50,6 +50,7 @@ export default function ConnecticutSunrunCasePage() {
     datePublished: "2026-10-31",
     dateModified: "2026-10-31",
     mainEntityOfPage: canonicalUrl,
+    author: { "@type": "Organization", name: "Jules Young", url: "https://solarcomplaint.com/authors/jules-young" },
     publisher: { "@type": "Organization", name: "Solar Consumer Research", url: "https://solarcomplaint.com" },
     isAccessibleForFree: true,
     about: [
@@ -84,6 +85,8 @@ export default function ConnecticutSunrunCasePage() {
         title="Connecticut&apos;s Sunrun Settlement: What the Court Records Actually Say"
         lede="A homeowner allegedly rejected a 25-year solar lease. The state&apos;s complaint says an electronic signature appeared anyway, followed by a phone call from someone pretending to be the customer. Two years later, Connecticut has settled with Sunrun and several sales defendants. The court documents explain how that happened, what changes now, and where the relief has limits."
       >
+        <p className="page-updated">By <Link href="/authors/jules-young">Jules Young</Link> · October 31, 2026</p>
+
         <nav className="case-question-links" aria-label="Sections of this investigation">
           <a href="#status">Where the case stands</a>
           <a href="#record">What Connecticut alleged</a>
