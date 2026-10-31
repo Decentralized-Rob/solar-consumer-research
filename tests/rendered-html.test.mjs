@@ -183,7 +183,7 @@ test("renders a Sunrun company hub that keeps enforcement statuses distinct", as
   assert.match(html, /Sunrun investigations, enforcement and documented cases/i);
   assert.match(html, /Texas residential solar investigation involving Sunrun/i);
   assert.match(html, /Arizona settlement with Sunrun and Vivint Solar/i);
-  assert.match(html, /Connecticut Attorney General lawsuit naming Sunrun/i);
+  assert.match(html, /Connecticut Sunrun settlement: contract-fraud claims and consumer relief/i);
   assert.match(html, /An investigation is not a finding of wrongdoing/i);
   assert.match(html, featuredResearchTitle);
   assert.match(html, /href=["']\/states\/arizona["']/i);
