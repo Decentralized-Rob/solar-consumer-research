@@ -40,6 +40,10 @@ const luna = "https://investors.sunrun.com/filings-financials/sec-filings/conten
 const kpmg = "https://www.sec.gov/Archives/edgar/data/1469367/000119312526318223/d149204dex991.htm";
 const slovinStipulation = "https://www.govinfo.gov/content/pkg/USCOURTS-cand-4_15-cv-05340/pdf/USCOURTS-cand-4_15-cv-05340-9.pdf";
 const slovinOrder = "https://law.justia.com/cases/federal/district-courts/california/candce/4%3A2015cv05340/293131/213/";
+const vivint2022 = "https://www.sec.gov/Archives/edgar/data/1469367/000146936722000118/run-20220630.htm";
+const vivintSecurities = "https://securities.stanford.edu/filings-case.html?id=107195";
+const muddyReport = "https://muddywatersresearch.com/research/run/just-making-it-up/";
+const sunrunMuddyReply = "https://investors.sunrun.com/news-events/press-releases/detail/296/deceptive-short-seller-muddy-waters-once-again-has-its";
 const ctComplaint = "https://portal.ct.gov/-/media/ag/press_releases/2024/2024-07-01-sunrun-complaint.pdf";
 const ctSettlement = "https://portal.ct.gov/ag/press-releases/2026-press-releases/attorney-general-tong-announces-settlements-with-sunrun-solar-and-others-to-require-consumer-relief";
 const azConsent = "https://www.azag.gov/consumer/sunrun";
@@ -73,6 +77,10 @@ export const articleConfig = {
     { name: "KPMG July 2026 agreed-upon-procedures report", url: kpmg, datePublished: "2026-07-24" },
     { name: "Slovin v. Sunrun 2019 telemarketing settlement, Section 12 injunctive requirements", url: slovinStipulation, datePublished: "2019-01-29" },
     { name: "July 19, 2019 final settlement approval in Slovin v. Sunrun", url: slovinOrder, datePublished: "2019-07-19" },
+    { name: "Sunrun second-quarter 2022 Form 10-Q on inherited Vivint securities settlement", url: vivint2022 },
+    { name: "Vivint Solar 2019 securities case filed record and 2022 judgment", url: vivintSecurities },
+    { name: "Muddy Waters Research 2023 criticism of subscriber counts", url: muddyReport, datePublished: "2023-10-25" },
+    { name: "Sunrun October 25, 2023 rebuttal to Muddy Waters subscriber comparison", url: sunrunMuddyReply, datePublished: "2023-10-25" },
     { name: "Connecticut Attorney General 2024 complaint", url: ctComplaint, publisher: "Connecticut Attorney General", datePublished: "2024-07-01" },
     { name: "Connecticut Attorney General 2026 settlement announcement", url: ctSettlement, publisher: "Connecticut Attorney General", datePublished: "2026-10-23" },
     { name: "Arizona Attorney General Sunrun consent agreement", url: azConsent, publisher: "Arizona Attorney General" },
@@ -114,6 +122,8 @@ export function SunrunInvestorReportingBody() {
 
       <p>Sunrun&apos;s published financial sensitivity analysis makes clear that estimated portfolio value depends on collection assumptions. At a 6% discount rate, its June 2026 Contracted Gross Earning Assets estimate was $16.86 billion using a 0% annualized net default assumption. The estimate falls to approximately $15.41 billion at a 0.75% annualized net default rate. That $1.45 billion difference is a model sensitivity, not a calculation of contract-fraud losses. It demonstrates the financial importance of what happens to expected customer payments.</p>
 
+      <p>Sunrun's reported subscriber count was challenged again in October 2023, this time by short seller Muddy Waters. Its <a href={muddyReport} target="_blank" rel="noreferrer">report</a> compared Sunrun's non-GAAP subscriber figures with data supplied to the U.S. Energy Information Administration and suggested the gap affected asset valuation and investment tax credit assumptions. Sunrun issued a <a href={sunrunMuddyReply} target="_blank" rel="noreferrer">same-day rebuttal</a>, arguing that it counts installed customers while EIA data reflects operational and billed systems, excludes prepaid subscribers and follows a different reporting purpose. The dispute supplies an earlier, direct investor-facing example of management being asked to reconcile customer counts across reporting systems. Neither side's public statement settled the factual debate.</p>
+
       <p>For additional background, SolarComplaint has examined the <Link href="/research/sunrun-25-year-solar-contracts">homeowner and investor sides of Sunrun&apos;s 25-year customer agreements</Link>. Those terms underpin years of projected payments, service obligations and possible contract transfers.</p>
     </section>
 
@@ -128,6 +138,8 @@ export function SunrunInvestorReportingBody() {
       <p>A fourth proceeding documented how Sunrun dealt with outside vendors years before the current enforcement actions. In <em>Slovin v. Sunrun</em>, filed in November 2015, consumers brought a class action over allegedly unlawful telemarketing calls. A <a href={slovinOrder} target="_blank" rel="noreferrer">federal judge approved a $5.5 million settlement in July 2019</a>. The <a href={slovinStipulation} target="_blank" rel="noreferrer">court-filed agreement, Section 12</a>, required four years of compliance measures: vendor due diligence, investigations and recordkeeping for complaints, quarterly random vendor audits with independent assistance, and contractual measures allowing payments to be withheld from vendors that made unlawful calls.</p>
 
       <p>Section 12.10 of that same agreement expressly prevents the compliance measures from being used as evidence that Sunrun controlled those vendors, that they were its agents, or that Sunrun was legally responsible for their alleged violations. The arrangement put substantial monitoring obligations on Sunrun while preserving a contractual boundary around vendor responsibility. It also required records of the allegations, investigation results, responses and final resolutions. For investors, the recurring question is how management measures these oversight programs and accounts for their cost and effectiveness.</p>
+
+      <p>Sunrun also inherited a distinct securities dispute when it acquired Vivint Solar in October 2020. The <em>Crumrine</em> and <em>Li</em> lawsuits, first filed against Vivint in 2019, alleged that unauthorized customer contracts and other improper sales practices inflated reported sales and installed megawatts. After the acquisition, Sunrun disclosed the case and its disposition in the <a href={vivint2022} target="_blank" rel="noreferrer">June 2022 Form 10-Q</a>. The parties settled for $1.25 million, and final approval came May 9, 2022. Sunrun reported that insurance reduced its accrual to $550,000. The <a href={vivintSecurities} target="_blank" rel="noreferrer">case history</a> concerns Vivint's pre-acquisition operations, but the resolution appeared in Sunrun's financial disclosures following the acquisition.</p>
 
       <p>The company continues to rely on outside sales channels. Its <a href={sec2025} target="_blank" rel="noreferrer">2025 Form 10-K</a> explains that partners generate customers and that Sunrun maintains contractual oversight and compliance requirements. The same business model places Sunrun&apos;s name on the long-term customer agreements. Shareholders should be able to assess the effectiveness of those controls whether a contract originated through a direct employee or a third-party sales organization.</p>
     </section>
