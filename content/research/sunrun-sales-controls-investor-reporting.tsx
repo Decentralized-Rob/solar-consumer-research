@@ -38,6 +38,8 @@ const q22026 = "https://www.sec.gov/Archives/edgar/data/1469367/0001628280260533
 const q2Earnings = "https://www.sec.gov/Archives/edgar/data/1469367/000162828026053349/exhibit991q226.htm";
 const luna = "https://investors.sunrun.com/filings-financials/sec-filings/content/0001628280-26-012289/ex1015-conformedlunasenior.htm";
 const kpmg = "https://www.sec.gov/Archives/edgar/data/1469367/000119312526318223/d149204dex991.htm";
+const slovinStipulation = "https://www.govinfo.gov/content/pkg/USCOURTS-cand-4_15-cv-05340/pdf/USCOURTS-cand-4_15-cv-05340-9.pdf";
+const slovinOrder = "https://law.justia.com/cases/federal/district-courts/california/candce/4%3A2015cv05340/293131/213/";
 const ctComplaint = "https://portal.ct.gov/-/media/ag/press_releases/2024/2024-07-01-sunrun-complaint.pdf";
 const ctSettlement = "https://portal.ct.gov/ag/press-releases/2026-press-releases/attorney-general-tong-announces-settlements-with-sunrun-solar-and-others-to-require-consumer-relief";
 const azConsent = "https://www.azag.gov/consumer/sunrun";
@@ -69,6 +71,8 @@ export const articleConfig = {
     { name: "Sunrun Q2 2026 earnings release, SEC exhibit", url: q2Earnings, datePublished: "2026-08-05" },
     { name: "Sunrun Project Luna consolidated credit agreement, Exhibit 10.15", url: luna },
     { name: "KPMG July 2026 agreed-upon-procedures report", url: kpmg, datePublished: "2026-07-24" },
+    { name: "Slovin v. Sunrun 2019 telemarketing settlement, Section 12 injunctive requirements", url: slovinStipulation, datePublished: "2019-01-29" },
+    { name: "July 19, 2019 final settlement approval in Slovin v. Sunrun", url: slovinOrder, datePublished: "2019-07-19" },
     { name: "Connecticut Attorney General 2024 complaint", url: ctComplaint, publisher: "Connecticut Attorney General", datePublished: "2024-07-01" },
     { name: "Connecticut Attorney General 2026 settlement announcement", url: ctSettlement, publisher: "Connecticut Attorney General", datePublished: "2026-10-23" },
     { name: "Arizona Attorney General Sunrun consent agreement", url: azConsent, publisher: "Arizona Attorney General" },
@@ -84,7 +88,7 @@ export function SunrunInvestorReportingBody() {
     <p className="page-updated">By <Link href="/authors/jules-young">Jules Young</Link></p>
 
     <section className="info-section">
-      <p><strong>TL;DR:</strong> Sunrun investors were questioning contract-cancellation reporting nearly a decade ago. Separate securities cases resulted in $32 million and $2.5 million settlements, followed by a governance-reform settlement, while the company has repeatedly assured shareholders that its incentive controls protect sales integrity. New consumer enforcement and SEC-filed financing requirements make the effectiveness of those controls a financial reporting question ahead of the November 4, 2026 earnings release.</p>
+      <p><strong>TL;DR:</strong> Sunrun investors were questioning contract-cancellation reporting nearly a decade ago. Separate securities cases resulted in $32 million and $2.5 million settlements, and a 2015 telemarketing class action settled for $5.5 million; shareholder derivative litigation produced governance reforms, while the company has repeatedly assured shareholders that its incentive controls protect sales integrity. New consumer enforcement and SEC-filed financing requirements make the effectiveness of those controls a financial reporting question ahead of the November 4, 2026 earnings release.</p>
 
       <p>In May 2017, Sunrun faced shareholder litigation over how the company had reported customers who signed solar agreements but cancelled before installation. The complaints concerned disclosures made from 2015, around the time of Sunrun's initial public offering, through early 2017. Former sales managers separately told the press that cancellations had been delayed in internal reporting. Sunrun said its internal review found no evidence that sales employees had changed cancellation dates in the way alleged.</p>
 
@@ -120,6 +124,10 @@ export function SunrunInvestorReportingBody() {
       <p>Connecticut went further than requiring a payment. The settlement calls for new verification procedures and a complaint process that examines available contract histories, verification records and other sales documents. Where a qualifying consumer says the contract was never provided and Sunrun cannot prove delivery, the agreement permits cancellation. The resulting records can show how many agreements the company must correct or unwind after a sales-integrity failure. SolarComplaint's <Link href="/cases/connecticut-attorney-general-sunrun-lawsuit">Connecticut investigation</Link> links to the filed complaint and stipulated judgment.</p>
 
       <p>Other states have challenged different parts of the same customer-acquisition and servicing operation. <a href={azConsent} target="_blank" rel="noreferrer">Arizona's May 2025 consent agreement</a> established relief and complaint-handling requirements for eligible Sunrun consumers. In April 2026, <a href={txInquiry} target="_blank" rel="noreferrer">Texas issued investigative demands</a> seeking records about solar sales claims, contract terms and customer representations. These actions concern different transactions and legal provisions, but each tests a business process that Sunrun has repeatedly told investors is subject to compliance controls.</p>
+
+      <p>A fourth proceeding documented how Sunrun dealt with outside vendors years before the current enforcement actions. In <em>Slovin v. Sunrun</em>, filed in November 2015, consumers brought a class action over allegedly unlawful telemarketing calls. A <a href={slovinOrder} target="_blank" rel="noreferrer">federal judge approved a $5.5 million settlement in July 2019</a>. The <a href={slovinStipulation} target="_blank" rel="noreferrer">court-filed agreement, Section 12</a>, required four years of compliance measures: vendor due diligence, investigations and recordkeeping for complaints, quarterly random vendor audits with independent assistance, and contractual measures allowing payments to be withheld from vendors that made unlawful calls.</p>
+
+      <p>Section 12.10 of that same agreement expressly prevents the compliance measures from being used as evidence that Sunrun controlled those vendors, that they were its agents, or that Sunrun was legally responsible for their alleged violations. The arrangement put substantial monitoring obligations on Sunrun while preserving a contractual boundary around vendor responsibility. It also required records of the allegations, investigation results, responses and final resolutions. For investors, the recurring question is how management measures these oversight programs and accounts for their cost and effectiveness.</p>
 
       <p>The company continues to rely on outside sales channels. Its <a href={sec2025} target="_blank" rel="noreferrer">2025 Form 10-K</a> explains that partners generate customers and that Sunrun maintains contractual oversight and compliance requirements. The same business model places Sunrun's name on the long-term customer agreements. Shareholders should be able to assess the effectiveness of those controls whether a contract originated through a direct employee or a third-party sales organization.</p>
     </section>
