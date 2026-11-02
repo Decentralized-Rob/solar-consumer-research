@@ -19,6 +19,10 @@
 
 ## Featured research
 
+- Sunrun sales integrity and investor reporting: https://solarcomplaint.com/research/sunrun-sales-controls-investor-reporting
+  - Original analysis of Sunrun's 2017 shareholder cancellation-reporting litigation, 2019 final settlement, 2019–2026 proxy assurances, 2026 financial disclosures, state enforcement, and SEC-filed solar financing requirements.
+  - Primary-source links to SEC filings and government settlements, including direct financing and verification records; publication and modification dates are explicit.
+
 - What Solar Costs in Massachusetts Right Now: https://solarcomplaint.com/research/massachusetts-solar-cost-2026
   - Uses September 2026 EnergySage Massachusetts pricing, Massachusetts Department of Revenue tax-credit guidance, SMART 3.0 program details, and current Sunrun Massachusetts plan information.
   - Connects current Massachusetts solar cost research to the Massachusetts state hub, Sunrun research hub, long-term contract research, financing research, and federal resources.
