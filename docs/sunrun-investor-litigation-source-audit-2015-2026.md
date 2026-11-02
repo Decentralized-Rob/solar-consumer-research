@@ -41,6 +41,39 @@ The filed *Slovin* settlement, §12.1–12.9, obligates Sunrun/CEE to oversee te
 
 This is evidence of the company's negotiated legal/operational approach, not evidence that any particular post-settlement vendor breached the requirements. Investor reporting should examine what company-wide performance measurements were generated and whether the resulting data appeared in board or financial reporting.
 
+## Independent reporting source trail (not company filings)
+
+These articles add outside interviews, independent case counting, written company responses or a separate editorial analysis. They are not ten independent studies proving the same underlying violation. In particular, 2017 re-reporting shares an original Wall Street Journal source, and some 2026 coverage reports the same Connecticut regulatory action.
+
+| Reporting | Original independent contribution | Company claim or financial connection |
+| --- | --- | --- |
+| [Wall Street Journal, May 22, 2017](https://www.wsj.com/articles/solar-company-sunrun-was-manipulating-sales-data-say-former-managers-1495445402) | Original interviews with former managers alleging delayed cancellation reporting during the 2015 IPO window | Earlier concerns over sales-to-installation pipeline metrics and cancellation classification |
+| [San Francisco Business Times, May 24, 2017](https://www.bizjournals.com/sanfrancisco/bizwomen/news/latest-news/2017/05/solar-company-manipulated-sales-data-former.html) | Re-reports WSJ interviews and publishes Sunrun CEO Lynn Jurich's response about customer conversion and internal systems; **dependent on WSJ for underlying manager testimony** | Compare reported manager accounts with company explanation and later proxy controls |
+| [WFSB I-Team, July 18, 2024](https://www.wfsb.com/2024/07/18/exclusive-ct-attorney-general-files-lawsuit-against-sunrun/) | Independent interviews with CT homeowners and direct written Sunrun response emphasizing that the sales and installation personnel in the state's case were nonemployees | Outside-channel accountability, code-of-conduct assurance, cancellation and repair concessions |
+| [WFSB I-Team, Sept. 30, 2024](https://www.wfsb.com/2024/09/30/i-team-sunrun-vision-solar-lawsuits-leave-waterbury-man-feeling-stuck-middle/) | Interviews with another CT homeowner who signed a Sunrun contract through a Vision Solar salesperson; reported different installed panel locations and a conditional relief offer | Independent account of promised versus installed system and vendor/customer responsibility |
+| [GBH News investigation, Apr. 28, 2025](https://www.wgbh.org/news/local/2025-04-28/solar-panel-company-accused-of-shady-business-in-massachusetts) | Court-data analysis with Boston University researchers: >420 Sunrun actions against MA consumers since 2023 and at least 24 homeowner lawsuits; ~170 complaints to MA AG in overlapping period; interviews and Sunrun response | Quantifies frequency of contract disputes and debt collection, without treating cases as proven violations |
+| [GBH reporter explains method, May 21, 2025](https://www.wgbh.org/news/local/2025-05-21/gbh-daily-solar-scams-investigation) | McKim explains how investigative tip led to court record research with BU SPARK!/Civera and ~two dozen homeowner interviews | Important methodology/supporting piece from same newsroom, **not a separate independent confirmation** |
+| [KPRC, Feb. 4, 2026](https://gmg-kprc-prod.cdn.arcpublishing.com/news/local/2026/02/04/houston-woman-says-solar-panels-she-never-activated-left-her-with-a-134000-bill/) and [Apr. 3 follow-up](https://www.click2houston.com/news/local/2026/04/03/state-investigates-solar-companies-over-claims-of-deceptive-savings-contracts/) | Houston consumer case: customer reported demand exceeding $134,000; Sunrun apologized and agreed to free removal after broadcaster investigation | Documented contract exit and company admission re customer-service standard; amount is a reported demand, not a court judgment |
+| [CBS News Texas, Apr. 30, 2026](https://www.cbsnews.com/texas/news/texas-investigation-rooftop-solar-industry-cbs-news-texas/) | Broadcast interviews of Sunrun customers reporting failed output and bills; interviewees confirmed cancelled contract and $15,000 settlement. Sunrun provided its own claims about formal complaints | Contrast reported resolution and Sunrun's complaint definitions, tracking, accounting |
+| [Utility Dive, Aug. 10, 2026](https://www.utilitydive.com/news/sunrun-rooftop-solar-battery-earnings/827458/) | Brian Martucci's industry reporting connects 2026 subscriber/cash guidance revisions to affiliate-channel transition and Freedom Forever bankruptcy | What changes in volume, acquisition cost and oversight when sales shift from affiliates to direct team |
+| [Bloomberg News, Oct. 25, 2023](https://news.bloombergtax.com/financial-accounting/sunpower-restatement-sunrun-short-report-sink-solar-stocks) | Independent market reporting documents immediate stock-price reaction (as much as 13% intraday) to Muddy Waters' subscriber-count allegations | Investor relevance and consequence of subscriber-definition disputes; not a finding that report's claims were true |
+| [Inside Investigator, Oct. 26, 2026](https://insideinvestigator.org/tong-settles-deceptive-solar-sales-suit/) | Independent examination of Sunrun/CT settlement terms including identity checks, employee training and review obligations | Connects stated internal controls to regulator-imposed verification requirements |
+
+### Recurring issue categories supported by third-party material
+
+1. **Cancellation reporting and definitions:** WSJ and Business Times (2017); financial market reaction to counting disputes via Bloomberg (2023). Investors need a time-consistent count for customers signed, cancelled pre-installation, installed but inactive, billed, defaulted and terminated.
+2. **External sales partner accountability:** WFSB published the company's own explanation that sales/installation were through nonemployees (2024); Utility Dive independently reports 2026 affiliate sales downsizing and associated financial headwinds.
+3. **Financial costs of correcting or ending agreements:** GBH's docket counts and reported debt waivers (2025), KPRC removal (2026), CBS Texas $15,000 customer settlement (2026), CT relief (2026).
+4. **Publicly stated quality controls versus their measurable outputs:** Proxy and financing requirements against independent investigations showing complaints, civil suits, cancellations, refunds and contractor explanations.
+
+### Research controls
+- Do not treat an interview allegation, class action claim or short-seller report as a proven violation.
+- Preserve the date of reporting and the timeframe of the underlying statistic. GBH's >420 MA lawsuits are *since 2023 through April 2025*, not a 2026 national count.
+- Distinguish GBH's Sunrun-initiated collections cases from homeowners' affirmative actions, and MA AG complaint tallies from actual enforcement findings.
+- Sunrun's CBS reference to “four” is **of complaints referenced by the Texas AG office** during a defined two-year period, not the company's nationwide lifetime complaint count.
+- Do not reproduce media articles, extended passages or lists of homeowner names. Summarize their original work and link to it.
+- Separate the 2017 WSJ original interview reporting from outlets repeating it; the extra articles are sources for Sunrun's response or market context, not independent interview corroboration.
+
 ## Important distinctions and research gaps
 
 - **IPO suit versus cancellation securities suit:** The $32M and $2.5M cases must not be merged or portrayed as a single adjudicated claim. The February 2018 IPO amendment added customer-cancellation allegations, but the IPO case also alleged other disclosure issues.
