@@ -6,10 +6,10 @@ export const story = {
   slug: "sunrun-sales-controls-investor-reporting",
   href: "/research/sunrun-sales-controls-investor-reporting",
   title: "Sunrun's Sales Controls Face an Investor Test a Decade in the Making",
-  deck: "A 2017 shareholder lawsuit challenged how Sunrun reported cancellations. Nearly a decade later, its proxy promises strong sales controls while new settlements put customer contracts under scrutiny.",
-  summary: "Sunrun investor analysis linking its 2017 contract-cancellation litigation, 2019–2026 proxy assurances, 2026 settlements, loan collateral representations and Q2 financial reporting ahead of Q3 earnings.",
+  deck: "Sunrun settled securities cases concerning IPO disclosures and customer cancellations, then agreed to governance reforms. Its 2026 proxy still promotes strong sales-integrity controls.",
+  summary: "Sunrun investor analysis of its 2015 IPO, 2016–2019 securities and derivative cases, $32 million and $2.5 million settlements, 2019 governance reforms and 2026 financial disclosures.",
   seoTitle: "Sunrun RUN Stock: Sales Controls, SEC Filings and Contract Risk",
-  seoDescription: "Sunrun (RUN) investors: examine 2017 cancellation lawsuits, repeated sales-integrity claims, 2026 settlements, $38.6B contracted revenue and Q3 disclosures.",
+  seoDescription: "Sunrun (RUN) investors: trace 2015–2019 securities litigation, contract cancellations, governance reforms and 2026 sales-integrity disclosures.",
   keywords: ["Sunrun stock", "RUN stock", "Sunrun SEC filings", "Sunrun investor relations", "Sunrun sales controls", "Sunrun contract cancellations", "Sunrun shareholder lawsuit", "Sunrun 2026 earnings", "Sunrun securitization", "Sunrun consumer settlements"],
   openGraphTitle: "Sunrun's Sales Integrity Claims Face a Decade of Investor Questions",
   socialDescription: "Sunrun faced investor lawsuits over contract-cancellation reporting in 2017. Its 2026 proxy still promotes strong sales controls. Here is what the financial filings reveal.",
@@ -57,6 +57,9 @@ export const articleConfig = {
   sources: [
     { name: "Sunrun 2017 Form 10-K, shareholder cancellation litigation", url: investor2017, datePublished: "2018-02-28" },
     { name: "Sunrun first-quarter 2019 Form 10-Q, final approval of $2.5 million federal settlement", url: investor2019 },
+    { name: "Sunrun 2018 Form 10-K: IPO settlement and cancellation amendments", url: "https://www.sec.gov/Archives/edgar/data/1469367/000146936719000041/sunrun10k2018.htm" },
+    { name: "Sunrun 2019 Form 10-K: shareholder derivative governance settlement", url: "https://www.sec.gov/Archives/edgar/data/1469367/000146936720000061/sunrun10k2019.htm" },
+    { name: "July 19, 2018 judicial order on cancellation-reporting pleadings", url: "https://www.govinfo.gov/content/pkg/USCOURTS-cand-3_17-cv-02537/pdf/USCOURTS-cand-3_17-cv-02537-1.pdf", datePublished: "2018-07-19" },
     { name: "Sunrun 2019 proxy, sales incentive controls", url: proxy2019 },
     { name: "Sunrun 2021 proxy, repeated sales integrity language", url: proxy2021 },
     { name: "Sunrun 2024 proxy, sales code and integrity language", url: proxy2024 },
@@ -81,7 +84,7 @@ export function SunrunInvestorReportingBody() {
     <p className="page-updated">By <Link href="/authors/jules-young">Jules Young</Link></p>
 
     <section className="info-section">
-      <p><strong>TL;DR:</strong> Sunrun investors were questioning contract-cancellation reporting nearly a decade ago. A 2017 securities lawsuit ended in a $2.5 million settlement, while the company has repeatedly assured shareholders that its incentive controls protect sales integrity. New consumer enforcement and SEC-filed financing requirements make the effectiveness of those controls a financial reporting question ahead of the November 4, 2026 earnings release.</p>
+      <p><strong>TL;DR:</strong> Sunrun investors were questioning contract-cancellation reporting nearly a decade ago. Separate securities cases resulted in $32 million and $2.5 million settlements, followed by a governance-reform settlement, while the company has repeatedly assured shareholders that its incentive controls protect sales integrity. New consumer enforcement and SEC-filed financing requirements make the effectiveness of those controls a financial reporting question ahead of the November 4, 2026 earnings release.</p>
 
       <p>In May 2017, Sunrun faced shareholder litigation over how the company had reported customers who signed solar agreements but cancelled before installation. The complaints concerned disclosures made from 2015, around the time of Sunrun's initial public offering, through early 2017. Former sales managers separately told the press that cancellations had been delayed in internal reporting. Sunrun said its internal review found no evidence that sales employees had changed cancellation dates in the way alleged.</p>
 
@@ -94,7 +97,7 @@ export function SunrunInvestorReportingBody() {
 
       <p>By the time that settlement received final approval, Sunrun was giving shareholders a recurring assurance about the integrity of its sales operation. Its <a href={proxy2019} target="_blank" rel="noreferrer">2019 proxy statement</a> explained that sales commissions were uncapped but internal controls helped ensure awards went to salespeople who acted with integrity and discouraged problematic behavior. Substantially similar statements appeared in its <a href={proxy2021} target="_blank" rel="noreferrer">2021</a> and <a href={proxy2024} target="_blank" rel="noreferrer">2024</a> proxy statements. The <a href={proxy2026} target="_blank" rel="noreferrer">April 2026 proxy</a> again describes strong internal controls over incentive awards and a sales code of conduct intended to enforce consumer-protection compliance.</p>
 
-      <p>This is the documented history behind the present investigation. Questions about cancellation reporting reached the courts in 2017. Sunrun's assurances about sales integrity were appearing in shareholder materials by at least 2019. Now, in 2026, regulators have required the company to investigate certain contract-fraud claims and provide relief that can include cancellation and system removal. Shareholders have been given years of descriptions of the controls, but far less detail about their measurable results.</p>
+      <p>This is the documented history behind the present investigation. Cancellation reporting allegations were filed in 2017 and added to the earlier IPO case in 2018; shareholder derivative claims led to governance reforms in 2019. Sunrun's assurances about sales integrity were appearing in shareholder materials by at least 2019. Now, in 2026, regulators have required the company to investigate certain contract-fraud claims and provide relief that can include cancellation and system removal. Shareholders have been given years of descriptions of the controls, but far less detail about their measurable results.</p>
     </section>
 
     <section className="info-section">
