@@ -79,6 +79,7 @@ export function SunrunQ3EarningsBody() {
 
       <p><a href={kbra} target="_blank" rel="noreferrer">KBRA identifies 37,595 Sunrun solar contracts backing securities</a>. How does Sunrun account for disputed contracts when valuing those customer payments?</p>
 
+      <h2>The customer contracts behind Sunrun\'s earnings</h2>
       <p>Sunrun's next earnings report arrives Wednesday, November 4, after the market closes, with a conference call scheduled for 4:30 p.m. Eastern. Investors will be watching revenue, cash generation and the company's transition toward more direct sales. They also have a consumer-contract issue to examine. The October 23 Connecticut settlement requires Sunrun to investigate covered claims of deceptive or unauthorized sales, with remedies that can include refunds, cancellations and equipment removal. Those agreements are central to the company's business: Sunrun expects payments from customers over decades, and those projected payments also underpin financing transactions.</p>
 
       <p>The connection between consumer contracts and Wall Street's interests has surfaced before. Reports of an SEC inquiry into Sunrun's handling of canceled contracts shook the stock in 2017. The latest settlement brings that history back into focus just as analysts are revising their financial expectations for the business.</p>
