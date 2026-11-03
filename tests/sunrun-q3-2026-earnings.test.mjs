@@ -22,8 +22,8 @@ test("Sunrun Q3 earnings preview has indexable finance-search metadata and attri
   assert.match(html, /Consumer Complaints &amp; Contract Risk|Consumer Complaints (?:&amp;|&) Contract Risk/);
   assert.match(html, /Consumer Complaints and the Contracts Behind Wall Street/);
   assert.match(html, /<strong>TL;DR:<\/strong>/);
-  assert.match(html, /restitution with no stated cap/);
-  assert.match(html, /37,595 Sunrun solar leases and PPAs backing a rated securities transaction/);
+  assert.match(html, /restitution without a stated cap/);
+  assert.match(html, /37,595 Sunrun solar leases and PPAs backing a securities deal/);
   assert.match(html, /rel="canonical"[^>]*sunrun-q3-2026-earnings|sunrun-q3-2026-earnings[^>]*rel="canonical"/i);
   assert.match(html, /"@type":"Article"/);
   assert.match(html, /"@type":"BreadcrumbList"/);
@@ -44,15 +44,15 @@ test("Sunrun Q3 earnings preview has indexable finance-search metadata and attri
   assert.doesNotMatch(html, /<meta[^>]+noindex/i);
 });
 
-test("Sunrun Q3 earnings story foregrounds verifiable investor questions without defensive detours", async () => {
+test("Sunrun Q3 earnings article reads as connected reporting with limited section breaks", async () => {
   const html = await render(articlePath);
-  assert.match(html, /Most of those target cuts came before Connecticut/);
-  assert.match(html, /What checks identify disputed, canceled or unenforceable customer agreements/);
-  assert.match(html, /number of claims reviewed and the costs of cancellations/);
-  assert.doesNotMatch(html, /settlement does not establish that every Sunrun contract is defective/);
-  assert.doesNotMatch(html, /These are reporting questions, not statements/);
-  assert.match(html, /pre-earnings report/);
-  assert.match(html, /not available at the time of writing/);
+  assert.match(html, /Most of those revisions preceded Connecticut/);
+  assert.match(html, /what happens to collateral when an agreement is unwound/);
+  assert.match(html, /customer agreement all the way from the sale/);
+  assert.match(html, /Research checked November 2, 2026/);
+  assert.doesNotMatch(html, /Five questions for Sunrun/);
+  assert.doesNotMatch(html, /Sunrun Q3 2026 earnings: quick answers/);
+  assert.doesNotMatch(html, /The settlement does not establish/);
 });
 
 test("Sunrun Q3 earnings article is discovered from research index and sitemap", async () => {
