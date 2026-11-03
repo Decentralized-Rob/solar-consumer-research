@@ -75,9 +75,9 @@ export function SunrunQ3EarningsBody() {
     <p className="page-updated">By <Link href="/authors/jules-young">Jules Young</Link></p>
 
     <section className="info-section">
-      <p><strong>TL;DR:</strong> Sunrun reports third-quarter earnings November 4 as several major banks lower their price targets. <a href={ctSettlement} target="_blank" rel="noreferrer">Connecticut has ordered reviews of covered consumer-fraud complaints</a>, with possible contract cancellations and restitution without a stated cap. The settlement puts new attention on the long-term customer agreements Sunrun counts on for years of projected payments.</p>
+      <p><strong>TL;DR:</strong> Sunrun reports earnings November 4 amid analyst price-target cuts and a <a href={ctSettlement} target="_blank" rel="noreferrer">Connecticut settlement</a> that could trigger contract cancellations and restitution.</p>
 
-      <p>Those agreements also have a Wall Street audience. <a href={kbra} target="_blank" rel="noreferrer">Credit-rating agency KBRA has documented 37,595 Sunrun solar leases and PPAs backing a securities deal</a>. With earnings approaching, investors have reason to ask how Sunrun counts disputed or canceled contracts, how those changes affect reported customer values, and what information reaches the firms financing the payments.</p>
+      <p><a href={kbra} target="_blank" rel="noreferrer">KBRA identifies 37,595 Sunrun solar contracts backing securities</a>. How does Sunrun account for disputed contracts when valuing those customer payments?</p>
 
       <p>Sunrun's next earnings report arrives Wednesday, November 4, after the market closes, with a conference call scheduled for 4:30 p.m. Eastern. Investors will be watching revenue, cash generation and the company's transition toward more direct sales. They also have a consumer-contract issue to examine. The October 23 Connecticut settlement requires Sunrun to investigate covered claims of deceptive or unauthorized sales, with remedies that can include refunds, cancellations and equipment removal. Those agreements are central to the company's business: Sunrun expects payments from customers over decades, and those projected payments also underpin financing transactions.</p>
 
