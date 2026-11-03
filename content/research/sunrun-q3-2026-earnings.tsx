@@ -14,7 +14,7 @@ export const story = {
   openGraphTitle: "Sunrun Q3 Earnings: Consumer Complaints and Wall Street\'s Solar Contracts",
   socialDescription: "Ahead of Sunrun's Nov. 4 earnings, a settlement requires a fraud-claims review while a rating agency documents thousands of solar customer agreements backing securities.",
   twitterDescription: "Sunrun Q3 earnings, Wall Street forecasts, contract disputes and the rating-agency records behind long-term solar financing.",
-  lede: "Wall Street puts a value on long-term solar customer contracts. Connecticut is requiring Sunrun to investigate allegations that some of those agreements were sold improperly. Both stories are unfolding ahead of the company's November 4 earnings report.",
+  lede: "Sunrun reports earnings November 4 after analyst price-target cuts and a Connecticut settlement requiring reviews of disputed customer contracts. Independent rating records show how long-term Sunrun agreements also support Wall Street financing.",
   publishedAt: "November 2, 2026",
   datePublished: "2026-11-02",
   dateModified: "2026-11-02",
@@ -73,92 +73,47 @@ export function SunrunQ3EarningsBody() {
   return <>
     <nav className="case-question-links" aria-label="Breadcrumb"><Link href="/">Home</Link><Link href="/research">Research</Link><Link href="/companies/sunrun">Sunrun</Link><span aria-current="page">Q3 2026 earnings</span></nav>
     <p className="page-updated">By <Link href="/authors/jules-young">Jules Young</Link></p>
-    <section className="info-section">
-      <p><strong>TL;DR:</strong> Sunrun reports Q3 earnings November 4 as major Wall Street firms cut their price targets. <a href={ctSettlement} target="_blank" rel="noreferrer">Connecticut has ordered a review of covered consumer-fraud claims</a> that could lead to contract cancellations and restitution with no stated cap. <a href={kbra} target="_blank" rel="noreferrer">KBRA documented 37,595 Sunrun solar leases and PPAs backing a rated securities transaction</a>. Investors have a direct question for the earnings call: how do disputed and canceled customer agreements affect the numbers Sunrun reports and the contracts used in its financing?</p>
-    </section>
 
     <section className="info-section">
-      <p>Sunrun reports third-quarter 2026 earnings on <strong>Wednesday, November 4, after the market closes</strong>. Its earnings call is scheduled for <strong>4:30 p.m. Eastern</strong>. Wall Street will scrutinize revenue, customer additions and cash generation. It should also scrutinize the customer agreements behind those numbers, including what happens when contracts are disputed or canceled.</p>
-      <p>On October 23, Connecticut announced a settlement requiring Sunrun to investigate covered allegations of fraudulent sales and provide responses within 60 days. Remedies can include credits, cash payments, contract cancellation and equipment removal. Restitution has no set cap. In August, an independent credit-rating agency described a Sunrun securities transaction backed by tens of thousands of solar leases and power purchase agreements. That puts a financial question squarely before the market: <strong>how does Sunrun verify and account for the agreements on which its long-term forecasts depend?</strong></p>
+      <p><strong>TL;DR:</strong> Sunrun reports third-quarter earnings November 4 as several major banks lower their price targets. <a href={ctSettlement} target="_blank" rel="noreferrer">Connecticut has ordered reviews of covered consumer-fraud complaints</a>, with possible contract cancellations and restitution without a stated cap. Meanwhile, <a href={kbra} target="_blank" rel="noreferrer">credit-rating agency KBRA has documented 37,595 Sunrun solar leases and PPAs backing a securities deal</a>. The earnings discussion should include how contested customer agreements affect the long-term revenue and asset values presented to investors.</p>
+
+      <p>Sunrun's next earnings report arrives Wednesday, November 4, after the market closes, with a conference call scheduled for 4:30 p.m. Eastern. Investors will be watching revenue, cash generation and the company's transition toward more direct sales. They also have a consumer-contract issue to examine. The October 23 Connecticut settlement requires Sunrun to investigate covered claims of deceptive or unauthorized sales, with remedies that can include refunds, cancellations and equipment removal. Those agreements are central to the company's business: Sunrun expects payments from customers over decades, and those projected payments also underpin financing transactions.</p>
+
+      <p>The connection between consumer contracts and Wall Street's interests has surfaced before. Reports of an SEC inquiry into Sunrun's handling of canceled contracts shook the stock in 2017. The latest settlement brings that history back into focus just as analysts are revising their financial expectations for the business.</p>
     </section>
 
     <section id="estimates" className="info-section">
-      <h2>Sunrun Q3 2026 earnings: the numbers analysts expect</h2>
-      <p><a href={zacksForecast} target="_blank" rel="noreferrer">Zacks Equity Research, October 28</a>, reported a consensus forecast of <strong>$0.26 in earnings per share and $804.1 million in revenue</strong> for the September quarter. That revenue forecast would be about 11% higher than a year earlier. Zacks said its EPS consensus had risen 49.86% over the preceding 30 days.</p>
-      <p>A different provider, <a href={marketbeatForecast} target="_blank" rel="noreferrer">MarketBeat</a>, displayed approximately <strong>$0.20 per share and $757.53 million in revenue</strong>. The two providers use different earnings estimates. Both figures are pre-earnings forecasts.</p>
-      <p>The comparisons matter because Sunrun's second-quarter performance did not erase operational pressure. Its August results recorded <strong>19,793 subscriber additions, down 31% year over year</strong>, while the company reduced its full-year 2026 cash-generation guidance to <strong>$200 million–$375 million</strong>, excluding specified equipment investments. <a href={q2Independent} target="_blank" rel="noreferrer">Utility Dive reported</a> on the shift from outside affiliate sales to a larger direct-sales operation, including the disruption associated with Freedom Forever's bankruptcy. <a href={q2Source} target="_blank" rel="noreferrer">The figures appear in the underlying quarterly results</a>.</p>
-    </section>
+      <h2>Sunrun Q3 2026 earnings: estimates and analyst cuts</h2>
+      <p><a href={zacksForecast} target="_blank" rel="noreferrer">Zacks Equity Research reported on October 28</a> that analysts expected Sunrun to earn $0.26 per share on $804.1 million in third-quarter revenue, an increase of about 11% from the prior year. Zacks said the earnings-per-share consensus had risen nearly 50% over the preceding month. <a href={marketbeatForecast} target="_blank" rel="noreferrer">MarketBeat displayed a different forecast</a> of about $0.20 per share on $757.53 million in revenue. The estimates vary by provider, but both put Wednesday's results in the spotlight.</p>
 
-    <section id="analysts" className="info-section">
-      <h2>Wall Street has been cutting Sunrun price targets</h2>
-      <p>Several investment banks reduced their Sunrun targets in October, even while many maintained Buy or equivalent ratings. The independently compiled <a href={tipranksTargets} target="_blank" rel="noreferrer">TipRanks forecast history</a> and <a href={marketbeatTargets} target="_blank" rel="noreferrer">MarketBeat analyst records</a> show these changes:</p>
-      <ul>
-        <li><strong>Morgan Stanley:</strong> $15 to $10, October 14.</li>
-        <li><strong>JPMorgan:</strong> $14 to $12, October 19.</li>
-        <li><strong>BMO Capital Markets:</strong> $10.50 to $7.75, reported October 20.</li>
-        <li><strong>Goldman Sachs:</strong> $13 to $11, October 8.</li>
-        <li><strong>Mizuho:</strong> $18 to $15, reported October 29.</li>
-      </ul>
-      <p>Most of those target cuts came before Connecticut announced its October 23 settlement. Investors now have the settlement's potential contract cancellations and restitution obligations to consider alongside an already pressured outlook.</p>
-      <p>On October 30, <a href={simplyWallSt} target="_blank" rel="noreferrer">Simply Wall St explicitly put the settlement into its Sunrun investment analysis</a>, discussing potential cancellations, consumer relief and the future cost of sales compliance. Consumer enforcement has entered the investor-facing discussion ahead of earnings.</p>
+      <p>Price targets tell another part of the story. <a href={tipranksTargets} target="_blank" rel="noreferrer">TipRanks</a> and <a href={marketbeatTargets} target="_blank" rel="noreferrer">MarketBeat</a> report October reductions from Morgan Stanley ($15 to $10), JPMorgan ($14 to $12), Goldman Sachs ($13 to $11), BMO Capital Markets ($10.50 to $7.75) and Mizuho ($18 to $15). Most of those revisions preceded Connecticut's October 23 announcement. They show analysts had already been reassessing Sunrun ahead of the next results, even as some maintained positive ratings.</p>
+
+      <p>Sunrun's second-quarter report helps explain the scrutiny. It recorded 19,793 new subscribers, down 31% from a year earlier, and reduced its 2026 cash-generation outlook to $200 million–$375 million, excluding specified equipment investments. <a href={q2Independent} target="_blank" rel="noreferrer">Utility Dive reported</a> that Sunrun was moving away from reliance on outside sales affiliates and expanding its direct-sales operation, with Freedom Forever's bankruptcy adding to the disruption. Those are measurable pressures for Wednesday's call. The underlying operating figures are available in the <a href={q2Source} target="_blank" rel="noreferrer">second-quarter results</a>.</p>
     </section>
 
     <section id="settlement" className="info-section">
-      <h2>Connecticut can force the question earnings headlines miss</h2>
-      <p>The <a href={ctSettlement} target="_blank" rel="noreferrer">Connecticut Attorney General's October 23 announcement</a> describes a settlement arising from alleged deceptive sales practices involving Sunrun and other defendants. Sunrun agreed to pay <strong>$300,000 to the state</strong> and investigate covered fraud complaints. If a qualifying claim is substantiated, relief may include contract cancellation or removal of the system. A customer who says they never received a contract can cancel when Sunrun cannot prove delivery under the settlement's terms. Sunrun must fund an independent arbitrator in the event of a dispute.</p>
-      <p>There is no stated ceiling on restitution under the agreement. The number of claims reviewed, contracts canceled and systems removed will determine the scale of the response. Those are figures investors should demand.</p>
-      <p>For investors, this creates questions with measurable answers: How many accounts enter review? How many result in credits, cancellations or removals? Where do those outcomes appear in the company's customer metrics, revenue assumptions and financing arrangements?</p>
-    </section>
+      <h2>Consumer complaints become a Wall Street question</h2>
+      <p>The <a href={ctSettlement} target="_blank" rel="noreferrer">Connecticut Attorney General's settlement</a>, announced October 23, requires Sunrun to review covered allegations of fraudulent sales and respond within 60 days. The company agreed to pay $300,000 to the state, while eligible consumers may receive credits, cash relief, contract cancellation or system removal. Restitution carries no stated cap. The agreement also addresses contract delivery and dispute resolution. Its financial consequences will depend on how many cases qualify and what remedies follow, figures investors have reason to ask about when reviewing Sunrun's customer metrics and future cash-flow assumptions.</p>
 
-    <section id="bonds" className="info-section">
-      <h2>The Wall Street connection is documented by a credit-rating agency</h2>
-      <p><a href={kbra} target="_blank" rel="noreferrer">KBRA's August 26, 2026 rating announcement</a> describes Sunrun Quintus Issuer 2026-2, an asset-backed securities transaction collateralized by <strong>37,595 residential solar leases and power purchase agreements</strong>. KBRA reported an aggregate discounted solar asset balance of approximately <strong>$359.7 million</strong> using a 7.5% discount rate. Roughly 90% of that discounted balance came from PPAs with monthly payments, 4.8% from leases and 5.2% from hedged solar renewable energy certificates.</p>
-      <p>In plain language, investors are buying securities whose financial performance depends in part on expected payments from household solar agreements over many years. Customer contracts are therefore more than sales paperwork. They underpin forecast cash flows and capital-market transactions.</p>
-      <p>The public rating materials make the investor exposure tangible. <strong>What checks identify disputed, canceled or unenforceable customer agreements before and after they enter financed portfolios?</strong> Which parties review those records, and how are problems reflected in collections and asset valuations?</p>
+      <p>The issue is beginning to appear in investment coverage. On October 30, <a href={simplyWallSt} target="_blank" rel="noreferrer">Simply Wall St examined whether the Connecticut settlement changes the Sunrun investment case</a>, including possible cancellations and the cost of stronger sales compliance. The question reaches beyond the immediate $300,000 state payment. Sunrun's projected customer payments depend on agreements being enforceable and customers continuing to pay. If agreements are canceled or amended, investors need to know how those changes are counted, valued and reported.</p>
+
+      <p>An independent rating-agency announcement supplies the financing connection. <a href={kbra} target="_blank" rel="noreferrer">KBRA reported on August 26</a> that Sunrun Quintus Issuer 2026-2 was backed by 37,595 residential solar leases and power purchase agreements, representing approximately $359.7 million in discounted solar asset balances. About 90% of that discounted balance came from PPAs with monthly payments. Securities investors depend on cash collections from these contracts over time. That makes customer-agreement quality a financial issue for the parties arranging, rating and buying the securities.</p>
+
+      <p>The public rating announcement describes the portfolio, but it does not answer how every contested agreement is handled as it moves through financing and servicing. Investors can ask which controls identify complaints, contract cancellations and disputed payments; which parties verify the underlying records; and what happens to collateral when an agreement is unwound. Those answers could help establish how closely Sunrun's contract-value reporting reflects the experience of the customers making the payments.</p>
     </section>
 
     <section id="history" className="info-section">
-      <h2>Sunrun has faced the customer-cancellation question before</h2>
-      <p>This is not the first time Sunrun customer-contract reporting has reached investors. In May 2017, <a href={bloomberg2017} target="_blank" rel="noreferrer">Bloomberg reported that Sunrun shares fell sharply</a> after a Wall Street Journal report of an SEC inquiry into disclosure of canceled solar contracts. Later that month, <a href={wsj2017} target="_blank" rel="noreferrer">The Wall Street Journal interviewed former Sunrun managers</a> who alleged that cancellations had been delayed in internal reporting around the company's 2015 IPO. The <a href={sfBusinessTimes} target="_blank" rel="noreferrer">San Francisco Business Times</a> followed the reporting and published the company's response.</p>
-      <p>A separate independent investigation gives the customer side of the record. <a href={gbh} target="_blank" rel="noreferrer">GBH News, reporting in April 2025 with Boston University researchers, counted more than 420 Massachusetts lawsuits filed by Sunrun against customers since 2023</a> and at least two dozen homeowner suits. GBH also reported approximately 170 complaints to the Massachusetts Attorney General over the period examined. The volume of filings documents how frequently Sunrun customer agreements have reached courts and regulators in one state.</p>
-      <p>Put together, the historical reporting and current settlement establish why the quality of the underlying agreement deserves attention in earnings coverage. Sunrun's customer relationships are presented as durable economic assets. Courts, regulators and homeowners have repeatedly tested individual agreements and the sales practices used to obtain them.</p>
-    </section>
+      <h2>Sunrun's older cancellation controversy has new relevance</h2>
+      <p>In 2017, <a href={bloomberg2017} target="_blank" rel="noreferrer">Bloomberg reported a sharp decline in Sunrun shares</a> following news of an SEC inquiry into the disclosure of canceled solar contracts. <a href={wsj2017} target="_blank" rel="noreferrer">The Wall Street Journal interviewed former Sunrun sales managers</a> who alleged that canceled deals had remained in internal reporting around the company's 2015 IPO. The <a href={sfBusinessTimes} target="_blank" rel="noreferrer">San Francisco Business Times</a> subsequently reported Sunrun's response. The controversy put the treatment of customer cancellations before investors years ahead of the current Connecticut settlement.</p>
 
-    <section id="questions" className="info-section">
-      <h2>Five questions for Sunrun's November 4 earnings call</h2>
-      <ol>
-        <li><strong>Complaint exposure:</strong> How many contracts are subject to the Connecticut review, and has the company estimated the possible remedies or costs?</li>
-        <li><strong>Contract accounting:</strong> How are substantiated cancellations reflected in subscriber counts, contracted-value metrics and revenue forecasts?</li>
-        <li><strong>Financing:</strong> What happens when a disputed or canceled agreement is part of a financed asset pool, and what replacement or repurchase provisions apply?</li>
-        <li><strong>Sales oversight:</strong> What measurable results have followed the shift from affiliate-originated sales to Sunrun's direct-sales model?</li>
-        <li><strong>Operating performance:</strong> Can subscriber growth, unit economics and cash generation improve against the reduced full-year outlook?</li>
-      </ol>
-      <p>Those answers would let investors follow the money from a customer's agreement to the future payments that support Sunrun's financing.</p>
-    </section>
+      <p>The consumer record has continued to grow. In April 2025, <a href={gbh} target="_blank" rel="noreferrer">GBH News and Boston University researchers</a> identified more than 420 lawsuits filed by Sunrun against Massachusetts customers since 2023, along with at least two dozen lawsuits brought by homeowners. GBH also reported approximately 170 complaints to the state attorney general during its review period. Those figures show the scale of the conflict over Sunrun customer relationships in one state. They also offer a concrete starting point for examining whether complaint volumes and resolutions are visible in the financial accounts investors rely on.</p>
 
-    <section id="faq" className="info-section">
-      <h2>Sunrun Q3 2026 earnings: quick answers</h2>
-      <h3>When does Sunrun report Q3 2026 earnings?</h3>
-      <p>Wednesday, November 4, 2026, after the U.S. market close. The conference call is scheduled for 4:30 p.m. ET. <a href={sunrunEarningsDate} target="_blank" rel="noreferrer">See the official schedule</a>.</p>
-      <h3>What are analysts expecting from Sunrun?</h3>
-      <p>As of October 28, Zacks reported $0.26 EPS and $804.1 million in revenue; MarketBeat displayed a different estimate of about $0.20 EPS and $757.53 million revenue. These figures may change before publication of actual results.</p>
-      <h3>Does the Connecticut settlement affect Sunrun shareholders?</h3>
-      <p>It creates financial and operational obligations for Sunrun, including investigations and potential relief with no stated restitution cap. Investors should look for the number of claims reviewed and the costs of cancellations, credits and system removals.</p>
-      <h3>Are Sunrun solar contracts used to back securities?</h3>
-      <p>Yes. KBRA documented a 2026 transaction backed by 37,595 residential solar leases and PPAs. That independently confirms a direct financial link between long-term customer payments and asset-backed securities.</p>
+      <p>Wednesday's earnings release can answer some of this. Analysts can compare subscriber additions, the full-year outlook and cash generation with the prior quarter. The harder questions concern how many customer agreements require review, what Sunrun expects that process to cost, how cancellations affect contracted customer value, and whether financing partners receive updated information when disputes change the expected payments. Sunrun's earnings coverage should follow the customer agreement all the way from the sale to the asset-backed securities it supports.</p>
     </section>
 
     <section id="sources" className="info-section">
-      <h2>Original documents and independent reporting</h2>
-      <p><strong>Earnings and analysts:</strong> <a href={zacksForecast} target="_blank" rel="noreferrer">Zacks earnings forecast</a>; <a href={marketbeatForecast} target="_blank" rel="noreferrer">MarketBeat Q3 estimates</a>; <a href={tipranksTargets} target="_blank" rel="noreferrer">TipRanks analyst target history</a>; <a href={sunrunEarningsDate} target="_blank" rel="noreferrer">November 4 earnings call schedule</a>.</p>
-      <p><strong>Consumer enforcement and credit:</strong> <a href={ctSettlement} target="_blank" rel="noreferrer">Connecticut Attorney General settlement</a>; <a href={kbra} target="_blank" rel="noreferrer">KBRA securitization ratings</a>; <a href={simplyWallSt} target="_blank" rel="noreferrer">Simply Wall St investor commentary</a>.</p>
-      <p><strong>Independent reporting:</strong> <a href={gbh} target="_blank" rel="noreferrer">GBH Massachusetts lawsuit investigation</a>; <a href={bloomberg2017} target="_blank" rel="noreferrer">Bloomberg 2017 SEC inquiry report</a>; <a href={wsj2017} target="_blank" rel="noreferrer">Wall Street Journal former-manager interviews</a>; <a href={q2Independent} target="_blank" rel="noreferrer">Utility Dive on Sunrun's sales transition</a>.</p>
-      <p>Research checked November 2, 2026. This is a pre-earnings report; Q3 results were not available at the time of writing. Estimates and analyst targets are attributed to their respective providers.</p>
-    </section>
-
-    <section className="info-section">
-      <h2>More Sunrun research</h2>
-      <p><Link href="/companies/sunrun">Sunrun Research Center</Link> · <Link href="/cases/connecticut-attorney-general-sunrun-lawsuit">Connecticut settlement and lawsuit</Link> · <Link href="/research/sunrun-25-year-solar-contracts">The homeowner and investor sides of 25-year solar agreements</Link> · <Link href="/research/solar-sales-financing-after-complaint">What happens to solar financing after complaints</Link></p>
+      <p><strong>Reporting sources:</strong> <a href={zacksForecast} target="_blank" rel="noreferrer">Zacks earnings forecast</a>, <a href={marketbeatForecast} target="_blank" rel="noreferrer">MarketBeat estimates</a>, <a href={ctSettlement} target="_blank" rel="noreferrer">Connecticut Attorney General</a>, <a href={kbra} target="_blank" rel="noreferrer">KBRA's securitization report</a>, <a href={gbh} target="_blank" rel="noreferrer">GBH's Massachusetts investigation</a>, <a href={wsj2017} target="_blank" rel="noreferrer">The Wall Street Journal</a> and <a href={simplyWallSt} target="_blank" rel="noreferrer">Simply Wall St</a>. Research checked November 2, 2026, ahead of Sunrun's Q3 results.</p>
+      <p>Related coverage: <Link href="/companies/sunrun">Sunrun Research Center</Link>, <Link href="/cases/connecticut-attorney-general-sunrun-lawsuit">Connecticut's Sunrun case</Link> and <Link href="/research/sunrun-25-year-solar-contracts">Sunrun's 25-year solar agreements</Link>.</p>
     </section>
   </>;
 }
