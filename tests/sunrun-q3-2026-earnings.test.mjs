@@ -22,8 +22,8 @@ test("Sunrun Q3 earnings preview has indexable finance-search metadata and attri
   assert.match(html, /Consumer Complaints &amp; Contract Risk|Consumer Complaints (?:&amp;|&) Contract Risk/);
   assert.match(html, /Consumer Complaints and the Contracts Behind Wall Street/);
   assert.match(html, /<strong>TL;DR:<\/strong>/);
-  assert.match(html, /restitution without a stated cap/);
-  assert.match(html, /37,595 Sunrun solar leases and PPAs backing a securities deal/);
+  assert.match(html, /contract cancellations and restitution/);
+  assert.match(html, /37,595 Sunrun solar contracts backing securities/);
   assert.match(html, /rel="canonical"[^>]*sunrun-q3-2026-earnings|sunrun-q3-2026-earnings[^>]*rel="canonical"/i);
   assert.match(html, /"@type":"Article"/);
   assert.match(html, /"@type":"BreadcrumbList"/);
