@@ -19,6 +19,11 @@ const articlePath = "/research/sunrun-q3-2026-earnings";
 test("Sunrun Q3 earnings preview has indexable finance-search metadata and attributed forecasts", async () => {
   const html = await render(articlePath);
   assert.match(html, /<title>Sunrun Q3 2026 Earnings:/);
+  assert.match(html, /Consumer Complaints &amp; Contract Risk|Consumer Complaints (?:&amp;|&) Contract Risk/);
+  assert.match(html, /Consumer Complaints and the Contracts Behind Wall Street/);
+  assert.match(html, /<strong>TL;DR:<\/strong>/);
+  assert.match(html, /no cap on consumer restitution/);
+  assert.match(html, /public records do not show that the Connecticut agreements are in that pool/);
   assert.match(html, /rel="canonical"[^>]*sunrun-q3-2026-earnings|sunrun-q3-2026-earnings[^>]*rel="canonical"/i);
   assert.match(html, /"@type":"Article"/);
   assert.match(html, /"@type":"BreadcrumbList"/);
