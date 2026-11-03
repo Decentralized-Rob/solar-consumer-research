@@ -22,8 +22,8 @@ test("Sunrun Q3 earnings preview has indexable finance-search metadata and attri
   assert.match(html, /Consumer Complaints &amp; Contract Risk|Consumer Complaints (?:&amp;|&) Contract Risk/);
   assert.match(html, /Consumer Complaints and the Contracts Behind Wall Street/);
   assert.match(html, /<strong>TL;DR:<\/strong>/);
-  assert.match(html, /no cap on consumer restitution/);
-  assert.match(html, /public records do not show that the Connecticut agreements are in that pool/);
+  assert.match(html, /restitution with no stated cap/);
+  assert.match(html, /37,595 Sunrun solar leases and PPAs backing a rated securities transaction/);
   assert.match(html, /rel="canonical"[^>]*sunrun-q3-2026-earnings|sunrun-q3-2026-earnings[^>]*rel="canonical"/i);
   assert.match(html, /"@type":"Article"/);
   assert.match(html, /"@type":"BreadcrumbList"/);
@@ -44,11 +44,13 @@ test("Sunrun Q3 earnings preview has indexable finance-search metadata and attri
   assert.doesNotMatch(html, /<meta[^>]+noindex/i);
 });
 
-test("Sunrun Q3 earnings coverage distinguishes unproven links from documented investor risk", async () => {
+test("Sunrun Q3 earnings story foregrounds verifiable investor questions without defensive detours", async () => {
   const html = await render(articlePath);
-  assert.match(html, /target cuts do not establish that the Connecticut settlement caused/);
-  assert.match(html, /does not establish that any Connecticut agreement covered by the settlement was included/);
-  assert.match(html, /not adjudicated violations/);
+  assert.match(html, /Most of those target cuts came before Connecticut/);
+  assert.match(html, /What checks identify disputed, canceled or unenforceable customer agreements/);
+  assert.match(html, /number of claims reviewed and the costs of cancellations/);
+  assert.doesNotMatch(html, /settlement does not establish that every Sunrun contract is defective/);
+  assert.doesNotMatch(html, /These are reporting questions, not statements/);
   assert.match(html, /pre-earnings report/);
   assert.match(html, /not available at the time of writing/);
 });
