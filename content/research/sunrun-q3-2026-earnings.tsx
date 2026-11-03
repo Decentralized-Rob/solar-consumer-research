@@ -5,13 +5,13 @@ export const story = {
   id: "sunrun-q3-2026-earnings",
   slug: "sunrun-q3-2026-earnings",
   href: "/research/sunrun-q3-2026-earnings",
-  title: "Sunrun Q3 Earnings: Wall Street's Contract Question",
-  deck: "Sunrun reports November 4. Analysts have cut price targets, Connecticut has ordered a consumer-fraud review, and a credit-rating agency has traced thousands of solar contracts into securities.",
+  title: "Sunrun Q3 Earnings: Consumer Complaints and the Contracts Behind Wall Street\'s Financing",
+  deck: "Before Sunrun reports November 4, analysts have cut price targets, Connecticut has ordered reviews of covered fraud claims, and an independent rating agency has documented 37,595 customer contracts behind a securities deal.",
   summary: "Sunrun Q3 2026 earnings preview: analyst EPS and revenue estimates, price target cuts, Connecticut's Sunrun settlement, independent reporting on contract disputes, and KBRA-rated solar securities.",
-  seoTitle: "Sunrun Q3 2026 Earnings: Analyst Estimates & Contract Risk",
-  seoDescription: "Sunrun reports Nov. 4. Compare Q3 earnings forecasts and Wall Street target cuts with Connecticut's settlement and the solar contracts backing investor securities.",
+  seoTitle: "Sunrun Q3 2026 Earnings: Consumer Complaints & Contract Risk",
+  seoDescription: "Sunrun reports Nov. 4. Analyst forecasts, price-target cuts, Connecticut\'s fraud-claims review and 37,595 contracts backing a rated securities deal.",
   keywords: ["Sunrun Q3 2026 earnings", "Sunrun earnings November 4", "Sunrun earnings report", "RUN stock earnings", "Sunrun earnings estimates", "Sunrun analyst price targets", "Sunrun Connecticut settlement", "Sunrun consumer complaints", "Sunrun solar securitization"],
-  openGraphTitle: "Sunrun Earnings: Wall Street Values the Contracts. Connecticut Is Checking the Sales.",
+  openGraphTitle: "Sunrun Q3 Earnings: Consumer Complaints and Wall Street\'s Solar Contracts",
   socialDescription: "Ahead of Sunrun's Nov. 4 earnings, a settlement requires a fraud-claims review while a rating agency documents thousands of solar customer agreements backing securities.",
   twitterDescription: "Sunrun Q3 earnings, Wall Street forecasts, contract disputes and the rating-agency records behind long-term solar financing.",
   lede: "Wall Street puts a value on long-term solar customer contracts. Connecticut is requiring Sunrun to investigate allegations that some of those agreements were sold improperly. Both stories are unfolding ahead of the company's November 4 earnings report.",
@@ -73,6 +73,9 @@ export function SunrunQ3EarningsBody() {
   return <>
     <nav className="case-question-links" aria-label="Breadcrumb"><Link href="/">Home</Link><Link href="/research">Research</Link><Link href="/companies/sunrun">Sunrun</Link><span aria-current="page">Q3 2026 earnings</span></nav>
     <p className="page-updated">By <Link href="/authors/jules-young">Jules Young</Link></p>
+    <section className="info-section">
+      <p><strong>TL;DR:</strong> Sunrun reports Q3 earnings November 4 after multiple Wall Street firms cut their price targets. <a href={ctSettlement} target="_blank" rel="noreferrer">Connecticut has ordered Sunrun to review covered fraud claims</a>, with possible contract cancellations and no cap on consumer restitution. Separately, <a href={kbra} target="_blank" rel="noreferrer">KBRA confirms that 37,595 residential solar leases and PPAs back a rated securities transaction</a>. The public records do not show that the Connecticut agreements are in that pool. The investor question is how challenged or canceled contracts affect Sunrun\'s customer-value calculations and financing.</p>
+    </section>
 
     <section className="info-section">
       <p>Sunrun reports third-quarter 2026 earnings on <strong>Wednesday, November 4, after the market closes</strong>. Its earnings call is scheduled for <strong>4:30 p.m. Eastern</strong>. Wall Street will get the usual figures on revenue, profitability, customer additions, batteries and cash generation. A second issue is already in the public record: what happens when the long-term customer agreements behind the financial model are challenged or canceled?</p>
