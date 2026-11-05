@@ -5,12 +5,12 @@ export const story = {
   id: "sunrun-customer-contract-value",
   slug: "sunrun-customer-contract-value",
   href: "/research/sunrun-customer-contract-value",
-  title: "How Sunrun Values Its 25-Year Customer Contracts",
-  deck: "Sunrun's latest filings put several different numbers on expected customer payments. Here is what each number measures and where assumed renewals enter the calculation.",
+  title: "Why Sunrun Models 30 Years for a 25-Year Solar Contract",
+  deck: "Sunrun assumes five more years after a 25-year agreement ends. Its November filings show how the company counts future customer payments.",
   summary: "Sunrun's Q3 2026 Subscriber Value, Gross Earning Assets and contracted revenue explained using its November 2026 results and September Form 10-Q.",
-  seoTitle: "Sunrun Contract Value: 25-Year Agreements and 30-Year Assumptions",
-  seoDescription: "Sunrun's Q3 2026 filings report Subscriber Value, $22.4 billion in Gross Earning Assets and $38.9 billion in future contracted revenue. What do those measures mean?",
-  lede: "A 25-year customer agreement can produce decades of expected payments. Sunrun reports those expectations in several ways. The measures have different definitions and should not be added together.",
+  seoTitle: "Sunrun 25-Year Contracts: Why Its Model Uses 30 Years",
+  seoDescription: "Sunrun assumes five extra years after a 25-year solar agreement. Its Q3 2026 filings put $22.4 billion on expected cash flows and $38.9 billion on future revenue.",
+  lede: "Sunrun's customers may sign for 25 years. In its financial model, the company assumes the relationship lasts 30. The extra years are only part of the value it reports to investors.",
   publishedAt: "November 5, 2026",
   datePublished: "2026-11-05",
   dateModified: "2026-11-05",
@@ -44,26 +44,27 @@ export function SunrunCustomerContractValueBody() {
     <p className="page-updated">By <Link href="/authors/jules-young">Jules Young</Link></p>
 
     <section className="info-section case-notice">
-      <h2>What the numbers mean</h2>
-      <p><strong>Subscriber Value</strong> estimates discounted cash flows associated with subscribers added in a quarter. <strong>Gross Earning Assets</strong> estimates discounted remaining cash flows from the subscriber base at a point in time. <strong>Contracted revenue not yet recognized</strong> is an accounting disclosure about revenue expected in future periods. Each has its own scope and calculation.</p>
+      <h2>TL;DR</h2>
+      <p>Sunrun assumes a 30-year relationship when it values subscribers, including five years after a 25-year contract&rsquo;s initial term. Its Q3 2026 results put $52,525 of estimated contracted value on each new subscriber.</p>
+      <p>Its September filing also reports $22.4 billion in discounted Gross Earning Assets and $38.9 billion in contracted revenue not yet recognized. Those figures use different calculations; they are not amounts to add together.</p>
     </section>
 
     <section className="info-section">
-      <h2>Value assigned to new subscribers in Q3 2026</h2>
+      <h2>What Sunrun counts for each new subscriber</h2>
       <p>Sunrun&rsquo;s November 4 results report <strong>$55,342 of Subscriber Value</strong> and <strong>$52,525 of Contracted Subscriber Value</strong> per subscriber addition in the third quarter of 2026. The contracted measure estimates the present value of upfront and future contracted cash flows from those additions, discounted using observed project-level capital costs. The difference includes estimated non-contracted or upside cash flows. These are company estimates for a cohort, not a price assigned to an individual homeowner&rsquo;s agreement.</p>
       <p>Both measures fell from the second quarter&rsquo;s $59,377 and $55,033, respectively. The discount rate used for third-quarter Subscriber Value was 8.4%, compared with 7.3% in the second quarter. The figures alone do not isolate which assumption or business change caused the quarter-to-quarter difference.</p>
       <p><a href={q3Results} target="_blank" rel="noreferrer">Sunrun Q3 results and definitions ↗</a> <a href={q2Results} target="_blank" rel="noreferrer">Sunrun Q2 results ↗</a></p>
     </section>
 
     <section className="info-section">
-      <h2>The five years beyond a 25-year agreement</h2>
+      <h2>Where the five extra years enter</h2>
       <p>For its Gross Earning Assets calculation, Sunrun assumes a 30-year customer relationship. A 25-year initial agreement gets five assumed renewal years; a 20-year initial agreement gets ten. The model assumes renewal payments equal to 90% of the rate in effect at the end of the initial term, or a system purchase at an equivalent value. This is Sunrun&rsquo;s financial assumption. It does not mean every homeowner has already agreed to a 30-year term.</p>
       <p>The September 2026 Form 10-Q says the non-contracted or upside category also includes projected grid-service payments, renewable energy credits and certain Flex billings above minimum contracted payments. Its value therefore is not solely a renewal estimate.</p>
       <p><a href={q3TenQ} target="_blank" rel="noreferrer">Read Sunrun&rsquo;s Form 10-Q definitions ↗</a></p>
     </section>
 
     <section className="info-section">
-      <h2>What the company reports for its existing subscriber base</h2>
+      <h2>What the $22.4 billion and $38.9 billion measure</h2>
       <p>As of September 30, 2026, Sunrun reported <strong>$17.0 billion in Contracted Gross Earning Assets</strong> and <strong>$5.3 billion in non-contracted or upside Gross Earning Assets</strong>, for a combined <strong>$22.4 billion</strong>. Those are present-value estimates of remaining cash flows discounted at 6%. The filing also shows how the figures change under different default, discount, purchase and renewal assumptions.</p>
       <p>The same filing separately reports approximately <strong>$38.9 billion of contracted revenue not yet recognized</strong>, with about 5% expected to be recognized over the next 12 months. That number is a revenue-accounting disclosure, not another valuation of the same assets at present value. Adding it to Gross Earning Assets would double-count different descriptions of expected payments.</p>
       <p><a href={q3TenQ} target="_blank" rel="noreferrer">Sunrun September 2026 Form 10-Q ↗</a></p>
