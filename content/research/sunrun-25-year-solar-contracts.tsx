@@ -6,17 +6,17 @@ export const story = {
   id: "sunrun-25-year-solar-contracts",
   slug: "sunrun-25-year-solar-contracts",
   href: "/research/sunrun-25-year-solar-contracts",
-  title: "Sunrun 25-Year Lease or PPA: What Happens If You Move?",
-  deck: "Selling a house with a Sunrun agreement raises a hard question: who takes over the payments? The contract also decides buyout and production terms.",
+  title: "Sunrun's 25-Year Solar Contract: What Happens After You Sign?",
+  deck: "A 25-year agreement covers far more than the installation. The price, production guarantee, home sale and end-of-term choices all matter later.",
   summary: "Sunrun lease and PPA terms for homeowners: production guarantees, payments, home-sale transfers and buyout options.",
-  seoTitle: "Sunrun 25-Year Lease or PPA: What Happens If You Move?",
-  seoDescription: "Selling a home with a Sunrun lease or PPA? See what Sunrun says about transfers, buyouts and prepayment, plus what to check in your 25-year contract.",
+  seoTitle: "Sunrun 25-Year Solar Contract: What Happens After You Sign?",
+  seoDescription: "A Sunrun lease or PPA can last 25 years. Check payment increases, production guarantees, selling your home, buyout terms and end-of-lease options.",
   keywords: ["Sunrun 25 year contract", "Sunrun solar contract", "Sunrun lease 25 years", "Sunrun PPA", "Sunrun contract terms", "Sunrun solar lease", "Sunrun contract transfer", "Sunrun buyout", "Sunrun performance guarantee", "Sunrun Flex"],
-  openGraphTitle: "What Happens to Your Sunrun Contract If You Move?",
-  socialDescription: "A Sunrun agreement can outlast your time in a home. Here is what its filings say about transfers, buyouts and payments.",
-  twitterDescription: "Selling your home with a Sunrun lease or PPA? Check the transfer and buyout terms.",
-  lede: "A 25-year Sunrun agreement can outlast your time in the house. If you sell, the contract decides whether the buyer can take it over, what you can prepay and what a buyout costs.",
-  displayTitle: "Sunrun 25-Year Lease or PPA: What Happens If You Move?",
+  openGraphTitle: "Sunrun's 25-Year Solar Contract: What Happens After You Sign?",
+  socialDescription: "The Sunrun contract governs payments, production, home sales and what happens to the system at the end. Here are the terms to check.",
+  twitterDescription: "What does a 25-year Sunrun lease or PPA say about payments, production and selling your home?",
+  lede: "A Sunrun lease or PPA may run for 25 years. In that time, payments can change, you might sell the house, and the system may produce less than expected. The agreement sets the terms for each.",
+  displayTitle: "Sunrun's 25-Year Solar Contract: What Happens After You Sign?",
   publishedAt: "September 7, 2026", datePublished: "2026-09-07", dateModified: "2026-11-05",
   stateCodes: [], companies: ["Sunrun"],
   topics: ["Sunrun contracts", "solar leases", "power purchase agreements", "contract transfers"],
@@ -53,8 +53,8 @@ export function SunrunContractsBody() {
 
       <section id="homeowner" className="info-section case-notice">
         <h2>TL;DR</h2>
-        <p>Sunrun says a homeowner selling the house may buy the system, transfer an eligible agreement to a buyer who accepts it, or prepay some remaining payments. An early buyout is different from buying the system at the end of the lease.</p>
-        <p>Check your signed terms for the price, transfer rules and production guarantee. An SEC-filed review found examples of newer agreements with guarantees of 90%, 85% or 0%.</p>
+        <p>Sunrun leases and PPAs typically start with 20- or 25-year terms. Payments may rise under an annual escalator, and an SEC-filed review found newer agreement examples with production guarantees of 90%, 85% or 0%.</p>
+        <p>If you sell the house, Sunrun says you may transfer an eligible agreement, prepay some remaining payments or buy the system. At the end of a lease, purchase, annual renewal and removal are separate choices. Check your signed terms for the details.</p>
       </section>
 
       <section id="new" className="info-section"><p className="eyebrow">What the records show</p><h2>Several kinds of 25-year agreement</h2><p>A Leidos engineering review filed with the SEC says Sunrun began offering SHIFT, Flex and Storage Add-on agreements in 2024. The agreement types it reviewed typically ran 25 years from the in-service date; the storage-only lease example ran 10 years. Leidos reviewed examples supplied by Sunrun and said terms vary by location and system.</p><p><a href={julyFleetReview} target="_blank" rel="noreferrer">Read the SEC-filed Leidos review ↗</a></p></section>
