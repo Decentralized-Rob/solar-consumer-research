@@ -1,89 +1,78 @@
 import Link from "next/link";
 import { defineResearchArticle, type ResearchStory } from "../../lib/research-article";
 
-
 export const story = {
   id: "sunrun-25-year-solar-contracts",
   slug: "sunrun-25-year-solar-contracts",
   href: "/research/sunrun-25-year-solar-contracts",
-  title: "Sunrun’s 25-Year Solar Contracts: The Homeowner View and the Investor View",
-  deck: "Sunrun’s own filings show why a 20- or 25-year solar agreement looks very different from the roof than it does in the financial statements.",
-  summary: "A source-backed analysis of Sunrun solar leases and PPAs, recurring customer payments, subscriber value, transfers, escalators and the terms homeowners should examine.",
-  seoTitle: "Sunrun 25-Year Solar Lease: Transfers, Buyouts & Guarantees",
-  seoDescription: "Sunrun 25-year lease or PPA? See 2026 filings on home-sale transfers, end-of-term options and why some reviewed agreements have a 0% production guarantee.",
+  title: "Sunrun’s 25-Year Solar Contract: What Are You Actually Agreeing To?",
+  deck: "The monthly price is only the beginning. The agreement also sets the rules for production, repairs, a home sale and what happens when the term ends.",
+  summary: "What a Sunrun lease or power purchase agreement means for your payments, production guarantee, home sale and end-of-term options.",
+  seoTitle: "Sunrun’s 25-Year Solar Contract: What Are You Actually Agreeing To?",
+  seoDescription: "What does a Sunrun 25-year lease or PPA actually require? Read the terms behind payments, production guarantees, selling your home and buying the system.",
   keywords: ["Sunrun 25 year contract", "Sunrun solar contract", "Sunrun lease 25 years", "Sunrun PPA", "Sunrun contract terms", "Sunrun solar lease", "Sunrun contract transfer", "Sunrun buyout", "Sunrun performance guarantee", "Sunrun Flex"],
-  openGraphTitle: "Sunrun 25-Year Solar Contracts: Transfers, Buyouts & Guarantees",
-  socialDescription: "Current SEC records explain the term, performance guarantees, transfers and financial value behind Sunrun leases and PPAs.",
-  twitterDescription: "Current 2026 records on what a long-term Sunrun agreement means for homeowners.",
-  lede: "A Sunrun lease or power purchase agreement can last longer than many homeowners stay in the same house. New 2026 SEC records add unusually specific details about what those agreements contain and how Sunrun values them.",
-  displayTitle: "Sunrun 25-Year Solar Lease: Transfers, Buyouts & Guarantees",
-  publishedAt: "September 7, 2026", datePublished: "2026-09-07", dateModified: "2026-09-16",
+  openGraphTitle: "Sunrun’s 25-Year Solar Contract: What Are You Actually Agreeing To?",
+  socialDescription: "A Sunrun solar contract can last 25 years. Here are the terms that matter after the sales pitch is over.",
+  twitterDescription: "What a Sunrun 25-year lease or PPA actually says about payments, production and your home.",
+  lede: "A Sunrun solar contract can last 25 years. The monthly payment gets most of the attention during a sale. The agreement also decides what Sunrun owes you if the system underproduces, what happens if you move and whether you can buy the equipment later.",
+  displayTitle: "Sunrun’s 25-Year Solar Contract: What Are You Actually Agreeing To?",
+  publishedAt: "September 7, 2026", datePublished: "2026-09-07", dateModified: "2026-11-05",
   stateCodes: [], companies: ["Sunrun"],
-  topics: ["Sunrun contracts", "solar leases", "power purchase agreements", "subscriber value", "contract transfers"],
+  topics: ["Sunrun contracts", "solar leases", "power purchase agreements", "contract transfers"],
   section: "Research", featured: true,
 } satisfies ResearchStory;
 
 const sec10k = "https://www.sec.gov/Archives/edgar/data/1469367/000162828026012289/run-20251231.htm";
-const q2Results = "https://www.sec.gov/Archives/edgar/data/1469367/000162828026053349/exhibit991q226.htm";
-const q2TenQ = "https://www.sec.gov/Archives/edgar/data/1469367/000162828026053366/run-20260630.htm";
-const secFleetReview = "https://www.sec.gov/Archives/edgar/data/1469367/000119312526167137/d147968dex991.htm";
+const leidosReview = "https://www.sec.gov/Archives/edgar/data/1469367/000119312526318237/d129330dex991.htm";
 const sunrunFaq = "https://www.sunrun.com/go-solar-center/solar-faq";
-const sunrunTransfer = "https://www.sunrun.com/go-solar-center/solar-terms/definition/service-transfer";
-const ftcSolar = "https://consumer.ftc.gov/articles/solar-power-your-home";
 
 export const articleConfig = {
   twitterTitle: story.seoTitle,
   schemaHeadline: story.seoTitle,
-  schemaDescription: "2026 source-backed guide to Sunrun 25-year leases and PPAs, including home-sale transfers, end-of-term options, variable production guarantees and SEC disclosures.",
+  schemaDescription: story.summary,
   breadcrumbLabel: "Sunrun 25-Year Solar Contracts",
   imageAlt: "Sunrun 25-year solar contract research",
   sources: [
     { name: "Sunrun 2025 Form 10-K", url: sec10k },
-    { name: "Sunrun Q2 2026 results", url: q2Results },
-    { name: "Sunrun Q2 2026 Form 10-Q", url: q2TenQ },
-    { name: "SEC-filed fleet review", url: secFleetReview },
-    { name: "Sunrun FAQ", url: sunrunFaq },
-    { name: "Sunrun service transfer", url: sunrunTransfer },
-    { name: "FTC solar guidance", url: ftcSolar },
+    { name: "Leidos Sunrun fleet review, July 2026 addendum", url: leidosReview },
+    { name: "Sunrun solar FAQ", url: sunrunFaq },
   ],
 };
 
 export function SunrunContractsBody() {
   return <>
     <nav className="case-question-links" aria-label="Breadcrumb"><Link href="/">Home</Link><Link href="/research">Research</Link><Link href="/companies/sunrun">Sunrun</Link><span aria-current="page">25-year contracts</span></nav>
-      <nav className="case-question-links" aria-label="Article navigation"><a href="#new">New in 2026</a><a href="#term">Contract length</a><a href="#guarantee">Performance guarantee</a><a href="#transfer">Selling the home</a><a href="#end">End of term</a><a href="#investor">Investor value</a><a href="#questions">Contract checklist</a><a href="#sources">Sources</a></nav>
 
-      <section className="info-section case-notice">
-        <strong>The short version</strong>
-        <p>Sunrun says its solar leases and power purchase agreements typically start with 20- or 25-year terms. What happens after signing depends on the agreement.</p>
-        <ul>
-          <li><strong>Selling your home:</strong> Sunrun says a seller may purchase the system or assign an eligible agreement to a buyer who accepts it and meets applicable credit requirements. <a href="#transfer">Read the transfer terms</a>.</li>
-          <li><strong>End of the lease:</strong> Sunrun lists purchase at then fair-market value, annual renewal or removal. An early buyout is different. <a href="#end">Read the end-of-term options</a>.</li>
-          <li><strong>Production guarantee:</strong> A 2026 SEC-filed review found newer agreements with guarantee percentages of 90%, 85% or 0%. Your signed terms determine your coverage. <a href="#guarantee">Read the source details</a>.</li>
-        </ul>
-      </section>
+    <p><strong>TL;DR:</strong> A Sunrun lease or power purchase agreement usually lasts 20 or 25 years. You pay for solar service while Sunrun owns and maintains the system. Your price may rise each year, and the production guarantee may be lower than you expect. Selling the house or buying the equipment can bring another set of terms into play. The signed agreement, including any changes, is where your actual numbers and options are spelled out.</p>
 
-      <section id="new" className="info-section"><p className="eyebrow">Fresh records</p><h2>What new 2026 SEC filings tell us about Sunrun contracts</h2><p>An April 2026 third-party review filed with the SEC examined Sunrun’s solar fleet and sample customer agreements. It says Sunrun began offering SHIFT, Flex and Storage Add-on agreements in 2024. The reviewed SHIFT and Flex agreements typically had 25-year terms. The storage-only lease was described as having a 10-year term.</p><p>The same filing says newer agreements reviewed for the report carried performance-guarantee percentages of 90%, 85% or 0%, depending on the agreement. That is important: the words <em>performance guarantee</em> do not by themselves tell a homeowner how much production is guaranteed. The percentage and calculation in the individual agreement matter.</p><p><a href={secFleetReview} target="_blank" rel="noreferrer">Read the April 2026 fleet review filed with the SEC ↗</a></p></section>
+    <section className="info-section">
+      <h2>What are you paying for?</h2>
+      <p>Sunrun calls its leases and power purchase agreements <a href={sec10k} target="_blank" rel="noreferrer">Customer Agreements</a>. In its 2025 annual filing, the company says these arrangements typically run for 20 or 25 years. Sunrun generally owns the system and says it monitors, maintains and insures it during that term. You get to use the electricity and make the payments set by the agreement.</p>
+      <p>The price on day one may not be the price in year ten. Sunrun says rates can stay fixed or rise by a set percentage each year. A prepaid deal changes the monthly bill, and a Flex agreement can include a minimum payment plus charges tied to electricity use. Check the actual payment schedule and billing formula. A quoted monthly amount alone does not tell you the total cost.</p>
+    </section>
 
-      <section id="term" className="info-section"><h2>How long is a Sunrun solar contract?</h2><p>Sunrun’s 2025 Form 10-K and June 2026 Form 10-Q describe Customer Agreements as typically having initial terms of 20 or 25 years. These agreements cover systems Sunrun says it monitors, maintains and insures during the contract term.</p><p>The payment structure depends on the agreement. Sunrun’s filings say rates may be fixed for the contract term or increase at a predetermined annual percentage. Flex agreements can work differently: Sunrun’s financial disclosures distinguish between a minimum contracted payment and additional billings tied to electricity consumption.</p><p><a href={sec10k} target="_blank" rel="noreferrer">Sunrun 2025 Form 10-K at the SEC ↗</a><br/><a href={q2TenQ} target="_blank" rel="noreferrer">Sunrun Q2 2026 Form 10-Q at the SEC ↗</a></p></section>
+    <section className="info-section">
+      <h2>What if the panels produce less than promised?</h2>
+      <p>A <a href={leidosReview} target="_blank" rel="noreferrer">Leidos review filed with the SEC</a> examined examples of Sunrun agreements and found production guarantees of 90%, 85% or 0% in newer contracts. Most of the agreements supplied for review compared actual production with guaranteed production every two years, with a refund if the system fell short. The examples varied by product and location.</p>
+      <p>A 0% guarantee does not mean the system is expected to produce nothing. It means that provision sets no minimum production threshold that would trigger a shortfall refund. Look for the percentage, the measurement period and the refund rate in your own agreement. If you have a battery, read its backup terms separately: the agreements Leidos reviewed did not promise uninterrupted backup during every outage.</p>
+    </section>
 
-      <section id="guarantee" className="info-section"><h2>Does a Sunrun lease or PPA guarantee solar production?</h2><p>Sunrun’s public filings say customers under Customer Agreements are covered by production guarantees, but the amount and mechanics depend on the agreement. The 2026 fleet review is more specific: newer agreements reviewed by the third party had guarantee percentages of 90%, 85% or 0%. It says most agreements it reviewed compared guaranteed production with actual production and calculated a refund, when applicable, every two years.</p><p>The same review says agreements involving battery storage do not guarantee that backup capacity will be available without interruption during every outage. Homeowners comparing solar-plus-storage offers should read the solar production language and battery-backup language separately.</p><p><a href={secFleetReview} target="_blank" rel="noreferrer">SEC-filed 2026 review of Sunrun agreements ↗</a></p></section>
+    <section className="info-section">
+      <h2>If you sell the house</h2>
+      <p>The solar agreement does not simply disappear at closing. Sunrun says a seller can purchase the system or transfer the agreement to a buyer who meets its credit requirements and accepts the terms. The seller may also prepay some or all of the remaining payments to lower the buyer&rsquo;s bill. Sunrun&rsquo;s <a href={sec10k} target="_blank" rel="noreferrer">annual filing</a> says it may look to the original customer for remaining payments if the system is neither purchased nor the agreement assigned.</p>
+      <p>That makes the transfer clause worth reading long before you list the house. Ask what the buyer must accept, what a prepayment would cost and how a purchase price is calculated. Those are different routes with different costs.</p>
+    </section>
 
-      <section id="transfer" className="info-section"><h2>What happens to a Sunrun contract when you sell your house?</h2><p>Sunrun’s Form 10-K says a customer selling a home may purchase the system or assign the Customer Agreement to the buyer, provided the buyer meets applicable credit requirements and accepts the agreement. The filing also says a seller may prepay some or all remaining payments to reduce or eliminate the rate paid by the buyer.</p><p>Sunrun’s updated 2026 service-transfer page describes the same basic process from the consumer side: the solar agreement or service plan moves from one homeowner to another during a sale. The exact rights, requirements and purchase options still come from the homeowner’s actual agreement.</p><p><a href={sunrunTransfer} target="_blank" rel="noreferrer">Sunrun’s 2026 service-transfer explanation ↗</a></p></section>
+    <section className="info-section">
+      <h2>Can you buy the system or end the agreement?</h2>
+      <p>Sunrun&rsquo;s <a href={sunrunFaq} target="_blank" rel="noreferrer">current FAQ</a> says a lease customer reaching the end of the term can buy the system at its then fair market value, renew annually or have Sunrun remove it. The FAQ says there is no automatic default, while Sunrun&rsquo;s <a href={sec10k} target="_blank" rel="noreferrer">annual filing</a> describes agreements that typically renew automatically. Check the renewal language in your signed version. Buying during the original term is a separate matter: Sunrun says purchases after installation are available at specific times defined in the agreement.</p>
+      <p>If you already have a system, get the final signed agreement and any amendments. Sunrun says copies are available in its app or online account under Contracts &amp; Docs. Compare those documents with what you were told about price increases, production, repairs, a future sale and removal. Those terms will matter for years after the installation crew leaves.</p>
+    </section>
 
-      <section id="end" className="info-section"><h2>What happens at the end of a Sunrun lease?</h2><p>Sunrun’s current FAQ says a lease customer reaching the end of the agreement has three options: purchase the system at its then fair-market value, renew the lease annually or have Sunrun remove the system. Sunrun says there is no automatic default among those choices.</p><p>That end-of-term choice is different from an early buyout or purchase during the initial contract term. For those questions, the individual agreement controls the timing and pricing provisions.</p><p><a href={sunrunFaq} target="_blank" rel="noreferrer">Sunrun’s current agreement FAQ ↗</a></p></section>
+    <p>Sunrun also reports the expected value of these long-term agreements to investors. <Link href="/research/sunrun-customer-contract-value">Read the separate article on how Sunrun values customer contracts.</Link></p>
 
-      <section id="investor" className="info-section"><p className="eyebrow">The other side of the contract</p><h2>Sunrun puts a financial value on the long-term customer relationship</h2><p>Sunrun’s Q2 2026 results reported <strong>$59,377 of Subscriber Value</strong> and <strong>$55,033 of Contracted Subscriber Value</strong> per subscriber addition. Contracted Subscriber Value represents Sunrun’s estimate of the present value of upfront and future contracted cash flows associated with a new subscriber, after applying its stated methodology and discount rate.</p><p>The company’s valuation model reaches beyond the initial term. For a 25-year Customer Agreement, Sunrun assumes a five-year renewal period. For a 20-year agreement, it assumes ten years. In both cases, Sunrun says its Subscriber Value calculation assumes a 30-year customer relationship, although an actual customer may renew for additional years or purchase the system.</p><p>That does not mean a homeowner has signed a 30-year initial contract. It shows why the initial 20- or 25-year agreement matters financially to Sunrun long after installation day.</p><p><a href={q2Results} target="_blank" rel="noreferrer">Sunrun Q2 2026 financial results filed with the SEC ↗</a></p></section>
-
-      <section className="info-section case-notice"><strong>One agreement, two very different views</strong><p>For the homeowner, the contract governs years of payments, service, roof access, production, a possible home sale and eventually what happens to the equipment. For Sunrun, long-term customer agreements also produce contracted cash flows that can be measured, financed and valued. Both descriptions come from the same underlying relationship.</p></section>
-
-      <section id="questions" className="info-section"><h2>What to find in a Sunrun 25-year lease or PPA</h2><p>Start with the actual agreement, not the proposal headline. Find the initial term; starting monthly or per-kWh price; annual escalator or Flex billing formula; production-guarantee percentage; how production shortfalls are calculated; equipment ownership; maintenance and service terms; roof removal and reinstallation terms; home-sale transfer requirements; purchase or early-termination provisions; renewal language; and end-of-term options.</p><p>Sunrun says customers can retrieve their agreement through the Sunrun app or their online account under Contracts &amp; Docs. Keep the final agreement with the proposal and any written sales representations so the terms can be compared later.</p><p><Link href="/companies/sunrun">Sunrun Consumer Resource Center →</Link><br/><Link href="/companies/sunrun/ethics-compliance">Sunrun ethics and compliance resources →</Link><br/><Link href="/states">Find state-specific solar consumer resources →</Link></p></section>
-
-      <section id="sources" className="info-section"><h2>Primary sources</h2><p><strong>U.S. Securities and Exchange Commission.</strong> <a href={sec10k} target="_blank" rel="noreferrer">Sunrun Inc. 2025 Form 10-K ↗</a> — agreement terms, escalators, transfers, recurring payments and contracted revenue.</p><p><strong>U.S. Securities and Exchange Commission.</strong> <a href={q2TenQ} target="_blank" rel="noreferrer">Sunrun Q2 2026 Form 10-Q ↗</a> — current customer-agreement and contracted-value disclosures.</p><p><strong>SEC-filed third-party review.</strong> <a href={secFleetReview} target="_blank" rel="noreferrer">April 2026 Sunrun fleet and agreement review ↗</a> — SHIFT, Flex and Storage Add-on terms and performance-guarantee findings.</p><p><strong>Sunrun / SEC.</strong> <a href={q2Results} target="_blank" rel="noreferrer">Second Quarter 2026 Financial Results ↗</a> — Subscriber Value, Contracted Subscriber Value and the 30-year customer-relationship assumption.</p><p><strong>Sunrun.</strong> <a href={sunrunFaq} target="_blank" rel="noreferrer">Solar FAQ ↗</a> and <a href={sunrunTransfer} target="_blank" rel="noreferrer">2026 Service Transfer guide ↗</a> — current company descriptions of agreement access, end-of-term choices and home-sale transfers.</p><p><strong>Federal Trade Commission.</strong> <a href={ftcSolar} target="_blank" rel="noreferrer">Solar Power for Your Home ↗</a> — federal consumer guidance for comparing solar leases and PPAs.</p></section>
-
-      <section className="info-section"><h2>Continue researching Sunrun</h2><p><Link href="/companies/sunrun">Sunrun complaints, investigations and consumer resources →</Link><br/><Link href="/research/sunrun-home-depot-sales-home-visit">Sunrun at Home Depot: shopper says store pitch followed him home →</Link><br/><Link href="/research/solar-sales-financing-after-complaint">Solar sales, financing and what happens after a complaint →</Link><br/><Link href="/research">More Solar Consumer Research →</Link><br/><Link href="/methodology">Research methodology and sourcing standards →</Link></p></section>
+    <section className="info-section"><h2>Sources</h2><p><a href={sec10k} target="_blank" rel="noreferrer">Sunrun 2025 Form 10-K</a>; <a href={leidosReview} target="_blank" rel="noreferrer">SEC-filed Leidos review</a>; <a href={sunrunFaq} target="_blank" rel="noreferrer">Sunrun solar FAQ</a>.</p></section>
   </>;
 }
-
 
 export const article = defineResearchArticle({ story, config: articleConfig, Body: SunrunContractsBody });
