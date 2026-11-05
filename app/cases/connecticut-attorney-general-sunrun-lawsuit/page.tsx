@@ -174,6 +174,7 @@ export default function ConnecticutSunrunCasePage() {
           <p><Link href="/companies/sunrun">Sunrun investigations, lawsuits and settlements</Link></p>
           <p><Link href="/research/sunrun-25-year-solar-contracts">Sunrun&apos;s 25-year contracts and homeowner obligations</Link></p>
           <p><Link href="/research/sunrun-mishler-roofing-lawsuit">Mishler v. Sunrun: a separate Connecticut roofing case</Link></p>
+          <p><Link href="/research/sunrun-sales-controls-investor-reporting">Sunrun investor reporting: SEC filings, sales controls and contract cancellations</Link></p>
           <p><Link href="/companies/sunrun/ethics-compliance">Sunrun ethics and compliance reporting resources</Link></p>
         </section>
       </InfoPage>
