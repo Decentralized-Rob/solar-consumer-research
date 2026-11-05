@@ -17,7 +17,7 @@ export const story = {
   lede: "Sunrun reports earnings November 4 after analyst price-target cuts and a Connecticut settlement requiring reviews of disputed customer contracts. Independent rating records show how long-term Sunrun agreements also support Wall Street financing.",
   publishedAt: "November 2, 2026",
   datePublished: "2026-11-02",
-  dateModified: "2026-11-02",
+  dateModified: "2026-11-05",
   stateCodes: [],
   companies: ["Sunrun"],
   topics: ["Sunrun quarterly earnings", "RUN stock", "analyst estimates", "solar customer agreements", "Connecticut consumer settlement", "solar asset-backed securities"],
@@ -101,6 +101,8 @@ export function SunrunQ3EarningsBody() {
       <p>The issue is beginning to appear in investment coverage. On October 30, <a href={simplyWallSt} target="_blank" rel="noreferrer">Simply Wall St examined whether the Connecticut settlement changes the Sunrun investment case</a>, including possible cancellations and the cost of stronger sales compliance. The question reaches beyond the immediate $300,000 state payment. Sunrun&rsquo;s projected customer payments depend on agreements being enforceable and customers continuing to pay. If agreements are canceled or amended, investors need to know how those changes are counted, valued and reported.</p>
 
       <p>An independent rating-agency announcement supplies the financing connection. <a href={kbra} target="_blank" rel="noreferrer">KBRA reported on August 26</a> that Sunrun Quintus Issuer 2026-2 was backed by 37,595 residential solar leases and power purchase agreements, representing approximately $359.7 million in discounted solar asset balances. About 90% of that discounted balance came from PPAs with monthly payments. Securities investors depend on cash collections from these contracts over time. That makes customer-agreement quality a financial issue for the parties arranging, rating and buying the securities.</p>
+
+      <p><strong>November 5 update:</strong> Sunrun&apos;s November 4 SEC filing reports $38.9 billion in contracted future revenue. SolarComplaint&apos;s <Link href="/research/sunrun-38-billion-contract-validity">new investigation</Link> examines the company&apos;s repeated statements about signed agreements alongside federal signature disputes and Connecticut&apos;s contract-cancellation requirements.</p>
 
       <p>The public rating announcement describes the portfolio, but it does not answer how every contested agreement is handled as it moves through financing and servicing. Investors can ask which controls identify complaints, contract cancellations and disputed payments; which parties verify the underlying records; and what happens to collateral when an agreement is unwound. Those answers could help establish how closely Sunrun&rsquo;s contract-value reporting reflects the experience of the customers making the payments.</p>
     </section>
