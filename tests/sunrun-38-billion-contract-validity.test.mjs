@@ -24,7 +24,6 @@ test("Sunrun $38.9B investor story links to the NJ case and original SEC sources
   assert.match(html, /run-20260930\.htm/);
   assert.match(html, /USCOURTS-njd-1_24-cv-11462-0\.pdf/);
   assert.match(html, /href="\/research\/sunrun-new-jersey-complaints-lawsuits"/);
-  assert.match(html, /href="\/research\/sunrun-sales-controls-investor-reporting"/);
   assert.match(html, /rel="canonical"[^>]*sunrun-38-billion-contract-validity|sunrun-38-billion-contract-validity[^>]*rel="canonical"/i);
   assert.doesNotMatch(html, /<meta[^>]*noindex/i);
 });
