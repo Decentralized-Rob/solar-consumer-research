@@ -6,17 +6,17 @@ export const story = {
   id: "sunrun-25-year-solar-contracts",
   slug: "sunrun-25-year-solar-contracts",
   href: "/research/sunrun-25-year-solar-contracts",
-  title: "Sunrun's 25-Year Solar Contract: What Happens After You Sign?",
-  deck: "A 25-year agreement covers far more than the installation. The price, production guarantee, home sale and end-of-term choices all matter later.",
+  title: "Some Sunrun Agreements Have a 0% Production Guarantee",
+  deck: "An SEC-filed review found the figure in newer agreement examples. The same records show why homeowners need to read the full 25-year deal.",
   summary: "Sunrun lease and PPA terms for homeowners: production guarantees, payments, home-sale transfers and buyout options.",
-  seoTitle: "Sunrun 25-Year Solar Contract: What Happens After You Sign?",
-  seoDescription: "A Sunrun lease or PPA can last 25 years. Check payment increases, production guarantees, selling your home, buyout terms and end-of-lease options.",
+  seoTitle: "Sunrun Contracts: Some Have a 0% Production Guarantee",
+  seoDescription: "An SEC-filed review found 0% production guarantees in newer Sunrun agreement examples. See what to check in a 25-year lease or PPA, including transfers and buyouts.",
   keywords: ["Sunrun 25 year contract", "Sunrun solar contract", "Sunrun lease 25 years", "Sunrun PPA", "Sunrun contract terms", "Sunrun solar lease", "Sunrun contract transfer", "Sunrun buyout", "Sunrun performance guarantee", "Sunrun Flex"],
-  openGraphTitle: "Sunrun's 25-Year Solar Contract: What Happens After You Sign?",
-  socialDescription: "The Sunrun contract governs payments, production, home sales and what happens to the system at the end. Here are the terms to check.",
-  twitterDescription: "What does a 25-year Sunrun lease or PPA say about payments, production and selling your home?",
-  lede: "A Sunrun lease or PPA may run for 25 years. In that time, payments can change, you might sell the house, and the system may produce less than expected. The agreement sets the terms for each.",
-  displayTitle: "Sunrun's 25-Year Solar Contract: What Happens After You Sign?",
+  openGraphTitle: "Some Sunrun Agreements Have a 0% Production Guarantee",
+  socialDescription: "An SEC-filed review found a 0% guarantee in newer Sunrun agreement examples. What does your 25-year contract promise?",
+  twitterDescription: "An SEC-filed review found Sunrun agreement examples with 0% production guarantees.",
+  lede: "A 2026 SEC-filed review found newer Sunrun agreement examples with a 0% production guarantee. A lease or PPA can run for 25 years. Before focusing on the monthly price, find out what the contract promises about production, service, selling the home and the end of the term.",
+  displayTitle: "Some Sunrun Agreements Have a 0% Production Guarantee",
   publishedAt: "September 7, 2026", datePublished: "2026-09-07", dateModified: "2026-11-05",
   stateCodes: [], companies: ["Sunrun"],
   topics: ["Sunrun contracts", "solar leases", "power purchase agreements", "contract transfers"],
@@ -49,19 +49,19 @@ export const articleConfig = {
 export function SunrunContractsBody() {
   return <>
     <nav className="case-question-links" aria-label="Breadcrumb"><Link href="/">Home</Link><Link href="/research">Research</Link><Link href="/companies/sunrun">Sunrun</Link><span aria-current="page">25-year contracts</span></nav>
-      <nav className="case-question-links" aria-label="Article navigation"><a href="#homeowner">For homeowners</a><a href="#term">Contract length</a><a href="#guarantee">Production guarantee</a><a href="#transfer">Selling the home</a><a href="#end">End of term</a><a href="#questions">Contract checklist</a><a href="#sources">Sources</a></nav>
+      <nav className="case-question-links" aria-label="Article navigation"><a href="#homeowner">For homeowners</a><a href="#guarantee">Production guarantee</a><a href="#term">Contract length</a><a href="#transfer">Selling the home</a><a href="#end">End of term</a><a href="#questions">Contract checklist</a><a href="#sources">Sources</a></nav>
 
       <section id="homeowner" className="info-section case-notice">
         <h2>TL;DR</h2>
-        <p>Sunrun leases and PPAs typically start with 20- or 25-year terms. Payments may rise under an annual escalator, and an SEC-filed review found newer agreement examples with production guarantees of 90%, 85% or 0%.</p>
-        <p>If you sell the house, Sunrun says you may transfer an eligible agreement, prepay some remaining payments or buy the system. At the end of a lease, purchase, annual renewal and removal are separate choices. Check your signed terms for the details.</p>
+        <p>An SEC-filed engineering review found newer Sunrun agreement examples with production guarantees of 90%, 85% or 0%. The percentage and refund formula in your signed contract tell you what protection you have.</p>
+        <p>Sunrun leases and PPAs typically start with 20- or 25-year terms. Payments can rise; selling the house can mean a transfer, prepayment or purchase. At the end of a lease, purchase, renewal and removal are separate choices.</p>
       </section>
+
+      <section id="guarantee" className="info-section"><h2>Does a Sunrun lease or PPA guarantee solar production?</h2><p>The Leidos review says newer agreements it examined had guarantee percentages of 90%, 85% or 0%. Most agreements supplied for review compared guaranteed output with actual output every two years and provided a refund when the guarantee was missed. At 0%, that provision promises no minimum output. Find the percentage and refund formula in your own signed agreement.</p><p>The review also says the battery agreements it examined did not promise uninterrupted backup capacity during every outage. Read solar production and battery backup terms separately.</p><p><a href={julyFleetReview} target="_blank" rel="noreferrer">SEC-filed review of agreement terms ↗</a></p></section>
 
       <section id="new" className="info-section"><p className="eyebrow">What the records show</p><h2>Several kinds of 25-year agreement</h2><p>A Leidos engineering review filed with the SEC says Sunrun began offering SHIFT, Flex and Storage Add-on agreements in 2024. The agreement types it reviewed typically ran 25 years from the in-service date; the storage-only lease example ran 10 years. Leidos reviewed examples supplied by Sunrun and said terms vary by location and system.</p><p><a href={julyFleetReview} target="_blank" rel="noreferrer">Read the SEC-filed Leidos review ↗</a></p></section>
 
       <section id="term" className="info-section"><h2>How long is a Sunrun solar contract?</h2><p>Sunrun’s 2025 Form 10-K describes Customer Agreements as typically having initial terms of 20 or 25 years. These agreements cover systems Sunrun says it monitors, maintains and insures during the contract term.</p><p>The payment structure depends on the agreement. Sunrun’s filings say rates may be fixed for the contract term or increase at a predetermined annual percentage. Flex agreements can work differently: Sunrun’s financial disclosures distinguish between a minimum contracted payment and additional billings tied to electricity consumption.</p><p><a href={sec10k} target="_blank" rel="noreferrer">Sunrun 2025 Form 10-K at the SEC ↗</a></p></section>
-
-      <section id="guarantee" className="info-section"><h2>Does a Sunrun lease or PPA guarantee solar production?</h2><p>The Leidos review says newer agreements it examined had guarantee percentages of 90%, 85% or 0%. Most agreements supplied for review compared guaranteed output with actual output every two years and provided a refund when the guarantee was missed. These were examples of Sunrun agreements; the percentage in your own signed agreement controls what it promises.</p><p>The review also says the battery agreements it examined did not promise uninterrupted backup capacity during every outage. Read solar production and battery backup terms separately.</p><p><a href={julyFleetReview} target="_blank" rel="noreferrer">SEC-filed review of agreement terms ↗</a></p></section>
 
       <section id="transfer" className="info-section"><h2>What happens to a Sunrun contract when you sell your house?</h2><p>Sunrun’s Form 10-K says a customer selling a home may purchase the system or assign the Customer Agreement to the buyer, provided the buyer meets applicable credit requirements and accepts the agreement. The filing also says a seller may prepay some or all remaining payments to reduce or eliminate the rate paid by the buyer.</p><p>Sunrun’s updated 2026 service-transfer page describes the same basic process from the consumer side: the solar agreement or service plan moves from one homeowner to another during a sale. The exact rights, requirements and purchase options still come from the homeowner’s actual agreement.</p><p><a href={sunrunTransfer} target="_blank" rel="noreferrer">Sunrun’s 2026 service-transfer explanation ↗</a></p></section>
 
