@@ -119,6 +119,19 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     };
   }
 
+  if (state.code === "NJ") {
+    const title = "New Jersey Solar Complaints: Sunrun Cases & Filing Help";
+    const description = "New Jersey solar complaint routes and official consumer resources, with court-record research on Sunrun signature disputes.";
+    return {
+      title,
+      description,
+      alternates: { canonical: "/states/new-jersey" },
+      openGraph: { title, description, url: "/states/new-jersey", type: "website" },
+      twitter: { card: "summary", title, description },
+      robots: { index: true, follow: true },
+    };
+  }
+
   const complaintRoute = consumerProtectionByState[state.code];
   const caseReference = getStateSolarCase(state.code);
   const titanReference = getTitanStateBankruptcy(state.code);
