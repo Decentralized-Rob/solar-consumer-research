@@ -14,11 +14,14 @@ async function render(path) {
   return response.text();
 }
 
-test("original Sunrun earnings preview links to November 5 contract investigation", async () => {
+test("updated Sunrun earnings results link to November 5 contract investigation and back", async () => {
   const html = await render("/research/sunrun-q3-2026-earnings");
   assert.match(html, /November 5 update:/);
   assert.match(html, /\$38\.9 billion/);
   assert.ok(html.includes('href="/research/sunrun-38-billion-contract-validity"'));
-  assert.match(html, /"dateModified":"2026-11-05"/);
+  assert.match(html, /"dateModified":"2026-11-07"/);
   assert.match(html, /"datePublished":"2026-11-02"/);
+  const investigation = await render("/research/sunrun-38-billion-contract-validity");
+  assert.ok(investigation.includes('href="/research/sunrun-q3-2026-earnings"'));
+  assert.match(investigation, /earnings results, Wall Street estimates and analyst cuts/);
 });

@@ -91,7 +91,7 @@ export function SunrunContractValidityBody() {
       <h2>What the filings still don&apos;t quantify</h2>
       <p>Sunrun reports projected contract revenue to the nearest hundred million dollars. Its public reporting does not give investors a comparable count of agreements challenged for unauthorized signatures, the number canceled following those investigations or their effect on financing pools and projected payments.</p>
       <p>The company&apos;s November 4 filing supplies the financial stakes. The New Jersey opinions establish a recurring problem courts have been asked to examine. Connecticut&apos;s agreement creates a way to measure the resulting cancellations and remedies. The missing numbers are now specific enough to ask for.</p>
-      <p><Link href="/companies/sunrun">More Sunrun investigations</Link> · <Link href="/cases/connecticut-attorney-general-sunrun-lawsuit">Connecticut court record and settlement</Link> · <Link href="/research/sunrun-25-year-solar-contracts">How Sunrun&apos;s long-term contracts work</Link></p>
+      <p><Link href="/research/sunrun-q3-2026-earnings">Sunrun&apos;s Q3 2026 earnings results, Wall Street estimates and analyst cuts</Link> · <Link href="/companies/sunrun">More Sunrun investigations</Link> · <Link href="/cases/connecticut-attorney-general-sunrun-lawsuit">Connecticut court record and settlement</Link> · <Link href="/research/sunrun-25-year-solar-contracts">How Sunrun&apos;s long-term contracts work</Link></p>
     </section>
   </>;
 }
