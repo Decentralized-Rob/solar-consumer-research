@@ -35,7 +35,7 @@ test("homepage, state pages, author page and sitemap discover stories from regis
     readFile(sitemapPath, "utf8"),
     readFile(authorPath, "utf8"),
   ]);
-  assert.match(home, /getLatestResearchStories\(3\)/);
+  assert.match(home, /getResearchStoriesForCompany\("Sunrun"\)\.slice\(0, 3\)/);
   assert.doesNotMatch(home, /index === 0/);
   assert.match(state, /getResearchStoriesForState\(state\.code\)/);
   assert.match(author, /getResearchStoriesForAuthor\("jules-young"\)/);

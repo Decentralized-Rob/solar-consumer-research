@@ -2,14 +2,14 @@ import type { Metadata } from "next";
 import { ResearchApp } from "../components/research-app";
 
 export const metadata: Metadata = {
-  title: "Solar Complaints and Consumer Resources | Solar Consumer Research",
+  title: "Sunrun Research and Solar Consumer Help | Solar Consumer Research",
   description:
-    "Find official solar complaint channels, source-backed research, lawsuits, investigations, public records, and consumer resources by state.",
+    "Find Sunrun lawsuits, settlement instructions, contract research, and complaint help. Browse official solar consumer resources by state.",
   alternates: { canonical: "/" },
   openGraph: {
-    title: "Solar Complaints and Consumer Resources | Solar Consumer Research",
+    title: "Sunrun Research and Solar Consumer Help | Solar Consumer Research",
     description:
-      "Official solar complaint channels, source-backed research, lawsuits, investigations, public records, and consumer resources by state.",
+      "Find Sunrun lawsuits, settlement instructions, contract research, and complaint help. Browse official solar consumer resources by state.",
     url: "/",
     images: [
       {
@@ -22,9 +22,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Solar Complaints and Consumer Resources | Solar Consumer Research",
+    title: "Sunrun Research and Solar Consumer Help | Solar Consumer Research",
     description:
-      "Official solar complaint channels, source-backed research, lawsuits, investigations, public records, and consumer resources by state.",
+      "Find Sunrun lawsuits, settlement instructions, contract research, and complaint help. Browse official solar consumer resources by state.",
     images: ["https://solarcomplaint.com/og.png"],
   },
 };

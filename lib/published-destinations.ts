@@ -30,11 +30,17 @@ if (!solarSalesFinancingStory) {
   throw new Error("Missing solar-sales-financing-after-complaint research story");
 }
 
+export const sunrunHub = {
+  href: "/companies/sunrun",
+  title: "Sunrun Lawsuits, Class Actions and Settlements",
+  dateModified: "2026-11-14",
+};
+
 const latestSunrunResearchDate = researchStories
   .filter((story) => story.companies.some((name) => name.toLowerCase() === "sunrun"))
   .reduce(
     (latest, story) => story.dateModified > latest ? story.dateModified : latest,
-    "2026-10-31",
+    sunrunHub.dateModified,
   );
 
 export const publishedDestinations: PublishedDestination[] = [
@@ -50,14 +56,14 @@ export const publishedDestinations: PublishedDestination[] = [
   },
   {
     id: "sunrun",
-    href: "/companies/sunrun",
-    title: "Sunrun lawsuits, investigations and consumer resources",
+    href: sunrunHub.href,
+    title: sunrunHub.title,
     kind: "company",
     published: true,
     preferredSource: "shared",
     menuLabel: "Sunrun Research",
-    researchMenuOrder: 20,
-    trackerLabel: "Sunrun lawsuits, investigations, settlements and consumer resources",
+    researchMenuOrder: 5,
+    trackerLabel: sunrunHub.title,
     showInTrackerDiscovery: true,
     sitemap: {
       lastModified: latestSunrunResearchDate,
