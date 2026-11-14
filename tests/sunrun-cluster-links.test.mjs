@@ -75,7 +75,7 @@ test("uses the updates page as an internal research discovery surface", async ()
 test("Sunrun hub lists its own published research instead of a sitewide featured story", async () => {
   const html = await render("/companies/sunrun");
   const start = html.indexOf('id="sunrun-research-title"');
-  const end = html.indexOf("Detailed case page", start);
+  const end = html.indexOf("</section>", start);
   assert.ok(start >= 0 && end > start, "Sunrun research section renders");
   const relatedSection = html.slice(start, end);
   for (const path of [

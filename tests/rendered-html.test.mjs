@@ -1,9 +1,9 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
-const productTitle = /<title>Solar Complaints and Consumer Resources \| Solar Consumer Research<\/title>/i;
+const productTitle = /<title>Sunrun Research and Solar Consumer Help \| Solar Consumer Research<\/title>/i;
 const productDescription =
-  /<meta(?=[^>]*\bname=["']description["'])(?=[^>]*\bcontent=["']Find official solar complaint channels, source-backed research, lawsuits, investigations, public records, and consumer resources by state\.["'])[^>]*>/i;
+  /<meta(?=[^>]*\bname=["']description["'])(?=[^>]*\bcontent=["']Find Sunrun lawsuits, settlement instructions, contract research, and complaint help. Browse official solar consumer resources by state\.["'])[^>]*>/i;
 const featuredResearchTitle = /Solar Sales, Financing and What Happens After a Complaint/i;
 
 function latestResearchStoryLinks(html) {
@@ -50,6 +50,9 @@ test("renders product metadata and the latest research homepage", async () => {
   assert.match(html, productTitle);
   assert.match(html, productDescription);
   assert.match(html, /Latest solar research/i);
+  assert.match(html, /href="\/companies\/sunrun">Lawsuits &amp; settlements/i);
+  assert.match(html, /href="\/companies\/sunrun#sunrun-contract"/i);
+  assert.match(html, /href="\/companies\/sunrun#sunrun-complaint-help"/i);
   const latestLinks = latestResearchStoryLinks(html);
   assert.equal(latestLinks.length, 3, "homepage should render exactly three latest research stories");
 });
@@ -180,11 +183,16 @@ test("renders a Sunrun company hub that keeps enforcement statuses distinct", as
 
   assert.equal(response.status, 200);
   const html = await response.text();
-  assert.match(html, /Sunrun investigations, enforcement and documented cases/i);
+  assert.match(html, /Sunrun Lawsuits, Class Actions and Settlements/i);
   assert.match(html, /Texas residential solar investigation involving Sunrun/i);
   assert.match(html, /Arizona settlement with Sunrun and Vivint Solar/i);
   assert.match(html, /Connecticut Sunrun settlement: contract-fraud claims and consumer relief/i);
-  assert.match(html, /An investigation is not a finding of wrongdoing/i);
+  assert.match(html, /Attorney general investigation/i);
+  assert.match(html, /Is there a Sunrun class action I can join/i);
+  assert.match(html, /rel="canonical" href="https:\/\/solarcomplaint\.com\/companies\/sunrun"/i);
+  assert.ok(html.indexOf('id="sunrun-settlements-title"') < html.indexOf('id="sunrun-research-title"'));
+  assert.match(html, /id="sunrun-contract"/i);
+  assert.match(html, /id="sunrun-complaint-help"/i);
   assert.match(html, featuredResearchTitle);
   assert.match(html, /href=["']\/states\/arizona["']/i);
   assert.match(html, /"@type":"CollectionPage"/i);
