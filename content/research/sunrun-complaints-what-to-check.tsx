@@ -56,7 +56,7 @@ export function SunrunComplaintsBody() {
       <h2>How to file a complaint against Sunrun</h2>
       <p>Massachusetts homeowners can <a href={massachusettsComplaintForm}>file a consumer complaint through the Attorney General’s online portal</a>. It goes to the office’s Consumer Advocacy and Response Division. Our <Link href="/guides/massachusetts-solar-complaint">Massachusetts complaint guide</Link> walks through what to include. Outside Massachusetts, use the <Link href="/resources">state complaint directory</Link> to find your consumer protection office.</p>
       <p>The California customer’s complaint started with a utility bill and a production reading. Together they gave the homeowner a specific period to dispute. Start there if you have a billing problem. If you dispute the contract or the work that was done, the useful record may be a signed agreement or a change order. Put the date and the discrepancy in your complaint so the person reading it can see what needs to be resolved.</p>
-      <p>If you’re trying to find a public record that bears on your complaint, <a href="/#questions">ask SolarComplaint.com for free research help</a>. Tell us your town and what you’re trying to verify.</p>
+      <p>If you’re trying to find a public record that bears on your complaint, <Link href="/#questions">ask SolarComplaint.com for free research help</Link>. Tell us your town and what you’re trying to verify.</p>
     </section>
   </>;
 }
