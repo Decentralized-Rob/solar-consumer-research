@@ -25,6 +25,7 @@ const laraComplaint = "https://www.nclc.org/wp-content/uploads/2024/12/2024.12.1
 const laraCase = "https://www.nclc.org/resources/lara-v-sunrun-inc-et-al/";
 const sunrunTransfer = "https://www.sunrun.com/moving-made-easy";
 const arizonaAgreement = "https://www.azag.gov/sites/default/files/2025-06/2025-05-22%20SUNRUN%20STIPULATED%20CONSENT%20AGREEMENT.pdf";
+const massachusettsComplaintForm = "https://massago.hylandcloud.com/251Forms/forms/f6950650-b137-4630-873a-645b5bbf29a9";
 const connecticutAnnouncement = "https://portal.ct.gov/ag/press-releases/2026-press-releases/attorney-general-tong-announces-settlements-with-sunrun-solar-and-others-to-require-consumer-relief";
 const dowDocket = "https://dockets.justia.com/docket/florida/flmdce/8:2025cv03324/450866";
 
@@ -36,6 +37,7 @@ export const articleConfig = {
     { name: "Lara v. Sunrun case summary", url: laraCase },
     { name: "Sunrun home sale and transfer FAQ", url: sunrunTransfer },
     { name: "Arizona stipulated consent agreement", url: arizonaAgreement, publisher: "Arizona Attorney General", datePublished: "2025-05-22" },
+    { name: "Massachusetts Attorney General consumer complaint instructions", url: "https://www.mass.gov/how-to/file-a-consumer-complaint", publisher: "Massachusetts Attorney General" },
     { name: "Connecticut Attorney General settlement announcement", url: connecticutAnnouncement, publisher: "Connecticut Attorney General", datePublished: "2026-10-23" },
     { name: "Dow v. SunRun federal docket, entries 18–19", url: dowDocket },
   ],
@@ -66,9 +68,10 @@ export function SunrunComplaintsBody() {
     <section className="info-section" id="filing">
       <h2>Filing a complaint</h2>
       <p>Write down what happened, when it happened and what you want Sunrun to fix. Save the bill or project record you’re disputing and any written response or case number. Use the <Link href="/guides/solar-complaint-record-checklist">complaint records checklist</Link> if you’re putting the file together.</p>
-      <p>For a Sunrun complaint in Massachusetts, our <Link href="/guides/massachusetts-solar-complaint">guide to filing with the Attorney General</Link> explains where to send it and what to include. If you need help finding records for your complaint, <Link href="/#questions">ask SolarComplaint.com for free research help</Link>. Tell us your town and what you’re trying to verify.</p>
+      <p>Massachusetts homeowners can <a href={massachusettsComplaintForm}>file a consumer protection complaint against Sunrun through the Attorney General’s online portal</a>. The complaint goes to the Consumer Advocacy and Response Division. Our <Link href="/guides/massachusetts-solar-complaint">Massachusetts filing guide</Link> explains the process.</p>
       <p>Under Connecticut’s October 2026 settlement, Sunrun must investigate covered fraud complaints and respond within 60 days. The <a href={connecticutAnnouncement}>Connecticut attorney general’s announcement</a> lists <a href="mailto:CTSupport@sunrun.com">CTSupport@sunrun.com</a> for claims. See <Link href="/cases/connecticut-attorney-general-sunrun-lawsuit">who’s covered and how to file</Link>.</p>
       <p>For Arizona, use the <Link href="/companies/sunrun#sunrun-settlements-title">settlement and filing links</Link>. For another state, check the <Link href="/resources">state complaint directory</Link>. The <Link href="/companies/sunrun">Sunrun lawsuit and settlement tracker</Link> links to the public case records.</p>
+      <p>If you’re trying to verify something Sunrun told you, <Link href="/#questions">request free research help from SolarComplaint.com</Link>. Tell us your town and what you’re trying to check. We can help you find relevant public records and official sources.</p>
     </section>
   </>;
 }
