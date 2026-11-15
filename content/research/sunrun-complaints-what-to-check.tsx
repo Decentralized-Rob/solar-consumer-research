@@ -8,12 +8,12 @@ export const story = {
   title: "Sunrun Solar Complaints: What to Check in Your Records",
   deck: "The dates on your first bill and the paperwork you signed can tell you where a Sunrun dispute started.",
   summary: "Use your Sunrun agreement, utility approval, bills, and project records to check a solar complaint. See what public cases document and where to file.",
-  seoDescription: "Check a Sunrun solar complaint against your contract, first bill, utility approval, and system output. Find state filing routes and settlement instructions.",
+  seoDescription: "Check a Sunrun solar complaint against your contract, first bill and utility approval. Find Massachusetts filing guidance and state settlement instructions.",
   lede: "Before you file a complaint about Sunrun, find the record that shows what you’re disputing. That might be the first bill, the panel layout you approved or the buyout quote Sunrun sent you. If you’ve already contacted Sunrun, keep its written response with that record.",
   publishedAt: "November 15, 2026",
   datePublished: "2026-11-15",
   dateModified: "2026-11-15",
-  stateCodes: [],
+  stateCodes: ["MA"],
   companies: ["Sunrun"],
   topics: ["Sunrun solar complaints", "Sunrun billing", "permission to operate", "solar change orders", "solar contract transfers"],
   section: "Research",
@@ -43,6 +43,8 @@ export const articleConfig = {
 
 export function SunrunComplaintsBody() {
   return <>
+    <p>If you’re a Massachusetts Sunrun customer and need help finding the right records, <Link href="/#questions">request free research help from SolarComplaint.com</Link>. Tell us your town, what happened and what you’re trying to verify.</p>
+
     <section className="info-section" id="billing">
       <h2>The first bill</h2>
       <p>Sunrun says it sends the first bill for a standard subscription about 30 days after activation. Flex and prepaid agreements have their own schedules. See <a href={sunrunFaq}>Sunrun’s billing FAQ</a>.</p>
@@ -66,8 +68,9 @@ export function SunrunComplaintsBody() {
     <section className="info-section" id="filing">
       <h2>Filing a complaint</h2>
       <p>Write down what happened, when it happened and what you want Sunrun to fix. Save the bill or project record you’re disputing and any written response or case number. Use the <Link href="/guides/solar-complaint-record-checklist">complaint records checklist</Link> if you’re putting the file together.</p>
+      <p>If you live in Massachusetts, our <Link href="/guides/massachusetts-solar-complaint">Massachusetts Attorney General complaint guide</Link> walks through where to file and what to include.</p>
       <p>Under Connecticut’s October 2026 settlement, Sunrun must investigate covered fraud complaints and respond within 60 days. The <a href={connecticutAnnouncement}>Connecticut attorney general’s announcement</a> lists <a href="mailto:CTSupport@sunrun.com">CTSupport@sunrun.com</a> for claims. See <Link href="/cases/connecticut-attorney-general-sunrun-lawsuit">who’s covered and how to file</Link>.</p>
-      <p>For Arizona, use the <Link href="/companies/sunrun#sunrun-settlements-title">settlement and filing links</Link>. For another state, check the <Link href="/resources">state complaint directory</Link>. If you’re in Massachusetts, use the <Link href="/guides/massachusetts-solar-complaint">Massachusetts attorney general complaint guide</Link>. The <Link href="/companies/sunrun">Sunrun lawsuit and settlement tracker</Link> links to the public case records.</p>
+      <p>For Arizona, use the <Link href="/companies/sunrun#sunrun-settlements-title">settlement and filing links</Link>. For another state, check the <Link href="/resources">state complaint directory</Link>. The <Link href="/companies/sunrun">Sunrun lawsuit and settlement tracker</Link> links to the public case records.</p>
     </section>
   </>;
 }
