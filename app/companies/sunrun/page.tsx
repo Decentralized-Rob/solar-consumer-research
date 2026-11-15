@@ -198,9 +198,9 @@ export default function SunrunCompanyPage() {
 
         <section className="info-section" aria-labelledby="sunrun-complaint-help">
           <h2 id="sunrun-complaint-help">Where to file a Sunrun complaint</h2>
-          <p>Start with <a href="https://www.sunrun.com/contact-us">Sunrun customer support</a> and keep the case number and any written response. If the issue remains open, find the consumer protection office for your state.</p>
+          <p>For an independent complaint, find the consumer protection office for your state. Keep the agreement, the records you’re disputing and any written response.</p>
           <p><Link href="/resources">Find your state’s complaint routes</Link> · <Link href="/guides/massachusetts-solar-complaint">Massachusetts complaint guide</Link></p>
-          <p><Link href="/research/sunrun-complaints-what-to-check">What to check in your bills, contract and project records</Link></p>
+          <p><Link href="/research/sunrun-complaints-what-to-check">Read documented Sunrun complaints and find out where to file</Link></p>
         </section>
 
         <SunrunEthicsSpotlight context="Sunrun research" />

@@ -5,73 +5,58 @@ export const story = {
   id: "sunrun-complaints-what-to-check",
   slug: "sunrun-complaints-what-to-check",
   href: "/research/sunrun-complaints-what-to-check",
-  title: "Sunrun Solar Complaints: What to Check in Your Records",
-  deck: "The dates on your first bill and the paperwork you signed can tell you where a Sunrun dispute started.",
-  summary: "Use your Sunrun agreement, utility approval, bills, and project records to check a solar complaint. See what public cases document and where to file.",
-  seoDescription: "Check a Sunrun solar complaint against your contract, first bill and utility approval. Find Massachusetts filing guidance and state settlement instructions.",
-  lede: "Before you file a complaint about Sunrun, find the record that shows what you’re disputing. That might be the first bill, the panel layout you approved or the buyout quote Sunrun sent you. If you’ve already contacted Sunrun, keep its written response with that record.",
+  title: "Sunrun Solar Complaints: What Customers Report and Where to File",
+  deck: "A customer’s panels stopped producing while the bills kept coming. See what to check in your bills and contract, and where to file a complaint.",
+  summary: "Read documented Sunrun complaints about solar bills, panels that stopped producing and disputed contracts. Find independent filing routes, including the Massachusetts Attorney General’s complaint form.",
+  seoTitle: "Sunrun Solar Complaints and Where to File",
+  seoDescription: "Read Sunrun complaints about billing, panels not working and disputed contracts. Find the Massachusetts Attorney General’s online complaint form.",
+  lede: "A California Sunrun customer checked their solar app after an unusually high utility bill. The app showed zero production. In a November 4, 2026 complaint to the Better Business Bureau, the customer said the panels had been down since August and the Sunrun bills kept coming.",
   publishedAt: "November 15, 2026",
   datePublished: "2026-11-15",
   dateModified: "2026-11-15",
   stateCodes: ["MA"],
   companies: ["Sunrun"],
-  topics: ["Sunrun solar complaints", "Sunrun billing", "permission to operate", "solar change orders", "solar contract transfers"],
+  topics: ["Sunrun solar complaints", "Sunrun billing", "solar system production", "Massachusetts consumer complaints"],
   section: "Research",
   featured: false,
 } satisfies ResearchStory;
 
-const sunrunFaq = "https://www.sunrun.com/go-solar-center/solar-faq";
+const bbbComplaint = "https://www.bbb.org/us/ca/san-francisco/profile/solar-energy-equipment-dealers/sunrun-inc-1116-312886/complaints?page=1";
 const laraComplaint = "https://www.nclc.org/wp-content/uploads/2024/12/2024.12.10_Cases_Lara-Complaint.pdf";
 const laraCase = "https://www.nclc.org/resources/lara-v-sunrun-inc-et-al/";
-const sunrunTransfer = "https://www.sunrun.com/moving-made-easy";
-const arizonaAgreement = "https://www.azag.gov/sites/default/files/2025-06/2025-05-22%20SUNRUN%20STIPULATED%20CONSENT%20AGREEMENT.pdf";
 const massachusettsComplaintForm = "https://massago.hylandcloud.com/251Forms/forms/f6950650-b137-4630-873a-645b5bbf29a9";
 const connecticutAnnouncement = "https://portal.ct.gov/ag/press-releases/2026-press-releases/attorney-general-tong-announces-settlements-with-sunrun-solar-and-others-to-require-consumer-relief";
-const dowDocket = "https://dockets.justia.com/docket/florida/flmdce/8:2025cv03324/450866";
 
 export const articleConfig = {
   breadcrumbLabel: "Sunrun solar complaints",
   sources: [
-    { name: "Sunrun billing FAQ", url: sunrunFaq },
-    { name: "Lara v. Sunrun complaint and Exhibit A", url: laraComplaint, datePublished: "2024-12-10" },
+    { name: "BBB customer complaint, November 4, 2026", url: bbbComplaint, datePublished: "2026-11-04" },
+    { name: "Lara v. Sunrun complaint, paragraphs 75–85", url: laraComplaint, datePublished: "2024-12-10" },
     { name: "Lara v. Sunrun case summary", url: laraCase },
-    { name: "Sunrun home sale and transfer FAQ", url: sunrunTransfer },
-    { name: "Arizona stipulated consent agreement", url: arizonaAgreement, publisher: "Arizona Attorney General", datePublished: "2025-05-22" },
     { name: "Massachusetts Attorney General consumer complaint instructions", url: "https://www.mass.gov/how-to/file-a-consumer-complaint", publisher: "Massachusetts Attorney General" },
     { name: "Connecticut Attorney General settlement announcement", url: connecticutAnnouncement, publisher: "Connecticut Attorney General", datePublished: "2026-10-23" },
-    { name: "Dow v. SunRun federal docket, entries 18–19", url: dowDocket },
   ],
 };
 
 export function SunrunComplaintsBody() {
   return <>
-    <section className="info-section" id="billing">
-      <h2>The first bill</h2>
-      <p>Sunrun says it sends the first bill for a standard subscription about 30 days after activation. Flex and prepaid agreements have their own schedules. See <a href={sunrunFaq}>Sunrun’s billing FAQ</a>.</p>
-      <p>Look at the dates the invoice covers. If it charges for time before the utility gave permission to operate (PTO), ask Sunrun what activation date it used. If the utility had already given approval and the panels produced little or nothing, save the production history for that billing period. Compare both bills for those dates and look up any production credit in your solar lease or power purchase agreement (PPA). Our <Link href="/research/sunrun-25-year-solar-contracts">Sunrun contract guide</Link> explains where to look.</p>
-      <p>Alberto Lara said in his Massachusetts lawsuit that he paid Sunrun about $11,000 while his panels sat idle and his utility bills stayed as high as before. He also said a change order cut the estimated share of his electricity use the panels would cover from 79% to 62%. The utility approval date and the date of any change-order signature are unclear from <a href={laraComplaint}>paragraphs 75–85 of his complaint</a>. The National Consumer Law Center says the case <a href={laraCase}>ended in Lara’s favor</a>.</p>
+    <p><a href={bbbComplaint}>Read the November 4 BBB complaint</a>.</p>
+    <section className="info-section">
+      <h2>When the panels stop working and the bills keep coming</h2>
+      <p>Alberto Lara described a similar problem in a Massachusetts lawsuit. He said he paid Sunrun about $11,000 while the panels weren’t working and his utility bills stayed as high as before. His complaint says a change order also lowered the estimated share of his electricity use the system would cover from 79% to 62%. The National Consumer Law Center, which represented Lara, says the case ended in his favor. <a href={laraComplaint}>Lara’s complaint, paragraphs 75–85</a> · <a href={laraCase}>NCLC’s case summary</a></p>
+      <p>If you’re paying for a system that isn’t producing, compare the dates on the bill with the utility’s permission to operate and the production history. An invoice that covers time before utility approval raises a different question from a bill for a system that was cleared to run but produced nothing. The numbers on a revised design are estimates. Use the actual production for the dates in dispute when you check whether the <Link href="/research/sunrun-25-year-solar-contracts">production guarantee in your contract</Link> applies.</p>
     </section>
 
-    <section className="info-section" id="installation">
-      <h2>What got installed</h2>
-      <p>Put the plan you approved next to the revised drawing and what’s on the roof. Check where the panels went, how many went up and whether the production estimate changed. If Sunrun says you signed off on the change, ask for the signed change order and its signing history. We’ve covered <Link href="/research/sunrun-solar-design-changes-change-orders">what can change between the quote and installation</Link>.</p>
-      <p>If the salesperson offered a new roof, look for the roofer’s name on the agreement, permit and warranty. Christopher Mishler said a new roof was part of his Connecticut solar deal. Sunrun called the roofer a personal referral and asked the roofer to repay money Sunrun said it had paid for the work. <Link href="/research/sunrun-mishler-roofing-lawsuit">Mishler’s case settled before trial</Link>.</p>
-      <p>If the panels are already up and the roof needs replacing, ask what Sunrun charges to take them down and put them back. Get that price in writing. Linda Dow disputed a panel-removal charge in Florida. Her case settled at mediation in April 2026, according to <a href={dowDocket}>entries 18 and 19 of the federal docket</a>.</p>
+    <section className="info-section">
+      <h2>When the complaint is about the contract itself</h2>
+      <p>Connecticut’s attorney general alleged that some homeowners were locked into long-term Sunrun contracts without their consent. Under the October 2026 settlement, Sunrun must investigate covered fraud complaints and respond within 60 days. If it substantiates fraud, relief can include a payment, an account credit, cancellation or removal of the system. The settlement has no cap on restitution. <a href={connecticutAnnouncement}>Connecticut Attorney General’s announcement</a> · <Link href="/cases/connecticut-attorney-general-sunrun-lawsuit">SolarComplaint’s coverage of the case</Link></p>
     </section>
 
-    <section className="info-section" id="home-sale">
-      <h2>Selling the house</h2>
-      <p>Before closing, ask Sunrun for the paperwork the buyer would sign to take over the agreement and what it would cost you to buy it out. Ask who will get the next bill. Sunrun says it temporarily removes applicable notices or UCC filings from the title at no charge during a transfer. See <a href={sunrunTransfer}>Sunrun’s home-sale FAQ</a>.</p>
-      <p>In Arizona, Sunrun and Vivint Solar have 30 days after notice of a sale or transfer to give covered customers the assignment paperwork and an updated buyout price. <a href={arizonaAgreement}>Paragraphs 33–37 of the consent agreement</a> also spell out when the companies have to start billing the new customer.</p>
-    </section>
-
-    <section className="info-section" id="filing">
-      <h2>Filing a complaint</h2>
-      <p>Write down what happened, when it happened and what you want Sunrun to fix. Save the bill or project record you’re disputing and any written response or case number. Use the <Link href="/guides/solar-complaint-record-checklist">complaint records checklist</Link> if you’re putting the file together.</p>
-      <p>Massachusetts homeowners can <a href={massachusettsComplaintForm}>file a consumer protection complaint against Sunrun through the Attorney General’s online portal</a>. The complaint goes to the Consumer Advocacy and Response Division. Our <Link href="/guides/massachusetts-solar-complaint">Massachusetts filing guide</Link> explains the process.</p>
-      <p>Under Connecticut’s October 2026 settlement, Sunrun must investigate covered fraud complaints and respond within 60 days. The <a href={connecticutAnnouncement}>Connecticut attorney general’s announcement</a> lists <a href="mailto:CTSupport@sunrun.com">CTSupport@sunrun.com</a> for claims. See <Link href="/cases/connecticut-attorney-general-sunrun-lawsuit">who’s covered and how to file</Link>.</p>
-      <p>For Arizona, use the <Link href="/companies/sunrun#sunrun-settlements-title">settlement and filing links</Link>. For another state, check the <Link href="/resources">state complaint directory</Link>. The <Link href="/companies/sunrun">Sunrun lawsuit and settlement tracker</Link> links to the public case records.</p>
-      <p>If you’re trying to verify something Sunrun told you, <Link href="/#questions">request free research help from SolarComplaint.com</Link>. Tell us your town and what you’re trying to check. We can help you find relevant public records and official sources.</p>
+    <section className="info-section">
+      <h2>How to file a complaint against Sunrun</h2>
+      <p>Massachusetts homeowners can <a href={massachusettsComplaintForm}>file a consumer complaint through the Attorney General’s online portal</a>. It goes to the office’s Consumer Advocacy and Response Division. Our <Link href="/guides/massachusetts-solar-complaint">Massachusetts complaint guide</Link> walks through what to include. Outside Massachusetts, use the <Link href="/resources">state complaint directory</Link> to find your consumer protection office.</p>
+      <p>The California customer’s complaint started with a utility bill and a production reading. Together they gave the homeowner a specific period to dispute. Start there if you have a billing problem. If you dispute the contract or the work that was done, the useful record may be a signed agreement or a change order. Put the date and the discrepancy in your complaint so the person reading it can see what needs to be resolved.</p>
+      <p>If you’re trying to find a public record that bears on your complaint, <Link href="/#questions">ask SolarComplaint.com for free research help</Link>. Tell us your town and what you’re trying to verify.</p>
     </section>
   </>;
 }
