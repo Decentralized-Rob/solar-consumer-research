@@ -9,7 +9,7 @@ export const story = {
   deck: "The dates on your first bill and the paperwork you signed can tell you where a Sunrun dispute started.",
   summary: "Use your Sunrun agreement, utility approval, bills, and project records to check a solar complaint. See what public cases document and where to file.",
   seoDescription: "Check a Sunrun solar complaint against your contract, first bill, utility approval, and system output. Find state filing routes and settlement instructions.",
-  lede: "If Sunrun billed you while your panels sat idle, check the dates on the bill against the utility’s approval and your production history. If the crew changed the layout, ask Sunrun for the plan it says you approved.",
+  lede: "Before you file a complaint about Sunrun, find the record that shows what you’re disputing. That might be the first bill, the panel layout you approved or the buyout quote Sunrun sent you. If you’ve already contacted Sunrun, keep its written response with that record.",
   publishedAt: "November 15, 2026",
   datePublished: "2026-11-15",
   dateModified: "2026-11-15",
