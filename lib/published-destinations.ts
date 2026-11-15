@@ -33,7 +33,7 @@ if (!solarSalesFinancingStory) {
 export const sunrunHub = {
   href: "/companies/sunrun",
   title: "Sunrun Lawsuits, Class Actions and Settlements",
-  dateModified: "2026-11-14",
+  dateModified: "2026-11-15",
 };
 
 const latestSunrunResearchDate = researchStories
