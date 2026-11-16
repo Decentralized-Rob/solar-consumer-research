@@ -11,6 +11,7 @@ const arizonaAgreement = featuredStateSources.AZ[0];
 const connecticutSource = "https://portal.ct.gov/ag/press-releases/2026-press-releases/attorney-general-tong-announces-settlements-with-sunrun-solar-and-others-to-require-consumer-relief";
 const arizonaSettlementPage = "https://www.azag.gov/consumer/sunrun";
 const floridaRoofOrder = "https://ecf.flmd.uscourts.gov/cgi-bin/show_public_doc?2025-02459-10-8-cv=";
+const floridaMediationDocket = "https://dockets.justia.com/docket/florida/flmdce/8:2025cv03324/450866";
 const diazOpinion = "https://www.govinfo.gov/app/details/USCOURTS-njd-1_24-cv-11462";
 const slovinDocket = "https://dockets.justia.com/docket/california/candce/3:2015cv05340/293131";
 const stricklandOpinion = "https://www.govinfo.gov/app/details/USCOURTS-cand-4_23-cv-05034";
@@ -75,10 +76,11 @@ export default function SunrunCompanyPage() {
     {
       state: "Florida",
       type: "Individual lawsuit",
-      date: "October 30, 2025 order",
+      date: "April 8, 2026 court acknowledgment",
       title: "Florida Sunrun roof-removal and contract-buyout dispute",
-      summary: "A homeowner alleged that Sunrun demanded more than $8,000 to remove panels for a roof replacement and later quoted roughly $35,000 to buy out her agreement. The federal judge sent the case back to Florida state court.",
-      source: floridaRoofOrder,
+      summary: "A homeowner alleged that Sunrun demanded more than $8,000 to remove panels for a roof replacement and later quoted roughly $35,000 to buy out her agreement. The first federal case was remanded in October 2025. In the second federal case, the mediator reported a settlement in April 2026. The public docket entries do not disclose the terms.",
+      source: floridaMediationDocket,
+      earlierOrder: floridaRoofOrder,
       stateHref: "/states/florida",
     },
     {
@@ -141,7 +143,7 @@ export default function SunrunCompanyPage() {
           <span aria-current="page">Sunrun</span>
         </nav>
 
-        <p><small>Updated <time dateTime={sunrunHub.dateModified}>November 14, 2026</time></small></p>
+        <p><small>Updated <time dateTime={sunrunHub.dateModified}>November 15, 2026</time></small></p>
 
         <section className="state-source-section" aria-labelledby="sunrun-settlements-title">
           <div className="state-source-section-heading">
@@ -183,6 +185,7 @@ export default function SunrunCompanyPage() {
                 <small>{action.date}</small>
                 <p><Link href={action.stateHref}>{action.state} solar resources</Link></p>
                 <a href={action.source}>Read the {action.state} record</a>
+                {action.earlierOrder && <p><a href={action.earlierOrder}>Read the October 2025 remand order</a></p>}
               </article>
             ))}
           </div>
@@ -195,8 +198,9 @@ export default function SunrunCompanyPage() {
 
         <section className="info-section" aria-labelledby="sunrun-complaint-help">
           <h2 id="sunrun-complaint-help">Where to file a Sunrun complaint</h2>
-          <p>Start with <a href="https://www.sunrun.com/contact-us">Sunrun customer support</a> and keep the case number and any written response. If the issue remains open, find the consumer protection office for your state.</p>
+          <p>For an independent complaint, find the consumer protection office for your state. Keep the agreement, the records you’re disputing and any written response.</p>
           <p><Link href="/resources">Find your state’s complaint routes</Link> · <Link href="/guides/massachusetts-solar-complaint">Massachusetts complaint guide</Link></p>
+          <p><Link href="/research/sunrun-complaints-what-to-check">Read documented Sunrun complaints and find out where to file</Link></p>
         </section>
 
         <SunrunEthicsSpotlight context="Sunrun research" />
