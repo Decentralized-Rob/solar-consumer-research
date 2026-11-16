@@ -48,6 +48,10 @@
   font-size: 0.75rem;
 }
 
+.control {
+  min-height: 44px;
+}
+
 @media (max-width: 760px) {
   .inner {
     width: min(100% - 28px, 680px);

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
+import { GooglePreferredSourceControl } from "../../../components/google-preferred-source";
 import "./freedom-hub.css";
 import "./freedom-hub-redesign.css";
 
@@ -99,11 +100,6 @@ function Chevron() {
 }
 
 export default function FreedomForeverHub() {
-  const preferredSourceAttributes = {
-    "google-add-preferred-source-btn": "",
-    "data-theme": "light",
-  };
-
   const structuredData = {
     "@context": "https://schema.org",
     "@graph": [
@@ -362,7 +358,7 @@ export default function FreedomForeverHub() {
             <h2>Choose SolarComplaint.com as a Preferred Source.</h2>
           </div>
           <div className="ffr-preferred-action">
-            <div {...preferredSourceAttributes} />
+            <GooglePreferredSourceControl />
           </div>
         </section>
       </main>
