@@ -224,6 +224,13 @@ export default function FreedomForeverHub() {
             <div><time dateTime="2026-09-09">Sep. 9, 2026</time><b>Read update ↗</b></div>
           </ExternalLink>
 
+          <Link className="ffr-story" href="/research/sunrun-freedom-forever-bankruptcy-cash-outlook">
+            <span className="ffr-story-label">Research</span>
+            <h2>What Freedom Forever’s bankruptcy meant for Sunrun</h2>
+            <p>GLJ warned that Sunrun would lose sales. See what Sunrun later told investors and how it revised its cash forecast.</p>
+            <div><time dateTime="2026-11-15">Nov. 15, 2026</time><b>Read report →</b></div>
+          </Link>
+
           <Link className="ffr-story" href="/cases/freedom-forever/what-happened">
             <span className="ffr-story-label">Report</span>
             <h2>What Happened to Freedom Forever? From National Solar Installer to Chapter 7</h2>
