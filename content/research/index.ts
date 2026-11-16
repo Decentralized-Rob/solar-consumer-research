@@ -2,13 +2,33 @@
 import { article as article0 } from "./massachusetts-solar-cost-2026";
 import { article as article1 } from "./solar-sales-financing-after-complaint";
 import { article as article2 } from "./sunrun-25-year-solar-contracts";
-import { article as article3 } from "./sunrun-home-depot-sales-home-visit";
+import { article as article3 } from "./sunrun-38-billion-contract-validity";
+import { article as article4 } from "./sunrun-complaints-what-to-check";
+import { article as article5 } from "./sunrun-freedom-forever-bankruptcy-cash-outlook";
+import { article as article6 } from "./sunrun-home-depot-sales-home-visit";
+import { article as article7 } from "./sunrun-mishler-roofing-lawsuit";
+import { article as article8 } from "./sunrun-new-jersey-complaints-lawsuits";
+import { article as article9 } from "./sunrun-parra-roof-arbitration";
+import { article as article10 } from "./sunrun-q3-2026-earnings";
+import { article as article11 } from "./sunrun-sales-controls-investor-reporting";
+import { article as article12 } from "./sunrun-solar-design-changes-change-orders";
+import { article as article13 } from "./titan-solar-power-loan-holder-rule";
 
 const discoveredArticles = [
   article0,
   article1,
   article2,
   article3,
+  article4,
+  article5,
+  article6,
+  article7,
+  article8,
+  article9,
+  article10,
+  article11,
+  article12,
+  article13,
 ];
 
 export const researchArticles = new Map(
