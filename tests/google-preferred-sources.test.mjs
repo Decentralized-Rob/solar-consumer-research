@@ -5,13 +5,18 @@ import test from "node:test";
 const layoutPath = new URL("../app/layout.tsx", import.meta.url);
 const componentPath = new URL("../components/google-preferred-source.tsx", import.meta.url);
 const destinationsPath = new URL("../lib/published-destinations.ts", import.meta.url);
+const freedomForeverPath = new URL("../app/cases/freedom-forever/page.tsx", import.meta.url);
 
-test("loads Google's Preferred Sources library from the root layout before hydration", async () => {
+test("loads Google's Preferred Sources library when the control approaches the viewport", async () => {
   const layout = await readFile(layoutPath, "utf8");
+  const component = await readFile(componentPath, "utf8");
+  const freedomForever = await readFile(freedomForeverPath, "utf8");
 
-  assert.match(layout, /https:\/\/news\.google\.com\/swg\/js\/v1\/publisher\.js/);
-  assert.match(layout, /strategy="beforeInteractive"/);
-  assert.match(layout, /<Script[\s\S]*?\basync\b[\s\S]*?publisher\.js/);
+  assert.doesNotMatch(layout, /publisher\.js/);
+  assert.match(component, /IntersectionObserver/);
+  assert.match(component, /shouldLoad && \(\s*<Script[\s\S]*?publisher\.js/);
+  assert.match(component, /onReady=.*?client\.init\(\)/);
+  assert.match(freedomForever, /<GooglePreferredSourceControl \/>/);
 });
 
 test("uses Google's standard declarative control and browser-language localization", async () => {
@@ -20,7 +25,6 @@ test("uses Google's standard declarative control and browser-language localizati
   assert.match(component, /"google-add-preferred-source-btn": ""/);
   assert.match(component, /"data-theme": "light"/);
   assert.doesNotMatch(component, /data-lang/);
-  assert.doesNotMatch(component, /next\/script/);
 });
 
 test("uses the publication registry as the source of truth for published Preferred Sources pages", async () => {

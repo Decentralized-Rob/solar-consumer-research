@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 type TurnstileApi = {
   render: (container: HTMLElement, options: {
@@ -31,8 +31,33 @@ export function TurnstileWidget({
   resetKey: number;
 }) {
   const containerRef = useRef<HTMLDivElement>(null);
+  const [shouldLoad, setShouldLoad] = useState(false);
 
   useEffect(() => {
+    if (shouldLoad || !containerRef.current) return;
+
+    const container = containerRef.current;
+    const form = container.closest("form");
+    const activate = () => setShouldLoad(true);
+    if (typeof IntersectionObserver === "undefined" || form?.contains(document.activeElement)) {
+      activate();
+      return;
+    }
+
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) activate();
+    }, { rootMargin: "250px" });
+    observer.observe(form ?? container);
+    form?.addEventListener("focusin", activate);
+    return () => {
+      observer.disconnect();
+      form?.removeEventListener("focusin", activate);
+    };
+  }, [shouldLoad]);
+
+  useEffect(() => {
+    if (!shouldLoad) return;
+
     let widgetId: string | null = null;
     let cancelled = false;
 
@@ -48,27 +73,26 @@ export function TurnstileWidget({
       });
     };
 
-    const existingScript = document.getElementById(SCRIPT_ID) as HTMLScriptElement | null;
+    let script = document.getElementById(SCRIPT_ID) as HTMLScriptElement | null;
     if (window.turnstile) {
       render();
-    } else if (existingScript) {
-      existingScript.addEventListener("load", render, { once: true });
     } else {
-      const script = document.createElement("script");
-      script.id = SCRIPT_ID;
-      script.src = "https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit";
-      script.async = true;
-      script.defer = true;
+      if (!script) {
+        script = document.createElement("script");
+        script.id = SCRIPT_ID;
+        script.src = "https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit";
+        script.async = true;
+      }
       script.addEventListener("load", render, { once: true });
-      document.head.appendChild(script);
+      if (!script.isConnected) document.head.appendChild(script);
     }
 
     return () => {
       cancelled = true;
-      existingScript?.removeEventListener("load", render);
+      script?.removeEventListener("load", render);
       if (widgetId && window.turnstile) window.turnstile.remove(widgetId);
     };
-  }, [onToken, resetKey, siteKey]);
+  }, [onToken, resetKey, shouldLoad, siteKey]);
 
-  return <div className="turnstile-widget" ref={containerRef} aria-label="Bot protection check" />;
+  return <div className="turnstile-widget" ref={containerRef} />;
 }

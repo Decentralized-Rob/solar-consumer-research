@@ -94,19 +94,25 @@ function mapUpdate(item: ApiUpdate): Update {
 }
 
 export function useResearchContent(stateCode: string) {
-  const [resourceItems, setResourceItems] = useState<Resource[]>(resources);
-  const [guideItems, setGuideItems] = useState<Guide[]>(guides);
-  const [updateItems, setUpdateItems] = useState<Update[]>(updates);
+  const [loadedContent, setLoadedContent] = useState<{
+    stateCode: string;
+    resourceItems: Resource[];
+    guideItems: Guide[];
+    updateItems: Update[];
+  } | null>(null);
 
   useEffect(() => {
-    let active = true;
+    if (!stateCode) return;
+
+    const controller = new AbortController();
+    const { signal } = controller;
 
     async function loadContent() {
       try {
         const [resourceResponse, guideResponse, updateResponse] = await Promise.all([
-          fetch(`/api/resources?state=${stateCode}`),
-          fetch(`/api/guides?state=${stateCode}`),
-          fetch(`/api/updates?state=${stateCode}`),
+          fetch(`/api/resources?state=${stateCode}`, { signal }),
+          fetch(`/api/guides?state=${stateCode}`, { signal }),
+          fetch(`/api/updates?state=${stateCode}`, { signal }),
         ]);
 
         if (!resourceResponse.ok || !guideResponse.ok || !updateResponse.ok) return;
@@ -114,21 +120,24 @@ export function useResearchContent(stateCode: string) {
         const resourcePayload = (await resourceResponse.json()) as { data: ApiResource[] };
         const guidePayload = (await guideResponse.json()) as { data: ApiGuide[] };
         const updatePayload = (await updateResponse.json()) as { data: ApiUpdate[] };
-        if (!active) return;
+        if (signal.aborted) return;
 
-        setResourceItems(resourcePayload.data.map(mapResource));
-        setGuideItems(guidePayload.data.map(mapGuide));
-        setUpdateItems(updatePayload.data.map(mapUpdate));
+        setLoadedContent({
+          stateCode,
+          resourceItems: resourcePayload.data.map(mapResource),
+          guideItems: guidePayload.data.map(mapGuide),
+          updateItems: updatePayload.data.map(mapUpdate),
+        });
       } catch {
         // Keep the reviewed local snapshot visible if the API is unavailable.
       }
     }
 
     void loadContent();
-    return () => {
-      active = false;
-    };
+    return () => controller.abort();
   }, [stateCode]);
 
-  return { resourceItems, guideItems, updateItems };
+  return loadedContent?.stateCode === stateCode
+    ? loadedContent
+    : { resourceItems: resources, guideItems: guides, updateItems: updates };
 }

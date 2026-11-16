@@ -1,5 +1,4 @@
 import type { Metadata, Viewport } from "next";
-import Script from "next/script";
 import { GooglePreferredSource } from "../components/google-preferred-source";
 import "./globals.css";
 import "./site-skin.css";
@@ -61,11 +60,6 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="antialiased">
-        <Script
-          async
-          src="https://news.google.com/swg/js/v1/publisher.js"
-          strategy="beforeInteractive"
-        />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
