@@ -53,3 +53,5 @@ a:hover .editorial-thumbnail img{transform:scale(1.025)}
 .editorial-archive-card{display:grid;grid-template-columns:minmax(160px,33%) 1fr;gap:20px;align-items:start}
 @media(max-width:620px){.editorial-archive-card{grid-template-columns:112px 1fr;gap:12px}.editorial-archive-card h2{font-size:21px}}
 @media(prefers-reduced-motion:reduce){.editorial-thumbnail img{transition:none}a:hover .editorial-thumbnail img{transform:none}}
+
+.engagement-impression-marker{display:block;width:100%;height:1px;pointer-events:none}

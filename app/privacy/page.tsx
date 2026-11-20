@@ -23,10 +23,12 @@ export default function PrivacyPage() {
           <li>Questions intentionally submitted by the user</li>
           <li>Optional email address and explanation provided with a suggested public source</li>
           <li>Basic technical records needed to operate and protect the service</li>
+          <li>Anonymous counts of article-link clicks and when story lists become visible, including the on-site source and destination paths; no search terms or personal identifiers are included in these events</li>
         </ul>
       </section>
       <section className="info-section">
         <h2>How it is used</h2>
+        <p>Aggregate navigation counts help us understand whether readers can find reporting from the homepage, search results and related-story links. Cloudflare processes these events without names, account identifiers, search terms or cookies set by this feature.</p>
         <p>Email addresses are used to respond to submitted questions or to follow up about a suggested source. State and city information helps identify relevant public resources. Submitted questions and source suggestions are available only to authorized site administrators and service providers needed to deliver the submission notification.</p>
       </section>
       <section className="info-section">

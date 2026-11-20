@@ -75,3 +75,15 @@ test("publisher cards show editorial illustrations and article links", async () 
   assert.match(article, /Read next/);
   assert.match(article, /editorial-thumbnail/);
 });
+
+test("click and visibility events are instrumented in the discovery surfaces", async () => {
+  const home = await render("/");
+  assert.match(home, /data-engagement-placement="homepage_story"/);
+  assert.match(home, /data-engagement-impression="homepage_story"/);
+  const archive = await render("/stories");
+  assert.match(archive, /data-engagement-placement="story_archive"/);
+  const casePage = await render("/cases/connecticut-attorney-general-sunrun-lawsuit");
+  assert.match(casePage, /data-engagement-placement="read_next"/);
+  const search = await render("/search?q=connecticut");
+  assert.match(search, /data-engagement-placement="search_result"/);
+});

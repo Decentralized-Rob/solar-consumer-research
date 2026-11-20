@@ -14,6 +14,7 @@ const isSeatbeltSandbox = process.env.CODEX_SANDBOX === "seatbelt";
 const localBindingConfig = {
   main: "./worker/index.ts",
   compatibility_flags: ["nodejs_compat"],
+  analytics_engine_datasets: [{ binding: "NAV_EVENTS", dataset: "SOLAR_NAV_EVENTS" }],
   ratelimits: [
     {
       name: "SEARCH_RATE_LIMITER",

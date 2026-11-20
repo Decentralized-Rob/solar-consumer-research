@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { InfoPage } from "../../components/info-page";
 import { searchSiteContent } from "../../lib/site-search";
+import { TrackedLink, TrackedImpression } from "../../components/tracked-link";
 
 export const metadata: Metadata = {
   title: "Search SolarComplaint Reporting",
@@ -27,9 +28,10 @@ export default async function SearchPage({
         <section aria-live="polite">
           <h2>{stories.length} {stories.length === 1 ? "result" : "results"} for “{query}”</h2>
           {stories.length ? <div className="editorial-story-list">
+            <TrackedImpression placement="search_result" />
             {stories.map(story => <article key={story.href}>
               <p className="editorial-meta">{story.section}{story.date ? <> · <time dateTime={story.date}>{story.date}</time></> : null}</p>
-              <h3><Link href={story.href}>{story.title}</Link></h3>
+              <h3><TrackedLink placement="search_result" href={story.href}>{story.title}</TrackedLink></h3>
               <p>{story.summary}</p>
             </article>)}
           </div> : <p>No matching reporting. Try a shorter phrase or <Link href="/stories">browse all stories</Link>.</p>}

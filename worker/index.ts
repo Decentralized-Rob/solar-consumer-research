@@ -1,11 +1,13 @@
 /** Cloudflare Worker entry point for Solar Consumer Research. */
 import { handleImageOptimization, DEFAULT_DEVICE_SIZES, DEFAULT_IMAGE_SIZES } from "vinext/server/image-optimization";
 import handler from "vinext/server/app-router-entry";
+import { parseNavigationEvent } from "./engagement";
 
 interface Env {
   ASSETS: Fetcher;
   DB: D1Database;
   SEARCH_RATE_LIMITER: RateLimit;
+  NAV_EVENTS?: AnalyticsEngineDataset;
   IMAGES: {
     input(stream: ReadableStream): {
       transform(options: Record<string, unknown>): {
@@ -45,6 +47,40 @@ const worker = {
     ) {
       url.pathname = ethicsPath;
       return Response.redirect(url.toString(), 301);
+    }
+
+    if (url.pathname === "/api/engagement") {
+      if (request.method !== "POST") return new Response(null, { status: 405 });
+      const origin = request.headers.get("origin");
+      const fetchSite = request.headers.get("sec-fetch-site");
+      if ((origin && origin !== url.origin) ||
+          (fetchSite && !["same-origin", "none"].includes(fetchSite))) {
+        return new Response(null, { status: 403 });
+      }
+      if (!request.headers.get("content-type")?.startsWith("application/json")) {
+        return new Response(null, { status: 415 });
+      }
+      if (Number(request.headers.get("content-length") || 0) > 500) {
+        return new Response(null, { status: 413 });
+      }
+      const body = await request.text();
+      if (body.length > 500) return new Response(null, { status: 413 });
+      let decoded: unknown = null;
+      try { decoded = JSON.parse(body); } catch { return new Response(null, { status: 400 }); }
+      const event = parseNavigationEvent(decoded);
+      if (!event) return new Response(null, { status: 400 });
+      const clientIp = request.headers.get("cf-connecting-ip") ?? "unknown";
+      const limiter = await env.SEARCH_RATE_LIMITER.limit({ key: `engagement:${clientIp}` });
+      if (!limiter.success) return new Response(null, { status: 429 });
+      if (!env.NAV_EVENTS) return new Response(null, { status: 503 });
+      env.NAV_EVENTS.writeDataPoint({
+        blobs: [event.kind, event.placement, event.source, event.target],
+        doubles: [1],
+      });
+      return new Response(null, {
+        status: 204,
+        headers: { "Cache-Control": "no-store" },
+      });
     }
 
     if (request.method === "GET" && url.pathname === "/api/search") {
