@@ -1,0 +1,30 @@
+import type { Metadata } from "next";
+import Link from "next/link";
+import { InfoPage } from "../../components/info-page";
+import { editorialStories } from "../../lib/editorial-directory";
+
+export const metadata: Metadata = {
+  title: "Latest SolarComplaint Stories and Investigations",
+  description: "SolarComplaint reporting, Sunrun investigations, lawsuits, settlements and consumer research, newest first.",
+  alternates: { canonical: "/stories" },
+};
+export default function StoriesPage() {
+  return (
+    <InfoPage eyebrow="Original reporting" title="Latest stories" lede="Our investigations and research, newest first. Find settlements, lawsuits and consumer reporting without navigating the filing system.">
+      <nav className="editorial-shortcuts" aria-label="Browse topics">
+        <Link href="/companies/sunrun">Sunrun</Link>
+        <Link href="/lawsuits-settlements">Lawsuits & settlements</Link>
+        <Link href="/search">Search reporting</Link>
+      </nav>
+      <div className="editorial-story-list">
+        {editorialStories.map(story => (
+          <article key={story.href}>
+            <p className="editorial-meta">{story.section} · {story.dateLabel} <time dateTime={story.date}>{story.date}</time></p>
+            <h2><Link href={story.href}>{story.title}</Link></h2>
+            <p>{story.summary}</p>
+          </article>
+        ))}
+      </div>
+    </InfoPage>
+  );
+}

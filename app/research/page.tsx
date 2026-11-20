@@ -88,6 +88,11 @@ export default function ResearchPage() {
           </p>
         </section>
 
+        <section className="editorial-pinned" aria-label="Latest enforcement reporting">
+          <p className="editorial-meta">Connecticut · Sunrun settlement</p>
+          <h2><Link href="/cases/connecticut-attorney-general-sunrun-lawsuit">Connecticut Sunrun Settlement: Verification Call, Disputed Lease and Consumer Relief</Link></h2>
+          <p><Link href="/stories">Browse the latest reporting</Link></p>
+        </section>
         <SunrunEthicsSpotlight variant="feature" context="New company research" />
 
         <section className="info-section">

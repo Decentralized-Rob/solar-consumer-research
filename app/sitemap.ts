@@ -61,6 +61,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
   return [
     { url: baseUrl, lastModified: new Date("2026-08-27"), changeFrequency: "weekly", priority: 1 },
     { url: `${baseUrl}/research`, lastModified: new Date(getLatestResearchModifiedDate()), changeFrequency: "weekly", priority: 0.95 },
+    { url: `${baseUrl}/stories`, lastModified: new Date(getLatestResearchModifiedDate()), changeFrequency: "daily", priority: 0.95 },
+    { url: `${baseUrl}/lawsuits-settlements`, lastModified: new Date(getLatestResearchModifiedDate()), changeFrequency: "weekly", priority: 0.9 },
+    { url: `${baseUrl}/search`, lastModified: new Date("2026-11-19"), changeFrequency: "monthly", priority: 0.5 },
     ...researchPages,
     ...publicationPages,
     ...goodLeapPages,

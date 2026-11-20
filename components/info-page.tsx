@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import Link from "next/link";
-import Image from "next/image";
+import { SiteHeader } from "./site-header";
+import { RelatedStories } from "./related-stories";
 
 export function InfoPage({
   eyebrow,
@@ -8,6 +9,7 @@ export function InfoPage({
   lede,
   children,
   showLegalNotice = true,
+  currentStoryHref,
   className = "",
 }: {
   eyebrow: string;
@@ -15,21 +17,18 @@ export function InfoPage({
   lede: string;
   children: ReactNode;
   showLegalNotice?: boolean;
+  currentStoryHref?: string;
   className?: string;
 }) {
   return (
     <div className={`info-page ${className}`.trim()}>
-      <header className="info-header">
-        <Link className="wordmark" href="/" aria-label="Solar Consumer Research home">
-          <Image className="brand-logo" src="/brand/solar-consumer-research.svg" alt="" width={690} height={104} unoptimized />
-        </Link>
-        <Link className="info-back" href="/">Back to home</Link>
-      </header>
+      <SiteHeader />
       <main className="info-main">
         <p className="eyebrow">{eyebrow}</p>
         <h1>{title}</h1>
         <p className="info-lede">{lede}</p>
         {children}
+        {currentStoryHref ? <RelatedStories currentHref={currentStoryHref} /> : null}
         {showLegalNotice && (
           <aside className="legal-notice" aria-label="Legal information disclaimer">
             <strong>General information only</strong>

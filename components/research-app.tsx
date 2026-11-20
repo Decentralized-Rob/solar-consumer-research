@@ -8,7 +8,8 @@ import type { Resource } from "../lib/types";
 import { FeaturedSection, PathSection } from "./home/discovery-sections";
 import { LatestResearchSection } from "./home/latest-research";
 import styles from "./home/latest-research.module.css";
-import { HomeFooter, HomeHeader } from "./home/navigation";
+import { HomeFooter } from "./home/navigation";
+import { SiteHeader } from "./site-header";
 import {
   QuestionsSection,
   ResourceDirectory,
@@ -21,7 +22,6 @@ import { useResearchContent } from "./home/use-research-content";
 export function ResearchApp() {
   const [stateCode, setStateCode] = useState("");
   const [topic, setTopic] = useState<TopicFilter>("all");
-  const [menuOpen, setMenuOpen] = useState(false);
   const { resourceItems, guideItems, updateItems } = useResearchContent(stateCode);
 
   const selectedState = states.find((state) => state.code === stateCode);
@@ -88,7 +88,7 @@ export function ResearchApp() {
 
   return (
     <div className="home-shell">
-      <HomeHeader menuOpen={menuOpen} onMenuToggle={() => setMenuOpen((current) => !current)} onMenuClose={() => setMenuOpen(false)} />
+      <SiteHeader />
       <main id="top">
         <LatestResearchSection />
 

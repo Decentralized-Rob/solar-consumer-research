@@ -3,6 +3,7 @@ import { InfoPage } from "../../components/info-page";
 import { updates as fallbackUpdates } from "../../lib/content";
 import { getTrackerDiscoveryItems } from "../../lib/published-destinations";
 import { featuredResearchStory } from "../../lib/research-stories";
+import { getLatestEditorialStories } from "../../lib/editorial-directory";
 import { createSupabaseServerClient } from "../../lib/supabase/server";
 import type { Update } from "../../lib/types";
 
@@ -54,6 +55,14 @@ export default async function UpdatesPage() {
       title="Solar Consumer Protection, Lawsuit & Enforcement Updates"
       lede="Verified public-record updates with direct paths into company trackers, case summaries, state resources, and source-backed research."
     >
+      <section className="info-section" aria-labelledby="latest-reporting-title">
+        <h2 id="latest-reporting-title">Latest SolarComplaint reporting</h2>
+        <p>New investigations and case reporting appear here independently of the official-source updates below. <Link href="/stories">See all latest stories</Link>.</p>
+        {getLatestEditorialStories(6).map(story => (
+          <p key={story.href}><time dateTime={story.date}>{story.date}</time> · <Link href={story.href}>{story.title}</Link></p>
+        ))}
+        <p><Link href="/cases/connecticut-attorney-general-sunrun-lawsuit">Read the Connecticut Sunrun settlement report</Link></p>
+      </section>
       <section className="info-section" aria-labelledby="company-case-trackers-title">
         <h2 id="company-case-trackers-title">Company and case trackers</h2>
         {companyCaseTrackers.map((item) => (
@@ -80,7 +89,7 @@ export default async function UpdatesPage() {
       </section>
 
       <section className="info-section" aria-labelledby="latest-updates-title">
-        <h2 id="latest-updates-title">Latest verified public-record updates</h2>
+        <h2 id="latest-updates-title">Official-source updates archive</h2>
         <div className="updates-page-list">
           {items.map((item) => (
             <a className="updates-page-row" href={item.url} target="_blank" rel="noreferrer" key={item.id}>

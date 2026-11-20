@@ -112,14 +112,15 @@ export function SearchPlaceholder() {
   return (
     <section className="home-search-later home-wrap" aria-labelledby="search-later-title">
       <div>
-        <p className="home-card-label">Site search</p>
-        <h2 id="search-later-title">Search is coming soon.</h2>
-        <p>For now, use the topic filters above or browse the full resource and guide pages.</p>
+        <p className="home-card-label">Find a story</p>
+        <h2 id="search-later-title">Search published reporting</h2>
+        <p>Find lawsuits, settlements, Sunrun investigations and research by company or state.</p>
       </div>
-      <div className="home-search-disabled" aria-label="Search coming soon">
-        <input type="search" placeholder="Search resources and guides" disabled />
-        <button type="button" disabled>Coming soon</button>
-      </div>
+      <form action="/search" method="get" role="search" className="home-search-disabled">
+        <label className="sr-only" htmlFor="home-story-search">Search reporting</label>
+        <input id="home-story-search" name="q" type="search" placeholder="Search reporting" minLength={2} required />
+        <button type="submit">Search</button>
+      </form>
     </section>
   );
 }

@@ -28,26 +28,18 @@ async function fetchHtml(worker, path) {
   return { response, html: await response.text() };
 }
 
-test("published Research menu destinations are unique and resolve", async () => {
+test("primary newsroom navigation destinations resolve", async () => {
   const worker = await loadWorker();
   const { response, html } = await fetchHtml(worker, "/");
-
   assert.equal(response.status, 200);
-
-  const submenu = html.match(/id=["']research-navigation-submenu["'][\s\S]*?<\/div>/i)?.[0];
-  assert.ok(submenu, "Research submenu should render in the home HTML");
-
-  const hrefs = [...submenu.matchAll(/href=["']([^"']+)["']/gi)].map((match) => match[1]);
-  assert.ok(hrefs.includes("/cases/freedom-forever"), "Freedom Forever should be a published Research destination");
-  assert.equal(new Set(hrefs).size, hrefs.length, "Research menu destinations must be unique");
-
-  for (const href of hrefs) {
+  assert.match(html, /aria-label="Primary navigation"/);
+  for (const href of ["/stories", "/companies/sunrun", "/lawsuits-settlements", "/guides", "/resources", "/search"]) {
+    assert.ok(html.includes(`href="${href}"`), href);
     const destination = await worker.fetch(
       new Request(`http://localhost${href}`, { headers: { accept: "text/html" } }),
-      env,
-      ctx,
+      env, ctx,
     );
-    assert.equal(destination.status, 200, `${href} should resolve from the Research menu`);
+    assert.equal(destination.status, 200, href);
   }
 });
 

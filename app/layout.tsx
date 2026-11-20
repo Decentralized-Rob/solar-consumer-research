@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { GooglePreferredSource } from "../components/google-preferred-source";
 import "./globals.css";
 import "./site-skin.css";
+import "./newsroom.css";
 import "./mobile-app-scale.css";
 
 export const metadata: Metadata = {
