@@ -20,9 +20,9 @@
 .stateControl select{width:100%;height:46px;padding:0 12px;border:1px solid #aeb3aa;border-radius:6px;background:#fffdfa;color:#18201d}
 @media(max-width:700px){.topGrid,.latestGrid,.stateFinder{grid-template-columns:1fr}.topGrid{gap:14px}.section{padding-top:18px}.lead h2{font-size:36px}.settlement h2{font-size:26px}.stateFinder{gap:18px;padding-top:20px;padding-bottom:24px}}
 
-.leadMedia,.settlementMedia,.storyMedia{display:block;overflow:hidden;background:#193d33}
-.leadMedia{margin-bottom:20px}
-.settlementMedia{margin-bottom:18px}
-.story{display:grid;grid-template-columns:minmax(105px,36%) 1fr;align-items:start;gap:18px}
-.storyMedia{margin:0}
-@media(max-width:700px){.story{grid-template-columns:112px 1fr;gap:12px}.story h2{font-size:22px}}
+/* Text-led editorial cards: no stock or placeholder imagery. */
+.story{display:block}
+.story h2{max-width:30ch}
+.lead h2{max-width:22ch}
+.settlement h2{max-width:22ch}
+@media(max-width:700px){.story h2{font-size:25px}}

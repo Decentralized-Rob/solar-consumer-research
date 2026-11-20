@@ -46,12 +46,9 @@
 .site-header{color:#142c22}
 .site-header a{color:inherit}
 
-.editorial-thumbnail{display:block;position:relative;width:100%;aspect-ratio:16/9;overflow:hidden;background:#193d33}
-.editorial-thumbnail img{display:block;width:100%;height:100%;object-fit:cover;transition:transform .2s ease-out}
-a:hover .editorial-thumbnail img{transform:scale(1.025)}
-.related-stories-list .editorial-thumbnail{margin-bottom:13px}
-.editorial-archive-card{display:grid;grid-template-columns:minmax(160px,33%) 1fr;gap:20px;align-items:start}
-@media(max-width:620px){.editorial-archive-card{grid-template-columns:112px 1fr;gap:12px}.editorial-archive-card h2{font-size:21px}}
-@media(prefers-reduced-motion:reduce){.editorial-thumbnail img{transition:none}a:hover .editorial-thumbnail img{transform:none}}
+.editorial-archive-card{display:block;max-width:820px}
+.editorial-archive-card h2{max-width:34ch}
+.related-stories-list h3{max-width:26ch}
+@media(max-width:620px){.editorial-archive-card h2{font-size:24px}}
 
 .engagement-impression-marker{display:block;width:100%;height:1px;pointer-events:none}

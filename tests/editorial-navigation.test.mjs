@@ -65,15 +65,20 @@ test("standalone pages show a single brand header and retain in-page navigation"
   assert.match(freedom, /Freedom Forever research center/);
 });
 
-test("publisher cards show editorial illustrations and article links", async () => {
+test("newsroom story cards are image-free, link to articles, and retain recommendations", async () => {
+  for (const page of ["/", "/stories", "/cases/connecticut-attorney-general-sunrun-lawsuit"]) {
+    const html = await render(page);
+    assert.doesNotMatch(html, /\/editorial\/(court-records|financial-records|solar-roof|consumer-records|solar-research)\.svg/);
+  }
   const home = await render("/");
-  assert.match(home, /\/editorial\/(court-records|financial-records|solar-roof|consumer-records|solar-research)\.svg/);
   assert.match(home, /href="\/cases\/connecticut-attorney-general-sunrun-lawsuit"/);
+  assert.match(home, /data-engagement-placement="homepage_story"/);
   const archive = await render("/stories");
   assert.match(archive, /class="editorial-archive-card"/);
+  assert.match(archive, /data-engagement-placement="story_archive"/);
   const article = await render("/cases/connecticut-attorney-general-sunrun-lawsuit");
   assert.match(article, /Read next/);
-  assert.match(article, /editorial-thumbnail/);
+  assert.match(article, /data-engagement-placement="read_next"/);
 });
 
 test("click and visibility events are instrumented in the discovery surfaces", async () => {
