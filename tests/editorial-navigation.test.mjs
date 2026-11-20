@@ -64,3 +64,14 @@ test("standalone pages show a single brand header and retain in-page navigation"
   const freedom = await render("/cases/freedom-forever");
   assert.match(freedom, /Freedom Forever research center/);
 });
+
+test("publisher cards show editorial illustrations and article links", async () => {
+  const home = await render("/");
+  assert.match(home, /\/editorial\/(court-records|financial-records|solar-roof|consumer-records|solar-research)\.svg/);
+  assert.match(home, /href="\/cases\/connecticut-attorney-general-sunrun-lawsuit"/);
+  const archive = await render("/stories");
+  assert.match(archive, /class="editorial-archive-card"/);
+  const article = await render("/cases/connecticut-attorney-general-sunrun-lawsuit");
+  assert.match(article, /Read next/);
+  assert.match(article, /editorial-thumbnail/);
+});

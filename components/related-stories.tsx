@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { StoryThumbnail } from "./story-thumbnail";
 import { getRelatedEditorialStories } from "../lib/editorial-directory";
 
 export function RelatedStories({ currentHref }: { currentHref: string }) {
@@ -14,6 +15,7 @@ export function RelatedStories({ currentHref }: { currentHref: string }) {
         {stories.map(story => (
           <article key={story.href}>
             <p>{story.section} · <time dateTime={story.date}>{story.date}</time></p>
+            <Link href={story.href} aria-label={`Read: ${story.title}`}><StoryThumbnail story={story} /></Link>
             <h3><Link href={story.href}>{story.title}</Link></h3>
           </article>
         ))}

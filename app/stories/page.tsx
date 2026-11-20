@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { StoryThumbnail } from "../../components/story-thumbnail";
 import { InfoPage } from "../../components/info-page";
 import { editorialStories } from "../../lib/editorial-directory";
 
@@ -18,10 +19,13 @@ export default function StoriesPage() {
       </nav>
       <div className="editorial-story-list">
         {editorialStories.map(story => (
-          <article key={story.href}>
-            <p className="editorial-meta">{story.section} · {story.dateLabel} <time dateTime={story.date}>{story.date}</time></p>
-            <h2><Link href={story.href}>{story.title}</Link></h2>
-            <p>{story.summary}</p>
+          <article key={story.href} className="editorial-archive-card">
+            <Link href={story.href} aria-label={`Read: ${story.title}`}><StoryThumbnail story={story} /></Link>
+            <div>
+              <p className="editorial-meta">{story.section} · {story.dateLabel} <time dateTime={story.date}>{story.date}</time></p>
+              <h2><Link href={story.href}>{story.title}</Link></h2>
+              <p>{story.summary}</p>
+            </div>
           </article>
         ))}
       </div>

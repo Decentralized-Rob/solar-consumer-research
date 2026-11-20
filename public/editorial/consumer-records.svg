@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" role="img" aria-labelledby="t d">
+<title id="t">Complaints</title><desc id="d">Consumer investigations</desc>
+<defs><linearGradient id="bg" x1="0" x2="1" y1="0" y2="1"><stop stop-color="#3c4033"/><stop offset="1" stop-color="#11251e"/></linearGradient></defs>
+<rect width="800" height="450" fill="url(#bg)"/>
+<circle cx="730" cy="70" r="155" fill="#e9bd65" opacity=".13"/>
+<path d="M0 357H800" stroke="#e9bd65" stroke-width="3" opacity=".65"/>
+<path d="M28 409H772" stroke="#fff" stroke-width="1" opacity=".17"/>
+<g transform="translate(502 72) rotate(-8 115 135)">
+  <rect x="12" y="16" width="222" height="274" rx="8" fill="#0a1915" opacity=".65"/>
+  <rect x="0" y="0" width="222" height="274" rx="8" fill="#f8f4e8"/>
+  <rect x="24" y="25" width="110" height="9" rx="4" fill="#e9bd65"/>
+  <rect x="24" y="55" width="166" height="7" rx="3" fill="#a3afa8"/>
+  <rect x="24" y="73" width="135" height="7" rx="3" fill="#c1c8c1"/>
+  <rect x="24" y="110" width="170" height="6" rx="3" fill="#bdc6bd"/>
+  <rect x="24" y="127" width="150" height="6" rx="3" fill="#bdc6bd"/>
+  <rect x="24" y="144" width="165" height="6" rx="3" fill="#bdc6bd"/>
+  <rect x="24" y="161" width="122" height="6" rx="3" fill="#bdc6bd"/>
+  <circle cx="158" cy="213" r="38" fill="none" stroke="#e9bd65" stroke-width="8" opacity=".78"/>
+  <path d="M137 214l15 13 27-33" fill="none" stroke="#e9bd65" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+<path d="M60 277h147v83H60z" stroke="#e9bd65" stroke-width="5" fill="none" stroke-linecap="round" opacity=".72"/>
+<text x="54" y="84" fill="#e9bd65" font-family="Arial,sans-serif" font-size="17" font-weight="700" letter-spacing="5">SOLARCOMPLAINT</text>
+<text x="54" y="180" fill="#f8f4e8" font-family="Georgia,serif" font-size="53" font-weight="500">Complaints</text>
+<text x="54" y="222" fill="#d8e3dd" font-family="Arial,sans-serif" font-size="23">Consumer investigations</text>
+<text x="54" y="409" fill="#e9bd65" font-family="Arial,sans-serif" font-size="15" font-weight="700" letter-spacing="3">DOCUMENTED RESEARCH</text>
+</svg>
