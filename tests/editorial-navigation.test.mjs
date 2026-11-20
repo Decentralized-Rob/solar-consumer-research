@@ -30,3 +30,24 @@ test("articles have persistent navigation and Read next", async () => {
   assert.match(html, /Read next/);
   assert.match(html, /href="\/stories"/);
 });
+
+test("search includes bankruptcy trackers and consumer guides", async () => {
+  for (const [query, href] of [
+    ["goodleap", "/goodleap"],
+    ["titan warranty", "/cases/titan-solar-power/warranty-after-bankruptcy"],
+    ["massachusetts complaint", "/guides/massachusetts-solar-complaint"],
+    ["freedom forever", "/cases/freedom-forever"],
+  ]) {
+    const html = await render(`/search?q=${encodeURIComponent(query)}`);
+    assert.ok(html.includes(`href="${href}"`), `missing ${href} for ${query}`);
+  }
+});
+
+test("standalone company and bankruptcy pages have primary navigation", async () => {
+  for (const path of ["/goodleap", "/cases/titan-solar-power", "/cases/titan-solar-power/customer-help", "/cases/freedom-forever"]) {
+    const html = await render(path);
+    assert.match(html, /aria-label="Primary navigation"/, path);
+    assert.match(html, /href="\/stories"/, path);
+    assert.match(html, /href="\/search"/, path);
+  }
+});

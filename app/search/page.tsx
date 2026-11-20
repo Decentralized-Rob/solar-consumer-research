@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { InfoPage } from "../../components/info-page";
-import { searchEditorialStories } from "../../lib/editorial-directory";
+import { searchSiteContent } from "../../lib/site-search";
 
 export const metadata: Metadata = {
   title: "Search SolarComplaint Reporting",
@@ -13,9 +13,9 @@ export default async function SearchPage({
 }: { searchParams: Promise<{ q?: string | string[] }> }) {
   const { q } = await searchParams;
   const query = (typeof q === "string" ? q : "").trim().slice(0,120);
-  const stories = query ? searchEditorialStories(query) : [];
+  const stories = searchSiteContent(query);
   return (
-    <InfoPage eyebrow="Find a story" title="Search reporting" lede="Search published investigations, lawsuits and original research by company, state or topic.">
+    <InfoPage eyebrow="Find a story" title="Search reporting" lede="Search reporting, company trackers, consumer guides and state resources by company, state or topic.">
       <form className="editorial-search-form" action="/search" method="get" role="search">
         <label htmlFor="story-query">Search stories</label>
         <div>
@@ -28,14 +28,14 @@ export default async function SearchPage({
           <h2>{stories.length} {stories.length === 1 ? "result" : "results"} for “{query}”</h2>
           {stories.length ? <div className="editorial-story-list">
             {stories.map(story => <article key={story.href}>
-              <p className="editorial-meta">{story.section} · <time dateTime={story.date}>{story.date}</time></p>
+              <p className="editorial-meta">{story.section}{story.date ? <> · <time dateTime={story.date}>{story.date}</time></> : null}</p>
               <h3><Link href={story.href}>{story.title}</Link></h3>
               <p>{story.summary}</p>
             </article>)}
           </div> : <p>No matching reporting. Try a shorter phrase or <Link href="/stories">browse all stories</Link>.</p>}
         </section>
       ) : <p><Link href="/cases/connecticut-attorney-general-sunrun-lawsuit">Looking for the Connecticut Sunrun settlement?</Link></p>}
-      <p className="editorial-search-note">Search covers published SolarComplaint reporting. For official complaint channels, <Link href="/resources">browse state resources</Link>.</p>
+      <p className="editorial-search-note">Search covers published SolarComplaint reporting, trackers and help pages. For official complaint channels, <Link href="/resources">browse state resources</Link>.</p>
     </InfoPage>
   );
 }

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
+import { SiteHeader } from "../../../../components/site-header";
 import "./customer-help.css";
 
 export const metadata: Metadata = {
@@ -33,6 +34,7 @@ const paths = [
 export default function TitanCustomerHelpPage() {
   return (
     <div className="th-shell">
+      <SiteHeader />
       <header className="th-header">
         <Link href="/" aria-label="Solar Consumer Research home"><Image src="/brand/solar-consumer-research.svg" alt="" width={690} height={104} priority unoptimized /></Link>
         <nav aria-label="Page navigation"><Link href="/cases/titan-solar-power">Titan updates</Link><a href="#paths">Research paths</a><Link href="/cases/titan-solar-power/warranty-after-bankruptcy">Warranty</Link></nav>

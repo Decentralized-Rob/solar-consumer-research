@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
+import { SiteHeader } from "../../../components/site-header";
 import SubscribeForm from "./SubscribeForm";
 import "./titan-tracker.css";
 
@@ -67,6 +68,7 @@ function ExternalLink({ href, children, className = "" }: { href: string; childr
 export default function TitanSolarPowerPage() {
   return (
     <div className="tt-shell">
+      <SiteHeader />
       <header className="tt-header">
         <Link href="/" aria-label="Solar Consumer Research home">
           <Image src="/brand/solar-consumer-research.svg" alt="" width={690} height={104} priority unoptimized />
