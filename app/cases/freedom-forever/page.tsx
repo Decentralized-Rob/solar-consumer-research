@@ -165,6 +165,7 @@ export default function FreedomForeverHub() {
           </div>
           <p className="ffr-reviewed">Last reviewed September 13, 2026</p>
           <p className="ffr-reviewed">2 of 6 stories published in the Freedom Forever research series</p>
+          <p className="ffr-feature-cta"><Link href="/cases/freedom-forever/warning-signs">Read the latest investigation →</Link></p>
         </section>
 
         <section className="ffr-editorial" aria-label="Freedom Forever research and reporting">
