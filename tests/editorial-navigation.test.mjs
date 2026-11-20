@@ -51,3 +51,16 @@ test("standalone company and bankruptcy pages have primary navigation", async ()
     assert.match(html, /href="\/search"/, path);
   }
 });
+
+test("standalone pages show a single brand header and retain in-page navigation", async () => {
+  for (const path of ["/goodleap", "/cases/titan-solar-power", "/cases/titan-solar-power/customer-help", "/cases/freedom-forever"]) {
+    const html = await render(path);
+    const headers = [...html.matchAll(/class="site-header"/g)];
+    assert.equal(headers.length, 1, `${path} must have one shared brand header`);
+    assert.doesNotMatch(html, /class="(?:gl-header|tt-header|th-header|ffr-header)"/);
+  }
+  const titan = await render("/cases/titan-solar-power");
+  assert.match(titan, /Titan research sections/);
+  const freedom = await render("/cases/freedom-forever");
+  assert.match(freedom, /Freedom Forever research center/);
+});

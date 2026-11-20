@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
 import { GooglePreferredSourceControl } from "../../../components/google-preferred-source";
 import "./freedom-hub.css";
@@ -148,52 +147,7 @@ export default function FreedomForeverHub() {
         Need help with a solar issue? <strong>Free research assistance</strong> <span aria-hidden="true">→</span>
       </Link>
 
-      <header className="ffr-header">
-        <Link className="ffr-wordmark" href="/" aria-label="SolarComplaint home">
-          <Image src="/brand/solarcomplaint.svg" alt="" width={650} height={110} priority unoptimized />
-        </Link>
 
-        <details className="ffr-menu">
-          <summary aria-label="Open site menu"><span aria-hidden="true">☰</span><span className="ffr-menu-label">Menu</span></summary>
-          <div className="ffr-menu-panel">
-            <div className="ffr-menu-top">
-              <Link href="/" aria-label="SolarComplaint home">
-                <Image src="/brand/solarcomplaint.svg" alt="" width={650} height={110} unoptimized />
-              </Link>
-              <span>Close ×</span>
-            </div>
-
-            <nav aria-label="Site navigation">
-              <details open>
-                <summary>Research <span>⌃</span></summary>
-                <div>
-                  <Link href="/research">Latest research</Link>
-                  <Link href="/companies/sunrun">Sunrun Research</Link>
-                  <Link href="/cases/freedom-forever">Freedom Forever</Link>
-                  <Link href="/cases/titan-solar-power">Titan Solar Power</Link>
-                </div>
-              </details>
-              <Link className="ffr-menu-row" href="/resources">States <Chevron /></Link>
-              <details>
-                <summary>Guides &amp; Resources <span>⌄</span></summary>
-                <div>
-                  <Link href="/federal-resources">Federal resources</Link>
-                  <Link href="/guides">Consumer guides</Link>
-                </div>
-              </details>
-              <Link className="ffr-menu-row" href="/#questions">Ask SolarComplaint <Chevron /></Link>
-              <Link className="ffr-menu-row" href="/about">About <Chevron /></Link>
-            </nav>
-
-            <div className="ffr-menu-feature">
-              <span>Featured research</span>
-              <strong>Freedom Forever</strong>
-              <p>2 of 6 stories published</p>
-              <Link href="/cases/freedom-forever/warning-signs">Read the latest investigation →</Link>
-            </div>
-          </div>
-        </details>
-      </header>
 
       <main className="ffr-main">
         <nav className="ffr-breadcrumbs" aria-label="Breadcrumb">
