@@ -1,31 +1,45 @@
 import Link from "next/link";
-import { sunrunHub } from "../../lib/published-destinations";
-import { getResearchStoriesForCompany } from "../../lib/research-stories";
+import { TrackedLink, TrackedImpression } from "../tracked-link";
+import { getLatestEditorialStories } from "../../lib/editorial-directory";
 import styles from "./latest-research.module.css";
 
 export function LatestResearchSection() {
-  const stories = getResearchStoriesForCompany("Sunrun").slice(0, 3);
-
+  const [lead, ...others] = getLatestEditorialStories(6);
   return (
-    <section className={`home-wrap ${styles.section}`} aria-label="Latest solar research">
-      <div className={styles.heading}>
-        <span aria-hidden="true" />
-        <h1>Sunrun research and consumer help</h1>
+    <section className={`home-wrap ${styles.section}`} aria-label="Latest stories">
+      <div className="editorial-section-heading">
+        <h1>Latest stories</h1>
+        <Link href="/stories">All reporting</Link>
       </div>
-      <nav className={styles.sunrunLinks} aria-label="Sunrun topics">
-        <Link href={sunrunHub.href}>Lawsuits &amp; settlements</Link>
-        <Link href={`${sunrunHub.href}#sunrun-contract`}>Contracts</Link>
-        <Link href={`${sunrunHub.href}#sunrun-complaint-help`}>Complaint help</Link>
-      </nav>
-      <div className={styles.list}>
-        {stories.map((story) => (
-          <article className={styles.story} key={story.id}>
-            <p className={styles.label}>{story.section ?? "Research"}</p>
-            <h2><a href={story.href}>{story.title}</a></h2>
+      <TrackedImpression placement="homepage_story" />
+      <div className={styles.topGrid}>
+        <article className={styles.lead}>
+          <p className={styles.label}>{lead.section} · <time dateTime={lead.date}>{lead.date}</time></p>
+          <h2><TrackedLink href={lead.href} placement="homepage_story">{lead.title}</TrackedLink></h2>
+          <p>{lead.summary}</p>
+        </article>
+        <aside className={styles.settlement}>
+          <p className={styles.label}>Connecticut · Attorney general settlement</p>
+          <h2><TrackedLink href="/cases/connecticut-attorney-general-sunrun-lawsuit" placement="homepage_story">Connecticut Sunrun Settlement: The Rejected Lease and Consumer Relief</TrackedLink></h2>
+          <p>The lawsuit, disputed verification call, settlement terms and homeowner relief.</p>
+          <Link href="/lawsuits-settlements">More lawsuits &amp; settlements</Link>
+        </aside>
+      </div>
+      <div className={styles.latestGrid}>
+        {others.map(story => <article key={story.href} className={styles.story}>
+          <div>
+            <p className={styles.label}>{story.section} · <time dateTime={story.date}>{story.date}</time></p>
+            <h2><TrackedLink href={story.href} placement="homepage_story">{story.title}</TrackedLink></h2>
             <p>{story.summary}</p>
-          </article>
-        ))}
+          </div>
+        </article>)}
       </div>
+      <nav className={styles.quickLinks} aria-label="Explore reporting">
+        <Link href="/companies/sunrun">Sunrun investigations</Link>
+        <Link href="/lawsuits-settlements">Lawsuits &amp; settlements</Link>
+        <Link href="/guides">Consumer help</Link>
+        <Link href="/search">Search stories</Link>
+      </nav>
     </section>
   );
 }

@@ -35,3 +35,7 @@
 .th-records p { margin: 0; color: #68685f; font-size: 12px; line-height: 1.55; }
 .th-footer { margin-top: 75px; padding: 32px max(24px, calc((100vw - 1160px) / 2)); border-top: 1px solid #cec8bb; color: #68685f; font-size: 11px; }
 @media (max-width: 780px) { .th-header > a { width: 190px; } .th-header nav a:not(:last-child) { display: none; } .th-section-head, .th-note { grid-template-columns: 1fr; gap: 26px; } .th-paths { grid-template-columns: 1fr; } .th-records { grid-template-columns: 1fr; } .th-records div:nth-child(odd), .th-records div:nth-child(even) { padding: 20px 0; border-left: 0; } .th-note { padding: 30px; } }
+
+.th-section-nav{display:flex;flex-wrap:wrap;align-items:center;gap:12px 22px;padding:12px max(24px,calc((100vw - 1160px)/2));background:#eae5da;border-bottom:1px solid #cec8bb}
+.th-section-nav a{font-size:12px;font-weight:800;color:#171915;text-decoration:underline;text-underline-offset:3px}
+@media(max-width:700px){.th-section-nav{padding:11px 16px;gap:10px 16px}}

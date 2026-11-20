@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
+import { SiteHeader } from "../../../components/site-header";
 import SubscribeForm from "./SubscribeForm";
 import "./titan-tracker.css";
 
@@ -67,18 +67,14 @@ function ExternalLink({ href, children, className = "" }: { href: string; childr
 export default function TitanSolarPowerPage() {
   return (
     <div className="tt-shell">
-      <header className="tt-header">
-        <Link href="/" aria-label="Solar Consumer Research home">
-          <Image src="/brand/solar-consumer-research.svg" alt="" width={690} height={104} priority unoptimized />
-        </Link>
-        <nav aria-label="Page navigation">
-          <a href="#who-took-over">Who took over?</a>
-          <a href="#bankruptcy-status">Bankruptcy</a>
-          <a href="#tt-updates">Updates</a>
-          <a href="#tt-resources">Resources</a>
-          <Link className="tt-header-cta" href="/cases/titan-solar-power/customer-help">Customer help</Link>
-        </nav>
-      </header>
+      <SiteHeader />
+      <nav className="tt-section-nav" aria-label="Titan research sections">
+        <a href="#who-took-over">Who took over?</a>
+        <a href="#bankruptcy-status">Bankruptcy</a>
+        <a href="#tt-updates">Updates</a>
+        <a href="#tt-resources">Sources</a>
+        <Link className="tt-header-cta" href="/cases/titan-solar-power/customer-help">Customer help</Link>
+      </nav>
 
       <main>
         <section className="tt-hero">

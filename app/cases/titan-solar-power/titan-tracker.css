@@ -131,3 +131,9 @@
 }
 
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+.tt-section-nav{display:flex;flex-wrap:wrap;gap:12px 24px;align-items:center;padding:12px max(24px,calc((100vw - 1160px)/2));border-bottom:1px solid #cec8bb;background:#eae5da}
+.tt-section-nav a{font-size:12px;font-weight:800;color:#171915;text-decoration:none}
+.tt-section-nav a:not(.tt-header-cta):hover{text-decoration:underline}
+.tt-section-nav .tt-header-cta{color:#fff}
+@media(max-width:700px){.tt-section-nav{padding:12px 16px;gap:10px 14px}.tt-section-nav a{font-size:12px}}

@@ -81,6 +81,7 @@ export default function ConnecticutSunrunCasePage() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       <InfoPage
+        currentStoryHref="/cases/connecticut-attorney-general-sunrun-lawsuit"
         eyebrow="Connecticut enforcement · October 31, 2026"
         title="Connecticut Sunrun Settlement: The Rejected Lease, the Verification Call and the Path to Consumer Relief"
         lede="A Connecticut homeowner turned down a 25-year Sunrun solar lease that would have cost her $306.98 a month. Her father rejected the same offer."

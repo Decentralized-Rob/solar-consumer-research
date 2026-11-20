@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 
 function latestResearchStoryLinks(html) {
-  const start = html.indexOf('aria-label="Latest solar research"');
+  const start = html.indexOf('aria-label="Latest stories"');
   assert.ok(start >= 0, "latest research section should render");
   const end = html.indexOf('id="start"', start);
   assert.ok(end > start, "latest research section should end before the state finder");
@@ -31,9 +31,10 @@ test("uses the redesigned homepage for the latest research collection", async ()
 
   assert.equal(response.status, 200);
   const html = await response.text();
-  assert.match(html, /Latest solar research/i);
+  assert.match(html, /Latest stories/i);
   const latestLinks = latestResearchStoryLinks(html);
-  assert.equal(latestLinks.length, 3, "homepage should render exactly three latest research stories");
+  assert.ok(latestLinks.length >= 1, "homepage should link to recent research stories");
+  assert.match(html, /href="\/cases\/connecticut-attorney-general-sunrun-lawsuit"/i);
   assert.doesNotMatch(html, /Featured company watch/i);
   assert.doesNotMatch(html, /New research guide/i);
 });

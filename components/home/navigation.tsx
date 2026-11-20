@@ -1,112 +1,4 @@
-"use client";
-
-import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
-import { getResearchMenuItems } from "../../lib/published-destinations";
-import styles from "./home-priority.module.css";
-
-const researchMenuItems = getResearchMenuItems();
-
-export function HomeHeader({
-  menuOpen,
-  onMenuToggle,
-  onMenuClose,
-}: {
-  menuOpen: boolean;
-  onMenuToggle: () => void;
-  onMenuClose: () => void;
-}) {
-  const [researchOpen, setResearchOpen] = useState(false);
-  const [resourcesOpen, setResourcesOpen] = useState(false);
-
-  const closeMenu = () => {
-    setResearchOpen(false);
-    setResourcesOpen(false);
-    onMenuClose();
-  };
-
-  return (
-    <header className={`home-header ${styles.compactHeader}`}>
-      <a className="home-wordmark" href="#top" aria-label="Solar Consumer Research home">
-        <Image className="brand-logo" src="/brand/solar-consumer-research.svg" alt="" width={690} height={104} priority unoptimized />
-      </a>
-      <button
-        className="home-menu-toggle"
-        type="button"
-        aria-expanded={menuOpen}
-        aria-controls="home-navigation"
-        onClick={onMenuToggle}
-      >
-        {menuOpen ? "Close" : "Menu"}
-      </button>
-      <nav
-        id="home-navigation"
-        className={`home-nav ${menuOpen ? "is-open" : ""}`}
-        aria-label="Primary navigation"
-      >
-        <Link href="/#start" onClick={closeMenu}>Start here</Link>
-        <div className={`home-nav-group ${researchOpen ? "is-expanded" : ""}`}>
-          <div className="home-nav-group-label">
-            <Link href="/research" onClick={closeMenu}>Research</Link>
-            <button
-              type="button"
-              aria-label="Show research pages"
-              aria-expanded={researchOpen}
-              aria-controls="research-navigation-submenu"
-              onClick={() => {
-                const nextOpen = !researchOpen;
-                setResearchOpen(nextOpen);
-                if (nextOpen) setResourcesOpen(false);
-              }}
-            >
-              <span aria-hidden="true">⌄</span>
-            </button>
-          </div>
-          <div
-            id="research-navigation-submenu"
-            className="home-nav-submenu"
-            style={{ display: researchOpen ? "block" : "none" }}
-          >
-            {researchMenuItems.map((item) => (
-              <a href={item.href} onClick={closeMenu} key={item.href}>{item.label}</a>
-            ))}
-          </div>
-        </div>
-        <a href="/resources" onClick={closeMenu}>States</a>
-        <div className={`home-nav-group ${resourcesOpen ? "is-expanded" : ""}`}>
-          <div className="home-nav-group-label">
-            <a href="/federal-resources" onClick={closeMenu}>Resources</a>
-            <button
-              type="button"
-              aria-label="Show consumer resources"
-              aria-expanded={resourcesOpen}
-              aria-controls="resources-navigation-submenu"
-              onClick={() => {
-                const nextOpen = !resourcesOpen;
-                setResourcesOpen(nextOpen);
-                if (nextOpen) setResearchOpen(false);
-              }}
-            >
-              <span aria-hidden="true">⌄</span>
-            </button>
-          </div>
-          <div
-            id="resources-navigation-submenu"
-            className="home-nav-submenu"
-            style={{ display: resourcesOpen ? "block" : "none" }}
-          >
-            <a href="/federal-resources" onClick={closeMenu}>Federal Resources</a>
-            <a href="/guides" onClick={closeMenu}>Consumer Guides</a>
-          </div>
-        </div>
-        <a href="/about" onClick={closeMenu}>About</a>
-      </nav>
-      <Link className="home-header-action" href="/#questions" style={{ color: "#f4f1e9" }}>Always Free Research Assistance</Link>
-    </header>
-  );
-}
-
 export function HomeFooter() {
   return (
     <footer className="home-footer">
@@ -116,6 +8,10 @@ export function HomeFooter() {
           <p>Independent public-source research for residential solar consumers.</p>
         </div>
         <nav aria-label="Footer navigation">
+          <Link href="/stories">Latest Stories</Link>
+          <Link href="/companies/sunrun">Sunrun</Link>
+          <Link href="/lawsuits-settlements">Lawsuits &amp; Settlements</Link>
+          <Link href="/search">Search</Link>
           <Link href="/research">Research</Link>
           <a href="/resources">Resources</a>
           <a href="/federal-resources">Federal</a>

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { SiteHeader } from "../../components/site-header";
 import "./goodleap.css";
 
 export const metadata: Metadata = {
@@ -12,10 +13,11 @@ const nav = [["State research","/goodleap/states"],["Resources","/goodleap/resou
 
 export default function GoodLeapLayout({children}:{children:React.ReactNode}) {
   return <div className="gl-shell">
-    <header className="gl-header"><div className="gl-header-inner">
-      <Link className="gl-brand" href="/"><span>Solar</span><strong><i>C</i>omplaint.com</strong></Link>
-      <nav aria-label="GoodLeap research navigation">{nav.map(([label,href])=><Link href={href} key={href}>{label}</Link>)}</nav>
-    </div></header>
+    <SiteHeader />
+    <nav className="gl-section-nav" aria-label="GoodLeap section navigation">
+      <Link className="gl-section-title" href="/goodleap">GoodLeap research</Link>
+      <div>{nav.map(([label,href])=><Link href={href} key={href}>{label}</Link>)}</div>
+    </nav>
     {children}
     <footer className="gl-footer"><p><strong>SolarComplaint.com</strong> organizes public records and official consumer resources.</p><p><Link href="/methodology">Methodology</Link> · <Link href="/corrections">Corrections</Link> · <Link href="/disclaimer">Disclaimer</Link></p></footer>
   </div>;

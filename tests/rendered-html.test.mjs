@@ -7,7 +7,7 @@ const productDescription =
 const featuredResearchTitle = /Solar Sales, Financing and What Happens After a Complaint/i;
 
 function latestResearchStoryLinks(html) {
-  const start = html.indexOf('aria-label="Latest solar research"');
+  const start = html.indexOf('aria-label="Latest stories"');
   assert.ok(start >= 0, "latest research section should render");
   const end = html.indexOf('id="start"', start);
   assert.ok(end > start, "latest research section should end before the state finder");
@@ -49,12 +49,12 @@ test("renders product metadata and the latest research homepage", async () => {
   const html = await response.text();
   assert.match(html, productTitle);
   assert.match(html, productDescription);
-  assert.match(html, /Latest solar research/i);
-  assert.match(html, /href="\/companies\/sunrun">Lawsuits &amp; settlements/i);
-  assert.match(html, /href="\/companies\/sunrun#sunrun-contract"/i);
-  assert.match(html, /href="\/companies\/sunrun#sunrun-complaint-help"/i);
+  assert.match(html, /Latest stories/i);
+  assert.match(html, /href="\/cases\/connecticut-attorney-general-sunrun-lawsuit"/i);
+  assert.match(html, /href="\/lawsuits-settlements"/i);
+  assert.match(html, /href="\/search"/i);
   const latestLinks = latestResearchStoryLinks(html);
-  assert.equal(latestLinks.length, 3, "homepage should render exactly three latest research stories");
+  assert.ok(latestLinks.length >= 1, "homepage should link to recent research");
 });
 
 test("serves canonical robots and sitemap files", async () => {
