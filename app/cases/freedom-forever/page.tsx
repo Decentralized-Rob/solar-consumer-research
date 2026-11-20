@@ -164,6 +164,7 @@ export default function FreedomForeverHub() {
             <span>Claim deadline: Oct. 16, 2026</span>
           </div>
           <p className="ffr-reviewed">Last reviewed September 13, 2026</p>
+          <p className="ffr-reviewed">2 of 6 stories published in the Freedom Forever research series</p>
         </section>
 
         <section className="ffr-editorial" aria-label="Freedom Forever research and reporting">
