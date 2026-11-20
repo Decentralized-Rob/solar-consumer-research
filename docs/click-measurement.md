@@ -1,44 +1,26 @@
-# Measuring article discovery clicks
+# Measuring internal article clicks
 
-PR #151 includes first-party, anonymous click and visibility events sent to the Cloudflare Worker route `POST /api/engagement`. The Worker writes to the Analytics Engine dataset `SOLAR_NAV_EVENTS`.
+PR #151 instruments first-party article discovery via `POST /api/engagement`. The handler validates same-origin, rate limits requests, and records four event placements.
 
-## What is measured
+- `homepage_story`: featured and recent story cards on the homepage
+- `read_next`: recommendations displayed at the bottom of an article
+- `search_result`: results on `/search`
+- `story_archive`: links from `/stories`
 
-- `homepage_story`: article cards in the Latest Stories section, including the featured Connecticut settlement.
-- `read_next`: links to closely related stories at the bottom of research/case pages.
-- `search_result`: result links on `/search`.
-- `story_archive`: links on `/stories`.
+Each placement emits `impression` when the placement marker becomes visible and `click` when a tracked link is clicked. The payload contains only the event type, placement and local source/target paths; it never submits IP addresses, cookies, user identifiers, search terms or referrer values.
 
-Each placement sends `impression` when its measurement marker first enters the viewport and `click` when a reader follows a tracked link. Events store `kind`, `placement`, on-site `source` path and on-site `target` path. No IP address, referrer, search query, cookie, email or user ID is saved in Analytics Engine.
+## Where the records live
 
-The worker limits the submission rate and rejects cross-site or malformed requests. The site remains navigable if measurement fails.
+The production deployment writes structured JSON to **Cloudflare Workers Logs**, one event per log entry marked `"event":"solar_navigation"`. In Cloudflare, go to **Workers & Pages → solar-consumer-research → Observability → Logs**, ensure Workers Logs is enabled, and filter for `solar_navigation`. You can inspect and count records by `placement` and `kind`, or export results according to your account's available log tools.
 
-## Queries
+No Analytics Engine binding is required for the PR: earlier attempts to add one caused Cloudflare preview deployment failures. The code also supports an optional `NAV_EVENTS` Analytics Engine binding in the future, writing `blobs: [kind, placement, source, target]` and `doubles: [1]`. **Do not add the binding to the Worker deployment config without confirming your Cloudflare account can deploy it.**
 
-In the Cloudflare dashboard, open Workers Analytics Engine or use its SQL API with account analytics read permission.
+If Workers Logs is disabled, events are received but not retained. Confirm logging is enabled before relying on counts; later creation of a dedicated Analytics Engine dataset would provide longer-term queryable measurements.
 
-```sql
-SELECT blob2 AS placement, blob1 AS action, SUM(_sample_interval) AS events
-FROM SOLAR_NAV_EVENTS
-GROUP BY placement, action
-ORDER BY placement, action
-```
+## Interpreting the results
 
-To identify which stories receive the most internal clicks:
+Count each placement's `click` and `impression` events over comparable periods. `click / impression` is an engagement-intensity ratio, not a distinct-user CTR, because a visitor can click more than once, and browser blocking or bots may affect totals.
 
-```sql
-SELECT blob2 AS placement, blob4 AS destination, SUM(_sample_interval) AS clicks
-FROM SOLAR_NAV_EVENTS
-WHERE blob1 = 'click'
-GROUP BY placement, destination
-ORDER BY clicks DESC
-LIMIT 50
-```
+For **Google Search CTR**, use Google Search Console (clicks / impressions and average position). Internal click data does not measure Google SERP traffic.
 
-For each placement, use *click events divided by observed section impressions* as a navigation-intensity indicator. It is **not** a distinct-user click-through rate: one reader can click multiple stories, and bots / blockers may affect counts. For Google Search results clicks, impressions and organic CTR use Google Search Console, not this dataset.
-
-## Before/after comparison
-
-Compare daily clicks into stories from the same placement against section impressions over similar day-of-week traffic. Separately compare Search Console CTR and average position for unchanged URLs. This avoids claiming that site navigation itself caused a change in Google's search results.
-
-The local Analytics Engine binding discards datapoints during local development; Cloudflare branch previews and production write to the dataset when deployed.
+The initial comparison is a 7-day period versus the preceding 7 days for similar pages, also controlling for day-of-week shifts.

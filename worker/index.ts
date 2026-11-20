@@ -72,11 +72,22 @@ const worker = {
       const clientIp = request.headers.get("cf-connecting-ip") ?? "unknown";
       const limiter = await env.SEARCH_RATE_LIMITER.limit({ key: `engagement:${clientIp}` });
       if (!limiter.success) return new Response(null, { status: 429 });
-      if (!env.NAV_EVENTS) return new Response(null, { status: 503 });
-      env.NAV_EVENTS.writeDataPoint({
-        blobs: [event.kind, event.placement, event.source, event.target],
-        doubles: [1],
-      });
+      if (env.NAV_EVENTS) {
+        env.NAV_EVENTS.writeDataPoint({
+          blobs: [event.kind, event.placement, event.source, event.target],
+          doubles: [1],
+        });
+      } else {
+        // Existing Workers Logs provide first-party, anonymous event counts
+        // without requiring the account to provision a new analytics binding.
+        console.log(JSON.stringify({
+          event: "solar_navigation",
+          kind: event.kind,
+          placement: event.placement,
+          source: event.source,
+          target: event.target,
+        }));
+      }
       return new Response(null, {
         status: 204,
         headers: { "Cache-Control": "no-store" },

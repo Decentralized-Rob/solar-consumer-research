@@ -87,3 +87,12 @@ test("click and visibility events are instrumented in the discovery surfaces", a
   const search = await render("/search?q=connecticut");
   assert.match(search, /data-engagement-placement="search_result"/);
 });
+
+test("first-party events are logged without a new Cloudflare dataset dependency", async () => {
+  const { readFile } = await import("node:fs/promises");
+  const worker = await readFile(new URL("../worker/index.ts", import.meta.url), "utf8");
+  const config = await readFile(new URL("../vite.config.ts", import.meta.url), "utf8");
+  assert.match(worker, /solar_navigation/);
+  assert.match(worker, /parseNavigationEvent/);
+  assert.doesNotMatch(config, /analytics_engine_datasets/);
+});
