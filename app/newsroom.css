@@ -52,3 +52,12 @@
 @media(max-width:620px){.editorial-archive-card h2{font-size:24px}}
 
 .engagement-impression-marker{display:block;width:100%;height:1px;pointer-events:none}
+
+
+/* Keep Sunrun hub topic targets visible below the sticky global masthead. */
+.sunrun-topic-nav { margin: 18px 0 22px; }
+#sunrun-settlements-title,
+#sunrun-actions-title,
+#sunrun-contract,
+#sunrun-complaint-help,
+#sunrun-research-title { scroll-margin-top: 100px; }
