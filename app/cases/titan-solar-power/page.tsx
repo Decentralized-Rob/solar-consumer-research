@@ -165,7 +165,7 @@ export default function TitanSolarPowerPage() {
         </section>
       </main>
 
-      <footer className="tt-footer"><strong>Solar Consumer Research</strong><p>Independent consumer research. General information only; not legal or financial advice.</p><a href="#top">Back to top ↑</a></footer>
+      
     </div>
   );
 }
