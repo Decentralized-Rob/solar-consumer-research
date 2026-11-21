@@ -11,6 +11,7 @@ export function InfoPage({
   children,
   showLegalNotice = true,
   currentStoryHref,
+  shareHref,
   byline,
   showShareButtons = true,
   className = "",
@@ -21,10 +22,12 @@ export function InfoPage({
   children: ReactNode;
   showLegalNotice?: boolean;
   currentStoryHref?: string;
+  shareHref?: string;
   byline?: ReactNode;
   showShareButtons?: boolean;
   className?: string;
 }) {
+  const shareDestination = shareHref ?? currentStoryHref;
   return (
     <div className={`info-page ${className}`.trim()}>
       <SiteHeader />
@@ -33,7 +36,7 @@ export function InfoPage({
         <h1>{title}</h1>
         <p className="info-lede">{lede}</p>
         {byline}
-        {showShareButtons ? <ArticleShareButtons href={currentStoryHref} title={title} /> : null}
+        {showShareButtons && shareDestination ? <ArticleShareButtons href={shareDestination} title={title} /> : null}
         {children}
         {currentStoryHref ? <RelatedStories currentHref={currentStoryHref} /> : null}
         {showLegalNotice && (
