@@ -101,3 +101,42 @@ test("first-party events are logged without a new Cloudflare dataset dependency"
   assert.match(worker, /parseNavigationEvent/);
   assert.doesNotMatch(config, /analytics_engine_datasets/);
 });
+
+
+test("high-priority Sunrun pages share one global header and discovery links", async () => {
+  for (const path of [
+    "/",
+    "/companies/sunrun",
+    "/research/sunrun-25-year-solar-contracts",
+    "/research/sunrun-q3-2026-earnings",
+    "/guides/massachusetts-solar-complaint",
+    "/cases/connecticut-attorney-general-sunrun-lawsuit",
+    "/cases/freedom-forever",
+  ]) {
+    const html = await render(path);
+    assert.equal([...html.matchAll(/class="site-header"/g)].length, 1, path);
+    assert.match(html, /aria-label="Primary navigation"/, path);
+    assert.match(html, /href="\\/stories"/, path);
+    assert.match(html, /href="\\/search"/, path);
+  }
+});
+
+test("Sunrun hub links directly to its distinct research sections", async () => {
+  const html = await render("/companies/sunrun");
+  const start = html.indexOf('aria-label="Browse Sunrun reporting"');
+  assert.ok(start > 0, "Sunrun section navigation appears");
+  const end = html.indexOf("</nav>", start);
+  assert.ok(end > start);
+  const nav = html.slice(start, end);
+  for (const id of [
+    "sunrun-settlements-title",
+    "sunrun-actions-title",
+    "sunrun-contract",
+    "sunrun-complaint-help",
+    "sunrun-research-title",
+  ]) {
+    assert.ok(nav.includes('href="#' + id + '"'), "missing topic link " + id);
+    assert.ok(html.includes('id="' + id + '"'), "missing section target " + id);
+  }
+  assert.ok(start < html.indexOf('aria-label="Connecticut settlement feature"'));
+});
