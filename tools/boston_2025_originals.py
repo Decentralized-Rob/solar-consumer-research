@@ -72,10 +72,11 @@ async def main():
    note("VISIBLE_INPUTS",await locator.count())
    meta=await locator.evaluate_all("""xs=>xs.map(x=>({id:x.id,placeholder:x.placeholder,name:x.name,html:x.outerHTML.slice(0,250),parent:x.parentElement?.parentElement?.innerText.slice(0,140)}))""")
    note("INPUT_META",json.dumps(meta)[:4000])
-   match_idx=next((i for i,x in enumerate(meta) if x.get("id")=="start6"),None)
+   match_idx=next((i for i,x in enumerate(meta) if x.get("id")=="start1"),None)
    if match_idx is not None:
-    await locator.nth(match_idx).fill(PERMITS[0])
-    note("FILLED_INPUT",match_idx)
+    await locator.nth(match_idx).fill("89")
+    await page.locator("#start2").fill("ROCKDALE")
+    note("FILLED_ADDRESS","89 ROCKDALE")
     await snapshot(page,"04_filled")
     buttons=page.get_by_role("button",name=re.compile("^Search$",re.I))
     if await buttons.count():
