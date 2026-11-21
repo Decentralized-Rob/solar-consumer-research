@@ -35,20 +35,28 @@ async def main():
    for company,terms in [("giga",["Giga","Espigar"]),("sunrun",["Sunrun","Sun Run"])]:
     for term in terms:
      if await page.locator("#resultsTable_filter input").count():
-      target=page.locator("#resultsTable_filter input").first
-      await target.fill(term)
-      await target.press("End")
-      await target.press("Backspace")
-      await target.press(term[-1])
-      await page.wait_for_timeout(3500)
+      state=await page.evaluate("""term=>{
+       const j=window.jQuery||window.$;
+       if(j && j.fn && j.fn.DataTable && j.fn.DataTable.isDataTable('#resultsTable')){
+        const dt=j('#resultsTable').DataTable();
+        dt.search(term).draw();
+        return {method:'datatable',server_side:dt.settings()[0].oFeatures.bServerSide,columns:dt.columns().count()};
+       }
+       const field=document.querySelector('#resultsTableSearch');
+       const btn=document.querySelector('#resultsTableSearchBtn');
+       if(field && btn){field.value=term;field.dispatchEvent(new Event('input',{bubbles:true}));btn.click();return {method:'hidden-search-control'};}
+       return {method:'unavailable'};
+      }""",term)
+      print("SEARCH_METHOD",company,term,state,flush=True)
+      await page.wait_for_timeout(5500)
       data=await page.evaluate("""()=>({rows:[...document.querySelectorAll('#resultsTable tbody tr')].map(r=>({text:r.innerText,hrefs:[...r.querySelectorAll('a[href]')].map(a=>a.getAttribute('href'))})),info:document.querySelector('#resultsTable_info')?.innerText||'',body:document.body.innerText.slice(-1000)})""")
       print("SEPARATE_SEARCH",company,term,"ROWS",len(data["rows"]),"INFO",data["info"],"FIRST",json.dumps(data["rows"][:3])[:1500],flush=True)
       results.append({"company":company,"term":term,**data})
-    # clear after each independent company search
-    if await page.locator("#resultsTable_filter input").count():
-     await page.locator("#resultsTable_filter input").fill("")
-     await page.locator("#resultsTable_filter input").press("Backspace")
-     await page.wait_for_timeout(1000)
+    await page.evaluate("""()=>{
+     const j=window.jQuery||window.$;
+     if(j && j.fn && j.fn.DataTable && j.fn.DataTable.isDataTable('#resultsTable'))j('#resultsTable').DataTable().search('').draw();
+    }""")
+    await page.wait_for_timeout(900)
    (OUT/"giga_separate_search.json").write_text(json.dumps([x for x in results if x["company"]=="giga"],indent=2))
    (OUT/"sunrun_separate_search.json").write_text(json.dumps([x for x in results if x["company"]=="sunrun"],indent=2))
    unique={}
