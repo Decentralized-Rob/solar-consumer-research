@@ -73,6 +73,7 @@ export default function SolarComplaintRecordChecklistPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData).replace(/</g, "\\u003c") }}
       />
       <InfoPage
+        shareHref="/guides/solar-complaint-record-checklist"
         eyebrow="Consumer record checklist"
         title="Build a clean solar complaint record before you file"
         lede="Put the contract, financing records, permits, bills, production data, service history, and written communications in date order before contacting a company or agency. A clean record makes it easier to explain what happened without mixing documents, assumptions, and unresolved questions."
