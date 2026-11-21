@@ -63,7 +63,7 @@ export default function TitanCustomerHelpPage() {
           <div className="th-records"><div><h3>System and installation</h3><p>Contract, permits, inspections, PTO/interconnection record, monitoring export, photos, equipment model numbers, and service requests.</p></div><div><h3>Financial and sales records</h3><p>Proposal, signed finance documents, payment history, lender notices, sales texts/emails, and the bills used to support a savings claim.</p></div><div><h3>Home transaction records</h3><p>Title-company requests, payoff information, UCC filings if applicable, system ownership documents, and current production status.</p></div><div><h3>Where to go next</h3><p>Manufacturer support terms, a licensed local technician, your utility or permitting office, the lender’s written dispute process, or your state consumer-protection agency depending on the issue.</p></div></div>
         </section>
       </main>
-      <footer className="th-footer">Solar Consumer Research provides general research information, not legal, financial, or contractor advice.</footer>
+      
     </div>
   );
 }
