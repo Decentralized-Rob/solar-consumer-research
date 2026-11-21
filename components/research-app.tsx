@@ -8,7 +8,6 @@ import type { Resource } from "../lib/types";
 import { FeaturedSection, PathSection } from "./home/discovery-sections";
 import { LatestResearchSection } from "./home/latest-research";
 import styles from "./home/latest-research.module.css";
-import { HomeFooter } from "./home/navigation";
 import { SiteHeader } from "./site-header";
 import {
   QuestionsSection,
@@ -121,7 +120,6 @@ export function ResearchApp() {
         <SearchPlaceholder />
         <QuestionsSection />
       </main>
-      <HomeFooter />
     </div>
   );
 }
