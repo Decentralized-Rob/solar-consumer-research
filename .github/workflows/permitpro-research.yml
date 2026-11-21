@@ -5,6 +5,7 @@ on:
       - research/permitpro-sunrun-giga
     paths:
       - "tools/permitpro_probe.py"
+      - "tools/permitpro_retrieval.py"
       - ".github/workflows/permitpro-research.yml"
   workflow_dispatch:
 
@@ -25,12 +26,16 @@ jobs:
           python -m pip install --disable-pip-version-check playwright
           python -m playwright install --with-deps chromium
       - name: Probe public municipality portals (no credentials)
-        run: python tools/permitpro_probe.py
+        run: |
+          python tools/permitpro_probe.py
+          python tools/permitpro_retrieval.py
       - name: Save inspection evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: permitpro-portal-probe
-          path: permitpro_probe/
+          path: |
+            permitpro_probe/
+            permitpro_retrieval/
           if-no-files-found: warn
           retention-days: 14
