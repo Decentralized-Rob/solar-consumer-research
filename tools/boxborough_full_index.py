@@ -95,6 +95,25 @@ async def main():
       same=next((r for n,p,r in other if p==path),other[0][2])
       allrows.extend(same)
     print("INDEX_ROWS",len(allrows),flush=True)
+
+    dates=[str(r.get("Application Date","")) for r in allrows if r.get("Application Date")]
+    uniqueids=set(str(r.get("_id","")) for r in allrows)
+    print("SCAN_COVERAGE","UNIQUE_IDS",len(uniqueids),"DATES",min(dates) if dates else "",max(dates) if dates else "",flush=True)
+    cutoff="2021-11-21"
+    recent=[r for r in allrows if str(r.get("Application Date",""))>=cutoff]
+    def rowdesc(r):
+     return {"_id":r.get("_id"),"application":r.get("Application ID"),"date":r.get("Application Date"),"address":r.get("address"),"type":r.get("type"),"company":r.get("applicantCompany"),"contractor":r.get("contractorCompany"),"work":str(r.get("proposedWorkDescription") or "")[:250]}
+    solar=[rowdesc(r) for r in recent if re.search(r"solar|photo.?voltaic|PV instal",str(r.get("type",""))+" "+str(r.get("proposedWorkDescription","")),re.I)]
+    roof=[rowdesc(r) for r in recent if re.search(r"roof|shingle|re.?roof",str(r.get("type",""))+" "+str(r.get("proposedWorkDescription","")),re.I)]
+    byroof={}
+    for r in roof:byroof.setdefault(norm(r["address"]),[]).append(r)
+    pairs=[{"address":s["address"],"solar":s,"roof":r} for s in solar for r in byroof.get(norm(s["address"]),[]) if s["_id"]!=r["_id"]]
+    print("ALTERNATE_CANDIDATES","RECENT",len(recent),"SOLAR",len(solar),"ROOF",len(roof),"PAIRS",len(pairs),"SAMPLES",json.dumps(pairs[:3])[:2300],flush=True)
+    (OUT/"solar_candidates.json").write_text(json.dumps(solar,indent=2))
+    (OUT/"roof_candidates.json").write_text(json.dumps(roof,indent=2))
+    (OUT/"solar_roof_address_pairs.json").write_text(json.dumps(pairs,indent=2))
+    (OUT/"coverage.json").write_text(json.dumps({"returned_rows":len(allrows),"unique_ids":len(uniqueids),"oldest":min(dates) if dates else None,"newest":max(dates) if dates else None,"recent":len(recent),"solar":len(solar),"roof":len(roof),"pairs":len(pairs)},indent=2))
+
     # Preserve independent name-match sets.
     for company,regex in WORDS.items():
      hits=[v for v in allrows if regex.search(flatten(v))]
