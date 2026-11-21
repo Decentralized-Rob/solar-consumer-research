@@ -37,7 +37,22 @@ async def main():
    rows=list(csv.DictReader(io.StringIO(data.decode("utf-8-sig",errors="replace"))))
    print("INDEX",len(rows),"HEADERS",list(rows[0]) if rows else [],flush=True)
    if not rows:return
-   direct=[x for x in rows if re.search(r'sunrun|giga property|espigar', " ".join(str(v or "") for v in x.values()),re.I)]
+   # Separate-name backup. Neither company has to be present for the other to be reported.
+   giga=[x for x in rows if re.search(r'giga|espigar', " ".join(str(v or "") for v in x.values()),re.I)]
+   sunrun=[x for x in rows if re.search(r'sunrun|sun[ -]run', " ".join(str(v or "") for v in x.values()),re.I)]
+   direct=giga+sunrun
+   def by_address(xs):
+    d={}
+    for row in xs:d.setdefault(n(field(row,"Address")),[]).append(row)
+    return d
+   gi=by_address(giga)
+   si=by_address(sunrun)
+   explicit=[{"address":field(g[0],"Address"),"giga":g,"sunrun":si[k]} for k,g in gi.items() if k and k in si]
+   (OUT/"giga_separate_search.json").write_text(json.dumps(giga,indent=2))
+   (OUT/"sunrun_separate_search.json").write_text(json.dumps(sunrun,indent=2))
+   print("BACKUP_SEPARATE_SEARCH","GIGA",len(giga),"SUNRUN",len(sunrun),"DIRECT_JOINT_ADDRESSES",len(explicit),flush=True)
+   for row in giga[:15]:print("GIGA_ONLY",field(row,"Application ID"),field(row,"Address"),field(row,"Proposed Work")[:110],flush=True)
+   for row in sunrun[:15]:print("SUNRUN_ONLY",field(row,"Application ID"),field(row,"Address"),field(row,"Proposed Work")[:110],flush=True)
    solar=[x for x in rows if re.search(r'\bsolar\b|photovoltaic|p\.?v\.? |roof.?top energy',field(x,"Proposed Work")+" "+field(x,"Application Type"),re.I)]
    roof=[x for x in rows if re.search(r'\broof(?:ing)?\b|shingles?|reroof|re-roof|minor repairs|roof replacement',field(x,"Proposed Work")+" "+field(x,"Application Type"),re.I)]
    indexed={}
@@ -51,16 +66,19 @@ async def main():
      if field(s,"Application ID")==field(r,"Application ID"):continue
      pairs.append({"address":field(s,"Address"),"solar":s,"roof":r})
    print("DIRECT",len(direct),"SOLAR",len(solar),"ROOF",len(roof),"PAIRS",len(pairs),flush=True)
-   (OUT/"candidate_index.json").write_text(json.dumps({"headers":list(rows[0]),"total":len(rows),"direct":direct[:80],"solar":solar[:200],"roof_solar_pairs":pairs[:150]},indent=2))
+   (OUT/"candidate_index.json").write_text(json.dumps({"headers":list(rows[0]),"total":len(rows),"direct":direct[:80],"giga_only":giga[:100],"sunrun_only":sunrun[:100],"explicit_matches":explicit[:100],"solar":solar[:200],"roof_solar_pairs":pairs[:150]},indent=2))
    for x in direct[:8]:print("DIRECT_CANDIDATE",field(x,"Application ID"),field(x,"Address"),field(x,"Proposed Work")[:100],flush=True)
    for x in pairs[:15]:print("PAIR",x["address"],field(x["solar"],"Application ID"),field(x["roof"],"Application ID"),flush=True)
    # Select a documented solar permit, and one plausible paired roof permit,
    # solely to test public process-screen and original attachment access.
    sample=[]
-   if pairs:
-    sample=[pairs[0]["solar"],pairs[0]["roof"]]
-   elif direct:sample=direct[:2]
-   else:sample=solar[:1] or roof[:1] or rows[:1]
+   if explicit:
+    sample=explicit[0]["giga"][:1]+explicit[0]["sunrun"][:1]
+   else:
+    # Independent backup: open a Giga record and a Sunrun record even when no match.
+    sample=giga[:1]+sunrun[:1]
+    if not sample and pairs:sample=[pairs[0]["solar"],pairs[0]["roof"]]
+    if not sample:sample=solar[:1] or roof[:1] or rows[:1]
    seen=set()
    for entry in sample:
     app=field(entry,"Application ID")
