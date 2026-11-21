@@ -144,6 +144,13 @@ export default function SunrunCompanyPage() {
         </nav>
 
         <p><small>Updated <time dateTime={sunrunHub.dateModified}>November 15, 2026</time></small></p>
+        <nav className="editorial-shortcuts sunrun-topic-nav" aria-label="Browse Sunrun reporting">
+          <a href="#sunrun-settlements-title">Settlements</a>
+          <a href="#sunrun-actions-title">Lawsuits &amp; investigations</a>
+          <a href="#sunrun-contract">Contracts</a>
+          <a href="#sunrun-complaint-help">Complaint help</a>
+          <a href="#sunrun-research-title">All Sunrun stories</a>
+        </nav>
         <section className="editorial-pinned" aria-label="Connecticut settlement feature">
           <p className="editorial-meta">Connecticut · Attorney general settlement · October 2026</p>
           <h2><Link href="/cases/connecticut-attorney-general-sunrun-lawsuit">Connecticut Sunrun Settlement: Disputed Signature, Verification Call and Consumer Relief</Link></h2>
