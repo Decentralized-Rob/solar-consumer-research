@@ -185,7 +185,7 @@ test("every published page template has the same masthead and footer navigation"
 test("mobile menu uses the same navigation and a keyboard-accessible native disclosure", async () => {
   const html = await render("/research/sunrun-25-year-solar-contracts");
   assert.match(html, /class="site-header-mobile"/);
-  assert.match(html, /<summary>Menu<\\/summary>/);
+  assert.ok(html.includes("<summary>Menu</summary>"));
   const start = html.indexOf('aria-label="Mobile primary navigation"');
   const end = html.indexOf("</nav>", start);
   assert.ok(start > 0 && end > start, "mobile navigation rendered");
