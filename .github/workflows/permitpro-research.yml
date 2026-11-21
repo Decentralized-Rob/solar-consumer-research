@@ -1,10 +1,10 @@
-name: Boxborough PermitPro - Giga and Sunrun separate backup
+name: Boxborough Giga/Sunrun independent backup UI search
 on:
   push:
     branches:
       - research/permitpro-sunrun-giga
     paths:
-      - "tools/boxborough_probe.py"
+      - "tools/boxborough_separate_ui_search.py"
       - ".github/workflows/permitpro-research.yml"
   workflow_dispatch:
 permissions:
@@ -12,7 +12,7 @@ permissions:
 jobs:
   boxborough:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 8
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -22,13 +22,13 @@ jobs:
         run: |
           python -m pip install --disable-pip-version-check playwright
           python -m playwright install --with-deps chromium
-      - name: Search Boxborough Giga and Sunrun separately, then retrieve originals
-        run: python -u tools/boxborough_probe.py
-      - name: Save Boxborough records and verified PDF originals
+      - name: Giga search and Sunrun search independently using Boxborough UI
+        run: python -u tools/boxborough_separate_ui_search.py
+      - name: Preserve separate searches and verified originals
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: boxborough-permitpro-originals-and-separate-searches
-          path: boxborough_probe/
+          name: boxborough-independent-giga-sunrun-backup
+          path: boxborough_ui_backup/
           if-no-files-found: warn
           retention-days: 2
