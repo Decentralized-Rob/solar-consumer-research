@@ -80,10 +80,11 @@ async def main():
     await snapshot(page,"04_filled")
     buttons=page.get_by_role("button",name=re.compile("^Search$",re.I))
     if await buttons.count():
-     await buttons.last.click(timeout=8000)
+     note("SEARCH_BUTTON_ENABLED",await page.locator("#btnSearch").is_enabled())
+     await page.locator("#btnSearch").click(timeout=8000)
     else:
      await locator.nth(match_idx).press("Enter")
-    await page.wait_for_timeout(3500)
+    await page.wait_for_timeout(12500)
     await snapshot(page,"05_results")
     for selector in ["tr","[class*='result']","[title*='View']","[title*='Download']"]:
      note("RESULT_SELECTOR",selector,"COUNT",await page.locator(selector).count())
