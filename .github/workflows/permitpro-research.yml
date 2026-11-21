@@ -1,39 +1,34 @@
-name: PermitPro public agreement discovery (isolated)
+name: Boston 2025 original Sunrun Giga permit image check
 on:
   push:
     branches:
       - research/permitpro-sunrun-giga
     paths:
-      - "tools/permitpro_find_ppa.py"
+      - "tools/boston_2025_originals.py"
       - ".github/workflows/permitpro-research.yml"
   workflow_dispatch:
-
 permissions:
   contents: read
-  actions: read
-
 jobs:
   inspect:
     runs-on: ubuntu-latest
-    timeout-minutes: 22
+    timeout-minutes: 8
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - name: Install PDF reader and browser
+      - name: Install browser
         run: |
-          python -m pip install --disable-pip-version-check playwright PyMuPDF requests
+          python -m pip install --disable-pip-version-check playwright
           python -m playwright install --with-deps chromium
-      - name: Search saved Sunrun indexes for publicly available PPAs
-        env:
-          GH_READ_TOKEN: ${{ github.token }}
-        run: python -u tools/permitpro_find_ppa.py
-      - name: Save document matches only
+      - name: Retrieve matching July 2025 permit image PDFs
+        run: python -u tools/boston_2025_originals.py
+      - name: Save archive captures
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: permitpro-ppa-candidates
-          path: permitpro_ppa_results/
+          name: boston-2025-originals-probe
+          path: boston_originals_probe/
           if-no-files-found: warn
           retention-days: 1
