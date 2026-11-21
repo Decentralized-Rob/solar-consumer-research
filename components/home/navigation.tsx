@@ -1,5 +1,5 @@
 import Link from "next/link";
-export function HomeFooter() {
+export function SiteFooter() {
   return (
     <footer className="home-footer">
       <div className="home-wrap home-footer-inner">
@@ -13,6 +13,7 @@ export function HomeFooter() {
           <Link href="/lawsuits-settlements">Lawsuits &amp; Settlements</Link>
           <Link href="/search">Search</Link>
           <Link href="/research">Research</Link>
+          <Link href="/about">About</Link>
           <a href="/resources">Resources</a>
           <a href="/federal-resources">Federal</a>
           <a href="/guides">Guides</a>
@@ -23,6 +24,7 @@ export function HomeFooter() {
           <a href="/privacy">Privacy</a>
           <a href="/disclaimer">Disclaimer</a>
           <a href="https://www.facebook.com/SolarComplaint/" target="_blank" rel="noreferrer">Facebook</a>
+          <a href="#">Back to top</a>
         </nav>
         <p>General information only. No legal advice or attorney-client relationship.</p>
       </div>
