@@ -1,16 +1,16 @@
-name: Boxborough public PermitPro search backend diagnosis
+name: Boxborough independent company search on published permit index
 on:
   push:
     branches:
       - research/permitpro-sunrun-giga
     paths:
-      - "tools/boxborough_backend_probe.py"
+      - "tools/boxborough_company_search.py"
       - ".github/workflows/permitpro-research.yml"
   workflow_dispatch:
 permissions:
   contents: read
 jobs:
-  inspect:
+  search:
     runs-on: ubuntu-latest
     timeout-minutes: 8
     steps:
@@ -22,13 +22,13 @@ jobs:
         run: |
           python -m pip install --disable-pip-version-check playwright
           python -m playwright install --with-deps chromium
-      - name: Capture public search request and filter schema
-        run: python -u tools/boxborough_backend_probe.py
-      - name: Save diagnosis
+      - name: Search Giga and Sunrun independently with backend
+        run: python -u tools/boxborough_company_search.py
+      - name: Save separated company results
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: boxborough-search-backend-diagnosis
-          path: boxborough_backend_probe/
+          name: boxborough-giga-sunrun-separated-results
+          path: boxborough_company_search/
           if-no-files-found: warn
-          retention-days: 1
+          retention-days: 2
