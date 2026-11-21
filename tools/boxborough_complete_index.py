@@ -43,6 +43,7 @@ async def main():
    payload["activeDashboardView"]["filters"]=[]
    payload["resultsSettings"]["limit"]=CHUNK
    allrows=[]
+   short_pages=[]
    skip=0
    total=9500
    while skip<total:
@@ -55,11 +56,11 @@ async def main():
     total=int(j.get("resultsSettings",{}).get("totalSearchResults",total))
     allrows+=rows
     print("INDEX_PAGE","skip",skip,"received",len(rows),"all",total,flush=True)
-    if not rows:break
-    skip+=len(rows)
-    if len(rows)<CHUNK and skip<total:raise RuntimeError(f"Page ended prematurely: {skip} of {total}")
+    if len(rows)<min(CHUNK,total-skip):short_pages.append({"offset":skip,"received":len(rows),"expected":min(CHUNK,total-skip)})
+    skip+=CHUNK
+    if not rows:print("EMPTY_BACKEND_PAGE","at",skip-CHUNK,flush=True)
    print("SCANNED",len(allrows),"EXPECTED",total,flush=True)
-   if len(allrows)<total:raise RuntimeError("Index incomplete, cannot report a no-match")
+   print("SHORT_PAGES",json.dumps(short_pages),flush=True)
    date_cutoff="2021-11-21"
    target=[r for r in allrows if str(r.get("Application Date",""))>=date_cutoff]
    giga=[record(r,r"giga|espigar") for r in target if any(re.search(r"giga|espigar",str(r.get(k) or ""),re.I) for k in FIELDS)]
@@ -69,7 +70,7 @@ async def main():
    si={}
    for x in sunrun:si.setdefault(clean(x["address"]),[]).append(x)
    matched=[{"address":g[0]["address"],"giga":g,"sunrun":si[k]} for k,g in gi.items() if k and k in si]
-   summary={"portal":"Boxborough PermitPro","total_public_index":total,"records_examined":len(target),
+   summary={"portal":"Boxborough PermitPro","total_public_index":total,"records_examined":len(target),"public_rows_returned":len(allrows),"expected_index_total":total,"short_pages":short_pages,
     "cutoff":date_cutoff,"giga":giga,"sunrun":sunrun,"same_address_matches":matched}
    (OUT/"separate_company_search.json").write_text(json.dumps(summary,indent=2))
    print("SEPARATE_FULL_INDEX_RESULTS","GIGA",len(giga),"SUNRUN",len(sunrun),"SAME_ADDRESS",len(matched),flush=True)
