@@ -20,21 +20,33 @@ async def main():
    print("FIELDS",selected,"ADDED",add,flush=True)
    await page.locator("#columnList").select_option(selected+add)
    await page.wait_for_timeout(900)
-   async with page.expect_download(timeout=70000) as dl:
-    await page.locator("#downloadResultsCSV").click()
-   download=await dl.value
-   f=OUT/"export.csv";await download.save_as(f)
-   rows=list(csv.DictReader(io.StringIO(f.read_bytes().decode("utf-8-sig",errors="replace"))))
-   print("CSV_ROWS",len(rows),"FIELDS",list(rows[0]) if rows else [],flush=True)
-   gigs=[r for r in rows if re.search(r"giga property|luiz.*espigar|luis.*espigar", "|".join(str(r.get(k,"")) for k in r if k and re.search(r"applicant|contractor",k,re.I)),re.I)]
-   suns=[r for r in rows if re.search(r"sunrun", "|".join(str(r.get(k,"")) for k in r if k and re.search(r"applicant|contractor",k,re.I)),re.I)]
-   print("GIGA",len(gigs),"SUNRUN",len(suns),flush=True)
-   for r in gigs:print("GIGA_APPLICATION",r.get("Application Date"),r.get("Application ID"),r.get("Address"),r.get("Application Type"),flush=True)
-   def addr(s):return re.sub("[^A-Z0-9]","",s.upper())
-   matches=[{"giga":g,"sunrun":s} for g in gigs for s in suns if addr(g.get("Address",""))==addr(s.get("Address",""))]
-   print("SAME_ADDRESS",len(matches),flush=True)
-   (OUT/"candidate_results.json").write_text(json.dumps({"count_all":len(rows),"giga":gigs,"sunrun":suns,"same_address":matches},indent=2))
-   f.unlink()
+   fields=await page.locator("#filterWhat option").evaluate_all("""xs=>xs.map(x=>({v:x.value,t:x.textContent.trim()}))""")
+   print("FILTER_FIELDS",json.dumps(fields)[:10000],flush=True)
+   targets=["contractorCompany","contractorName","applicantCompany","applicantName"]
+   found=[]
+   for field in targets:
+    match=next((x for x in fields if x["v"].lower()==field.lower() or x["t"].lower()==field.lower().replace("company"," company").replace("name"," name")),None)
+    if not match:
+     print("FIELD_UNAVAILABLE",field,flush=True)
+     continue
+    for term in ("Giga","Espigar") if field in ("contractorCompany","contractorName","applicantName") else ("Giga",):
+     try:
+      await page.locator("#filterWhat").select_option(match["v"])
+      opts2=await page.locator("#filterOperator option").evaluate_all("""xs=>xs.map(x=>({v:x.value,t:x.textContent.trim()}))""")
+      op=next((x["v"] for x in opts2 if "contain" in x["t"].lower() or "contain" in x["v"].lower()),None)
+      print("SEARCH_FILTER",field,term,"OPTIONS",json.dumps(opts2)[:300],flush=True)
+      if not op:continue
+      await page.locator("#filterOperator").select_option(op)
+      await page.locator("input.filterWhere:visible").first.fill(term)
+      await page.locator("#filterShow").click()
+      await page.wait_for_timeout(10500)
+      rows=await page.locator("tr").evaluate_all("""xs=>xs.map(x=>({text:x.innerText,hrefs:[...x.querySelectorAll('a[href]')].map(a=>a.getAttribute('href'))})).filter(x=>x.hrefs.some(y=>y&&y.includes('act=process')))""")
+      print("FILTER_RESULT",field,term,"COUNT",len(rows),json.dumps(rows)[:4000],flush=True)
+      found.extend([{"filter":field,"term":term,**x} for x in rows if term.lower() in x["text"].lower() or re.search("25-|26-|24-",x["text"])])
+      await page.goto(BASE+"index.php?act=dashboard",wait_until="domcontentloaded",timeout=25000)
+      await page.wait_for_timeout(2000)
+     except Exception as ex:print("FILTER_ERROR",field,term,str(ex)[:300],flush=True)
+   (OUT/"candidate_results.json").write_text(json.dumps(found,indent=2))
   except Exception as e:
    print("ERROR",repr(e)[:1300],flush=True)
    (OUT/"error.txt").write_text(str(e))
