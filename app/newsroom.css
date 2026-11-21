@@ -61,3 +61,16 @@
 #sunrun-contract,
 #sunrun-complaint-help,
 #sunrun-research-title { scroll-margin-top: 100px; }
+
+
+/* Shared navigation is readable on every page, including legacy custom layouts. */
+.home-footer { color: #f7f5ee; }
+.home-footer strong, .home-footer nav a { color: #f7f5ee; }
+.home-footer p { color: #d8e5dd; font-size: 12px; }
+.home-footer nav { font-size: 12px; line-height: 1.5; }
+.home-footer a:focus-visible, .site-header a:focus-visible,
+.site-header-mobile summary:focus-visible { outline: 3px solid #e6aa18; outline-offset: 3px; }
+@media (max-width: 950px) {
+  .site-header-mobile nav { max-height: min(70vh, 560px); overflow-y: auto; }
+  .site-header-mobile nav a { min-height: 44px; display: flex; align-items: center; }
+}

@@ -19,6 +19,6 @@ export default function GoodLeapLayout({children}:{children:React.ReactNode}) {
       <div>{nav.map(([label,href])=><Link href={href} key={href}>{label}</Link>)}</div>
     </nav>
     {children}
-    <footer className="gl-footer"><p><strong>SolarComplaint.com</strong> organizes public records and official consumer resources.</p><p><Link href="/methodology">Methodology</Link> · <Link href="/corrections">Corrections</Link> · <Link href="/disclaimer">Disclaimer</Link></p></footer>
+    
   </div>;
 }

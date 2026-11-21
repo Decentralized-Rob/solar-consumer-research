@@ -140,3 +140,62 @@ test("Sunrun hub links directly to its distinct research sections", async () => 
   }
   assert.ok(start < html.indexOf('aria-label="Connecticut settlement feature"'));
 });
+
+
+test("every published page template has the same masthead and footer navigation", async () => {
+  const representativePages = [
+    "/",
+    "/stories",
+    "/companies/sunrun",
+    "/lawsuits-settlements",
+    "/search",
+    "/research",
+    "/research/sunrun-q3-2026-earnings",
+    "/guides",
+    "/guides/massachusetts-solar-complaint",
+    "/guides/massachusetts-30-day-demand-letter",
+    "/resources",
+    "/states/arizona",
+    "/states/florida",
+    "/states/michigan",
+    "/states/massachusetts",
+    "/goodleap",
+    "/goodleap/states",
+    "/goodleap/states/minnesota",
+    "/cases/freedom-forever",
+    "/cases/freedom-forever/warning-signs",
+    "/cases/freedom-forever/what-happened",
+    "/cases/titan-solar-power",
+    "/cases/titan-solar-power/customer-help",
+    "/cases/titan-solar-power/warranty-after-bankruptcy",
+  ];
+
+  for (const path of representativePages) {
+    const html = await render(path);
+    assert.equal([...html.matchAll(/class="site-header"/g)].length, 1, path + " shared header");
+    assert.equal([...html.matchAll(/class="home-footer"/g)].length, 1, path + " shared footer");
+    assert.match(html, /aria-label="Primary navigation"/, path);
+    assert.match(html, /aria-label="Footer navigation"/, path);
+    for (const href of ["/stories", "/companies/sunrun", "/lawsuits-settlements", "/guides", "/resources", "/search"]) {
+      assert.ok(html.includes('href="' + href + '"'), path + " missing " + href);
+    }
+  }
+});
+
+test("mobile menu uses the same navigation and a keyboard-accessible native disclosure", async () => {
+  const html = await render("/research/sunrun-25-year-solar-contracts");
+  assert.match(html, /class="site-header-mobile"/);
+  assert.ok(html.includes("<summary>Menu</summary>"));
+  const start = html.indexOf('aria-label="Mobile primary navigation"');
+  const end = html.indexOf("</nav>", start);
+  assert.ok(start > 0 && end > start, "mobile navigation rendered");
+  const nav = html.slice(start, end);
+  for (const href of ["/stories", "/companies/sunrun", "/lawsuits-settlements", "/guides", "/resources", "/search"]) {
+    assert.ok(nav.includes('href="' + href + '"'), "mobile menu missing " + href);
+  }
+  const { readFile } = await import("node:fs/promises");
+  const header = await readFile(new URL("../components/site-header.tsx", import.meta.url), "utf8");
+  assert.match(header, /onClick={closeMobileMenu}/, "mobile selection should close the menu");
+  assert.match(header, /event.key === "Escape"/, "Escape should dismiss the menu");
+  assert.match(header, /closeOnOutsidePointer/, "outside pointer interaction should dismiss the menu");
+});
