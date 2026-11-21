@@ -33,6 +33,23 @@ async def main():
   for app,meta in TARGETS.items():
    match=next((row for row in rows if app in row["text"]),None)
    if not match:
+    # Holbrook sometimes takes longer than Upton to replace the dashboard's first page.
+    await page.wait_for_timeout(7500)
+    rows=await page.locator("tr").evaluate_all("""els=>els.map(tr=>({text:tr.innerText,hrefs:[...tr.querySelectorAll('a[href]')].map(a=>a.getAttribute('href'))})).filter(x=>x.text.includes('26-0'))""")
+    match=next((row for row in rows if app in row["text"]),None)
+   if not match:
+    # Same PermitPro dashboard workflow, this time by the exact application number.
+    await page.goto(BASE+"index.php?act=dashboard",wait_until="domcontentloaded",timeout=25000)
+    await page.wait_for_timeout(1200)
+    await page.locator("#filterWhat").select_option("Application ID")
+    await page.locator("#filterOperator").select_option("contains")
+    await page.locator("input.filterWhere:visible").first.fill(app)
+    await page.locator("#filterShow").click()
+    await page.wait_for_timeout(8000)
+    rows=await page.locator("tr").evaluate_all("""els=>els.map(tr=>({text:tr.innerText,hrefs:[...tr.querySelectorAll('a[href]')].map(a=>a.getAttribute('href'))})).filter(x=>x.text.includes('26-0'))""")
+    print("APPLICATION_FILTER",app,"ROWS",json.dumps(rows)[:1300])
+    match=next((row for row in rows if app in row["text"]),None)
+   if not match:
     print("APP_MISSING",app);continue
    href=next((href for href in match["hrefs"] if "act=process" in href),None)
    if not href:print("NO_LINK",app,match);continue
