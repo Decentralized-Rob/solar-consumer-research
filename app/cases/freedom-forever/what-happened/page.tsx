@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { ArticleShareButtons } from "../../../../components/article-share";
 import "../freedom-hub.css";
 
 const canonicalUrl = "https://solarcomplaint.com/cases/freedom-forever/what-happened";
@@ -111,6 +112,8 @@ export default function FreedomForeverWhatHappened() {
           <span>Last reviewed September 9, 2026</span>
           <span>Sources linked inline</span>
         </div>
+
+        <ArticleShareButtons href="/cases/freedom-forever/what-happened" title="What Happened to Freedom Forever? From National Solar Installer to Chapter 7" />
 
         <article className="ff-article-body">
           <div className="ff-article-callout">
