@@ -116,8 +116,8 @@ test("high-priority Sunrun pages share one global header and discovery links", a
     const html = await render(path);
     assert.equal([...html.matchAll(/class="site-header"/g)].length, 1, path);
     assert.match(html, /aria-label="Primary navigation"/, path);
-    assert.match(html, /href="\\/stories"/, path);
-    assert.match(html, /href="\\/search"/, path);
+    assert.ok(html.includes('href="/stories"'), path);
+    assert.ok(html.includes('href="/search"'), path);
   }
 });
 
