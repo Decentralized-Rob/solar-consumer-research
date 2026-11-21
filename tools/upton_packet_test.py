@@ -1,59 +1,71 @@
-import asyncio, hashlib, json, re
+import asyncio, hashlib, json
 from pathlib import Path
 from urllib.parse import urljoin
 from playwright.async_api import async_playwright
 
-OUT=Path("upton_test_packet"); OUT.mkdir(exist_ok=True)
+OUT=Path("upton_test_packet");OUT.mkdir(exist_ok=True)
 BASE="https://upton.patriotpermitpro.com/"
-TARGETS=[
- {"id":11860,"application":"25-00509","type":"Roofing / Minor Repairs","name":"Luiz Espigar","date":"2025-06-13"},
- {"id":11757,"application":"25-00417","type":"Electrical","name":"SUNRUN / Nathan Ashe","date":"2025-05-19"},
- {"id":11756,"application":"25-00416","type":"Solar","name":"SUNRUN / Marc Blanchard","date":"2025-05-19"},
- {"id":11768,"application":"25-00426","type":"Electrical","name":"Copper & Oak LLC","date":"2025-05-20"}
-]
+TARGETS={
+ "25-00509":{"type":"Roofing / Minor Repairs","name":"Luiz Espigar","date":"2025-06-13"},
+ "25-00417":{"type":"Electrical","name":"Sunrun / Nathan Ashe","date":"2025-05-19"},
+ "25-00416":{"type":"Solar","name":"Sunrun / Marc Blanchard","date":"2025-05-19"},
+ "25-00426":{"type":"Electrical","name":"Copper & Oak LLC","date":"2025-05-20"}
+}
 manifest=[]
+records=[]
 async def main():
  async with async_playwright() as p:
   browser=await p.chromium.launch(headless=True)
   context=await browser.new_context(accept_downloads=True)
   page=await context.new_page()
   r=await page.goto(BASE+"index.php?act=dashboard",wait_until="domcontentloaded",timeout=25000)
+  await page.wait_for_timeout(1200)
   print("DASHBOARD",r.status)
-  for target in TARGETS:
-   idx=target["id"]
-   url=f"{BASE}index.php?act=process&id={idx}"
-   try:
-    res=await page.goto(url,wait_until="domcontentloaded",timeout=25000)
-    await page.wait_for_timeout(800)
-    data=await page.evaluate("""() => ({title:document.title,url:location.href,text:document.body.innerText.slice(0,30000),links:[...document.querySelectorAll('a[href]')].map(a=>({href:a.href,text:a.innerText,title:a.title,outer:a.outerHTML.slice(0,800)})),buttons:[...document.querySelectorAll('button')].map(b=>({text:b.innerText,outer:b.outerHTML.slice(0,450)}))})""")
-    folder=OUT/target["application"];folder.mkdir(exist_ok=True)
-    (folder/"record.json").write_text(json.dumps(data,indent=2))
-    print("RECORD",idx,"HTTP",res.status if res else None,"URL",data["url"],"TITLE",data["title"],"TEXT",repr(data["text"][:1800]),"PDF_LINKS",json.dumps([a for a in data["links"] if "s3.amazonaws.com" in a["href"]])[:6000])
-    # All links on public Documents area, including PDFs other than s3.
-    links=[a["href"] for a in data["links"] if any(x in a["href"].lower() for x in ["s3.amazonaws.com",".pdf","downloadfile","uploads"])]
-    print("LINK_COUNT",len(links))
-    # Don't capture unrelated documents if wrong property/application.
-    if not ("6 CROSS" in data["text"].upper() or target["application"] in data["text"]):
-     print("RECORD_MISMATCH",idx,"NOT_DOWNLOADING")
-     continue
-    for link in dict.fromkeys(links):
-     try:
-      resp=await context.request.get(link,timeout=25000)
-      b=await resp.body()
-      if not b.startswith(b"%PDF-"):
-       print("NOT_PDF",link,resp.status,len(b),b[:50])
-       continue
-      sha=hashlib.sha256(b).hexdigest()
-      path=folder/f"{target['application']}_{sha[:12]}.pdf"
-      path.write_bytes(b)
-      ent={**target,"source_record":url,"document_url":link,"filename":str(path),"sha256":sha,"bytes":len(b),"status":resp.status,"content_type":resp.headers.get("content-type")}
-      manifest.append(ent)
-      print("PDF_SAVED",json.dumps(ent))
-     except Exception as e:
-      print("PDF_ERROR",str(e)[:280],link)
-   except Exception as e: print("RECORD_ERROR",idx,str(e)[:500])
+  await page.locator("#filterWhat").select_option("address")
+  await page.locator("#filterOperator").select_option("contains")
+  await page.locator("input.filterWhere:visible").first.fill("6 CROSS")
+  await page.locator("#filterShow").click()
+  await page.wait_for_timeout(1800)
+  print("FILTER_TEXT",(await page.locator("body").inner_text())[-4000:])
+  rows=await page.locator("tr").evaluate_all("""els=>els.map(tr=>({text:tr.innerText,hrefs:[...tr.querySelectorAll('a[href]')].map(a=>a.getAttribute('href'))})).filter(x=>x.text.includes('25-0'))""")
+  (OUT/"filtered_rows.json").write_text(json.dumps(rows,indent=2))
+  print("ROWS",json.dumps(rows)[:14000])
+  for app,meta in TARGETS.items():
+   match=next((row for row in rows if app in row["text"]),None)
+   if not match:
+    print("APP_MISSING",app);continue
+   href=next((href for href in match["hrefs"] if "act=process" in href),None)
+   if not href:print("NO_LINK",app,match);continue
+   url=urljoin(BASE,href)
+   res=await page.goto(url,wait_until="domcontentloaded",timeout=25000)
+   await page.wait_for_timeout(500)
+   obj=await page.evaluate("""()=>({text:document.body.innerText.slice(0,22000),links:[...document.querySelectorAll('a[href]')].map(a=>({href:a.href,title:a.title,text:a.innerText}))})""")
+   folder=OUT/app;folder.mkdir(exist_ok=True)
+   (folder/"record.json").write_text(json.dumps(obj,indent=2))
+   print("OPEN",app,url,"TEXT",repr(obj["text"][:800]),"HTTP",res.status if res else None)
+   good= "6 CROSS" in obj["text"].upper() and app in obj["text"]
+   if not good:
+    print("MISMATCH",app);continue
+   found=[a["href"] for a in obj["links"] if ".s3.amazonaws.com/" in a["href"] or (".pdf" in a["href"].lower() and a["href"].startswith("http"))]
+   found=list(dict.fromkeys(found))
+   print("PDF_URLS",app,len(found),found[:15])
+   records.append({**meta,"app":app,"record_url":url,"files_seen":len(found),"record_status":res.status if res else None})
+   for link in found[:25]:
+    try:
+     response=await context.request.get(link,timeout=25000)
+     b=await response.body()
+     if not b.startswith(b"%PDF-"):
+      print("NOT_PDF",app,link,response.status,len(b));continue
+     sha=hashlib.sha256(b).hexdigest()
+     filename=f"{app}_{sha[:12]}.pdf"
+     (folder/filename).write_bytes(b)
+     entry={**meta,"app":app,"source_record":url,"document_url":link,"filename":f"{app}/{filename}","sha256":sha,"bytes":len(b),"status":response.status,"content_type":response.headers.get("content-type")}
+     manifest.append(entry)
+     print("PDF_SAVED",json.dumps(entry))
+    except Exception as e:print("PDF_ERROR",app,link,str(e)[:220])
   await context.close();await browser.close()
+ (OUT/"records.json").write_text(json.dumps(records,indent=2))
  (OUT/"manifest.json").write_text(json.dumps(manifest,indent=2))
- print("RESULT",len(manifest),"PDFS",len(TARGETS),"RECORDS")
+ print("RESULT",len(manifest),"PDFS",len(records),"MATCHING_RECORDS")
 
 asyncio.run(main())
