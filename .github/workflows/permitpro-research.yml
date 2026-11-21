@@ -1,10 +1,10 @@
-name: PermitPro 2025 signed document investigation
+name: One property original PDFs - Upton method
 on:
   push:
     branches:
       - research/permitpro-sunrun-giga
     paths:
-      - "tools/permitpro_new_2025.py"
+      - "tools/holbrook_packet_test.py"
       - ".github/workflows/permitpro-research.yml"
   workflow_dispatch:
 permissions:
@@ -22,13 +22,13 @@ jobs:
         run: |
           python -m pip install --disable-pip-version-check playwright
           python -m playwright install --with-deps chromium
-      - name: Inspect 2025 Giga Sunrun originals
-        run: python -u tools/permitpro_new_2025.py
-      - name: Save discovered original documents
+      - name: Repeat Upton permit record PDF downloads for one property
+        run: python -u tools/holbrook_packet_test.py
+      - name: Save original PDFs and source manifest
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: permitpro-2025-giga-sunrun-originals
-          path: permitpro_new_2025/
+          name: holbrook-35-marion-original-permit-pdfs
+          path: holbrook_35_marion_packet/
           if-no-files-found: warn
           retention-days: 1
