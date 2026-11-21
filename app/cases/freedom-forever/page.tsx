@@ -319,11 +319,7 @@ export default function FreedomForeverHub() {
         </section>
       </main>
 
-      <footer className="ffr-footer">
-        <strong>SolarComplaint</strong>
-        <p>Independent consumer research. General information only; not legal or financial advice.</p>
-        <div><Link href="/about">About</Link><Link href="/methodology">Methodology</Link><Link href="/corrections">Corrections</Link><a href="#top">Back to top ↑</a></div>
-      </footer>
+      
     </div>
   );
 }
