@@ -57,7 +57,7 @@ async def main():
   for f in EXTRA:
    d=known.get(f.lower(),{"fieldName":f,"friendlyName":f,"dataType":"string","collection":"formdata"})
    if f not in exist:fd.append(d);exist.add(f)
-  sem=asyncio.Semaphore(4)
+  sem=asyncio.Semaphore(8)
   async def fetch(skip=0,limit=250,filterfield=None,term=None):
    async with sem:
     obj=copy.deepcopy(template)
@@ -101,15 +101,5 @@ async def main():
      (OUT/f"{company}_independent_matches.json").write_text(json.dumps(hits,indent=2))
      print("INDEPENDENT",company,len(hits),"SAMPLES",json.dumps(hits[:3])[:1700],flush=True)
     (OUT/"scan_summary.json").write_text(json.dumps({"first_count":len(base),"total_reported":total,"rows_fetched":len(allrows)},indent=2))
-  for company,regex in WORDS.items():
-   results=[]
-   for f in ["contractorCompany","applicantCompany","contractorName","applicantName","proposedWorkDescription"]:
-    for term in (["Giga","Espigar"] if company=="giga" else ["Sunrun","Sun Run"]):
-     data,stat=await fetch(0,250,f,term)
-     candidates=rowlist(data)
-     summary={"field":f,"term":term,"status":stat,"counts":{k:v for k,v in data.get("resultsSettings",{}).items() if "total" in k.lower()},"matches":len(candidates[0][2]) if candidates else 0,"sample":candidates[0][2][:3] if candidates else []}
-     results.append(summary)
-     print("FILTER",company,f,term,stat,summary["counts"],summary["matches"],flush=True)
-   (OUT/f"{company}_filter_results.json").write_text(json.dumps(results,indent=2))
   await ctx.close();await browser.close()
 asyncio.run(main())
