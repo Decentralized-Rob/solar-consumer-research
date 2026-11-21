@@ -37,10 +37,17 @@ async def main():
      if await page.locator("#resultsTable_filter input").count():
       state=await page.evaluate("""term=>{
        const j=window.jQuery||window.$;
-       if(j && j.fn && j.fn.DataTable && j.fn.DataTable.isDataTable('#resultsTable')){
-        const dt=j('#resultsTable').DataTable();
-        dt.search(term).draw();
-        return {method:'datatable',server_side:dt.settings()[0].oFeatures.bServerSide,columns:dt.columns().count()};
+       if(j && j.fn && j.fn.DataTable){
+        try{
+         const dt=j('#resultsTable').DataTable();
+         if(dt&&typeof dt.search==='function'){
+          dt.search(term).draw();
+          return {method:'datatable',server_side:dt.settings?.()[0]?.oFeatures?.bServerSide,columns:dt.columns?.().count?.()};
+         }
+        }catch(e){}
+       }
+       if(j && j.fn && j.fn.dataTable){
+        try{const old=j('#resultsTable').dataTable(); if(typeof old.fnFilter==='function'){old.fnFilter(term);return {method:'legacy-datatable'};}}catch(e){}
        }
        const field=document.querySelector('#resultsTableSearch');
        const btn=document.querySelector('#resultsTableSearchBtn');
@@ -54,7 +61,8 @@ async def main():
       results.append({"company":company,"term":term,**data})
     await page.evaluate("""()=>{
      const j=window.jQuery||window.$;
-     if(j && j.fn && j.fn.DataTable && j.fn.DataTable.isDataTable('#resultsTable'))j('#resultsTable').DataTable().search('').draw();
+     if(j&&j.fn&&j.fn.DataTable){try{j('#resultsTable').DataTable().search('').draw();return;}catch(e){}}
+     if(j&&j.fn&&j.fn.dataTable){try{j('#resultsTable').dataTable().fnFilter('');}catch(e){}}
     }""")
     await page.wait_for_timeout(900)
    (OUT/"giga_separate_search.json").write_text(json.dumps([x for x in results if x["company"]=="giga"],indent=2))
