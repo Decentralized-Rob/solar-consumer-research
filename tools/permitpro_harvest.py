@@ -51,7 +51,7 @@ async def collect_record(context,base,town,href):
     finally:await page.close()
 
 async def find_sunrun_csv(context,town,base):
-    page=await context.new_page(accept_downloads=True)
+    page=await context.new_page()
     try:
         await page.goto(base+"index.php?act=dashboard",wait_until="domcontentloaded",timeout=24000)
         await page.wait_for_timeout(1200)
