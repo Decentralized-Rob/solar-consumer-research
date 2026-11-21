@@ -132,6 +132,7 @@ export default function SunrunCompanyPage() {
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }} />
       <InfoPage
+        shareHref="/companies/sunrun"
         eyebrow="Company research · Sunrun"
         title={sunrunHub.title}
         lede="Connecticut and Arizona have separate Sunrun settlements with different rules for consumer relief. Find the filing instructions, then see what courts have ruled in other Sunrun disputes."
