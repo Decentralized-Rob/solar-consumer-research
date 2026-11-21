@@ -4,6 +4,8 @@ import "./globals.css";
 import "./site-skin.css";
 import "./newsroom.css";
 import "./mobile-app-scale.css";
+import "./article-share.css";
+import { SitewideShareFooter } from "../components/article-share";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://solarcomplaint.com"),
@@ -90,6 +92,7 @@ export default function RootLayout({
           }}
         />
         {children}
+        <SitewideShareFooter />
         <GooglePreferredSource />
       </body>
     </html>

@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import Link from "next/link";
 import { SiteHeader } from "./site-header";
 import { RelatedStories } from "./related-stories";
+import { ArticleShareButtons } from "./article-share";
 
 export function InfoPage({
   eyebrow,
@@ -10,6 +11,8 @@ export function InfoPage({
   children,
   showLegalNotice = true,
   currentStoryHref,
+  byline,
+  showShareButtons = true,
   className = "",
 }: {
   eyebrow: string;
@@ -18,6 +21,8 @@ export function InfoPage({
   children: ReactNode;
   showLegalNotice?: boolean;
   currentStoryHref?: string;
+  byline?: ReactNode;
+  showShareButtons?: boolean;
   className?: string;
 }) {
   return (
@@ -27,6 +32,8 @@ export function InfoPage({
         <p className="eyebrow">{eyebrow}</p>
         <h1>{title}</h1>
         <p className="info-lede">{lede}</p>
+        {byline}
+        {showShareButtons ? <ArticleShareButtons href={currentStoryHref} title={title} /> : null}
         {children}
         {currentStoryHref ? <RelatedStories currentHref={currentStoryHref} /> : null}
         {showLegalNotice && (

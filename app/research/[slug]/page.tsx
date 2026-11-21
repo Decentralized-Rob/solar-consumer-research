@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { InfoPage } from "../../../components/info-page";
+import Link from "next/link";
 import { getResearchArticle, researchArticles } from "../../../content/research";
 import { buildResearchMetadata, buildResearchStructuredData, researchEyebrow } from "../../../lib/research-article";
 
@@ -46,7 +47,8 @@ export default async function ResearchArticlePage({ params }: ResearchPageProps)
 
   return <>
     <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }} />
-    <InfoPage currentStoryHref={story.href} className="research-story-page" eyebrow={researchEyebrow(story)} title={story.displayTitle ?? story.title} lede={story.lede ?? story.deck}>
+    <InfoPage currentStoryHref={story.href} className="research-story-page" eyebrow={researchEyebrow(story)} title={story.displayTitle ?? story.title} lede={story.lede ?? story.deck}
+      byline={<p className="page-updated">{story.author ? <>By {story.authorSlug ? <Link href={`/authors/${story.authorSlug}`}>{story.author}</Link> : story.author} · </> : null}{story.publishedAt}</p>}>
       <Body />
     </InfoPage>
   </>;

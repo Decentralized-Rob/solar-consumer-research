@@ -1,0 +1,49 @@
+/* Built-in react-share platform marks, no external share-widget script. */
+.sc-share {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin: 16px 0 24px;
+  padding: 12px 0;
+  border-top: 1px solid var(--line, #d8d7cf);
+  border-bottom: 1px solid var(--line, #d8d7cf);
+}
+.sc-share__label {
+  color: var(--muted, #68716d);
+  font: 600 12px/1.3 Arial, Helvetica, sans-serif;
+  margin-right: 5px;
+}
+.sc-share button:not(.sc-share__copy) {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+}
+.sc-share button { cursor: pointer; }
+.sc-share button:focus-visible {
+  outline: 3px solid #226caa;
+  outline-offset: 3px;
+}
+.sc-share__copy {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border: 0;
+  border-radius: 50%;
+  color: #30445a;
+  background: #e8edf0;
+}
+.sc-share__copy:hover { background: #dbe4e9; }
+.sc-share__feedback {
+  min-width: 0;
+  color: #205c42;
+  font: 600 12px/1.3 Arial, Helvetica, sans-serif;
+}
+.sc-share-footer {
+  width: min(720px, calc(100% - 40px));
+  margin: 36px auto;
+}
+.sc-share--footer { border: 0; margin: 0; padding: 12px 0; }

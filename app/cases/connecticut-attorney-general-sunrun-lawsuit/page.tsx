@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { InfoPage } from "../../../components/info-page";
+import { ArticleShareButtons } from "../../../components/article-share";
 import { SunrunEthicsSpotlight } from "../../../components/sunrun-ethics-spotlight";
 
 const canonicalUrl = "https://solarcomplaint.com/cases/connecticut-attorney-general-sunrun-lawsuit";
@@ -81,12 +82,14 @@ export default function ConnecticutSunrunCasePage() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       <InfoPage
+        showShareButtons={false}
         currentStoryHref="/cases/connecticut-attorney-general-sunrun-lawsuit"
         eyebrow="Connecticut enforcement · October 31, 2026"
         title="Connecticut Sunrun Settlement: The Rejected Lease, the Verification Call and the Path to Consumer Relief"
         lede="A Connecticut homeowner turned down a 25-year Sunrun solar lease that would have cost her $306.98 a month. Her father rejected the same offer."
       >
         <p className="page-updated">By <Link href="/authors/jules-young">Jules Young</Link> · October 31, 2026</p>
+        <ArticleShareButtons href="/cases/connecticut-attorney-general-sunrun-lawsuit" title="Connecticut Sunrun Settlement: The Rejected Lease, the Verification Call and the Path to Consumer Relief" />
 
         <section className="info-section">
           <p>According to a lawsuit filed by Connecticut Attorney General William Tong, the contract was signed electronically anyway. Her first and last names were reversed, as were her initials.</p>
