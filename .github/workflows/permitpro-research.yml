@@ -8,6 +8,7 @@ on:
       - "tools/permitpro_retrieval.py"
       - "tools/permitpro_harvest.py"
       - "tools/permitpro_oct2025.py"
+      - "tools/upton_packet_test.py"
       - ".github/workflows/permitpro-research.yml"
   workflow_dispatch:
 
@@ -28,12 +29,12 @@ jobs:
           python -m pip install --disable-pip-version-check playwright
           python -m playwright install --with-deps chromium
       - name: Probe public municipality portals (no credentials)
-        run: python tools/permitpro_oct2025.py
+        run: python tools/upton_packet_test.py
       - name: Save inspection evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: permitpro-oct2025-investigation
-          path: permitpro_oct2025/
+          name: upton-6-cross-st-packet
+          path: upton_test_packet/
           if-no-files-found: warn
-          retention-days: 14
+          retention-days: 1
