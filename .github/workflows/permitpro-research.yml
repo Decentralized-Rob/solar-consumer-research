@@ -1,10 +1,10 @@
-name: Boylston one-town contractor lookup (Upton discovery step)
+name: One property original PDFs - Upton method
 on:
   push:
     branches:
       - research/permitpro-sunrun-giga
     paths:
-      - "tools/boylston_giga_candidates.py"
+      - "tools/boylston_mile_hill_packet_test.py"
       - ".github/workflows/permitpro-research.yml"
   workflow_dispatch:
 permissions:
@@ -22,13 +22,13 @@ jobs:
         run: |
           python -m pip install --disable-pip-version-check playwright
           python -m playwright install --with-deps chromium
-      - name: Identify first Giga-Sunrun matching address in Boylston only
-        run: python -u tools/boylston_giga_candidates.py
-      - name: Save only identified candidate metadata
+      - name: Original PDF extraction from one property
+        run: python -u tools/boylston_mile_hill_packet_test.py
+      - name: Archive original PDFs
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: boylston-giga-address-matches
-          path: boylston_giga_candidates/
+          name: boylston-268-mile-hill-originals
+          path: boylston_268_mile_hill_packet/
           if-no-files-found: warn
           retention-days: 1
