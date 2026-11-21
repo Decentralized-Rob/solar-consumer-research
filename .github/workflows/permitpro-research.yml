@@ -1,10 +1,10 @@
-name: One property original PDFs - Upton method
+name: Upton method - One property original PDFs
 on:
   push:
     branches:
       - research/permitpro-sunrun-giga
     paths:
-      - "tools/holbrook_packet_test.py"
+      - "tools/boylston_barnard_packet_test.py"
       - ".github/workflows/permitpro-research.yml"
   workflow_dispatch:
 permissions:
@@ -12,7 +12,7 @@ permissions:
 jobs:
   inspect:
     runs-on: ubuntu-latest
-    timeout-minutes: 8
+    timeout-minutes: 9
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -22,13 +22,13 @@ jobs:
         run: |
           python -m pip install --disable-pip-version-check playwright
           python -m playwright install --with-deps chromium
-      - name: Repeat Upton permit record PDF downloads for one property
-        run: python -u tools/holbrook_packet_test.py
-      - name: Save original PDFs and source manifest
+      - name: Original Upton one-property record download sequence
+        run: python -u tools/boylston_barnard_packet_test.py
+      - name: Original scanned PDFs and manifest
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: holbrook-35-marion-original-permit-pdfs
-          path: holbrook_35_marion_packet/
+          name: boylston-23-barnard-original-permit-pdfs
+          path: boylston_23_barnard_packet/
           if-no-files-found: warn
           retention-days: 1
