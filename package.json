@@ -19,8 +19,7 @@
     "@supabase/supabase-js": "2.112.3",
     "next": "16.4.6",
     "react": "19.2.6",
-    "react-dom": "19.2.6",
-    "react-share": "6.1.0"
+    "react-dom": "19.2.6"
   },
   "devDependencies": {
     "@cloudflare/vite-plugin": "1.54.0",

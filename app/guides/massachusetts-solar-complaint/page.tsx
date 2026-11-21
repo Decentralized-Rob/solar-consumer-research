@@ -72,6 +72,7 @@ export default function MassachusettsSolarComplaintGuidePage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData).replace(/</g, "\\u003c") }}
       />
       <InfoPage
+        shareHref="/guides/massachusetts-solar-complaint"
         eyebrow="Massachusetts consumer guide"
         title="How to file a solar complaint with the Massachusetts Attorney General"
         lede="Massachusetts consumers can file a complaint with the Attorney General's Consumer Advocacy & Response Division online or by mail. The AGO says it can help with most consumer issues, including home-improvement contracts, business closures, debt collection, financing, and utility-bill disputes."

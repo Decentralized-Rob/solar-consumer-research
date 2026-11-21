@@ -5,7 +5,6 @@ import "./site-skin.css";
 import "./newsroom.css";
 import "./mobile-app-scale.css";
 import "./article-share.css";
-import { SitewideShareFooter } from "../components/article-share";
 import { SiteFooter } from "../components/home/navigation";
 
 export const metadata: Metadata = {
@@ -93,7 +92,6 @@ export default function RootLayout({
           }}
         />
         {children}
-        <SitewideShareFooter />
         <GooglePreferredSource />
         <SiteFooter />
       </body>

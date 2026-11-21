@@ -71,6 +71,7 @@ export default function MassachusettsDemandLetterGuidePage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData).replace(/</g, "\\u003c") }}
       />
       <InfoPage
+        shareHref="/guides/massachusetts-30-day-demand-letter"
         eyebrow="Massachusetts consumer guide"
         title="Massachusetts 30-day demand letter requirements"
         lede="Massachusetts guidance says consumers asserting certain claims over unfair or deceptive business practices generally must send the business a written demand 30 days before filing the claim in court. The letter must identify the complaint, the harm suffered, and the relief requested."

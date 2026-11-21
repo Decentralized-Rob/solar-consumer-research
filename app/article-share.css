@@ -1,49 +1,42 @@
-/* Built-in react-share platform marks, no external share-widget script. */
+/* Editorial share links are local HTML/CSS; no Meta or X SDK is loaded. */
 .sc-share {
   display: flex;
-  flex-wrap: wrap;
   align-items: center;
+  flex-wrap: wrap;
   gap: 10px;
-  margin: 16px 0 24px;
-  padding: 12px 0;
+  margin: 18px 0 28px;
+  padding: 13px 0;
   border-top: 1px solid var(--line, #d8d7cf);
   border-bottom: 1px solid var(--line, #d8d7cf);
 }
-.sc-share__label {
-  color: var(--muted, #68716d);
-  font: 600 12px/1.3 Arial, Helvetica, sans-serif;
-  margin-right: 5px;
-}
-.sc-share button:not(.sc-share__copy) {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-}
-.sc-share button { cursor: pointer; }
-.sc-share button:focus-visible {
-  outline: 3px solid #226caa;
-  outline-offset: 3px;
-}
+.sc-share__link,
 .sc-share__copy {
   display: inline-flex;
-  align-items: center;
   justify-content: center;
-  width: 36px;
-  height: 36px;
-  border: 0;
-  border-radius: 50%;
-  color: #30445a;
-  background: #e8edf0;
+  align-items: center;
+  gap: 9px;
+  min-height: 42px;
+  padding: 9px 13px;
+  border: 1px solid #c2c9c3;
+  border-radius: 6px;
+  background: #fff;
+  color: #18201d;
+  text-decoration: none;
+  font: 700 13px/1.25 Arial, Helvetica, sans-serif;
+  cursor: pointer;
 }
-.sc-share__copy:hover { background: #dbe4e9; }
+.sc-share__link:hover,
+.sc-share__copy:hover { border-color: #5a7865; background: #f3f6f1; }
+.sc-share__link:focus-visible,
+.sc-share__copy:focus-visible { outline: 3px solid #206f9f; outline-offset: 3px; }
+.sc-share__icon { display: block; flex: none; width: 20px; height: 20px; }
+.sc-share__copy svg { flex: none; }
 .sc-share__feedback {
-  min-width: 0;
+  min-height: 16px;
   color: #205c42;
-  font: 600 12px/1.3 Arial, Helvetica, sans-serif;
+  font: 700 12px/1.3 Arial, Helvetica, sans-serif;
 }
-.sc-share-footer {
-  width: min(720px, calc(100% - 40px));
-  margin: 36px auto;
+@media (max-width: 480px) {
+  .sc-share { gap: 8px; }
+  .sc-share__link, .sc-share__copy { min-height: 44px; padding: 9px 11px; }
 }
-.sc-share--footer { border: 0; margin: 0; padding: 12px 0; }

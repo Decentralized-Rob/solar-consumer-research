@@ -158,6 +158,7 @@ export default function SunrunEthicsCompliancePage() {
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }} />
       <InfoPage
+        shareHref="/companies/sunrun/ethics-compliance"
         className={styles.page}
         eyebrow="Company watch · Sunrun"
         title="Sunrun Ethics & Compliance"
