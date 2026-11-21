@@ -61,19 +61,18 @@ async def main():
      icons=await target.locator("button,a,[title],[aria-label],span").evaluate_all("""els=>els.map(x=>({outer:x.outerHTML.slice(0,220)})).slice(0,30)""")
      note("FOLDER_ICON_OPTIONS",json.dumps(icons)[:3000])
     except Exception as e:note("FOLDER_ICON_ERROR",str(e)[:180])
-    search_icons=page.locator('[title*="Search"],[aria-label*="Search"]')
-    note("SEARCH_ICONS",await search_icons.count())
-    if await search_icons.count():
-     try:await search_icons.first.click(timeout=5000)
-     except Exception as e:note("SEARCH_ICON_FAIL",str(e)[:180])
-     await page.wait_for_timeout(650)
+    folder_search=target.locator('a[title="Search"][ng-click*="searchFolder"]')
+    note("FOLDER_SEARCH",await folder_search.count())
+    if await folder_search.count():
+     await folder_search.first.click(timeout=6500)
+     await page.wait_for_timeout(1300)
      await snapshot(page,"03_search_icon")
    # Try enter one unique permit number into a visible search field
-   locator=page.locator('input:visible')
+   locator=page.locator('input[type="text"]:visible:not([disabled])')
    note("VISIBLE_INPUTS",await locator.count())
    meta=await locator.evaluate_all("""xs=>xs.map(x=>({id:x.id,placeholder:x.placeholder,name:x.name,html:x.outerHTML.slice(0,250),parent:x.parentElement?.parentElement?.innerText.slice(0,140)}))""")
    note("INPUT_META",json.dumps(meta)[:4000])
-   match_idx=next((i for i,x in enumerate(meta) if re.search("permit|number",str(x),re.I)),None)
+   match_idx=next((i for i,x in enumerate(meta) if re.search("permit.*number|number.*permit",str(x),re.I)),None)
    if match_idx is not None:
     await locator.nth(match_idx).fill(PERMITS[0])
     note("FILLED_INPUT",match_idx)
