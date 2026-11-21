@@ -7,6 +7,7 @@ on:
       - "tools/permitpro_probe.py"
       - "tools/permitpro_retrieval.py"
       - "tools/permitpro_harvest.py"
+      - "tools/permitpro_oct2025.py"
       - ".github/workflows/permitpro-research.yml"
   workflow_dispatch:
 
@@ -16,7 +17,7 @@ permissions:
 jobs:
   inspect:
     runs-on: ubuntu-latest
-    timeout-minutes: 12
+    timeout-minutes: 14
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -27,12 +28,12 @@ jobs:
           python -m pip install --disable-pip-version-check playwright
           python -m playwright install --with-deps chromium
       - name: Probe public municipality portals (no credentials)
-        run: python tools/permitpro_harvest.py
+        run: python tools/permitpro_oct2025.py
       - name: Save inspection evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: permitpro-public-pdf-harvest
-          path: permitpro_harvest/
+          name: permitpro-oct2025-investigation
+          path: permitpro_oct2025/
           if-no-files-found: warn
           retention-days: 14
