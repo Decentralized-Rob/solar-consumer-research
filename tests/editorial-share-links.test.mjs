@@ -35,7 +35,7 @@ test("editorial articles render static Facebook and X share links for the canoni
     assert.ok(html.includes("https://x.com/intent/post?url=" + expected), path + " missing X canonical share URL");
     assert.ok(html.includes("rel=" + String.fromCharCode(34) + "noopener noreferrer" + String.fromCharCode(34)), path);
     assert.ok(html.includes("aria-label=" + String.fromCharCode(34) + "Copy article link" + String.fromCharCode(34)), path);
-    assert.doesNotMatch(html, /connect\\.facebook\\.net|platform\\.x\\.com\\/widgets\\.js/, path);
+    assert.ok(!html.includes("connect.facebook.net") && !html.includes("platform.x.com/widgets.js"), path);
   }
 });
 
@@ -43,7 +43,7 @@ test("utility and directory routes do not display share buttons", async () => {
   for (const path of ["/", "/search", "/about", "/privacy", "/disclaimer", "/methodology", "/resources", "/guides", "/stories", "/states/massachusetts"]) {
     const html = await render(path);
     assert.doesNotMatch(html, /aria-label="Share this article"/, path);
-    assert.doesNotMatch(html, /sharer\\/sharer\\.php/, path);
+    assert.ok(!html.includes("sharer/sharer.php"), path);
   }
 });
 
@@ -64,7 +64,7 @@ test("social anchors require no third-party SDK or client-side popup", async () 
   const share = await readFile(new URL("../components/article-share.tsx", import.meta.url), "utf8");
   const layout = await readFile(new URL("../app/layout.tsx", import.meta.url), "utf8");
   const pkg = JSON.parse(await readFile(new URL("../package.json", import.meta.url), "utf8"));
-  assert.doesNotMatch(share, /"use client"|react-share|window\\.open|navigator\\.share/);
+  assert.ok(!share.includes('"use client"') && !share.includes("react-share") && !share.includes("window.open") && !share.includes("navigator.share"));
   assert.match(share, /href={facebookHref}/);
   assert.match(share, /href={xHref}/);
   assert.doesNotMatch(layout, /SitewideShareFooter/);
