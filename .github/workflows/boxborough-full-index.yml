@@ -4,7 +4,7 @@ on:
     branches:
       - research/boxborough-full-index-20261121
     paths:
-      - "tools/boxborough_full_index.py"
+      - "tools/boxborough_process_records.py"
       - ".github/workflows/boxborough-full-index.yml"
   workflow_dispatch:
 permissions:
@@ -23,12 +23,12 @@ jobs:
           python -m pip install playwright
           python -m playwright install --with-deps chromium
       - name: Search public permit index
-        run: python -u tools/boxborough_full_index.py
+        run: python -u tools/boxborough_process_records.py
       - name: Preserve independent search results
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: boxborough-full-index-results
-          path: boxborough_full_index/
+          name: boxborough-full-permit-records
+          path: boxborough_permit_records/
           retention-days: 2
           if-no-files-found: warn
