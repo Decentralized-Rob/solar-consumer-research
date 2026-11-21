@@ -144,7 +144,7 @@ export default function SunrunCompanyPage() {
         </nav>
 
         <p><small>Updated <time dateTime={sunrunHub.dateModified}>November 15, 2026</time></small></p>
-        <nav className="editorial-shortcuts" aria-label="Browse Sunrun reporting">
+        <nav className="editorial-shortcuts sunrun-topic-nav" aria-label="Browse Sunrun reporting">
           <a href="#sunrun-settlements-title">Settlements</a>
           <a href="#sunrun-actions-title">Lawsuits &amp; investigations</a>
           <a href="#sunrun-contract">Contracts</a>
