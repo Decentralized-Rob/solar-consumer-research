@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { ArticleShareButtons } from "../../../../components/article-share";
 import "../freedom-hub.css";
 
 const canonicalUrl = "https://solarcomplaint.com/cases/freedom-forever/warning-signs";
@@ -119,6 +120,8 @@ export default function FreedomForeverWarningSigns() {
           <span>Last reviewed September 13, 2026</span>
           <span>Sources linked inline</span>
         </div>
+
+        <ArticleShareButtons href="/cases/freedom-forever/warning-signs" title="Before the Bankruptcy: The Freedom Forever Warning Signs Were Already Public" />
 
         <article className="ff-article-body">
           <div className="ff-article-callout">
