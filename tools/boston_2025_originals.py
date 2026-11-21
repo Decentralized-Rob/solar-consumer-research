@@ -64,7 +64,7 @@ async def main():
     folder_search=target.locator('a[title="Search"][ng-click*="searchFolder"]')
     note("FOLDER_SEARCH",await folder_search.count())
     if await folder_search.count():
-     await folder_search.first.click(timeout=6500)
+     await folder_search.last.click(timeout=6500)
      await page.wait_for_timeout(1300)
      await snapshot(page,"03_search_icon")
    # Try enter one unique permit number into a visible search field
