@@ -39,7 +39,7 @@ class DiscoveryTests(unittest.TestCase):
     def test_no_results_is_not_error_or_proof_no_state_cases(self):
         result = discovery.search(fetch=lambda _: {"results": [], "next": None})
         self.assertEqual(result["status"], "no_candidates_indexed")
-        self.assertIn("state cases excluded", result["scope"])
+        self.assertIn("Massachusetts state cases NOT indexed", result["scope"])
 
     def test_reject_cross_origin_pagination(self):
         with self.assertRaises(ValueError):
