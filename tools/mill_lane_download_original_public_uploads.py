@@ -8,8 +8,8 @@ from pathlib import Path
 from urllib.parse import unquote,urlparse
 from playwright.async_api import async_playwright
 BASE="https://brimfield.patriotpermitpro.com/"
-RECORDS={"roof":("22-00442","2283"),"solar_building":("22-00441","2282"),"solar_electrical":("22-00443","2284")}
-ROOT=Path("mill_lane_all_original_attachments");ROOT.mkdir(parents=True,exist_ok=True)
+RECORDS={"solar_building":("22-00441","2282")}
+ROOT=Path("mill_lane_solar_original_attachments");ROOT.mkdir(parents=True,exist_ok=True)
 entries=[]
 async def main():
  async with async_playwright() as p:
@@ -19,7 +19,10 @@ async def main():
   for kind,(app,record) in RECORDS.items():
    url=BASE+f"index.php?act=process&id={record}"
    await page.goto(url,wait_until="domcontentloaded",timeout=40000)
-   await page.wait_for_timeout(400)
+   try:
+    await page.locator('a[href*="act=form/view/"]').first.wait_for(timeout=15000)
+   except Exception as ex: print("FORM_WAIT_TIMEOUT",kind,repr(ex)[:150],flush=True)
+   await page.wait_for_timeout(1200)
    data=await page.evaluate("""()=>({
     url:location.href,text:document.body?.innerText||"",
     docs:[...document.querySelectorAll('a[href]')].filter(a=>(a.href.includes('s3.amazonaws.com/')||a.href.includes('act=form/view/')||a.href.includes('act=form/certificate/'))).map(a=>({url:a.href,label:(a.closest('tr')?.innerText||a.innerText||'').slice(0,220)}))
