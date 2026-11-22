@@ -49,7 +49,7 @@ async def town(ctx,town):
   for n in chosen:
    if n not in existing:
     fd.append(names.get(n,{"fieldName":n,"friendlyName":n,"dataType":"string","collection":"formdata"})); existing.add(n)
-  async def query(skip=0,limit=50,field=None,term=None):
+  async def query(skip=0,limit=50,field=None,term=None,global_term=None):
    obj=copy.deepcopy(template)
    obj["activeDashboardView"]["selectedFieldNames"]=chosen
    obj["activeDashboardView"]["modified"]=True
@@ -57,7 +57,7 @@ async def town(ctx,town):
    if field:
     d=names.get(field,{})
     obj["activeDashboardView"]["filters"]=[{"what":field,"operator":"contains","where":term,"show":True,"collection":d.get("collection","formdata"),"dataType":d.get("dataType","string"),"valueType":"string"}]
-   obj["resultsSettings"].update({"skip":skip,"limit":limit,"fieldData":fd})
+   obj["resultsSettings"].update({"skip":skip,"limit":limit,"fieldData":fd,"searchValue":global_term or ""})
    try:
     r=await ctx.request.post(base+"index.php?act=dashboard&mode=getResults",form={"jsonData":json.dumps(obj)},timeout=55000)
     j=await r.json()
@@ -76,6 +76,10 @@ async def town(ctx,town):
   if not posterm:posfield="proposedWorkDescription";posterm="solar"
   st,ctrl=await query(limit=20,field=posfield,term=posterm)
   print("FILTER_CONTROL",town,posfield,posterm,st,ctrl.get("resultsSettings",{}).get("totalSearchResults"),len(ctrl.get("resultsData",[])),preview(ctrl.get("resultsData",[])[:1],850),flush=True)
+  for term in ["Sunrun","Sunrun Installation Services","solar"]:
+   st,j=await query(limit=40,global_term=term)
+   rr=j.get("resultsData",[])
+   print("GLOBAL_SEARCH",town,repr(term),"HTTP",st,"SEARCH_TOTAL",j.get("resultsSettings",{}).get("totalSearchResults"),"RETURNED",len(rr),"HITS",preview(rr[:5],3200),flush=True)
   companyfields=[n for n in chosen if re.search(r"contractor|applicant|company|installer|installing|authorized|agent",n,re.I)]
   companyfields=list(dict.fromkeys(companyfields))[:12]
   for name in companyfields:
@@ -85,7 +89,7 @@ async def town(ctx,town):
    print("SUNRUN_FILTER",town,name,"HTTP",st,"MATCHES",total,"RETURNED",len(rr),"SAMPLE",preview(rr[:3],1750),flush=True)
   # Full index fallback if no material name result. Confirm real occurrences in fields.
   total=int(sets.get("totalApplications") or sets.get("totalSearchResults") or 0)
-  if total and total<=18000:
+  if False and total and total<=18000:
    allrows=[]
    step=200
    for start in range(0,total,step):
