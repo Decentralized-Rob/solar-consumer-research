@@ -1,4 +1,4 @@
-name: Court RECAP original-document recovery
+name: Massachusetts court RECAP original-document recovery
 
 on:
   pull_request:
@@ -12,9 +12,10 @@ on:
         type: string
         required: true
       court:
-        description: 'CourtListener court ID (e.g. mad)'
-        type: string
-        required: true
+        description: 'Massachusetts US District Court only (mad)'
+        type: choice
+        options: [mad]
+        default: mad
       company:
         description: 'Company under investigation'
         type: choice
@@ -59,8 +60,8 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - name: Search public RECAP federal dockets for Giga Property Solutions
-        run: python tools/court-records/discover_recap.py --out court-recap-output
+      - name: Search only Massachusetts federal RECAP dockets for Giga Property Solutions
+        run: python tools/court-records/discover_recap.py --court mad --out court-recap-output
       - name: Archive exact discovery outcome
         if: always()
         uses: actions/upload-artifact@v4
