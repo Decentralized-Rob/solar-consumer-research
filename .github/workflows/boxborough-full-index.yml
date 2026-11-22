@@ -1,10 +1,10 @@
-name: PermitPro Sunrun portal query path
+name: Brimfield Sunrun one project original packet
 on:
   push:
     branches:
       - research/boxborough-full-index-20261121
     paths:
-      - "tools/permitpro_sunrun_query_path.py"
+      - "tools/brimfield_single_sunrun_packet.py"
       - ".github/workflows/boxborough-full-index.yml"
   workflow_dispatch:
 permissions:
@@ -23,12 +23,12 @@ jobs:
           python -m pip install playwright
           python -m playwright install --with-deps chromium
       - name: Search public permit index
-        run: python -u tools/permitpro_sunrun_query_path.py
+        run: python -u tools/brimfield_single_sunrun_packet.py
       - name: Preserve independent search results
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: permitpro-sunrun-query-results
-          path: tools/permitpro_sunrun_query_path.py
+          name: brimfield-sunrun-one-original-packet
+          path: brimfield_sunrun_single/
           retention-days: 2
           if-no-files-found: warn
