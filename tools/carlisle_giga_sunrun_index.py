@@ -42,11 +42,12 @@ async def main():
    if not res.ok: raise RuntimeError(f"HTTP_{res.status}_{(await res.text())[:240]}")
    j=await res.json()
    return j.get("resultsData",[]),j.get("resultsSettings",{}).get("totalSearchResults")
-  rows,count=await get(0,150)
-  for skip in range(150,int(count),150):
-   rr,_=await get(skip,150)
+  rows,count=await get(0,1000)
+  for skip in range(1000,int(count),1000):
+   rr,_=await get(skip,1000)
    rows.extend(rr)
   print("ALL_ROWS",len(rows),"EXPECTED",count,"SELECTED_FIELDS",len(selected),flush=True)
+  if len(rows) != int(count): print("WARNING_INCOMPLETE_PAGINATION",len(rows),count,flush=True)
   names=defaultdict(list)
   for r in rows:names[addr(r.get("address"))].append(r)
   results=[]
