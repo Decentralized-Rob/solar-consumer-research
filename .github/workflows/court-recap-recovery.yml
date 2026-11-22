@@ -1,10 +1,6 @@
 name: Massachusetts court RECAP original-document recovery
 
 on:
-  pull_request:
-    paths:
-      - 'tools/court-records/**'
-      - '.github/workflows/court-recap-recovery.yml'
   workflow_dispatch:
     inputs:
       case_number:
