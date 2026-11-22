@@ -1,10 +1,10 @@
-name: Brimfield solar roofing matched-property discovery
+name: Brimfield check next Sunrun paired roof permits
 on:
   push:
     branches:
       - research/boxborough-full-index-20261121
     paths:
-      - "tools/brimfield_find_next_roof_match.py"
+      - "tools/brimfield_roof_source_debug.py"
       - ".github/workflows/boxborough-full-index.yml"
   workflow_dispatch:
 permissions:
