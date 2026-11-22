@@ -51,7 +51,7 @@ async def pagesnapshot(page):
         let t=window.__tbl;
         let info=t.page.info();
         return {info:info,cols:[...t.settings()[0].nTable.querySelectorAll("thead th")].map(x=>x.innerText),
-          rows:[...document.querySelector("#permitPublicView").querySelectorAll("tbody tr")].map(tr=>[...tr.querySelectorAll('td')].map(td=>td.innerText))};
+          rows:[...t.settings()[0].nTable.querySelectorAll("tbody tr")].map(tr=>[...tr.querySelectorAll('td')].map(td=>td.innerText))};
     }""")
 async def collect(page,limit_pages=10):
     snap=await pagesnapshot(page)
