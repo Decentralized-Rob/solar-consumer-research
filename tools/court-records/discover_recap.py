@@ -96,7 +96,13 @@ def main():
     out = Path(args.out)
     out.mkdir(parents=True, exist_ok=True)
     try:
-        result = search(court=args.court)
+        if not os.getenv("COURTLISTENER_API_TOKEN", "").strip():
+            result = {"status": "requires_courtlistener_token", "count": 0,
+                      "matches": [], "search_attempted": False,
+                      "message": "CourtListener API returned HTTP 401 in live GitHub Actions; add COURTLISTENER_API_TOKEN as repository Actions secret."}
+        else:
+            result = search(court=args.court)
+            result["search_attempted"] = True
     except (HTTPError, URLError, OSError, ValueError, TypeError) as e:
         result = {"status": "search_failed", "error_type": type(e).__name__,
                   "message": str(e)[:200], "matches": [], "count": 0}
