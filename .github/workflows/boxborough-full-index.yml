@@ -1,10 +1,10 @@
-name: Westborough Giga and Sunrun PermitPro index
+name: Westborough Giga Sunrun targeted index queries
 on:
   push:
     branches:
       - research/boxborough-full-index-20261121
     paths:
-      - "tools/westborough_giga_sunrun_index.py"
+      - "tools/westborough_giga_sunrun_targeted.py"
       - ".github/workflows/boxborough-full-index.yml"
   workflow_dispatch:
 permissions:
@@ -23,12 +23,12 @@ jobs:
           python -m pip install playwright
           python -m playwright install --with-deps chromium
       - name: Search public permit index
-        run: python -u tools/westborough_giga_sunrun_index.py
+        run: python -u tools/westborough_giga_sunrun_targeted.py
       - name: Preserve independent search results
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: westborough-giga-sunrun-index-results
-          path: westborough_giga_search/
+          name: westborough-giga-sunrun-targeted-results
+          path: westborough_targeted_search/
           retention-days: 2
           if-no-files-found: warn
