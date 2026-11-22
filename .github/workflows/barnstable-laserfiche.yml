@@ -5,6 +5,7 @@ on:
       - research/barnstable-laserfiche-20261122
     paths:
       - "tools/barnstable_laserfiche_probe.py"
+      - "tools/barnstable_sunrun_roof_pair_scan.py"
       - ".github/workflows/barnstable-laserfiche.yml"
   workflow_dispatch:
 permissions:
@@ -20,15 +21,19 @@ jobs:
           python-version: "3.12"
       - name: Install Playwright
         run: |
-          python -m pip install playwright
+          python -m pip install playwright pymupdf requests
           python -m playwright install --with-deps chromium
       - name: Probe public property files and PDF links
         run: python -u tools/barnstable_laserfiche_probe.py
+      - name: Match roof-before-Sunrun jobs from official town reports
+        run: python -u tools/barnstable_sunrun_roof_pair_scan.py
       - name: Preserve public discovery and original PDFs only
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: barnstable-45-tevyaw-public-permit-research
-          path: barnstable_45_tevyaw_packet/
+          path: |
+            barnstable_45_tevyaw_packet/
+            barnstable_roof_before_sunrun/
           retention-days: 2
           if-no-files-found: warn
