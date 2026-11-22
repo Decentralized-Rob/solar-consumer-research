@@ -186,7 +186,7 @@ async def test_export_button(page):
                     except: pass
             controls=await page.locator('button, input[type="button"],a').evaluate_all("(es)=>es.map(e=>({tag:e.tagName,id:e.id,text:(e.innerText||e.value||'').trim().slice(0,120),title:e.title,aria:e.getAttribute('aria-label')})).filter(x=>/save|download|export|print|pdf/i.test(JSON.stringify(x))).slice(0,35)")
             print("EXPORT_CONTROLS",json.dumps(controls)[:5000],flush=True)
-            for label in ["Download", "Export", "Save"]:
+            for label in ["Download & Print", "Download", "Export", "Save"]:
                 b=page.get_by_role("button",name=re.compile("^"+label+"$",re.I)).first
                 if await b.count() and await b.is_visible():
                     await b.click(timeout=6500)
@@ -203,6 +203,13 @@ async def main():
         context = await browser.new_context(accept_downloads=True, viewport={"width": 1400, "height": 1000})
         page = await context.new_page()
         page.on("response", on_response)
+        # Export the previously discovered public doc ID without repeating folder navigation.
+        await inspect_docview(page)
+        await test_export_button(page)
+        (OUT / "00_DISCOVERY_MANIFEST.json").write_text(json.dumps(OBS, ensure_ascii=False, indent=2))
+        print("FINAL", "pdfs", len(OBS["pdfs"]), "request_paths", len(OBS["requests"]), "pages", len(OBS["pages"]), flush=True)
+        await browser.close()
+        return
         for tag, url in [
             ("00_weblink_welcome", BASE + "Welcome.aspx?dbid=0&repo=TownOfBarnstable"),
             ("01_weblink_browse", BASE + "Browse.aspx?dbid=0&repo=TownOfBarnstable")
