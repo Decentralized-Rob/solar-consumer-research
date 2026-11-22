@@ -51,6 +51,7 @@ async def main():
   ordered=[]
   visited=set()
   for r in sunrun:
+   if str(r.get("Application Date",""))>"2025-06-03":continue
    key=addr(r.get("address"))
    if key in visited or key in EXCLUDE:continue
    visited.add(key)
