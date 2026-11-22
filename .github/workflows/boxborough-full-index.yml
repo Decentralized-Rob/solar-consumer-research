@@ -1,10 +1,10 @@
-name: Brimfield Mill Lane paired roofing and solar source exports
+name: Mill Lane full original public permit attachments
 on:
   push:
     branches:
       - research/boxborough-full-index-20261121
     paths:
-      - "tools/brimfield_mill_lane_evidence_packet.py"
+      - "tools/mill_lane_download_original_public_uploads.py"
       - ".github/workflows/boxborough-full-index.yml"
   workflow_dispatch:
 permissions:
@@ -12,7 +12,7 @@ permissions:
 jobs:
   scan:
     runs-on: ubuntu-latest
-    timeout-minutes: 12
+    timeout-minutes: 18
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -23,12 +23,12 @@ jobs:
           python -m pip install playwright
           python -m playwright install --with-deps chromium
       - name: Search public permit index
-        run: python -u tools/brimfield_mill_lane_evidence_packet.py
+        run: python -u tools/mill_lane_download_original_public_uploads.py
       - name: Preserve independent search results
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: brimfield-mill-lane-evidence
-          path: brimfield_15_mill_lane/
+          name: brimfield-mill-lane-all-originals
+          path: mill_lane_all_original_attachments/
           retention-days: 2
           if-no-files-found: warn
