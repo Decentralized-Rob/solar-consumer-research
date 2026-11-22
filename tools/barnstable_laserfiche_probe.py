@@ -34,7 +34,7 @@ async def snapshot(page, tag):
     OBS["pages"].append(entry)
     print("SNAPSHOT", tag, page.url, "TEXT", repr(data.get("text", "")[:850]), flush=True)
     print("INPUTS", tag, json.dumps(data.get("inputs", []))[:2000], flush=True)
-    print("LINKS", tag, json.dumps(data.get("links", [])[:10])[:1800], flush=True)
+    print("LINKS", tag, json.dumps(data.get("links", [])[:80])[:8000], flush=True)
     return entry
 
 def on_response(resp):
@@ -100,6 +100,36 @@ async def try_public_originals(page, context):
         except Exception as e:
             OBS["errors"].append("pdf " + doc["id"] + " " + repr(e)[:200])
 
+
+async def walk_building_division(page):
+    url = BASE + "Browse.aspx?id=652286&dbid=0&repo=TownOfBarnstable"
+    try:
+        resp = await page.goto(url, wait_until="domcontentloaded", timeout=35000)
+        await page.wait_for_timeout(5000)
+        print("BUILDING_FOLDER", resp.status if resp else "none", flush=True)
+        first = await snapshot(page, "03_building_division_folder")
+        for goal in ["HYANNIS", "T", "TEVYAW ROAD", "0045 TEVYAW ROAD"]:
+            links = await page.locator('a[href]').evaluate_all("(es)=>es.map(e=>({text:(e.innerText||'').trim(),href:e.href}))")
+            candidates = [x for x in links if goal.lower() == x["text"].lower() or (goal.lower() in x["text"].lower() and len(x["text"])<80)]
+            print("FOLDER_GOAL", goal, "MATCHING_LINKS", json.dumps(candidates[:15])[:2000], flush=True)
+            if candidates:
+                await page.goto(candidates[0]["href"], wait_until="domcontentloaded", timeout=35000)
+                await page.wait_for_timeout(4200)
+                await snapshot(page, "04_folder_" + re.sub("[^a-z0-9]+", "_", goal.lower()))
+                continue
+            try:
+                el = page.get_by_text(re.compile("^" + re.escape(goal) + "$", re.I)).first
+                if await el.count():
+                    await el.dblclick(timeout=5000)
+                    await page.wait_for_timeout(4200)
+                    await snapshot(page, "04_folder_" + re.sub("[^a-z0-9]+", "_", goal.lower()))
+                    continue
+            except Exception as e:
+                OBS["errors"].append("walk " + goal + " " + repr(e)[:200])
+            break
+    except Exception as e:
+        OBS["errors"].append("building folder " + repr(e)[:300])
+
 async def main():
     async with async_playwright() as p:
         browser = await p.chromium.launch(headless=True)
@@ -118,6 +148,7 @@ async def main():
             except Exception as e:
                 OBS["errors"].append("navigate " + tag + " " + repr(e)[:250])
         await test_search(page)
+        await walk_building_division(page)
         await try_public_originals(page, context)
         # Save portal request paths to identify whether an anonymous public search API exists.
         OBS["requests"] = OBS["requests"][:150]
