@@ -1,10 +1,10 @@
-name: Boylston PermitPro search diagnosis
+name: Boylston full Giga Sunrun verified scan
 on:
   push:
     branches:
       - research/boxborough-full-index-20261121
     paths:
-      - "tools/boylston_diagnose_dashboard.py"
+      - "tools/boylston_giga_sunrun_complete.py"
       - ".github/workflows/boxborough-full-index.yml"
   workflow_dispatch:
 permissions:
@@ -23,12 +23,12 @@ jobs:
           python -m pip install playwright
           python -m playwright install --with-deps chromium
       - name: Search public permit index
-        run: python -u tools/boylston_diagnose_dashboard.py
+        run: python -u tools/boylston_giga_sunrun_complete.py
       - name: Preserve independent search results
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: boylston-diagnostics
-          path: boylston_giga_search/
+          name: boylston-complete-verified-search
+          path: boylston_complete_search/
           retention-days: 2
           if-no-files-found: warn
