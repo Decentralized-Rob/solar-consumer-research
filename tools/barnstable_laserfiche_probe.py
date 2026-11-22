@@ -153,6 +153,50 @@ async def inspect_docview(page):
     except Exception as e:
         OBS["errors"].append("docview " + repr(e)[:500])
 
+
+async def test_export_button(page):
+    tasks = []
+    popups = []
+    async def save_download(d):
+        try:
+            name = d.suggested_filename
+            pth = OUT / ("original_web_link_export_" + re.sub("[^a-zA-Z0-9._-]","_",name))
+            await d.save_as(str(pth))
+            b=pth.read_bytes()
+            good=b.startswith(b"%PDF")
+            OBS["pdfs"].append({"path":str(pth),"bytes":len(b),"pdf":good,"sha256":hashlib.sha256(b).hexdigest(),"downloaded_name":name})
+            print("EXPORTED_DOWNLOAD",name,len(b),good,flush=True)
+            if not good: pth.unlink()
+        except Exception as e:
+            OBS["errors"].append("export download " + repr(e)[:250])
+    page.on("download",lambda d: tasks.append(asyncio.create_task(save_download(d))))
+    page.on("popup",lambda w:popups.append(w))
+    btn=page.locator("#STR_DOWNLOAD_PDF")
+    print("EXPORT_BUTTON_COUNT", await btn.count(), flush=True)
+    if await btn.count():
+        try:
+            await btn.click(timeout=7000)
+            await page.wait_for_timeout(6500)
+            print("EXPORT_CLICKED",page.url,"POPUPS",len(popups),flush=True)
+            await snapshot(page,"06_after_print_pdf")
+            for popup in popups[:]:
+                print("EXPORT_POPUP",popup.url,flush=True)
+                if not popup.is_closed():
+                    try: await snapshot(popup,"07_export_popup")
+                    except: pass
+            controls=await page.locator('button, input[type="button"],a').evaluate_all("(es)=>es.map(e=>({tag:e.tagName,id:e.id,text:(e.innerText||e.value||'').trim().slice(0,120),title:e.title,aria:e.getAttribute('aria-label')})).filter(x=>/save|download|export|print|pdf/i.test(JSON.stringify(x))).slice(0,35)")
+            print("EXPORT_CONTROLS",json.dumps(controls)[:5000],flush=True)
+            for label in ["Download", "Export", "Save"]:
+                b=page.get_by_role("button",name=re.compile("^"+label+"$",re.I)).first
+                if await b.count() and await b.is_visible():
+                    await b.click(timeout=6500)
+                    await page.wait_for_timeout(5000)
+                    print("EXPORT_FINAL_CLICK",label,page.url,flush=True)
+                    break
+            if tasks: await asyncio.gather(*tasks,return_exceptions=True)
+        except Exception as e:
+            OBS["errors"].append("export click " + repr(e)[:500])
+
 async def main():
     async with async_playwright() as p:
         browser = await p.chromium.launch(headless=True)
@@ -174,6 +218,7 @@ async def main():
         await walk_building_division(page)
         await try_public_originals(page, context)
         await inspect_docview(page)
+        await test_export_button(page)
         # Save portal request paths to identify whether an anonymous public search API exists.
         OBS["requests"] = OBS["requests"][:150]
         (OUT / "00_DISCOVERY_MANIFEST.json").write_text(json.dumps(OBS, ensure_ascii=False, indent=2))
