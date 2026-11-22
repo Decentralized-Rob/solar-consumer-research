@@ -1,7 +1,7 @@
 import asyncio,re,json
 from playwright.async_api import async_playwright
 BASE="https://brimfield.patriotpermitpro.com/"
-TARGETS=[("12 HOLLOW ROAD","2911"),("209 EAST HILL ROAD","2903"),("15 MILL LANE ROAD","2282"),("15 MILL LANE ROAD","2283"),("82 APPLE ROAD","2105"),("19 LYMAN BARNES ROAD","87"),("99 HAYNES HILL ROAD","1386"),("1497 DUNHAMTOWN BRIMFIELD RD","2351")]
+TARGETS=[("82 APPLE ROAD","2178"),("324 PALMER ROAD","2097"),("209 EAST HILL ROAD","3126"),("64 CUBLES DRIVE","965"),("64 CUBLES DRIVE","1981"),("85 DUNHAMTOWN PALMER ROAD","2037")]
 async def main():
  async with async_playwright() as p:
   browser=await p.chromium.launch(headless=True)
@@ -11,7 +11,7 @@ async def main():
    url=BASE+f"index.php?act=process&id={idx}"
    try:
     r=await page.goto(url,wait_until="domcontentloaded",timeout=26000)
-    await page.wait_for_timeout(400)
+    await page.wait_for_timeout(1000)
     txt=await page.locator("body").inner_text()
     links=await page.locator("a[href]").evaluate_all("""els=>els.filter(x=>x.href.includes('act=form/')).map(x=>x.href)""")
     print("CHECK_RECORD",addr,idx,"HTTP",r.status if r else None,"CHARS",len(txt),"START",repr(txt[:1100]),"FORM_LINKS",links,flush=True)
