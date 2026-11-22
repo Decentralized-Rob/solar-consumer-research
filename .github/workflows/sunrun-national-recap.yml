@@ -1,0 +1,32 @@
+name: Nationwide Sunrun GRSM roofing RECAP investigation
+
+on:
+  pull_request:
+    paths:
+      - 'tools/court-records/sunrun_national.py'
+      - '.github/workflows/sunrun-national-recap.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  investigate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      COURTLISTENER_API_TOKEN: ${{ secrets.COURTLISTENER_API_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Search nationwide Sunrun cases and GRSM/Guilmartin and retrieve public original PDFs
+        run: python tools/court-records/sunrun_national.py
+      - name: Upload original PDFs and case/filing source manifest for review
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: sunrun-national-recap-research
+          path: sunrun-recap-national/
+          if-no-files-found: warn
+          retention-days: 3
