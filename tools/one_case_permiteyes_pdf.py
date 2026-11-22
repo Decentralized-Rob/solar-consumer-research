@@ -174,7 +174,7 @@ async def main():
                 prev_roofs=[]
                 for r in at_address:
                     rdate=parsedate(r["issued_date"]) or parsedate(r["application_date"])
-                    if roof(r) and solar_date and rdate and rdate<solar_date:prev_roofs.append(r)
+                    if roof(r) and solar_date and rdate and datetime(2021,11,22) <= rdate < solar_date:prev_roofs.append(r)
                 print("ADDRESS_CHECK",address,"RECORDS",len(at_address),"EARLIER_ROOF",len(prev_roofs),flush=True)
                 if not prev_roofs:continue
                 for r in prev_roofs:
