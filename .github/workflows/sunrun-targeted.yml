@@ -1,10 +1,7 @@
 name: Targeted Sunrun docket PDF audit — slow and relevant only
 
 on:
-  pull_request:
-    paths:
-      - 'tools/court-records/sunrun_targeted.py'
-      - '.github/workflows/sunrun-targeted.yml'
+  workflow_dispatch:
 
 permissions:
   contents: read
