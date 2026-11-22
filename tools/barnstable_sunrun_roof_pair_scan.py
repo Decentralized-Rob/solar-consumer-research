@@ -1,225 +1,110 @@
-"""Find same-address Barnstable Sunrun solar + earlier roofing permits from official monthly PDF reports.
-Read-only investigation; separate actual matches from unverified near matches.
+"""Find ONE Barnstable property with an earlier roofing permit and subsequent Sunrun solar permit.
+Read original public monthly permit PDFs; preserve exact source and row page numbers.
+No inferred pairs. This replaces a broken prior PDF extraction script.
 """
 from __future__ import annotations
-import concurrent.futures, datetime as dt, json, re, hashlib, unicodedata
+import concurrent.futures, datetime as dt, json, re, unicodedata
 from pathlib import Path
-from urllib.parse import urljoin
-import requests, fitz
+import requests
+import fitz
 
-ROOT=Path("barnstable_roof_before_sunrun")
-ROOT.mkdir(exist_ok=True)
-BASE="https://tobweb.town.barnstable.ma.us/Departments/Building/Office_Resources/"
-MONTHS="January February March April May June July August September October November December".split()
-SOURCES=[]
-for y in (2024,2025,2026):
- for m,month in enumerate(MONTHS,1):
-  if y==2026 and m>10:continue
-  SOURCES.append({"year":y,"month":m,"url":BASE+f"{month}-{y}.pdf"})
-HEADERS={
- "permit": ["Record #","Permit Number","Permit #"],
- "date": ["Date Issued","Issued Date","Permit/License Issued Date","Date / Time"],
- "applicant": ["Applicant Name","Applicant / Contractor","Applicant/Contractor"],
- "description": ["Work Description","Description of Work"],
- "address": ["Full Address","Property Address"]
-}
-roof_words=re.compile(r'roof|shingl',re.I)
-sunrun_words=re.compile(r'sun\s*run|ste(?:ph|v)en\s*kelly',re.I)
-permit_pattern=re.compile(r'(EXPR|BLDR|BLDC)(2[0-9])(\d+)',re.I)
-def find_header(page, choices):
- for word in choices:
-  try:
-   found=page.search_for(word)
-   if found:return found[0]
-  except: pass
- return None
-def clean(s):return re.sub(r"\s+"," ",s or "").strip()
-def normalize_addr(addr):
- addr=unicodedata.normalize('NFKD',addr).upper()
- addr=re.sub(r'\s+(?:HYANNIS|CENTERVILLE|COTUIT|OSTERVILLE|MARSTONS\s*MILLS|WEST\s*BARNSTABLE|BARNSTABLE)\s*,?\s*MA\s*0[0-9]{4}.*
- addr=re.sub(r"\bROAD\b","RD",addr)
- addr=re.sub(r"\bSTREET\b","ST",addr)
- addr=re.sub(r"\bDRIVE\b","DR",addr)
- addr=re.sub(r"\bAVENUE\b","AVE",addr)
- addr=re.sub(r"\bLANE\b","LN",addr)
- addr=re.sub(r"\bWAY\b","WAY",addr)
- addr=re.sub(r"\bROUTE\b","RTE",addr)
- addr=re.sub(r"\bAPT\b.*$","",addr)
- addr=re.sub(r"[^A-Z0-9]","",addr)
- return addr
-def read_one(source):
- u=source['url']
- try:
-  r=requests.get(u,timeout=30,headers={"User-Agent":"Mozilla/5.0 (compatible; public records research; GitHub Actions)"})
-  if r.status_code!=200 or not r.content.startswith(b'%PDF'):
-   return {**source,"status":r.status_code,"pdf":False,"error":"not public PDF"}
-  doc=fitz.open(stream=r.content,filetype="pdf")
-  records=[]
-  for pageno,page in enumerate(doc):
-   text0=page.get_text("text")
-   if not re.search(r'sun\s*run|ste(?:ph|v)en\s+kelly|giga|espigar|roof|shingle',text0,re.I):continue
-   try:
-    tables=page.find_tables()
-    rawtables=tables.tables
-   except Exception as e:
-    print("TABLE_ERROR",source['year'],source['month'],pageno+1,str(e)[:100],flush=True)
-    continue
-   if not rawtables and pageno==0:
-    print("NO_TABLE",source['year'],source['month'],pageno+1,flush=True)
-   for t in rawtables:
-    try:rows=t.extract()
-    except Exception as e:
-     print("EXTRACT_ERROR",source['year'],source['month'],pageno+1,str(e)[:100],flush=True)
-     continue
-    for cellrow in rows:
-     if not cellrow or len(cellrow)<8:continue
-     row=[clean(c) for c in cellrow]
-     permit=clean(row[0])
-     normalized_permit=re.sub(r'[^A-Z0-9]','',permit.upper())
-     found=permit_pattern.search(normalized_permit)
-     if not found:continue
-     applicant=row[5]
-     description=row[6]
-     addr=row[7]
-     if not addr:continue
-     if not (sunrun_words.search(applicant) or roof_words.search(description)):continue
-     rec={
-       "permit":f'{found.group(1)}-{found.group(2)}-{found.group(3)}',
-       "date":row[2],
-       "applicant":applicant,
-       "description":description,
-       "address":addr,
-       "page":pageno+1,
-       "source":u
-     }
-     if sunrun_words.search(applicant) and re.search(r"solar|photovoltaic|panel|battery",description,re.I):
-      rec['kind']="sunrun_solar"
-     elif roof_words.search(description) and re.search(r"replace|strip|re[ -]?roof|shingl|roofing|roofrepair|roofreplacement",description,re.I):
-      rec['kind']="roof"
-     else:continue
-     records.append(rec)
-  return {**source,"status":200,"pdf":True,"pages":len(doc),"bytes":len(r.content),"records":records}
- except Exception as e:
-  return {**source,"pdf":False,"error":str(e)[:250]}
-def date_of(s):
- m=re.search(r"\b(\d{1,2})/(\d{1,2})/(20\d\d)",s or "")
- try:return dt.date(int(m[3]),int(m[1]),int(m[2])) if m else None
- except:return None
-with concurrent.futures.ThreadPoolExecutor(max_workers=5) as ex:
- results=list(ex.map(read_one,SOURCES))
-allrecords=[rec for file in results for rec in file.get("records",[])]
-solar=[r for r in allrecords if r['kind']=='sunrun_solar']
-roof=[r for r in allrecords if r['kind']=='roof']
-matches=[]
-for sr in solar:
- da=date_of(sr['date'])
- for rr in roof:
-  db=date_of(rr['date'])
-  if da and db and db<da and normalize_addr(sr['address'])==normalize_addr(rr['address']):
-   matches.append({"solar":sr,"roof":rr,"days_prior":(da-db).days})
-matches.sort(key=lambda x:(bool(re.search(r"giga|espigar",x["roof"]["applicant"],re.I)), date_of(x["solar"]["date"]) or dt.date.min, -x["days_prior"]),reverse=True)
-for f in results:
- print("REPORT",f['year'],f['month'],f.get('status',""),"PAGES",f.get('pages',0),"SOLAR",sum(x['kind']=='sunrun_solar' for x in f.get('records',[])),"ROOF",sum(x['kind']=='roof' for x in f.get('records',[])),f.get("error",""),flush=True)
-print("TOTALS","reports",sum(f.get("pdf",False) for f in results),"solar",len(solar),"roof",len(roof),"matches",len(matches),"giga_matches",sum(bool(re.search("giga|espigar",x["roof"]["applicant"],re.I)) for x in matches),flush=True)
-for x in matches[:25]:print("MATCH",json.dumps(x,ensure_ascii=False),flush=True)
-print("SOLAR_SAMPLES",json.dumps(solar[:8],ensure_ascii=False)[:14000],flush=True)
-print("ROOF_SAMPLES",json.dumps(roof[:5],ensure_ascii=False)[:7000],flush=True)
-(ROOT/"MATCHES.json").write_text(json.dumps(matches,indent=2,ensure_ascii=False))
-(ROOT/"SUNRUN_SOLAR_RECORDS.json").write_text(json.dumps(solar,indent=2,ensure_ascii=False))
-(ROOT/"ROOF_RECORDS.json").write_text(json.dumps(roof,indent=2,ensure_ascii=False))
-(ROOT/"REPORT_STATUS.json").write_text(json.dumps([{k:v for k,v in f.items() if k!="records"} for f in results],indent=2))
-, '', addr)
- addr=addr.split(",")[0].strip()
- addr=re.sub(r"\bROAD\b","RD",addr)
- addr=re.sub(r"\bSTREET\b","ST",addr)
- addr=re.sub(r"\bDRIVE\b","DR",addr)
- addr=re.sub(r"\bAVENUE\b","AVE",addr)
- addr=re.sub(r"\bLANE\b","LN",addr)
- addr=re.sub(r"\bWAY\b","WAY",addr)
- addr=re.sub(r"\bROUTE\b","RTE",addr)
- addr=re.sub(r"\bAPT\b.*$","",addr)
- addr=re.sub(r"[^A-Z0-9]","",addr)
- return addr
-def read_one(source):
- u=source['url']
- try:
-  r=requests.get(u,timeout=30,headers={"User-Agent":"Mozilla/5.0 (compatible; public records research; GitHub Actions)"})
-  if r.status_code!=200 or not r.content.startswith(b'%PDF'):
-   return {**source,"status":r.status_code,"pdf":False,"error":"not public PDF"}
-  doc=fitz.open(stream=r.content,filetype="pdf")
-  records=[]
-  for pageno,page in enumerate(doc):
-   text0=page.get_text("text")
-   if not re.search(r'sun\s*run|ste(?:ph|v)en\s+kelly|giga|espigar|roof|shingle',text0,re.I):continue
-   try:
-    tables=page.find_tables()
-    rawtables=tables.tables
-   except Exception as e:
-    print("TABLE_ERROR",source['year'],source['month'],pageno+1,str(e)[:100],flush=True)
-    continue
-   if not rawtables and pageno==0:
-    print("NO_TABLE",source['year'],source['month'],pageno+1,flush=True)
-   for t in rawtables:
-    try:rows=t.extract()
-    except Exception as e:
-     print("EXTRACT_ERROR",source['year'],source['month'],pageno+1,str(e)[:100],flush=True)
-     continue
-    if pageno<2:
-     print("TABLE_DIAG",source['year'],source['month'],pageno+1,"rows",len(rows),"lens",[len(x) if x else 0 for x in rows[:10]],"examples",repr(rows[:3])[:5500],flush=True)
-    for cellrow in rows:
-     if not cellrow or len(cellrow)<8:continue
-     row=[clean(c) for c in cellrow]
-     permit=clean(row[0])
-     normalized_permit=re.sub(r'[^A-Z0-9]','',permit.upper())
-     found=permit_pattern.search(normalized_permit)
-     if not found:continue
-     applicant=row[5]
-     description=row[6]
-     addr=row[7]
-     if not addr:continue
-     if not (sunrun_words.search(applicant) or roof_words.search(description)):continue
-     rec={
-       "permit":f'{found.group(1)}-{found.group(2)}-{found.group(3)}',
-       "date":row[2],
-       "applicant":applicant,
-       "description":description,
-       "address":addr,
-       "page":pageno+1,
-       "source":u
-     }
-     if sunrun_words.search(applicant) and re.search(r"solar|photovoltaic|panel|battery",description,re.I):
-      rec['kind']="sunrun_solar"
-     elif roof_words.search(description) and re.search(r"replace|strip|roof|shingl|repair",description,re.I):
-      rec['kind']="roof"
-     else:continue
-     records.append(rec)
-  return {**source,"status":200,"pdf":True,"pages":len(doc),"bytes":len(r.content),"records":records}
- except Exception as e:
-  return {**source,"pdf":False,"error":str(e)[:250]}
-def date_of(s):
- m=re.search(r"\b(\d{1,2})/(\d{1,2})/(20\d\d)",s or "")
- try:return dt.date(int(m[3]),int(m[1]),int(m[2])) if m else None
- except:return None
-with concurrent.futures.ThreadPoolExecutor(max_workers=5) as ex:
- results=list(ex.map(read_one,SOURCES))
-allrecords=[rec for file in results for rec in file.get("records",[])]
-solar=[r for r in allrecords if r['kind']=='sunrun_solar']
-roof=[r for r in allrecords if r['kind']=='roof']
-matches=[]
-for sr in solar:
- da=date_of(sr['date'])
- for rr in roof:
-  db=date_of(rr['date'])
-  if da and db and db<da and normalize_addr(sr['address'])==normalize_addr(rr['address']):
-   matches.append({"solar":sr,"roof":rr,"days_prior":(da-db).days})
-matches.sort(key=lambda x:(x["solar"]["date"],-x["days_prior"]),reverse=True)
-for f in results:
- print("REPORT",f['year'],f['month'],f.get('status',""),"PAGES",f.get('pages',0),"SOLAR",sum(x['kind']=='sunrun_solar' for x in f.get('records',[])),"ROOF",sum(x['kind']=='roof' for x in f.get('records',[])),f.get("error",""),flush=True)
-print("TOTALS","reports",sum(f.get("pdf",False) for f in results),"solar",len(solar),"roof",len(roof),"matches",len(matches),flush=True)
-for x in matches[:25]:print("MATCH",json.dumps(x,ensure_ascii=False),flush=True)
-print("SOLAR_SAMPLES",json.dumps(solar[:8],ensure_ascii=False)[:14000],flush=True)
-print("ROOF_SAMPLES",json.dumps(roof[:5],ensure_ascii=False)[:7000],flush=True)
-(ROOT/"MATCHES.json").write_text(json.dumps(matches,indent=2,ensure_ascii=False))
-(ROOT/"SUNRUN_SOLAR_RECORDS.json").write_text(json.dumps(solar,indent=2,ensure_ascii=False))
-(ROOT/"ROOF_RECORDS.json").write_text(json.dumps(roof,indent=2,ensure_ascii=False))
-(ROOT/"REPORT_STATUS.json").write_text(json.dumps([{k:v for k,v in f.items() if k!="records"} for f in results],indent=2))
+OUT = Path("barnstable_roof_before_sunrun")
+OUT.mkdir(exist_ok=True)
+BASE = "https://tobweb.town.barnstable.ma.us/Departments/Building/Office_Resources/"
+MONTHS = "January February March April May June July August September October November December".split()
+SOURCES = [{"year":year, "month":m, "url":BASE + f"{month}-{year}.pdf"}
+           for year in (2024, 2025, 2026) for m, month in enumerate(MONTHS, 1)
+           if not (year == 2026 and m > 10)]
+PERMIT_RE = re.compile(r"(EXPR|BLDR|BLDC)(2[0-9])([0-9]+)", re.I)
+SUNRUN_RE = re.compile(r"sun\s*run|ste(?:ph|v)en\s*kelly", re.I)
+ROOF_RE = re.compile(r"re[\s-]?roof|roofing|shingl|replace.{0,30}roof|strip.{0,30}roof|roof.{0,30}replace", re.I)
+VILLAGES = ["MARSTONS MILLS", "WEST BARNSTABLE", "BARNSTABLE", "CENTERVILLE", "HYANNIS", "COTUIT", "OSTERVILLE"]
+
+def clean(s):
+    return re.sub(r"\s+", " ", s or "").strip()
+
+def normalize_address(addr):
+    addr = unicodedata.normalize("NFKD", addr or "").upper()
+    addr = addr.split(",")[0].strip()
+    # Table text frequently has no spaces: "45AMESWAY Centerville".
+    addr = re.sub(r"[\s,.-]+", "", addr)
+    for village in VILLAGES:
+        v = re.sub(r"[^A-Z]", "", village)
+        if addr.endswith(v):
+            addr = addr[:-len(v)]
+    for old,new in (("ROAD","RD"),("STREET","ST"),("AVENUE","AVE"),("DRIVE","DR"),("LANE","LN")):
+        addr = addr.replace(old,new)
+    return addr
+
+def permit_date(raw):
+    match = re.search(r"(\d{1,2})/(\d{1,2})/(20\d\d)", raw or "")
+    if not match: return None
+    try: return dt.date(int(match[3]),int(match[1]),int(match[2]))
+    except ValueError: return None
+
+def fetch_report(source):
+    url = source["url"]
+    try:
+        resp = requests.get(url, timeout=28, headers={"User-Agent":"Mozilla/5.0"})
+        if resp.status_code != 200 or resp.content[:4] != b"%PDF":
+            return {**source, "status":resp.status_code, "error":"No PDF", "records":[]}
+        pdf = fitz.open(stream=resp.content, filetype="pdf")
+        extracted = []
+        for ix, page in enumerate(pdf):
+            txt = page.get_text("text")
+            if not re.search(r"sun\s*run|ste(?:ph|v)en\s*kelly|giga|espigar|roof|shingle",txt,re.I):
+                continue
+            try:
+                tables = page.find_tables().tables
+            except Exception:
+                continue
+            for table in tables:
+                for cells in table.extract():
+                    if not cells or len(cells)<8: continue
+                    permit = re.sub(r"[^A-Z0-9]","",cells[0].upper() if cells[0] else "")
+                    match = PERMIT_RE.search(permit)
+                    if not match: continue
+                    applicant, description, addr = [clean(x) for x in cells[5:8]]
+                    if not addr: continue
+                    record = {"permit":f"{match[1]}-{match[2]}-{match[3]}",
+                              "date":clean(cells[2]),"applicant":applicant,
+                              "description":description,"address":addr,
+                              "page":ix+1,"source":url}
+                    if SUNRUN_RE.search(applicant) and re.search(r"solar|photovoltaic|panel",description,re.I):
+                        record["kind"]="sunrun"
+                    elif ROOF_RE.search(description) and (record["permit"].startswith("EXPR-") or "roof" in description.lower()):
+                        record["kind"]="roof"
+                    else: continue
+                    extracted.append(record)
+        print("REPORT",source["year"],source["month"],"SUNRUN",sum(x["kind"]=="sunrun" for x in extracted),"ROOF",sum(x["kind"]=="roof" for x in extracted),flush=True)
+        return {**source,"status":200,"pages":len(pdf),"records":extracted}
+    except Exception as exc:
+        print("ERROR_REPORT",source["year"],source["month"],repr(exc)[:250],flush=True)
+        return {**source,"error":repr(exc)[:200],"records":[]}
+
+with concurrent.futures.ThreadPoolExecutor(max_workers=6) as pool:
+    reports = list(pool.map(fetch_report,SOURCES))
+all_records = [r for s in reports for r in s["records"]]
+solar = [x for x in all_records if x["kind"]=="sunrun"]
+roof = [x for x in all_records if x["kind"]=="roof"]
+roof_by_address = {}
+for item in roof:
+    roof_by_address.setdefault(normalize_address(item["address"]), []).append(item)
+matches = []
+for sun in solar:
+    key = normalize_address(sun["address"])
+    sun_date = permit_date(sun["date"])
+    if not sun_date: continue
+    for pre in roof_by_address.get(key, []):
+        roof_date = permit_date(pre["date"])
+        if roof_date and roof_date < sun_date:
+            matches.append({"address": sun["address"],
+                            "roof":pre,"solar":sun,
+                            "days_between":(sun_date-roof_date).days,
+                            "giga_roof":bool(re.search(r"giga|espigar",pre["applicant"],re.I))})
+matches.sort(key=lambda x:(x["giga_roof"], permit_date(x["solar"]["date"]) or dt.date.min),reverse=True)
+print("TOTALS", "reports",len(reports),"solar",len(solar),"roof",len(roof),"same_address_prior_roof",len(matches),flush=True)
+for result in matches[:8]:
+    print("CONFIRMED_MATCH",json.dumps(result,ensure_ascii=False),flush=True)
+(OUT/"MATCHES.json").write_text(json.dumps(matches[:10],indent=2,ensure_ascii=False))
+(OUT/"SUMMARY.json").write_text(json.dumps({"reports_checked":len(reports),"sunrun":len(solar),"roof":len(roof),"matched":len(matches),"first_match":matches[0] if matches else None},indent=2,ensure_ascii=False))
