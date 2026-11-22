@@ -17,7 +17,15 @@ on:
         options: [sunrun, giga]
         default: sunrun
       address:
-        description: 'Candidate property address (not verified from permit)'
+        description: 'Case property address (required for Sunrun, must match roof permit)'
+        type: string
+        required: false
+      roof_permit_url:
+        description: 'Official matching roof permit URL (required for Sunrun)'
+        type: string
+        required: false
+      roof_permit_number:
+        description: 'Matching roof permit number (required for Sunrun)'
         type: string
         required: false
 
@@ -34,6 +42,8 @@ jobs:
       COURT: ${{ inputs.court }}
       COMPANY: ${{ inputs.company }}
       CASE_ADDRESS: ${{ inputs.address }}
+      ROOF_PERMIT_URL: ${{ inputs.roof_permit_url }}
+      ROOF_PERMIT_NUMBER: ${{ inputs.roof_permit_number }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -47,6 +57,8 @@ jobs:
             --court "$COURT" \
             --company "$COMPANY" \
             --address "$CASE_ADDRESS" \
+            --roof-permit-url "$ROOF_PERMIT_URL" \
+            --roof-permit-number "$ROOF_PERMIT_NUMBER" \
             --download \
             --out court-recap-output
       - name: Archive manifest and original PDF bytes (no site publication)
