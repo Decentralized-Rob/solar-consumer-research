@@ -41,12 +41,14 @@ def search(company: str = NAME, court: str = "mad", fetch=api_search) -> dict:
     # type=d returns federal dockets without truncated nested document matches
     url = API + "?" + urlencode({"type": "d", "q": q, "order_by": "dateFiled desc"})
     pages = 0
+    results_seen = 0
     candidates = []
     seen = set()
     while url and pages < MAX_PAGES:
         data = fetch(url)
         pages += 1
         for hit in data.get("results", []):
+            results_seen += 1
             title = str(hit.get("caseName") or hit.get("case_name") or "")
             docket = str(hit.get("docketNumber") or hit.get("docket_number") or "")
             filed = str(hit.get("dateFiled") or hit.get("date_filed") or "")[:10]
@@ -83,10 +85,13 @@ def search(company: str = NAME, court: str = "mad", fetch=api_search) -> dict:
         "start_date": START,
         "end_date": END,
         "pages_fetched": pages,
+        "results_seen": results_seen,
         "search_complete": not bool(url),
         "matches": candidates,
         "count": len(candidates),
-        "status": "found_candidates" if candidates else "no_candidates_indexed",
+        "status": ("found_candidates" if candidates else
+                   "no_candidates_indexed" if not url else
+                   "search_incomplete_no_matches"),
     }
 
 
@@ -109,7 +114,11 @@ def main():
         result = {"status": "search_failed", "error_type": type(e).__name__,
                   "message": str(e)[:200], "matches": [], "count": 0}
     (out / "DISCOVERY.json").write_text(json.dumps(result, indent=2) + "\n")
-    print(json.dumps({"status": result["status"], "count": result["count"]}))
+    print(json.dumps({"status": result["status"], "count": result["count"],
+                      "pages_fetched": result.get("pages_fetched"),
+                      "results_seen": result.get("results_seen"),
+                      "search_complete": result.get("search_complete"),
+                      "error_type": result.get("error_type")}))
     return 1 if result["status"] == "search_failed" else 0
 
 
