@@ -112,12 +112,17 @@ def collect(args):
         "case_property_match_verified": False,
         "qualifies_for_sunrun_roof_permit_study": False,
         "candidate_case_address": args.address or None,
+        "roof_permit_source_url": args.roof_permit_url or None,
+        "roof_permit_reference": args.roof_permit_number or None,
         "docket_candidates": [],
         "documents": [],
         "status": "not_started",
         "error": None,
     }
     try:
+        if args.company == "sunrun" and not (args.roof_permit_url and args.roof_permit_number and args.address):
+            manifest["status"] = "sunrun_roof_permit_evidence_required"
+            return manifest
         hits = find_docket(args.case_number, args.court, token)
         manifest["docket_candidates"] = hits
         if not hits:
@@ -199,6 +204,8 @@ def main():
     p.add_argument("--court", required=True, help="CourtListener court id e.g. mad")
     p.add_argument("--company", choices=("sunrun", "giga"), required=True)
     p.add_argument("--address", default="")
+    p.add_argument("--roof-permit-url", default="", help="Official source URL for verified matching roof permit")
+    p.add_argument("--roof-permit-number", default="", help="Matching permit reference, manually verified")
     p.add_argument("--out", default="court-recap-output")
     p.add_argument("--download", action="store_true")
     args = p.parse_args()
