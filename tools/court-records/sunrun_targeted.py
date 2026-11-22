@@ -55,31 +55,16 @@ def rest(url: str):
     if not token:
         raise RuntimeError("CourtListener API token absent")
     headers = {"Authorization": "Token " + token, "Accept": "application/json",
-               "User-Agent": "SolarConsumerResearch public RECAP evidence audit/0.3"}
-    for attempt in range(3):
-        wait = MIN_SECONDS - (time.monotonic() - _last_request)
-        if wait > 0:
-            time.sleep(wait)
-        _last_request = time.monotonic()
-        _requests += 1
-        try:
-            with urlopen(Request(url, headers=headers), timeout=40) as response:
-                return json.load(response)
-        except HTTPError as e:
-            if e.code != 429 or attempt == 2:
-                raise
-            retry_after = e.headers.get("Retry-After", "45")
-            try:
-                seconds = min(180, max(45, int(retry_after)))
-            except ValueError:
-                try:
-                    seconds = min(180, max(45, (parsedate_to_datetime(retry_after) -
-                                  datetime.now(timezone.utc)).total_seconds()))
-                except Exception:
-                    seconds = 60
-            print("rate_limited_backoff_seconds", int(seconds), flush=True)
-            time.sleep(seconds)
-    raise RuntimeError("retry_budget_exhausted")
+               "User-Agent": "SolarConsumerResearch public RECAP evidence audit/0.4"}
+    wait = MIN_SECONDS - (time.monotonic() - _last_request)
+    if wait > 0:
+        time.sleep(wait)
+    _last_request = time.monotonic()
+    _requests += 1
+    # Rate-limit stop, not immediate retry. API 429 Retry-After can be hours,
+    # so the next batch should run only after the service's reset.
+    with urlopen(Request(url, headers=headers), timeout=40) as response:
+        return json.load(response)
 
 
 def listed_pdf_urls(document: dict) -> list[str]:
