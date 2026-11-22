@@ -38,7 +38,7 @@ class OneCaseTests(unittest.TestCase):
                   patch.object(diaz, "api_json", side_effect=api),
                   patch.object(diaz, "fetch_pdf", return_value=b"%PDF-1.4\nfixture")):
                 result = diaz.main()
-            self.assertEqual(result, 0)
+            self.assertEqual(result, 1)  # Fixture omits ECF 1 and 6: partial archive, even with two PDFs
             self.assertTrue((Path(folder) / "filing_index.csv").exists())
             saved = list((Path(folder) / "pdfs").glob("*.pdf"))
             self.assertEqual(len(saved), 2)
