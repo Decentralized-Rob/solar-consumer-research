@@ -50,8 +50,8 @@ async def pagesnapshot(page):
     return await page.evaluate("""() => {
         let t=window.__tbl;
         let info=t.page.info();
-        return {info:info,cols:[...t.table().node().querySelectorAll("thead th")].map(x=>x.innerText),
-          rows:[...t.table().node().querySelectorAll("tbody tr")].map(tr=>[...tr.querySelectorAll('td')].map(td=>td.innerText))};
+        return {info:info,cols:[...document.querySelector("#permitPublicView").querySelectorAll("thead th")].map(x=>x.innerText),
+          rows:[...document.querySelector("#permitPublicView").querySelectorAll("tbody tr")].map(tr=>[...tr.querySelectorAll('td')].map(td=>td.innerText))};
     }""")
 async def collect(page,limit_pages=10):
     snap=await pagesnapshot(page)
