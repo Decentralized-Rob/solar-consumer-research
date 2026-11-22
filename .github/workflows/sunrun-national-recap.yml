@@ -1,10 +1,7 @@
 name: Nationwide Sunrun GRSM roofing RECAP investigation
 
 on:
-  pull_request:
-    paths:
-      - 'tools/court-records/sunrun_national.py'
-      - '.github/workflows/sunrun-national-recap.yml'
+  workflow_dispatch:
 
 permissions:
   contents: read
