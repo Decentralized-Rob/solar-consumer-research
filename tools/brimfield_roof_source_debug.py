@@ -1,7 +1,7 @@
 import asyncio,re,json
 from playwright.async_api import async_playwright
 BASE="https://brimfield.patriotpermitpro.com/"
-TARGETS=[("51 WARREN ROAD","1851"),("85 DUNHAMTOWN PALMER RD","2037"),("85 DUNHAMTOWN PALMER RD","1178"),("261 LITTLE ALUM ROAD","1125"),("324 PALMER ROAD","495")]
+TARGETS=[("12 HOLLOW ROAD","2911"),("209 EAST HILL ROAD","2903"),("15 MILL LANE ROAD","2282"),("15 MILL LANE ROAD","2283"),("82 APPLE ROAD","2105"),("19 LYMAN BARNES ROAD","87"),("99 HAYNES HILL ROAD","1386"),("1497 DUNHAMTOWN BRIMFIELD RD","2351")]
 async def main():
  async with async_playwright() as p:
   browser=await p.chromium.launch(headless=True)
