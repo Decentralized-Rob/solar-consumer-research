@@ -1,33 +1,34 @@
-name: Barnstable roof-before-Sunrun permit match
+name: 169 Katherine Road public original permits
 on:
   push:
-    branches:
+    branches: 
       - research/barnstable-laserfiche-20261122
     paths:
       - "tools/barnstable_laserfiche_probe.py"
-      - "tools/barnstable_sunrun_roof_pair_scan.py"
       - ".github/workflows/barnstable-laserfiche.yml"
   workflow_dispatch:
 permissions:
   contents: read
 jobs:
-  scan:
+  extract:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 12
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - name: Install PDF search dependencies
-        run: python -m pip install pymupdf requests
-      - name: Match roof-before-Sunrun jobs from official town reports
-        run: python -u tools/barnstable_sunrun_roof_pair_scan.py
-      - name: Preserve public discovery and original PDFs only
+      - name: Install browser
+        run: |
+          python -m pip install playwright
+          python -m playwright install --with-deps chromium
+      - name: Check original property file and export public PDFs
+        run: python -u tools/barnstable_laserfiche_probe.py
+      - name: Preserve original PDF evidence and manifest
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: barnstable-sunrun-roof-permit-crossmatch
-          path: barnstable_roof_before_sunrun/
-          retention-days: 2
+          name: 169-katherine-roof-sunrun-originals
+          path: barnstable_169_katherine_originals/
+          retention-days: 7
           if-no-files-found: warn
