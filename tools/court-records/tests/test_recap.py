@@ -63,6 +63,16 @@ class CollectorTests(unittest.TestCase):
         )
         self.assertEqual(collector.pdf_sources({"filepath_local": "https://untrusted.test/secret.pdf"}), [])
 
+    def test_ma_only_docket_collection(self):
+        args = SimpleNamespace(out=None, company="giga", case_number="1:25-cv-00099",
+                               court="cacd", address="", roof_permit_url="",
+                               roof_permit_number="", download=True)
+        with tempfile.TemporaryDirectory() as temp:
+            args.out = temp
+            with patch.object(collector, "find_docket", side_effect=AssertionError("should not search out of state")):
+                result = collector.collect(args)
+            self.assertEqual(result["status"], "outside_massachusetts_court_scope")
+
     def test_sunrun_requires_existing_roof_permit_reference(self):
         args = SimpleNamespace(out=None, company="sunrun", case_number="1:25-cv-10",
                                court="mad", address="Some Property",
