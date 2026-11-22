@@ -1,24 +1,16 @@
 name: Court RECAP original-document recovery
 
 on:
-  push:
-    branches:
-      - research/court-recap-recovery-20261122
-    paths:
-      - tools/court-records/**
-      - .github/workflows/court-recap-recovery.yml
   workflow_dispatch:
     inputs:
       case_number:
-        description: 'Federal docket number (e.g. 4:26-cv-14283)'
+        description: 'Verified federal docket number for a qualifying Giga case or Sunrun case with matching roof permit'
         type: string
         required: true
-        default: '4:26-cv-14283'
       court:
         description: 'CourtListener court ID (e.g. mad)'
         type: string
         required: true
-        default: 'mad'
       company:
         description: 'Company under investigation'
         type: choice
@@ -38,10 +30,10 @@ jobs:
     timeout-minutes: 12
     env:
       COURTLISTENER_API_TOKEN: ${{ secrets.COURTLISTENER_API_TOKEN }}
-      CASE_NUMBER: ${{ inputs.case_number || '4:26-cv-14283' }}
-      COURT: ${{ inputs.court || 'mad' }}
-      COMPANY: ${{ inputs.company || 'sunrun' }}
-      CASE_ADDRESS: ${{ inputs.address || '10 Oak Hill Drive, Canton, MA' }}
+      CASE_NUMBER: ${{ inputs.case_number }}
+      COURT: ${{ inputs.court }}
+      COMPANY: ${{ inputs.company }}
+      CASE_ADDRESS: ${{ inputs.address }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
