@@ -1,10 +1,10 @@
-name: Brimfield Giga permit verification
+name: Carlisle Giga and Sunrun full permit index
 on:
   push:
     branches:
       - research/boxborough-full-index-20261121
     paths:
-      - "tools/brimfield_giga_all_permits.py"
+      - "tools/carlisle_giga_sunrun_index.py"
       - ".github/workflows/boxborough-full-index.yml"
   workflow_dispatch:
 permissions:
@@ -23,12 +23,12 @@ jobs:
           python -m pip install playwright
           python -m playwright install --with-deps chromium
       - name: Search public permit index
-        run: python -u tools/brimfield_giga_all_permits.py
+        run: python -u tools/carlisle_giga_sunrun_index.py
       - name: Preserve independent search results
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: brimfield-giga-index-results
-          path: brimfield_giga_search/
+          name: carlisle-giga-sunrun-index-results
+          path: carlisle_giga_search/
           retention-days: 2
           if-no-files-found: warn
