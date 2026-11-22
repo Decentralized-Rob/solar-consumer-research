@@ -1,4 +1,4 @@
-name: Bellingham 46 Pickering original PDF record packet
+name: Bellingham 37 Susan Lane original PDF record packet
 on:
   push:
     branches:
@@ -28,7 +28,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: bellingham-46-pickering-all-originals
-          path: bellingham_46_pickering_packet/
+          name: bellingham-37-susan-giga-sunrun-original-pdfs
+          path: bellingham_37_susan_packet/
           retention-days: 2
           if-no-files-found: warn
