@@ -34,7 +34,11 @@ def rowdata(c):
             "type":c[9+offset].strip(),"permit":c[10+offset].strip(),"status":c[11+offset].strip()}
 def roof(rec):
     txt=rec["type"]+" "+rec["work"]
-    return bool(re.search(r"roof|reroof|re-roof|shingl",txt,re.I)) and not bool(re.search(r"solar|photovoltaic|PV panel",txt,re.I))
+    # Roof replacement/repair, never PV mounting or a Sunrun electrical permit.
+    if re.search(r"sun\\s*run",rec["applicant"],re.I):return False
+    if re.search(r"solar|photovoltaic|\\bPV\\b|panels?|battery|inverter|electrical",txt,re.I):return False
+    if rec["type"].upper().startswith("ELECT"):return False
+    return bool(re.search(r"re[ -]?roof|roofing|shingl|replace.{0,40}roof|roof.{0,40}replac|roof.{0,20}repair|strip.{0,40}roof|tear.{0,30}roof",txt,re.I))
 def sunrun(rec):
     return bool(re.search(r"sun\s*run|stephen\s+kelly",rec["applicant"],re.I)) and bool(re.search(r"solar|panel|photovoltaic",rec["work"],re.I))
 async def waitdraw(page):
