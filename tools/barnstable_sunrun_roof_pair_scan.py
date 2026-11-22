@@ -24,9 +24,9 @@ HEADERS={
  "description": ["Work Description","Description of Work"],
  "address": ["Full Address","Property Address"]
 }
-roof_words=re.compile(r'\broof(?:ing|ed|s)?\b|re[ -]?roof|re[ -]?shingl|strip.*shingle|new shingles',re.I)
-sunrun_words=re.compile(r'sun\s*run|ste(?:ph|v)en\s+kelly',re.I)
-permit_pattern=re.compile(r'(?:EXPR|BLDR|BLDC)[-–]\s*(?:2[0-9])[-–]\s*\d+',re.I)
+roof_words=re.compile(r'roof|shingl',re.I)
+sunrun_words=re.compile(r'sun\s*run|ste(?:ph|v)en\s*kelly',re.I)
+permit_pattern=re.compile(r'(EXPR|BLDR|BLDC)(2[0-9])(\\d+)',re.I)
 def find_header(page, choices):
  for word in choices:
   try:
@@ -78,15 +78,16 @@ def read_one(source):
      if not cellrow or len(cellrow)<8:continue
      row=[clean(c) for c in cellrow]
      permit=clean(row[0])
-     if not permit_pattern.search(permit):continue
-     found=permit_pattern.search(permit)
+     normalized_permit=re.sub(r'[^A-Z0-9]','',permit.upper())
+     found=permit_pattern.search(normalized_permit)
+     if not found:continue
      applicant=row[5]
      description=row[6]
      addr=row[7]
      if not addr:continue
      if not (sunrun_words.search(applicant) or roof_words.search(description)):continue
      rec={
-       "permit":re.sub(r'\s+','',found.group()).upper(),
+       "permit":f'{found.group(1)}-{found.group(2)}-{found.group(3)}',
        "date":row[2],
        "applicant":applicant,
        "description":description,
@@ -96,7 +97,7 @@ def read_one(source):
      }
      if sunrun_words.search(applicant) and re.search(r"solar|photovoltaic|panel|battery",description,re.I):
       rec['kind']="sunrun_solar"
-     elif roof_words.search(description) and re.search(r"replace|strip|re[ -]?roof|shingle|new roof|roofing|repair",description,re.I):
+     elif roof_words.search(description) and re.search(r"replace|strip|roof|shingl|repair",description,re.I):
       rec['kind']="roof"
      else:continue
      records.append(rec)
