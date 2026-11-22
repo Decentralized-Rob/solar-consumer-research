@@ -4,7 +4,7 @@ from collections import defaultdict
 from urllib.parse import parse_qs
 from playwright.async_api import async_playwright
 BASE="https://brimfield.patriotpermitpro.com/"
-EXCLUDE={"285BROOKFIELDROAD","30STGEORGEROAD"}
+EXCLUDE={"285BROOKFIELDRD","30STGEORGERD"}
 def addr(s):return re.sub(r"[^A-Z0-9]","",str(s or "").upper()).replace("STREET","ST").replace("ROAD","RD")
 async def main():
  async with async_playwright() as pw:
