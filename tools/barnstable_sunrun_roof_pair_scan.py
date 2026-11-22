@@ -56,56 +56,47 @@ def read_one(source):
   doc=fitz.open(stream=r.content,filetype="pdf")
   records=[]
   for pageno,page in enumerate(doc):
-   # Header columns are consistent for public spreadsheet-exported permit lists.
-   applicant=find_header(page,HEADERS['applicant']); desc=find_header(page,HEADERS['description']);address=find_header(page,HEADERS['address'])
-   date=find_header(page,HEADERS['date'])
-   if not (applicant and desc and address and date): continue
-   width=page.rect.width
-   addr_cut=address.x0-3
-   desc_cut=desc.x0-3
-   app_cut=applicant.x0-3
-   date_cut=date.x0-3
-   header_bottom=max(x.y1 for x in (applicant,desc,address,date))
-   # Public PDF table uses horizontal separators across most columns.
-   draws=page.get_drawings()
-   ys=[]
-   for shape in draws:
-    for part in shape["items"]:
-     if part[0]=="l":
-      a,b=part[1],part[2]
-      if abs(a.y-b.y)<2 and abs(a.x-b.x)>width*.45 and a.y>=header_bottom-10:
-       ys.append(round(a.y,1))
-     if part[0]=="re":
-      rect=part[1]
-      if rect.width>width*.45 and rect.height>8 and rect.y0>=header_bottom-10:
-       ys.extend([round(rect.y0,1),round(rect.y1,1)])
-   ys=sorted(set(ys))
-   if len(ys)<2:
-    # Try single-page cell-table bounding boxes from the sheet lines.
-    print("NO_ROW_GRID",source['year'],source['month'],pageno+1,"lines",len(draws),"headers",round(header_bottom),flush=True)
+   text0=page.get_text("text")
+   if not re.search(r'sun\\s*run|ste(?:ph|v)en\\s+kelly|giga|espigar|roof|shingle',text0,re.I):continue
+   try:
+    tables=page.find_tables()
+    rawtables=tables.tables
+   except Exception as e:
+    print("TABLE_ERROR",source['year'],source['month'],pageno+1,str(e)[:100],flush=True)
     continue
-   words=page.get_text("words")
-   for lo,hi in zip(ys,ys[1:]):
-    if hi-lo<13 or hi<=header_bottom or lo>page.rect.height:continue
-    selected=[w for w in words if w[1]>=lo-1 and w[3]<=hi+2 and w[1]>=header_bottom-3]
-    if not selected:continue
-    selected.sort(key=lambda w:(round(w[1]/4)*4,w[0]))
-    def col(x0,x1):
-     return clean(" ".join(w[4] for w in sorted((w for w in selected if w[0]>=x0 and w[0]<x1),key=lambda v:(round(v[1]/4)*4,v[0]))))
-    rec={
-     "permit":col(0,date_cut),
-     "date":col(date_cut,app_cut-.01),
-     "applicant":col(app_cut,desc_cut),
-     "description":col(desc_cut,addr_cut),
-     "address":col(addr_cut,width+5),
-     "page":pageno+1,
-     "source":u
-    }
-    found=permit_pattern.search(rec['permit'])
-    if found: rec['permit']=re.sub(r'\s+','',found.group()).upper()
-    if rec['address'] and rec['permit'] and (sunrun_words.search(rec['applicant']) or roof_words.search(rec['description'])):
-     rec['kind']=("sunrun_solar" if sunrun_words.search(rec['applicant']) and re.search("solar|photovoltaic|panel|battery",rec['description'],re.I) else "roof" if roof_words.search(rec['description']) and re.search("replace|strip|re[ -]?roof|shingle|new roof|roofing|repair",rec['description'],re.I) else "other")
-     if rec['kind']!="other":records.append(rec)
+   if not rawtables and pageno==0:
+    print("NO_TABLE",source['year'],source['month'],pageno+1,flush=True)
+   for t in rawtables:
+    try:rows=t.extract()
+    except Exception as e:
+     print("EXTRACT_ERROR",source['year'],source['month'],pageno+1,str(e)[:100],flush=True)
+     continue
+    for cellrow in rows:
+     if not cellrow or len(cellrow)<8:continue
+     row=[clean(c) for c in cellrow]
+     permit=clean(row[0])
+     if not permit_pattern.search(permit):continue
+     found=permit_pattern.search(permit)
+     applicant=row[5]
+     description=row[6]
+     addr=row[7]
+     if not addr:continue
+     if not (sunrun_words.search(applicant) or roof_words.search(description)):continue
+     rec={
+       "permit":re.sub(r'\\s+','',found.group()).upper(),
+       "date":row[2],
+       "applicant":applicant,
+       "description":description,
+       "address":addr,
+       "page":pageno+1,
+       "source":u
+     }
+     if sunrun_words.search(applicant) and re.search(r"solar|photovoltaic|panel|battery",description,re.I):
+      rec['kind']="sunrun_solar"
+     elif roof_words.search(description) and re.search(r"replace|strip|re[ -]?roof|shingle|new roof|roofing|repair",description,re.I):
+      rec['kind']="roof"
+     else:continue
+     records.append(rec)
   return {**source,"status":200,"pdf":True,"pages":len(doc),"bytes":len(r.content),"records":records}
  except Exception as e:
   return {**source,"pdf":False,"error":str(e)[:250]}
