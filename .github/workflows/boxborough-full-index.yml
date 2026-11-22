@@ -1,10 +1,10 @@
-name: PermitEyes Bellingham Giga Sunrun public record search
+name: PermitEyes Bellingham address and original PDF test
 on:
   push:
     branches:
       - research/boxborough-full-index-20261121
     paths:
-      - "tools/permiteyes_bellingham_search_public.py"
+      - "tools/permiteyes_bellingham_crosscheck_attachments.py"
       - ".github/workflows/boxborough-full-index.yml"
   workflow_dispatch:
 permissions:
@@ -23,12 +23,12 @@ jobs:
           python -m pip install playwright
           python -m playwright install --with-deps chromium
       - name: Search public permit index
-        run: python -u tools/permiteyes_bellingham_search_public.py
+        run: python -u tools/permiteyes_bellingham_crosscheck_attachments.py
       - name: Preserve independent search results
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: permiteyes-bellingham-giga-sunrun-search
-          path: permiteyes_bellingham_search/
+          name: permiteyes-bellingham-crosscheck-originals
+          path: permiteyes_bellingham_originals/
           retention-days: 2
           if-no-files-found: warn
