@@ -1,10 +1,10 @@
-name: Brimfield check next Sunrun paired roof permits
+name: Brimfield Giga permit verification
 on:
   push:
     branches:
       - research/boxborough-full-index-20261121
     paths:
-      - "tools/brimfield_roof_source_debug.py"
+      - "tools/brimfield_giga_all_permits.py"
       - ".github/workflows/boxborough-full-index.yml"
   workflow_dispatch:
 permissions:
@@ -23,12 +23,12 @@ jobs:
           python -m pip install playwright
           python -m playwright install --with-deps chromium
       - name: Search public permit index
-        run: python -u tools/brimfield_roof_source_debug.py
+        run: python -u tools/brimfield_giga_all_permits.py
       - name: Preserve independent search results
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: brimfield-roof-match-discovery
-          path: brimfield_roof_match_discovery/
+          name: brimfield-giga-index-results
+          path: brimfield_giga_search/
           retention-days: 2
           if-no-files-found: warn
