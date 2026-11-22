@@ -92,7 +92,7 @@ async def try_public_originals(page, context):
             resp = await context.request.get(u, timeout=25000)
             b = await resp.body()
             is_pdf = b.startswith(b"%PDF")
-            print("DOWNLOAD_TEST", doc["id"], resp.status, len(b), resp.headers.get("content-type"), is_pdf, flush=True)
+            print("DOWNLOAD_TEST", doc["id"], resp.status, len(b), resp.headers.get("content-type"), is_pdf, "HTML_HEAD",repr(b[:360]), flush=True)
             if is_pdf and len(b) <= 25_000_000:
                 p = OUT / ("document_" + doc["id"] + ".pdf")
                 p.write_bytes(b)
@@ -132,6 +132,27 @@ async def walk_building_division(page):
     except Exception as e:
         OBS["errors"].append("building folder " + repr(e)[:300])
 
+
+async def inspect_docview(page):
+    try:
+        url = BASE + "DocView.aspx?id=790578&dbid=0&repo=TownOfBarnstable"
+        resp = await page.goto(url, wait_until="domcontentloaded", timeout=35000)
+        await page.wait_for_timeout(6000)
+        print("DOCVIEW", resp.status if resp else "none", page.url,flush=True)
+        await snapshot(page, "05_docviewer")
+        details = await page.evaluate("""() => ({
+           all_controls: [...document.querySelectorAll('button, input[type="button"], a, [role="button"]')].map(e => ({
+              tag:e.tagName, id:e.id, cls:(e.className||'').toString().slice(0,100),
+              text:(e.innerText||e.value||'').trim().slice(0,100), aria:e.getAttribute('aria-label'), 
+              title:e.getAttribute('title'),href:e.href||null
+           })).filter(x=>/download|export|print|pdf|save|original|document/i.test(JSON.stringify(x))).slice(0,90),
+           scripts: [...document.scripts].map(s=>s.src).filter(x=>x).slice(-30)
+        })""")
+        print("DOCVIEW_CONTROLS", json.dumps(details,ensure_ascii=False)[:14000],flush=True)
+        OBS["docview_controls"] = details
+    except Exception as e:
+        OBS["errors"].append("docview " + repr(e)[:500])
+
 async def main():
     async with async_playwright() as p:
         browser = await p.chromium.launch(headless=True)
@@ -152,6 +173,7 @@ async def main():
         await test_search(page)
         await walk_building_division(page)
         await try_public_originals(page, context)
+        await inspect_docview(page)
         # Save portal request paths to identify whether an anonymous public search API exists.
         OBS["requests"] = OBS["requests"][:150]
         (OUT / "00_DISCOVERY_MANIFEST.json").write_text(json.dumps(OBS, ensure_ascii=False, indent=2))
