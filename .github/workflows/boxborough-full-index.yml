@@ -1,10 +1,10 @@
-name: Verify next Massachusetts PermitPro municipality
+name: Princeton Giga Sunrun PermitPro audit
 on:
   push:
     branches:
       - research/boxborough-full-index-20261121
     paths:
-      - "tools/verify_next_permitpro_town.py"
+      - "tools/princeton_giga_sunrun_complete.py"
       - ".github/workflows/boxborough-full-index.yml"
   workflow_dispatch:
 permissions:
@@ -23,12 +23,12 @@ jobs:
           python -m pip install playwright
           python -m playwright install --with-deps chromium
       - name: Search public permit index
-        run: python -u tools/verify_next_permitpro_town.py
+        run: python -u tools/princeton_giga_sunrun_complete.py
       - name: Preserve independent search results
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: permitpro-municipality-verification
-          path: permitpro_town_verification/
+          name: princeton-giga-sunrun-permit-search
+          path: princeton_giga_sunrun_search/
           retention-days: 2
           if-no-files-found: warn
