@@ -26,7 +26,7 @@ HEADERS={
 }
 roof_words=re.compile(r'roof|shingl',re.I)
 sunrun_words=re.compile(r'sun\s*run|ste(?:ph|v)en\s*kelly',re.I)
-permit_pattern=re.compile(r'(EXPR|BLDR|BLDC)(2[0-9])(\\d+)',re.I)
+permit_pattern=re.compile(r'(EXPR|BLDR|BLDC)(2[0-9])(\d+)',re.I)
 def find_header(page, choices):
  for word in choices:
   try:
