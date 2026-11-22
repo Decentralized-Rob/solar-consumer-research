@@ -1,10 +1,10 @@
-name: Brimfield roof permit address and parcel check
+name: Brimfield historic Building Envelope permit details
 on:
   push:
     branches:
       - research/boxborough-full-index-20261121
     paths:
-      - "tools/brimfield_roof_permit_verify.py"
+      - "tools/brimfield_historic_roof_permits.py"
       - ".github/workflows/boxborough-full-index.yml"
   workflow_dispatch:
 permissions:
@@ -23,7 +23,7 @@ jobs:
           python -m pip install playwright
           python -m playwright install --with-deps chromium
       - name: Search public permit index
-        run: python -u tools/brimfield_roof_permit_verify.py
+        run: python -u tools/brimfield_historic_roof_permits.py
       - name: Preserve independent search results
         if: always()
         uses: actions/upload-artifact@v4
