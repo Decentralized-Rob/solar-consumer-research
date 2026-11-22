@@ -110,7 +110,9 @@ async def walk_building_division(page):
         first = await snapshot(page, "03_building_division_folder")
         for goal in ["HYANNIS", "T", "TEVYAW ROAD", "0045 TEVYAW ROAD"]:
             links = await page.locator('a[href]').evaluate_all("(es)=>es.map(e=>({text:(e.innerText||'').trim(),href:e.href}))")
-            candidates = [x for x in links if goal.lower() == x["text"].lower() or (goal.lower() in x["text"].lower() and len(x["text"])<80)]
+            candidates = [x for x in links if goal.lower() == x["text"].lower() and x["href"].startswith("http")]
+            if not candidates and len(goal) > 3:
+                candidates = [x for x in links if goal.lower() in x["text"].lower() and len(x["text"])<80 and x["href"].startswith("http")]
             print("FOLDER_GOAL", goal, "MATCHING_LINKS", json.dumps(candidates[:15])[:2000], flush=True)
             if candidates:
                 await page.goto(candidates[0]["href"], wait_until="domcontentloaded", timeout=35000)
