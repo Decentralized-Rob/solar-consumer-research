@@ -1,10 +1,10 @@
-name: Princeton Giga Sunrun PermitPro audit
+name: Holbrook Giga and Sunrun full PermitPro audit
 on:
   push:
     branches:
       - research/boxborough-full-index-20261121
     paths:
-      - "tools/princeton_giga_sunrun_complete.py"
+      - "tools/holbrook_giga_sunrun_complete.py"
       - ".github/workflows/boxborough-full-index.yml"
   workflow_dispatch:
 permissions:
@@ -23,12 +23,12 @@ jobs:
           python -m pip install playwright
           python -m playwright install --with-deps chromium
       - name: Search public permit index
-        run: python -u tools/princeton_giga_sunrun_complete.py
+        run: python -u tools/holbrook_giga_sunrun_complete.py
       - name: Preserve independent search results
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: princeton-giga-sunrun-permit-search
-          path: princeton_giga_sunrun_search/
+          name: holbrook-giga-sunrun-permit-search
+          path: holbrook_giga_sunrun_search/
           retention-days: 2
           if-no-files-found: warn
