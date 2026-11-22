@@ -123,6 +123,9 @@ def collect(args):
         "error": None,
     }
     try:
+        if args.court != "mad":
+            manifest["status"] = "outside_massachusetts_court_scope"
+            return manifest
         if args.company == "sunrun" and not (args.roof_permit_url and args.roof_permit_number and args.address):
             manifest["status"] = "sunrun_roof_permit_evidence_required"
             return manifest
