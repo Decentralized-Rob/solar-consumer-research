@@ -1,0 +1,40 @@
+name: Diaz one-case public RECAP PDF test
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/diaz-recap-one-case.yml'
+      - 'scripts/download_diaz_recap.py'
+      - 'scripts/test_diaz_recap.py'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: diaz-recap-research
+  cancel-in-progress: false
+
+jobs:
+  collect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    env:
+      COURTLISTENER_API_TOKEN: ${{ secrets.COURTLISTENER_API_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Offline tests
+        run: python -m unittest discover -s scripts -p 'test_diaz_recap.py' -v
+      - name: Retrieve Diaz original public RECAP exhibits (bounded calls)
+        run: python scripts/download_diaz_recap.py
+      - name: Preserve PDF originals and availability manifest
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: diaz-new-original-filing-test
+          path: output/diaz/
+          if-no-files-found: warn
+          retention-days: 5
