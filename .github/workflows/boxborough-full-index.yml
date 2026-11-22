@@ -1,10 +1,10 @@
-name: Brimfield historic Building Envelope permit details
+name: Brimfield next Sunrun property
 on:
   push:
     branches:
       - research/boxborough-full-index-20261121
     paths:
-      - "tools/brimfield_historic_roof_permits.py"
+      - "tools/brimfield_next_sunrun.py"
       - ".github/workflows/boxborough-full-index.yml"
   workflow_dispatch:
 permissions:
@@ -23,7 +23,7 @@ jobs:
           python -m pip install playwright
           python -m playwright install --with-deps chromium
       - name: Search public permit index
-        run: python -u tools/brimfield_historic_roof_permits.py
+        run: python -u tools/brimfield_next_sunrun.py
       - name: Preserve independent search results
         if: always()
         uses: actions/upload-artifact@v4
