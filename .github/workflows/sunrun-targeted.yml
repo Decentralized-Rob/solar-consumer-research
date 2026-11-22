@@ -1,0 +1,32 @@
+name: Targeted Sunrun docket PDF audit — slow and relevant only
+
+on:
+  pull_request:
+    paths:
+      - 'tools/court-records/sunrun_targeted.py'
+      - '.github/workflows/sunrun-targeted.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    env:
+      COURTLISTENER_API_TOKEN: ${{ secrets.COURTLISTENER_API_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Slowly inspect unreviewed Sunrun dockets for original new evidence
+        run: python tools/court-records/sunrun_targeted.py
+      - name: Preserve original PDF bytes and targeted relevance report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: sunrun-targeted-new-evidence
+          path: sunrun-targeted-records/
+          retention-days: 3
+          if-no-files-found: warn
