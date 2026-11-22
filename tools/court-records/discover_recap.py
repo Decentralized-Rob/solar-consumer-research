@@ -32,12 +32,14 @@ def api_search(url: str) -> dict:
         return json.load(response)
 
 
-def search(company: str = NAME, court: str = "", fetch=api_search) -> dict:
+def search(company: str = NAME, court: str = "mad", fetch=api_search) -> dict:
     if company != NAME:
         raise ValueError("This workflow is restricted to the Giga Property Solutions research target")
+    if court != "mad":
+        raise ValueError("Massachusetts-only scope requires court=mad")
     q = f'caseName:"{company}"'
     # type=d returns federal dockets without truncated nested document matches
-    url = API + "?" + urlencode({"type": "d", "q": q})
+    url = API + "?" + urlencode({"type": "d", "q": q, "order_by": "dateFiled desc"})
     pages = 0
     candidates = []
     seen = set()
@@ -54,7 +56,7 @@ def search(company: str = NAME, court: str = "", fetch=api_search) -> dict:
                 continue
             if not filed or not START <= filed <= END:
                 continue
-            if court and court not in court_id.lower().split("/"):
+            if court_id.lower().strip("/") not in ("mad", "https://www.courtlistener.com/api/rest/v4/courts/mad") and not court_id.lower().endswith("/courts/mad/"):
                 continue
             match = re.search(r"/docket/(\d+)/", absolute_url)
             docket_id = hit.get("docket_id") or (int(match.group(1)) if match else None)
@@ -76,7 +78,7 @@ def search(company: str = NAME, court: str = "", fetch=api_search) -> dict:
         url = nxt
     return {
         "searched_at_utc": datetime.now(timezone.utc).isoformat(),
-        "scope": "Federal RECAP only. Massachusetts state cases excluded.",
+        "scope": "Massachusetts US District Court only (mad). Massachusetts state cases NOT indexed here.",
         "company": company,
         "start_date": START,
         "end_date": END,
@@ -91,14 +93,14 @@ def search(company: str = NAME, court: str = "", fetch=api_search) -> dict:
 def main():
     p = argparse.ArgumentParser()
     p.add_argument("--out", default="court-recap-output")
-    p.add_argument("--court", default="", help="Optional CourtListener court short-id, e.g. mad")
+    p.add_argument("--court", default="mad", choices=("mad",), help="District of Massachusetts federal court only")
     args = p.parse_args()
     out = Path(args.out)
     out.mkdir(parents=True, exist_ok=True)
     try:
         if not os.getenv("COURTLISTENER_API_TOKEN", "").strip():
             result = {"status": "requires_courtlistener_token", "count": 0,
-                      "matches": [], "search_attempted": False,
+                      "matches": [], "search_attempted": False, "scope": "District of Massachusetts federal only; state-court cases not checked",
                       "message": "CourtListener API returned HTTP 401 in live GitHub Actions; add COURTLISTENER_API_TOKEN as repository Actions secret."}
         else:
             result = search(court=args.court)
