@@ -27,10 +27,11 @@ def norm(addr):
     return addr
 def rowdata(c):
     if len(c)<12:return None
+    offset=1 if len(c)>=14 else 0
     return {"application":c[3].strip(),"application_date":c[4].strip(),
             "issued_date":c[5].strip(),"address":c[6].strip(),
-            "applicant":c[7].strip(),"work":c[8].strip(),
-            "type":c[9].strip(),"permit":c[10].strip(),"status":c[11].strip()}
+            "applicant":c[7].strip(),"work":c[8+offset].strip(),
+            "type":c[9+offset].strip(),"permit":c[10+offset].strip(),"status":c[11+offset].strip()}
 def roof(rec):
     txt=rec["type"]+" "+rec["work"]
     return bool(re.search(r"roof|reroof|re-roof|shingl",txt,re.I)) and not bool(re.search(r"solar|photovoltaic|PV panel",txt,re.I))
@@ -40,17 +41,17 @@ async def waitdraw(page):
     await page.wait_for_timeout(900)
 async def setsearch(page,term):
     await page.evaluate("""v => {
-      let t=window.jQuery && jQuery('#BuildingPublicHome').DataTable();
+      let t=window.__tbl;
       if(!t)throw Error('no initialized PermitEyes Building table');
       t.search(v).draw();
     }""", term)
     await waitdraw(page)
 async def pagesnapshot(page):
     return await page.evaluate("""() => {
-        let t=jQuery('#BuildingPublicHome').DataTable();
+        let t=window.__tbl;
         let info=t.page.info();
-        return {info:info,cols:[...document.querySelectorAll('#BuildingPublicHome thead th')].map(x=>x.innerText),
-          rows:[...document.querySelectorAll('#BuildingPublicHome tbody tr')].map(tr=>[...tr.querySelectorAll('td')].map(td=>td.innerText))};
+        return {info:info,cols:[...t.table().node().querySelectorAll("thead th")].map(x=>x.innerText),
+          rows:[...t.table().node().querySelectorAll("tbody tr")].map(tr=>[...tr.querySelectorAll('td')].map(td=>td.innerText))};
     }""")
 async def collect(page,limit_pages=10):
     snap=await pagesnapshot(page)
@@ -59,7 +60,7 @@ async def collect(page,limit_pages=10):
     maxpages=min(snap["info"]["pages"],limit_pages)
     for i in range(maxpages):
         if i>0:
-            await page.evaluate("(i)=>jQuery('#BuildingPublicHome').DataTable().page(i).draw('page')",i)
+            await page.evaluate("(i)=>window.__tbl.page(i).draw('page')",i)
             await waitdraw(page)
             snap=await pagesnapshot(page)
         for c in snap["rows"]:
@@ -70,7 +71,7 @@ async def extract_attachments(page,rec,kind):
     # Search by application number, not owner name
     aid=rec["application"]
     await setsearch(page,aid)
-    rows=page.locator("#BuildingPublicHome tbody tr")
+    rows=page.locator("#permitPublicView tbody tr")
     count=await rows.count()
     located=None
     for n in range(min(count,15)):
@@ -129,7 +130,17 @@ async def main():
             resp=await page.goto(URL,wait_until="domcontentloaded",timeout=55000)
             await page.wait_for_timeout(3500)
             print("PORTAL",page.url,resp.status if resp else "",(await page.locator("body").inner_text())[:800],flush=True)
-            await page.wait_for_selector("#BuildingPublicHome",timeout=25000)
+            print("DIAGNOSTIC_TABLES",await page.locator("table").evaluate_all("(es)=>es.map(e=>({id:e.id,thead:(e.querySelector('thead')?.innerText||'').slice(0,300),visible:!!e.getClientRects().length,cls:e.className}))"),flush=True)
+            await page.wait_for_function("""() => {
+               if(!window.jQuery || !jQuery.fn.DataTable)return false;
+               return [...document.querySelectorAll('table')].some(t => jQuery.fn.DataTable.isDataTable(t) && /Site Address/i.test(t.querySelector('thead')?.innerText || ''));
+            }""",timeout=25000)
+            await page.evaluate("""() => {
+              let t=[...document.querySelectorAll('table')].find(t => jQuery.fn.DataTable.isDataTable(t) && /Site Address/i.test(t.querySelector('thead')?.innerText || ''));
+              if(!t)throw Error('No qualifying PermitEyes table');
+              t.id='permitPublicView';
+              window.__tbl=jQuery(t).DataTable();
+            }""")
             await setsearch(page,"Sunrun")
             solar_candidates=await collect(page,limit_pages=12)
             solar_candidates=[x for x in solar_candidates if sunrun(x)]
