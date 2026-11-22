@@ -51,6 +51,45 @@ async def main():
    print("RECORD_TEXT",app,data["text"][:3800].replace("\n"," | "),flush=True)
    print("LINKS",app,json.dumps(data["links"][:55])[:6500],flush=True)
    records.append({"app":app,"record_url":url,"data":data,"http":resp.status if resp else None})
+   # PermitPro exposes source application/permit views through act=form/view and
+   # act=form/certificate, rather than conventional .pdf links.
+   forms=[x["href"] for x in data["links"] if "act=form/" in x["href"]]
+   for idx,form_url in enumerate(forms):
+    try:
+     response=await ctx.request.get(form_url,timeout=35000)
+     body=await response.body()
+     headers=response.headers
+     ispdf=body.startswith(b"%PDF-")
+     print("DOCUMENT_ROUTE",app,"URL",form_url,"HTTP",response.status,"CTYPE",headers.get("content-type"),"BYTES",len(body),"PDF",ispdf,"HEAD",repr(body[:140]),flush=True)
+     if ispdf:
+      digest=hashlib.sha256(body).hexdigest()
+      fname=f"{app}_{idx+1:02d}_{digest[:16]}.pdf"
+      (ROOT/fname).write_bytes(body)
+      files.append({"app":app,"filename":fname,"source":form_url,"bytes":len(body),"sha256":digest,"source_type":"original_server_pdf"})
+      print("ORIGINAL_PDF",app,fname,len(body),flush=True)
+     else:
+      # Record the portal's actual document view and identify print/download commands.
+      sub=await ctx.new_page()
+      rr=await sub.goto(form_url,wait_until="domcontentloaded",timeout=30000)
+      await sub.wait_for_timeout(600)
+      detail=await sub.evaluate("""()=>({
+       title:document.title,url:location.href,text:(document.body?.innerText||'').slice(0,40000),
+       links:[...document.querySelectorAll('a[href]')].map(a=>({url:a.href,text:a.innerText.slice(0,100)})),
+       elements:[...document.querySelectorAll('button,input,iframe,embed,object')].slice(0,100).map(x=>({tag:x.tagName,outer:x.outerHTML.slice(0,500)}))
+      })""")
+      (ROOT/f"{app}_form_{idx+1:02d}.json").write_text(json.dumps(detail,indent=2))
+      print("VIEW_DETAIL",app,idx+1,"HTTP",rr.status if rr else None,"TEXT",detail["text"][:2200].replace("\n"," | "),"LINKS",json.dumps(detail["links"][:25])[:2000],"ELEMENTS",json.dumps(detail["elements"][:15])[:2400],flush=True)
+      try:
+       rendered=await sub.pdf(format="Letter",print_background=True)
+       if rendered.startswith(b"%PDF-"):
+        digest=hashlib.sha256(rendered).hexdigest()
+        fname=f"{app}_portal_export_{idx+1:02d}_{digest[:12]}.pdf"
+        (ROOT/fname).write_bytes(rendered)
+        files.append({"app":app,"filename":fname,"source":form_url,"bytes":len(rendered),"sha256":digest,"source_type":"browser_export_of_public_portal_document_view"})
+        print("PORTAL_PRINT_PDF",app,fname,len(rendered),flush=True)
+      except Exception as e:print("PRINT_ERROR",app,repr(e)[:150],flush=True)
+      await sub.close()
+    except Exception as e:print("FORM_ROUTE_ERROR",app,repr(e)[:250],flush=True)
    urls=list(dict.fromkeys(x["href"] for x in data["links"] if ".s3.amazonaws.com/" in x["href"] or re.search(r"\.pdf($|\?)",x["href"],re.I)))
    print("PDF_CANDIDATES",app,len(urls),flush=True)
    for link in urls:
