@@ -1,237 +1,100 @@
-"""Read-only Barnstable Laserfiche public property-file discovery; preserve genuine PDFs only."""
-import asyncio
-import hashlib
-import json
-import re
+"""One verified address only: 169 Katherine Road, Centerville.
+Find public Laserfiche original municipal records (not monthly report) and
+download ONLY files that plausibly contain 2025 permits.
+"""
+import asyncio, json, re, hashlib
 from pathlib import Path
-from urllib.parse import urljoin, urlparse, parse_qs
 from playwright.async_api import async_playwright
 
-OUT = Path("barnstable_45_tevyaw_packet")
+OUT=Path("barnstable_169_katherine_originals")
 OUT.mkdir(exist_ok=True)
-BASE = "https://laserweb.town.barnstable.ma.us/WebLink/"
-ROOT = "https://laserweb.town.barnstable.ma.us/"
-OBS = {"target": "45 TEVYAW ROAD, HYANNIS, MA", "giga_permit": "EXPR-25-4", "pages": [], "requests": [], "pdfs": [], "errors": []}
-seen_requests = set()
+BASE="https://laserweb.town.barnstable.ma.us/WebLink/"
+PARAMS="dbid=0&repo=TownOfBarnstable"
+TARGET={"address":"169 KATHERINE ROAD, CENTERVILLE, MA 02632",
+"roof":"EXPR-25-1450","roof_date":"2025-12-09",
+"sunrun":"BLDR-25-1504","solar_date":"2025-12-15"}
+R={"target":TARGET,"navigation":[],"documents":[],"downloaded":[],"errors":[]}
+async def visit(page,url,stage):
+    response=await page.goto(url,wait_until="domcontentloaded",timeout=36000)
+    await page.wait_for_timeout(3200)
+    links=await page.locator("a[href]").evaluate_all("(es)=>es.map(e=>({text:(e.innerText||'').trim(),href:e.href})).filter(x=>x.href.startsWith('http'))")
+    body=(await page.locator("body").inner_text())[:8000]
+    R["navigation"].append({"stage":stage,"url":page.url,"status":response.status if response else None,"text":body[:1800],"links":links[:90]})
+    print("VISIT",stage,"HTTP",response.status if response else None,"URL",page.url,"BODY",repr(body[:1200]),flush=True)
+    return links,body
 
-async def snapshot(page, tag):
-    try:
-        await page.screenshot(path=str(OUT / (tag + ".png")), full_page=True, timeout=10000)
-    except Exception as e:
-        OBS["errors"].append("screenshot " + tag + " " + repr(e)[:200])
-    try:
-        data = await page.evaluate("""() => ({
-          text: document.body ? document.body.innerText.slice(0,12000) : "",
-          title: document.title,
-          inputs: [...document.querySelectorAll('input')].slice(0,24).map(e=>({type:e.type,id:e.id,name:e.name,placeholder:e.placeholder,aria:e.getAttribute('aria-label')})),
-          buttons: [...document.querySelectorAll('button')].slice(0,25).map(e=>({text:(e.innerText||'').slice(0,100),title:e.title,aria:e.getAttribute('aria-label')})),
-          links: [...document.querySelectorAll('a[href]')].slice(0,150).map(e=>({text:(e.innerText||'').slice(0,110),href:e.href})),
-          frames: [...document.querySelectorAll('iframe')].map(e=>e.src)
-        })""")
-    except Exception as e:
-        data = {"error": repr(e)}
-    entry = {"tag": tag, "url": page.url, **data}
-    OBS["pages"].append(entry)
-    print("SNAPSHOT", tag, page.url, "TEXT", repr(data.get("text", "")[:850]), flush=True)
-    print("INPUTS", tag, json.dumps(data.get("inputs", []))[:2000], flush=True)
-    print("LINKS", tag, json.dumps(data.get("links", [])[:80])[:8000], flush=True)
-    return entry
+async def choose(page,links,name,stage):
+    matches=[v for v in links if v["text"].strip().upper()==name.upper() and "/Browse.aspx?" in v["href"]]
+    if not matches:
+        matches=[v for v in links if name.upper() in v["text"].strip().upper() and "/Browse.aspx?" in v["href"]]
+    print("FOLDER_SEARCH",stage,name,"MATCHES",json.dumps(matches[:12]),flush=True)
+    if not matches:
+        print("FOLDER_MISSING",stage,name,"AVAILABLE",json.dumps([x["text"] for x in links[:80]]),flush=True)
+        return None
+    return await visit(page,matches[0]["href"],stage)
 
-def on_response(resp):
+async def inspect_original(page,doc):
+    url=doc["href"]
+    _,body=await visit(page,url,"document")
+    date_hits=re.findall(r"(?:Modified|Created)\s+(\d{1,2}/\d{1,2}/\d{4})",body,re.I)
+    doc["metadata_dates"]=date_hits
+    doc["preview"]=body[:2200]
+    eligible=any(int(x.rsplit("/",1)[1])>=2025 for x in date_hits)
+    doc["eligible_for_2025"]=eligible
+    print("DOCUMENT_META",doc["text"],"DATES",date_hits,"CANDIDATE",eligible,flush=True)
+    if not eligible:
+        print("SKIP_OLD_ARCHIVE",url,flush=True)
+        return
     try:
-        req = resp.request
-        if req.resource_type not in ("fetch", "xhr", "document"):
+        button=page.locator("#STR_DOWNLOAD_PDF")
+        if await button.count()==0:
+            print("NO_DOWNLOAD_PDF_BUTTON",url,flush=True)
             return
-        u = resp.url
-        if not ("barnstable.ma.us" in u or "viewpointcloud.com" in u):
+        await button.click(timeout=8000)
+        await page.wait_for_timeout(800)
+        accept=page.get_by_role("button",name="Download & Print")
+        if await accept.count()==0: 
+            print("NO_PRINT_CONFIRM_BUTTON",url,flush=True)
             return
-        key = (resp.status, u.split("?")[0])
-        if key in seen_requests:
+        async with page.expect_download(timeout=45000) as item:
+            await accept.first.click(timeout=8000)
+        download=await item.value
+        filename="original_"+re.sub(r"[^A-Za-z0-9._-]","_",download.suggested_filename)
+        dest=OUT/filename
+        await download.save_as(str(dest))
+        b=dest.read_bytes()
+        if not b.startswith(b"%PDF"):
+            print("NON_PDF_DOWNLOAD",filename,len(b),flush=True)
+            dest.unlink()
             return
-        seen_requests.add(key)
-        OBS["requests"].append({"status": resp.status, "type": req.resource_type, "url": u[:350], "content_type": resp.headers.get("content-type", "")})
-    except Exception:
-        pass
-
-async def test_search(page):
-    locator = page.locator('input[type="search"], input[placeholder*="Search" i], input[aria-label*="Search" i], input[placeholder*="document" i]')
-    if await locator.count() == 0:
-        locator = page.locator('input[type="text"]:visible')
-    print("SEARCH_INPUTS", await locator.count(), flush=True)
-    for i in range(min(await locator.count(), 3)):
-        item = locator.nth(i)
-        try:
-            if not await item.is_visible(): continue
-            await item.fill("45 TEVYAW ROAD", timeout=6000)
-            await item.press("Enter")
-            await page.wait_for_timeout(5000)
-            await snapshot(page, "02_after_address_search")
-            return True
-        except Exception as e:
-            OBS["errors"].append("search " + repr(e)[:200])
-    return False
-
-async def try_public_originals(page, context):
-    # Never guess document identifiers. Use IDs observed in the visible public page only.
-    links = await page.locator('a[href]').evaluate_all("(es)=>es.map(e=>({text:(e.innerText||'').slice(0,100),href:e.href}))")
-    candidates = []
-    for v in links:
-        u = v["href"]
-        low = u.lower()
-        if "docview.aspx" in low or ("browse.aspx" in low and "id=" in low):
-            ids = parse_qs(urlparse(u).query).get("id", [])
-            if ids:
-                candidates.append({"id": ids[0], "href": u, "text": v["text"]})
-    OBS["document_candidates"] = candidates[:50]
-    print("CANDIDATES", json.dumps(candidates[:15])[:3000], flush=True)
-    for doc in candidates[:6]:
-        if "docview" not in doc["href"].lower():
-            continue
-        u = BASE + "DocView.aspx?dbid=0&repo=TownOfBarnstable&id=" + doc["id"] + "&openpdf=true"
-        try:
-            resp = await context.request.get(u, timeout=25000)
-            b = await resp.body()
-            is_pdf = b.startswith(b"%PDF")
-            print("DOWNLOAD_TEST", doc["id"], resp.status, len(b), resp.headers.get("content-type"), is_pdf, "HTML_HEAD",repr(b[:360]), flush=True)
-            if is_pdf and len(b) <= 25_000_000:
-                p = OUT / ("document_" + doc["id"] + ".pdf")
-                p.write_bytes(b)
-                OBS["pdfs"].append({"id": doc["id"], "path": str(p), "bytes": len(b), "sha256": hashlib.sha256(b).hexdigest(), "source": u})
-        except Exception as e:
-            OBS["errors"].append("pdf " + doc["id"] + " " + repr(e)[:200])
-
-
-async def walk_building_division(page):
-    url = BASE + "Browse.aspx?id=652286&dbid=0&repo=TownOfBarnstable"
-    try:
-        resp = await page.goto(url, wait_until="domcontentloaded", timeout=35000)
-        await page.wait_for_timeout(5000)
-        print("BUILDING_FOLDER", resp.status if resp else "none", flush=True)
-        first = await snapshot(page, "03_building_division_folder")
-        for goal in ["HYANNIS", "T", "TEVYAW ROAD", "0045 TEVYAW ROAD"]:
-            links = await page.locator('a[href]').evaluate_all("(es)=>es.map(e=>({text:(e.innerText||'').trim(),href:e.href}))")
-            candidates = [x for x in links if goal.lower() == x["text"].lower() and x["href"].startswith("http")]
-            if not candidates and len(goal) > 3:
-                candidates = [x for x in links if goal.lower() in x["text"].lower() and len(x["text"])<80 and x["href"].startswith("http")]
-            print("FOLDER_GOAL", goal, "MATCHING_LINKS", json.dumps(candidates[:15])[:2000], flush=True)
-            if candidates:
-                await page.goto(candidates[0]["href"], wait_until="domcontentloaded", timeout=35000)
-                await page.wait_for_timeout(4200)
-                await snapshot(page, "04_folder_" + re.sub("[^a-z0-9]+", "_", goal.lower()))
-                continue
-            try:
-                el = page.get_by_text(re.compile("^" + re.escape(goal) + "$", re.I)).first
-                if await el.count():
-                    await el.dblclick(timeout=5000)
-                    await page.wait_for_timeout(4200)
-                    await snapshot(page, "04_folder_" + re.sub("[^a-z0-9]+", "_", goal.lower()))
-                    continue
-            except Exception as e:
-                OBS["errors"].append("walk " + goal + " " + repr(e)[:200])
-            break
-    except Exception as e:
-        OBS["errors"].append("building folder " + repr(e)[:300])
-
-
-async def inspect_docview(page):
-    try:
-        url = BASE + "DocView.aspx?id=790578&dbid=0&repo=TownOfBarnstable"
-        resp = await page.goto(url, wait_until="domcontentloaded", timeout=35000)
-        await page.wait_for_timeout(6000)
-        print("DOCVIEW", resp.status if resp else "none", page.url,flush=True)
-        await snapshot(page, "05_docviewer")
-        details = await page.evaluate("""() => ({
-           all_controls: [...document.querySelectorAll('button, input[type="button"], a, [role="button"]')].map(e => ({
-              tag:e.tagName, id:e.id, cls:(e.className||'').toString().slice(0,100),
-              text:(e.innerText||e.value||'').trim().slice(0,100), aria:e.getAttribute('aria-label'), 
-              title:e.getAttribute('title'),href:e.href||null
-           })).filter(x=>/download|export|print|pdf|save|original|document/i.test(JSON.stringify(x))).slice(0,90),
-           scripts: [...document.scripts].map(s=>s.src).filter(x=>x).slice(-30)
-        })""")
-        print("DOCVIEW_CONTROLS", json.dumps(details,ensure_ascii=False)[:14000],flush=True)
-        OBS["docview_controls"] = details
-    except Exception as e:
-        OBS["errors"].append("docview " + repr(e)[:500])
-
-
-async def test_export_button(page):
-    tasks = []
-    popups = []
-    async def save_download(d):
-        try:
-            name = d.suggested_filename
-            pth = OUT / ("original_web_link_export_" + re.sub("[^a-zA-Z0-9._-]","_",name))
-            await d.save_as(str(pth))
-            b=pth.read_bytes()
-            good=b.startswith(b"%PDF")
-            OBS["pdfs"].append({"path":str(pth),"bytes":len(b),"pdf":good,"sha256":hashlib.sha256(b).hexdigest(),"downloaded_name":name})
-            print("EXPORTED_DOWNLOAD",name,len(b),good,flush=True)
-            if not good: pth.unlink()
-        except Exception as e:
-            OBS["errors"].append("export download " + repr(e)[:250])
-    page.on("download",lambda d: tasks.append(asyncio.create_task(save_download(d))))
-    page.on("popup",lambda w:popups.append(w))
-    btn=page.locator("#STR_DOWNLOAD_PDF")
-    print("EXPORT_BUTTON_COUNT", await btn.count(), flush=True)
-    if await btn.count():
-        try:
-            await btn.click(timeout=7000)
-            await page.wait_for_timeout(6500)
-            print("EXPORT_CLICKED",page.url,"POPUPS",len(popups),flush=True)
-            await snapshot(page,"06_after_print_pdf")
-            for popup in popups[:]:
-                print("EXPORT_POPUP",popup.url,flush=True)
-                if not popup.is_closed():
-                    try: await snapshot(popup,"07_export_popup")
-                    except: pass
-            controls=await page.locator('button, input[type="button"],a').evaluate_all("(es)=>es.map(e=>({tag:e.tagName,id:e.id,text:(e.innerText||e.value||'').trim().slice(0,120),title:e.title,aria:e.getAttribute('aria-label')})).filter(x=>/save|download|export|print|pdf/i.test(JSON.stringify(x))).slice(0,35)")
-            print("EXPORT_CONTROLS",json.dumps(controls)[:5000],flush=True)
-            for label in ["Download & Print", "Download", "Export", "Save"]:
-                b=page.get_by_role("button",name=re.compile("^"+label+"$",re.I)).first
-                if await b.count() and await b.is_visible():
-                    await b.click(timeout=6500)
-                    await page.wait_for_timeout(5000)
-                    print("EXPORT_FINAL_CLICK",label,page.url,flush=True)
-                    break
-            if tasks: await asyncio.gather(*tasks,return_exceptions=True)
-        except Exception as e:
-            OBS["errors"].append("export click " + repr(e)[:500])
+        entry={"filename":filename,"source":url,"bytes":len(b),"sha256":hashlib.sha256(b).hexdigest(),"metadata_dates":date_hits}
+        R["downloaded"].append(entry)
+        print("VERIFIED_ORIGINAL_PDF",json.dumps(entry),flush=True)
+    except Exception as exc:
+        R["errors"].append("download "+repr(exc)[:500])
+        print("PDF_EXPORT_ERROR",repr(exc)[:500],flush=True)
 
 async def main():
     async with async_playwright() as p:
-        browser = await p.chromium.launch(headless=True)
-        context = await browser.new_context(accept_downloads=True, viewport={"width": 1400, "height": 1000})
-        page = await context.new_page()
-        page.on("response", on_response)
-        # Export the previously discovered public doc ID without repeating folder navigation.
-        await inspect_docview(page)
-        await test_export_button(page)
-        (OUT / "00_DISCOVERY_MANIFEST.json").write_text(json.dumps(OBS, ensure_ascii=False, indent=2))
-        print("FINAL", "pdfs", len(OBS["pdfs"]), "request_paths", len(OBS["requests"]), "pages", len(OBS["pages"]), flush=True)
+        browser=await p.chromium.launch(headless=True)
+        context=await browser.new_context(accept_downloads=True)
+        page=await context.new_page()
+        try:
+            links,_=await visit(page,BASE+"Browse.aspx?id=652286&"+PARAMS,"Building Division")
+            for name,tag in [("CENTERVILLE","village"),("K","letter"),("KATHERINE ROAD","street"),("0169 KATHERINE ROAD","property")]:
+                result=await choose(page,links,name,tag)
+                if result is None:break
+                links,_=result
+            else:
+                docs=[x for x in links if "/DocView.aspx?" in x["href"]]
+                print("PROPERTY_DOCS",json.dumps(docs),flush=True)
+                R["documents"]=docs
+                for doc in docs[:8]:
+                    await inspect_original(page,doc)
+        except Exception as exc:
+            R["errors"].append("navigation "+repr(exc)[:500])
+            print("NAVIGATION_ERROR",repr(exc)[:500],flush=True)
+        (OUT/"00_ORIGINAL_FILE_MANIFEST.json").write_text(json.dumps(R,ensure_ascii=False,indent=2))
+        print("SUMMARY",len(R["documents"]),"candidate_documents",sum(x.get("eligible_for_2025",False) for x in R["documents"]),"verified_pdfs",len(R["downloaded"]),flush=True)
         await browser.close()
-        return
-        for tag, url in [
-            ("00_weblink_welcome", BASE + "Welcome.aspx?dbid=0&repo=TownOfBarnstable"),
-            ("01_weblink_browse", BASE + "Browse.aspx?dbid=0&repo=TownOfBarnstable")
-        ]:
-            try:
-                response = await page.goto(url, wait_until="domcontentloaded", timeout=35000)
-                await page.wait_for_timeout(4500)
-                print("NAVIGATE", tag, response.status if response else "none", page.url, flush=True)
-                await snapshot(page, tag)
-            except Exception as e:
-                OBS["errors"].append("navigate " + tag + " " + repr(e)[:250])
-        await test_search(page)
-        await walk_building_division(page)
-        await try_public_originals(page, context)
-        await inspect_docview(page)
-        await test_export_button(page)
-        # Save portal request paths to identify whether an anonymous public search API exists.
-        OBS["requests"] = OBS["requests"][:150]
-        (OUT / "00_DISCOVERY_MANIFEST.json").write_text(json.dumps(OBS, ensure_ascii=False, indent=2))
-        print("FINAL", "pdfs", len(OBS["pdfs"]), "request_paths", len(OBS["requests"]), "pages", len(OBS["pages"]), flush=True)
-        print("RELEVANT_REQUESTS", json.dumps(OBS["requests"][-25:], ensure_ascii=False)[:7000], flush=True)
-        await browser.close()
-
-if __name__ == "__main__":
-    asyncio.run(main())
+asyncio.run(main())
