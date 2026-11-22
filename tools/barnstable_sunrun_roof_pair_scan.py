@@ -16,6 +16,7 @@ for y in (2024,2025,2026):
  for m,month in enumerate(MONTHS,1):
   if y==2026 and m>10:continue
   SOURCES.append({"year":y,"month":m,"url":BASE+f"{month}-{y}.pdf"})
+SOURCES=[x for x in SOURCES if x["year"]==2026 and x["month"]==1]
 HEADERS={
  "permit": ["Record #","Permit Number","Permit #"],
  "date": ["Date Issued","Issued Date","Permit/License Issued Date","Date / Time"],
@@ -57,7 +58,7 @@ def read_one(source):
   records=[]
   for pageno,page in enumerate(doc):
    text0=page.get_text("text")
-   if not re.search(r'sun\\s*run|ste(?:ph|v)en\\s+kelly|giga|espigar|roof|shingle',text0,re.I):continue
+   if not re.search(r'sun\s*run|ste(?:ph|v)en\s+kelly|giga|espigar|roof|shingle',text0,re.I):continue
    try:
     tables=page.find_tables()
     rawtables=tables.tables
@@ -71,6 +72,8 @@ def read_one(source):
     except Exception as e:
      print("EXTRACT_ERROR",source['year'],source['month'],pageno+1,str(e)[:100],flush=True)
      continue
+    if pageno<2:
+     print("TABLE_DIAG",source['year'],source['month'],pageno+1,"rows",len(rows),"lens",[len(x) if x else 0 for x in rows[:10]],"examples",repr(rows[:3])[:5500],flush=True)
     for cellrow in rows:
      if not cellrow or len(cellrow)<8:continue
      row=[clean(c) for c in cellrow]
@@ -83,7 +86,7 @@ def read_one(source):
      if not addr:continue
      if not (sunrun_words.search(applicant) or roof_words.search(description)):continue
      rec={
-       "permit":re.sub(r'\\s+','',found.group()).upper(),
+       "permit":re.sub(r'\s+','',found.group()).upper(),
        "date":row[2],
        "applicant":applicant,
        "description":description,
