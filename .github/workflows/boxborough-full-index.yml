@@ -23,7 +23,7 @@ jobs:
           python -m pip install playwright
           python -m playwright install --with-deps chromium
       - name: Search public permit index
-        run: python -u tools/brimfield_find_next_roof_match.py
+        run: python -u tools/brimfield_roof_source_debug.py
       - name: Preserve independent search results
         if: always()
         uses: actions/upload-artifact@v4
