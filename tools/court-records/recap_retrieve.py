@@ -78,8 +78,11 @@ def each_entry(docket_id, token):
 
 def pdf_sources(doc):
     paths = []
-    if doc.get("filepath_local"):
-        paths.append(ARCHIVE + str(doc["filepath_local"]).lstrip("/"))
+    local = str(doc.get("filepath_local") or "").strip()
+    # CourtListener filepath_local is a relative archive key, NEVER a URL.
+    # Reject absolute URLs, authority-style paths, backslashes and traversal.
+    if local and not urlsplit(local).scheme and not local.startswith("//") and "\\" not in local and ".." not in local.split("/"):
+        paths.append(ARCHIVE + local.lstrip("/"))
     if doc.get("filepath_ia"):
         paths.append(str(doc["filepath_ia"]))
     result = []
