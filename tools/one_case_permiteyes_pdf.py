@@ -13,10 +13,10 @@ MUNICIPALITY="milton"
 URL="https://permiteyes.us/milton/publicview.php"
 RESULT={"municipality":MUNICIPALITY,"source":URL,"paired":None,"downloaded":[],"probes":[],"errors":[]}
 def parsedate(raw):
-    for pattern in [r"\d{1,2}/\d{1,2}/\d{4}",r"\d{4}-\d{2}-\d{2}"]:
+    for pattern in [r"\d{1,2}/\d{1,2}/\d{4}",r"\d{1,2}/\d{1,2}/\d{2}(?!\d)",r"\d{4}-\d{2}-\d{2}"]:
         found=re.search(pattern, raw or "")
         if found:
-            try:return datetime.strptime(found.group(),"%m/%d/%Y" if "/" in found.group() else "%Y-%m-%d")
+            try:return datetime.strptime(found.group(), ("%m/%d/%Y" if len(found.group().split("/")[-1])==4 else "%m/%d/%y") if "/" in found.group() else "%Y-%m-%d")
             except:pass
     return None
 def norm(addr):
