@@ -1,10 +1,10 @@
-name: Mill Lane solar building original attachments
+name: Brimfield solar roofing matched-property discovery
 on:
   push:
     branches:
       - research/boxborough-full-index-20261121
     paths:
-      - "tools/mill_lane_download_original_public_uploads.py"
+      - "tools/brimfield_find_next_roof_match.py"
       - ".github/workflows/boxborough-full-index.yml"
   workflow_dispatch:
 permissions:
@@ -23,12 +23,12 @@ jobs:
           python -m pip install playwright
           python -m playwright install --with-deps chromium
       - name: Search public permit index
-        run: python -u tools/mill_lane_download_original_public_uploads.py
+        run: python -u tools/brimfield_find_next_roof_match.py
       - name: Preserve independent search results
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: brimfield-mill-lane-solar-originals
-          path: mill_lane_solar_original_attachments/
+          name: brimfield-roof-match-discovery
+          path: brimfield_roof_match_discovery/
           retention-days: 2
           if-no-files-found: warn
