@@ -186,7 +186,12 @@ def collect(args):
                         if row["status"] != "verified_pdf":
                             row["status"] = "failed_documented_sources"
                 manifest["documents"].append(row)
-        manifest["status"] = "completed"
+        if not args.download:
+            manifest["status"] = "completed_index_only"
+        elif any(item["status"] == "verified_pdf" for item in manifest["documents"]):
+            manifest["status"] = "completed_with_pdfs"
+        else:
+            manifest["status"] = "no_public_pdfs_found"
     except HTTPError as e:
         manifest["status"] = "api_error"
         manifest["error"] = f"HTTP {e.code}: authentication may be needed (no credentials are logged)"
@@ -214,7 +219,7 @@ def main():
           "candidates": m["docket_candidates"],
           "entries": m.get("entry_count", 0), "pdfs": sum(x["status"] == "verified_pdf" for x in m["documents"]),
           "documents_indexed": len(m["documents"])}, indent=2))
-    return 0 if m["status"] in ("completed", "not_indexed_in_recap") else 1
+    return 0 if m["status"] in ("completed_with_pdfs", "completed_index_only", "not_indexed_in_recap") else 1
 
 
 if __name__ == "__main__":
