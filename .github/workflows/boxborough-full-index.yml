@@ -1,10 +1,10 @@
-name: Boylston full Giga Sunrun verified scan
+name: Verify next Massachusetts PermitPro municipality
 on:
   push:
     branches:
       - research/boxborough-full-index-20261121
     paths:
-      - "tools/boylston_giga_sunrun_complete.py"
+      - "tools/verify_next_permitpro_town.py"
       - ".github/workflows/boxborough-full-index.yml"
   workflow_dispatch:
 permissions:
@@ -23,12 +23,12 @@ jobs:
           python -m pip install playwright
           python -m playwright install --with-deps chromium
       - name: Search public permit index
-        run: python -u tools/boylston_giga_sunrun_complete.py
+        run: python -u tools/verify_next_permitpro_town.py
       - name: Preserve independent search results
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: boylston-complete-verified-search
-          path: boylston_complete_search/
+          name: permitpro-municipality-verification
+          path: permitpro_town_verification/
           retention-days: 2
           if-no-files-found: warn
