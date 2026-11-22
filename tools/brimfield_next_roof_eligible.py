@@ -83,16 +83,16 @@ async def main():
        fr=await page.goto(urls[0],wait_until="domcontentloaded",timeout=26000)
        ftext=(await page.locator("body").inner_text())
        if re.search("Building Envelope",str(candidate.get("type")),re.I):
-        m=re.search(r"Roofing Material\\s*(.*?)\\s*(?:Type of Siding|Will the project)",ftext,re.I|re.S)
+        m=re.search(r"Roofing Material\s*(.*?)\s*(?:Type of Siding|Will the project)",ftext,re.I|re.S)
         if m: form_scope="Roofing material: "+m.group(1).strip()
        else:
-        m=re.search(r"Brief Description of Proposed Work[^:]*:\\s*(.*?)(?:SECTION 4:|SECTION 4\\b)",ftext,re.I|re.S)
+        m=re.search(r"Brief Description of Proposed Work[^:]*:\s*(.*?)(?:SECTION 4:|SECTION 4\b)",ftext,re.I|re.S)
         if m: form_scope=m.group(1).strip()
        print("FORM_READ",candidate.get("Application ID"),"HTTP",fr.status if fr else 0,"FORM_SCOPE",repr(form_scope[:550]),"FORM_START",repr(ftext[:500]),flush=True)
       except Exception as e:print("FORM_ERROR",candidate.get("Application ID"),repr(e)[:230],flush=True)
      effective=scope+" | "+form_scope
-     roof=bool(re.search(r"re.?roof|roof replacement|replace.{0,50}roof|roof.{0,35}replac|roof repair|repair.{0,25}roof|shingl|standing.seam|roofing material:\\s*[A-Z0-9]",effective,re.I))
-     if roof and re.search(r"roof.?top.{0,45}(solar|photo|pv)",effective,re.I) and not re.search(r"shingl|re.?roof|roof replacement|replace.{0,50}roof|roof.{0,35}replac|roof repair|roofing material:\\s*[A-Z0-9]",effective,re.I):
+     roof=bool(re.search(r"re.?roof|roof replacement|replace.{0,50}roof|roof.{0,35}replac|roof repair|repair.{0,25}roof|shingl|standing.seam|roofing material:\s*[A-Z0-9]",effective,re.I))
+     if roof and re.search(r"roof.?top.{0,45}(solar|photo|pv)",effective,re.I) and not re.search(r"shingl|re.?roof|roof replacement|replace.{0,50}roof|roof.{0,35}replac|roof repair|roofing material:\s*[A-Z0-9]",effective,re.I):
       roof=False
      if not roof and re.search("Building Envelope",str(candidate.get("type")),re.I):
       print("ENVELOPE_NOT_ROOF",candidate.get("Application ID"),repr(effective[:800]),flush=True)
