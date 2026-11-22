@@ -50,7 +50,7 @@ async def pagesnapshot(page):
     return await page.evaluate("""() => {
         let t=window.__tbl;
         let info=t.page.info();
-        return {info:info,cols:[...document.querySelector("#PublicHome").querySelectorAll("thead th")].map(x=>x.innerText),
+        return {info:info,cols:[...t.settings()[0].nTable.querySelectorAll("thead th")].map(x=>x.innerText),
           rows:[...document.querySelector("#permitPublicView").querySelectorAll("tbody tr")].map(tr=>[...tr.querySelectorAll('td')].map(td=>td.innerText))};
     }""")
 async def collect(page,limit_pages=10):
@@ -150,6 +150,11 @@ async def main():
               firstRows:[...document.querySelectorAll('#PublicHome tbody tr')].slice(0,2).map(tr=>tr.innerText.slice(0,300))
             })"""),flush=True)
             await setsearch(page,"Sunrun")
+            print("POST_SEARCH_TABLE",await page.evaluate("""() => ({
+              ids:[...document.querySelectorAll('table')].map(t=>t.id),
+              dataTablePresent:!!window.__tbl?.settings()?.[0]?.nTable,
+              body:(document.body.innerText||'').slice(0,500)
+            })"""),flush=True)
             solar_candidates=await collect(page,limit_pages=12)
             solar_candidates=[x for x in solar_candidates if sunrun(x)]
             print("SUNRUN_CANDIDATES",len(solar_candidates),json.dumps(solar_candidates[:8]),flush=True)
