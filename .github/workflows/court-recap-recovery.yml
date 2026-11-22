@@ -1,0 +1,67 @@
+name: Court RECAP original-document recovery
+
+on:
+  push:
+    branches:
+      - research/court-recap-recovery-20261122
+    paths:
+      - tools/court-records/**
+      - .github/workflows/court-recap-recovery.yml
+  workflow_dispatch:
+    inputs:
+      case_number:
+        description: 'Federal docket number (e.g. 4:26-cv-14283)'
+        type: string
+        required: true
+        default: '4:26-cv-14283'
+      court:
+        description: 'CourtListener court ID (e.g. mad)'
+        type: string
+        required: true
+        default: 'mad'
+      company:
+        description: 'Company under investigation'
+        type: choice
+        options: [sunrun, giga]
+        default: sunrun
+      address:
+        description: 'Candidate property address (not verified from permit)'
+        type: string
+        required: false
+
+permissions:
+  contents: read
+
+jobs:
+  recover:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    env:
+      COURTLISTENER_API_TOKEN: ${{ secrets.COURTLISTENER_API_TOKEN }}
+      CASE_NUMBER: ${{ inputs.case_number || '4:26-cv-14283' }}
+      COURT: ${{ inputs.court || 'mad' }}
+      COMPANY: ${{ inputs.company || 'sunrun' }}
+      CASE_ADDRESS: ${{ inputs.address || '10 Oak Hill Drive, Canton, MA' }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Discover docket, enumerate original court filings, retrieve public PDFs
+        shell: bash
+        run: |
+          python tools/court-records/recap_retrieve.py \
+            --case-number "$CASE_NUMBER" \
+            --court "$COURT" \
+            --company "$COMPANY" \
+            --address "$CASE_ADDRESS" \
+            --download \
+            --out court-recap-output
+      - name: Archive manifest and original PDF bytes (no site publication)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: court-recap-evidence
+          path: court-recap-output/
+          retention-days: 3
+          if-no-files-found: warn
