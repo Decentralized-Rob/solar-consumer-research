@@ -1,10 +1,10 @@
-name: Carlisle Giga and Sunrun full permit index
+name: Westborough Giga and Sunrun PermitPro index
 on:
   push:
     branches:
       - research/boxborough-full-index-20261121
     paths:
-      - "tools/carlisle_giga_sunrun_index.py"
+      - "tools/westborough_giga_sunrun_index.py"
       - ".github/workflows/boxborough-full-index.yml"
   workflow_dispatch:
 permissions:
@@ -23,12 +23,12 @@ jobs:
           python -m pip install playwright
           python -m playwright install --with-deps chromium
       - name: Search public permit index
-        run: python -u tools/carlisle_giga_sunrun_index.py
+        run: python -u tools/westborough_giga_sunrun_index.py
       - name: Preserve independent search results
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: carlisle-giga-sunrun-index-results
-          path: carlisle_giga_search/
+          name: westborough-giga-sunrun-index-results
+          path: westborough_giga_search/
           retention-days: 2
           if-no-files-found: warn
