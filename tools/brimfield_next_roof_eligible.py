@@ -75,16 +75,28 @@ async def main():
      txt=(await page.locator("body").inner_text())
      mat=re.search(r"Proposed Work:\s*(.*?)\s*Status History",txt,re.I|re.S)
      scope=(mat.group(1).strip() if mat else "")
-     roof=bool(re.search(r"roof|shingl|standing.seam|asphalt|tear.?off|re.?roof",scope,re.I))
-     if not scope and re.search("Building Envelope",str(candidate.get("type")),re.I):
-      urls=await page.locator('a[href*="act=form/view"]').evaluate_all("(as)=>as.map(a=>a.href)")
-      if urls:
-       await page.goto(urls[0],wait_until="domcontentloaded",timeout=26000)
+     page_status=res.status if res else 0
+     urls=await page.locator('a[href*="act=form/view"]').evaluate_all("(as)=>as.map(a=>a.href)")
+     form_scope=""
+     if urls:
+      try:
+       fr=await page.goto(urls[0],wait_until="domcontentloaded",timeout=26000)
        ftext=(await page.locator("body").inner_text())
-       # isolate roofing material rather than form heading
-       m=re.search(r"Roofing Material\s*(.*?)\s*(?:Type of Siding|Will the project)",ftext,re.I|re.S)
-       scope=("Roofing material details: "+m.group(1).strip()) if m else ""
-       roof=bool(m and re.search(r"metal|shingle|slate|asphalt|rubber|standing|EPDM|roof",scope,re.I))
+       if re.search("Building Envelope",str(candidate.get("type")),re.I):
+        m=re.search(r"Roofing Material\\s*(.*?)\\s*(?:Type of Siding|Will the project)",ftext,re.I|re.S)
+        if m: form_scope="Roofing material: "+m.group(1).strip()
+       else:
+        m=re.search(r"Brief Description of Proposed Work[^:]*:\\s*(.*?)(?:SECTION 4:|SECTION 4\\b)",ftext,re.I|re.S)
+        if m: form_scope=m.group(1).strip()
+       print("FORM_READ",candidate.get("Application ID"),"HTTP",fr.status if fr else 0,"FORM_SCOPE",repr(form_scope[:550]),"FORM_START",repr(ftext[:500]),flush=True)
+      except Exception as e:print("FORM_ERROR",candidate.get("Application ID"),repr(e)[:230],flush=True)
+     effective=scope+" | "+form_scope
+     roof=bool(re.search(r"re.?roof|roof replacement|replace.{0,50}roof|roof.{0,35}replac|roof repair|repair.{0,25}roof|shingl|standing.seam|roofing material:\\s*[A-Z0-9]",effective,re.I))
+     if roof and re.search(r"roof.?top.{0,45}(solar|photo|pv)",effective,re.I) and not re.search(r"shingl|re.?roof|roof replacement|replace.{0,50}roof|roof.{0,35}replac|roof repair|roofing material:\\s*[A-Z0-9]",effective,re.I):
+      roof=False
+     if not roof and re.search("Building Envelope",str(candidate.get("type")),re.I):
+      print("ENVELOPE_NOT_ROOF",candidate.get("Application ID"),repr(effective[:800]),flush=True)
+     scope=effective.strip(" |")
      print("HISTORY",json.dumps({"solar_address":solar.get("address"),"solar_date":solar_date,"application":candidate.get("Application ID"),"permit":candidate.get("Permit Number"),"date":candidate.get("Application Date"),"type":candidate.get("type"),"roof_work":roof,"scope":scope[:1200],"url":BASE+"index.php?act=process&id="+id},ensure_ascii=False),flush=True)
      if roof:
       saw_roof=True
@@ -94,6 +106,6 @@ async def main():
     print("SELECTED",solar.get("address"),solar.get("Application ID"),flush=True)
     break
    count+=1
-   if count>=18:print("STOP_NO_ROOF_IN_FIRST",count,flush=True);break
+   if count>=30:print("STOP_NO_ROOF_IN_FIRST",count,flush=True);break
   await ctx.close();await browser.close()
 asyncio.run(main())
