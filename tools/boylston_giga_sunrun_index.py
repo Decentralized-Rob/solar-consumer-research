@@ -27,7 +27,7 @@ async def main():
   fields={x["fieldName"]:x for x in fieldmeta if isinstance(x,dict) and "fieldName" in x}
   print("AVAILABLE_FIELDS",json.dumps(list(fields)),flush=True)
   extras=["applicantName","applicantCompany","contractorName","contractorCompany","location-parcelID","proposedWorkDescription","applicantEmail","contactName","businessName"]
-  extras += [k for k in fields if re.search("applicant|contractor|company|business|license|builder|owner|description|work|hic|email",k,re.I)]
+  extras += ["authorizedAgent","ownerName"]
   selected=list(dict.fromkeys(t["activeDashboardView"]["selectedFieldNames"]+extras))
   fd=t["resultsSettings"]["fieldData"][:]
   have={x.get("fieldName") for x in fd}
@@ -42,9 +42,9 @@ async def main():
    if not res.ok: raise RuntimeError(f"HTTP_{res.status}_{(await res.text())[:240]}")
    j=await res.json()
    return j.get("resultsData",[]),j.get("resultsSettings",{}).get("totalSearchResults")
-  rows,count=await get(0,1000)
-  for skip in range(1000,int(count),1000):
-   rr,_=await get(skip,1000)
+  rows,count=await get(0,200)
+  for skip in range(200,int(count),200):
+   rr,_=await get(skip,200)
    rows.extend(rr)
   print("ALL_ROWS",len(rows),"EXPECTED",count,"SELECTED_FIELDS",len(selected),flush=True)
   if len(rows) != int(count): print("WARNING_INCOMPLETE_PAGINATION",len(rows),count,flush=True)
