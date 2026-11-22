@@ -1,9 +1,9 @@
-"""Preserve public original attachment PDFs for matched Bellingham Giga/Sunrun 46 Pickering Avenue permits."""
+"""Preserve public original attachment PDFs for matched Bellingham Giga/Sunrun 37 Susan Lane permits."""
 import asyncio,re,json,hashlib
 from pathlib import Path
 from playwright.async_api import async_playwright
 BASE="https://permiteyes.us/bellingham/publicview.php"
-ROOT=Path("bellingham_46_pickering_packet")
+ROOT=Path("bellingham_37_susan_packet")
 ROOT.mkdir(exist_ok=True)
 MANIFEST=[]
 async def main():
@@ -16,7 +16,7 @@ async def main():
   await page.goto(BASE,wait_until="domcontentloaded",timeout=45000)
   await page.wait_for_timeout(2200)
   search=page.locator('input[type="search"][aria-controls="BuildingPublicHome"]')
-  await search.fill("46 Pickering");await search.press("Enter")
+  await search.fill("37 Susan");await search.press("Enter")
   await page.wait_for_timeout(1500)
   rows=page.locator("#BuildingPublicHome tbody tr")
   count=await rows.count()
@@ -27,11 +27,18 @@ async def main():
    cells=await row.locator("td").all_inner_texts()
    if len(cells)<13:continue
    applicant=cells[7].strip();address=cells[6].strip()
-   if not (re.search("Espigar|Sunrun",applicant,re.I) and "Pickering" in address):continue
+   if not (re.search("Espigar|Sunrun",applicant,re.I) and "Susan" in address):continue
    data={"application":cells[3].strip(),"application_date":cells[4].strip(),"issue_date":cells[5].strip(),"address":address,"applicant":applicant,"scope":cells[8].strip(),"type":cells[9].strip(),"permit":cells[10].strip(),"status":cells[11].strip()}
    records.append(data)
+  records.sort(key=lambda rec:(0 if re.search("Espigar|Giga",rec["applicant"],re.I) else 1))
   print("MATCHED_RECORDS",json.dumps(records,ensure_ascii=False),flush=True)
+  if not records or not re.search("Espigar|Giga",records[0]["applicant"],re.I):
+   print("NO_QUALIFYING_GIGA_ROOF_RECORD",flush=True)
+   await browser.close();return
   for i,rec in enumerate(records):
+   if i==1 and not any(x.get("pdf") and re.search("Espigar|Giga",x.get("applicant",""),re.I) for x in MANIFEST):
+    print("FIRST_QUALIFIER_FAILED_NO_DOWNLOADED_GIGA_PDF",flush=True)
+    break
    recid=rec["application"]
    row=rows.filter(has=page.locator(f'td:nth-child(4) span[data-id="{recid}"]')).first
    if await row.count()==0:
