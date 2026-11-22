@@ -1,4 +1,4 @@
-name: Mill Lane full original public permit attachments
+name: Mill Lane solar building original attachments
 on:
   push:
     branches:
@@ -28,7 +28,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: brimfield-mill-lane-all-originals
-          path: mill_lane_all_original_attachments/
+          name: brimfield-mill-lane-solar-originals
+          path: mill_lane_solar_original_attachments/
           retention-days: 2
           if-no-files-found: warn
