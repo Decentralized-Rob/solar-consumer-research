@@ -1,0 +1,31 @@
+name: Stow MA PermitLink original PDF preflight
+on:
+  push:
+    branches: [research/permitlink-stow-20261123]
+    paths:
+      - "tools/stow_permitlink_pdf_preflight.py"
+      - ".github/workflows/stow-permitlink-pdf-preflight.yml"
+  workflow_dispatch:
+permissions: {contents: read}
+jobs:
+  original-file-test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.12"}
+      - name: Install browser
+        run: |
+          pip install playwright
+          python -m playwright install --with-deps chromium
+      - name: Validate Stow original permit attachment PDF bytes
+        run: python -u tools/stow_permitlink_pdf_preflight.py
+      - name: Archive validated original or failure evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: stow-original-permit-pdf-proof
+          path: stow_permitlink_pdf_preflight/
+          retention-days: 7
+          if-no-files-found: warn
