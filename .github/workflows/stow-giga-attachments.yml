@@ -20,7 +20,10 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           mkdir -p source_index
-          gh run download 45173613770 -n stow-roof-solar-permit-index -D source_index
+          for attempt in {1..30}; do
+            gh run download 45174625681 -n stow-roof-solar-permit-index -D source_index && break
+            sleep 10
+          done
           test -s source_index/roof_solar_candidates.json
       - name: Install PDF scanner and browser
         run: |
