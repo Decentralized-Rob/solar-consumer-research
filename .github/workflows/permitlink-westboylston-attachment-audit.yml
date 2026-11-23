@@ -1,0 +1,40 @@
+name: West Boylston Giga and Sunrun original PDF attachment audit
+on:
+  push:
+    branches: [research/permitlink-westboylston-20261123]
+    paths:
+      - "tools/permitlink_westboylston_attachment_audit.py"
+      - ".github/workflows/permitlink-westboylston-attachment-audit.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.12"}
+      - name: Download complete permit index from verified previous run
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p source_index
+          gh run download 45170633629 -n westboylston-giga-sunrun-index -D source_index
+          test -s source_index/all_permits.json
+      - name: Install Playwright and PDF extraction dependencies
+        run: |
+          pip install playwright pypdf cryptography
+          python -m playwright install --with-deps chromium
+      - name: Examine all roof and solar attachment packets
+        run: python -u tools/permitlink_westboylston_attachment_audit.py
+      - name: Preserve verified PDFs, match index and audit record
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: westboylston-giga-sunrun-originals-and-audit
+          path: westboylston_giga_sunrun_audit/
+          retention-days: 7
+          if-no-files-found: warn
