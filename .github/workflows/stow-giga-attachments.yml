@@ -1,0 +1,38 @@
+name: Stow original Giga roofing and solar permit attachments
+on:
+  push:
+    branches: [research/permitlink-stow-20261123]
+    paths: [".github/workflows/stow-giga-attachments.yml","tools/stow_giga_attachment_audit.py"]
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.12"}
+      - name: Get verified public permit index and candidate records
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p source_index
+          gh run download 45173613770 -n stow-roof-solar-permit-index -D source_index
+          test -s source_index/roof_solar_candidates.json
+      - name: Install PDF scanner and browser
+        run: |
+          pip install playwright pypdf cryptography
+          python -m playwright install --with-deps chromium
+      - name: Scan original public attachments for Giga
+        run: python -u tools/stow_giga_attachment_audit.py
+      - name: Preserve original matches, metadata and scan coverage
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: stow-giga-original-permit-results
+          path: stow_giga_attachment_audit/
+          retention-days: 7
+          if-no-files-found: warn
