@@ -46,6 +46,19 @@ async def main():
           }
         }""")
         (ROOT/"list_structure.json").write_text(json.dumps(data,indent=2,default=str))
+        allrows = await page.evaluate("""() => {
+            const t = zenPage.getComponentById('table');
+            const total = Number(t.getProperty('rowCount')) || 0;
+            return Array.from({length: total},(_,i)=>t.getRowData(i));
+        }""")
+        (ROOT/"all_permits.json").write_text(json.dumps(allrows,indent=2,default=str))
+        filters = {}
+        for term in ("giga","sunrun","solar","photovoltaic","pv","roof","panel","tesla","battery","sunlight","sunpower"):
+            filters[term] = [r for r in allrows if term in (str(r.get("WorkDescription",""))+" "+str(r.get("PermitType",""))+" "+str(r.get("Owner",""))).lower()]
+        (ROOT/"matches.json").write_text(json.dumps(filters,indent=2,default=str))
+        print("INDEX RECORDS:",len(allrows),"MATCH COUNTS:",{k:len(v) for k,v in filters.items()},flush=True)
+        for term in ("giga","sunrun","solar","photovoltaic","panel"):
+            print("MATCH",term, json.dumps(filters[term],default=str)[:7500],flush=True)
         print("COMPONENTS",json.dumps(data["components"],default=str)[:3500],flush=True)
         print("BUTTONS",json.dumps([x for x in data["buttons"] if x["visible"]],default=str)[:3500],flush=True)
         print("INPUTS",json.dumps([x for x in data["inputs"] if x["visible"]],default=str)[:6000],flush=True)
