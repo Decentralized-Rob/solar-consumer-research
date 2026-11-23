@@ -26,7 +26,7 @@ async def main():
         const t=zenPage.getComponentById('table');
         return [...document.querySelectorAll('tr[id^="tr_"]')]
           .filter(el=>el.offsetHeight>0)
-          .map((el,i)=>({row_id:el.id,text:el.innerText.replace(/\\s+/g,' ').trim(),index:(pageNumber-1)*perPage+i}))
+          .map((el,i)=>({row_id:el.id,text:el.innerText.replace(/\\s+/g,' ').trim(),index:(pageNumber-1)*perPage+i,local:i}))
           .filter(x=>x.text.length>0);
       }""",{"pageNumber":n,"perPage":22})
       for v in entries:
@@ -37,7 +37,7 @@ async def main():
         if KEYWORDS.search(v["text"]):
           try:
             info=await page.evaluate("(index)=>zenPage.getComponentById('table').getRowData(index)",v["index"])
-            if not info or not info.get("DocumentId"):
+            if not info or not info.get("DocumentId") or str(info.get("PermitID","")).strip() not in v["text"]:
               issues.append({"page":n,"index":v["index"],"issue":"No document id","info":info})
             else:
               candidates.append({"visible":v,"permit":info})
