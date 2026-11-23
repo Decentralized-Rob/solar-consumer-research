@@ -1,0 +1,28 @@
+name: Retry West Boylston missing attachment pages
+on:
+  push:
+    branches: [research/permitlink-westboylston-20261123]
+    paths: ["tools/permitlink_westboylston_retry.py", ".github/workflows/permitlink-westboylston-retry.yml"]
+  workflow_dispatch:
+permissions: {contents: read}
+jobs:
+  retry:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.12"}
+      - name: Install browser and PDF parser
+        run: |
+          pip install playwright pypdf cryptography
+          python -m playwright install --with-deps chromium
+      - name: Retry incomplete records and inspect originals
+        run: python -u tools/permitlink_westboylston_retry.py
+      - name: Archive evidence and results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: westboylston-two-permits-retry-results
+          path: westboylston_retry_evidence/
+          retention-days: 7
