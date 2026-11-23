@@ -105,7 +105,7 @@ async def main():
             (OUT / "initial_page.html").write_text(await page.content())
             await page.screenshot(path=str(OUT / "initial_page.png"), full_page=True)
 
-            rows = page.locator("tr").filter(has_text=TARGET)
+            rows = page.locator('tr[id^="tr_"]').filter(has_text=TARGET)
             if await rows.count() > 0:
                 await rows.first.click(timeout=15000)
                 print("Selected matching table row", flush=True)
@@ -114,8 +114,15 @@ async def main():
                 print("Selected matching document text", flush=True)
             await page.wait_for_timeout(600)
 
+            row_info = await page.evaluate("""() => {
+                const t = zenPage.getComponentById('table');
+                const idx = t.getProperty('selectedIndex');
+                return {index: idx, row: idx >= 0 ? t.getRowData(idx) : null};
+            }""")
+            (OUT / "selected_row.json").write_text(json.dumps(row_info, indent=2))
+            print("Selected row data:", row_info, flush=True)
             button_found = False
-            for selector in ('input[value="Open Selected"]',
+            for selector in ('input[onclick*="zenPage.getDocument()"]',
                              'button:has-text("Open Selected")',
                              'a:has-text("Open Selected")',
                              'text="Open Selected"'):
@@ -128,7 +135,19 @@ async def main():
             if not button_found:
                 raise RuntimeError("Could not locate a visible Open Selected control")
 
-            await page.wait_for_timeout(12000)
+            await page.wait_for_timeout(6000)
+            imageid = (row_info.get("row") or {}).get("ImageId")
+            if imageid:
+                direct_url = ("https://permitlinkusa-online.com/csp/westboylstonma/"
+                              "TaxLink.ImageServer.cls?ImageID=" + str(imageid) + "&Decrypt=0")
+                try:
+                    r = await context.request.get(direct_url, timeout=25000)
+                    print("Original endpoint status:", r.status, "type:", r.headers.get("content-type"), flush=True)
+                    await save_pdf(await r.body(), "PermitLink original ImageServer: " + direct_url)
+                except Exception as exc:
+                    errors.append("Direct ImageServer GET: " + repr(exc)[:220])
+            else:
+                errors.append("Selected row has no ImageId; see selected_row.json")
             # A PDF opened inline or as a popup may require a cookie-bearing GET.
             for other in opened:
                 link = other.url
