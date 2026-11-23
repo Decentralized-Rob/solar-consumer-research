@@ -1,0 +1,36 @@
+name: PermitLink West Boylston original PDF preflight
+on:
+  push:
+    branches:
+      - research/permitlink-westboylston-20261123
+    paths:
+      - "tools/permitlink_westboylston_preflight.py"
+      - ".github/workflows/permitlink-westboylston-preflight.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify-one-original-pdf:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install headless browser and PDF validator
+        run: |
+          python -m pip install --disable-pip-version-check playwright pypdf
+          python -m playwright install --with-deps chromium
+      - name: Select and open the signed roofing proposal
+        run: python -u tools/permitlink_westboylston_preflight.py
+      - name: Save verified PDF or debugging evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: westboylston-permitlink-original-pdf-preflight
+          path: permitlink_westboylston_results/
+          if-no-files-found: warn
+          retention-days: 7
