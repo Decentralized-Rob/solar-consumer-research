@@ -1,0 +1,28 @@
+name: Stow older rows diagnostic
+on:
+  push:
+    branches: [research/permitlink-stow-20261123]
+    paths: [".github/workflows/stow-giga-row-debug.yml","tools/stow_giga_row_debug.py"]
+  workflow_dispatch:
+permissions: {contents: read}
+jobs:
+  debug:
+    runs-on: ubuntu-latest
+    timeout-minutes: 7
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.12"}
+      - name: Install browser
+        run: |
+          pip install playwright
+          python -m playwright install --with-deps chromium
+      - name: Diagnose older permit row attachment navigation
+        run: python -u tools/stow_giga_row_debug.py
+      - name: Save diagnostic
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: stow-older-rows-debug
+          path: stow_giga_late_row_debug/
+          retention-days: 7
