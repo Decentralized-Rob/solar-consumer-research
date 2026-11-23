@@ -36,7 +36,8 @@ async def main():
       for v in entries:
         if KEYWORDS.search(v["text"]):
           try:
-            info=await page.evaluate("(index)=>zenPage.getComponentById('table').getRowData(index)",v["index"])
+            await page.locator("#"+v["row_id"]).click(timeout=10000)
+            info=await page.evaluate("() => { const t=zenPage.getComponentById('table'); return t.getRowData(t.getProperty('selectedIndex')); }")
             if not info or not info.get("DocumentId") or str(info.get("PermitID","")).strip() not in v["text"]:
               issues.append({"page":n,"index":v["index"],"issue":"No document id","info":info})
             else:
