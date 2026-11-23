@@ -1,0 +1,29 @@
+name: Stow Giga permit index
+on:
+  push:
+    branches: [research/permitlink-stow-20261123]
+    paths: [".github/workflows/stow-giga-index.yml","tools/stow_giga_index.py"]
+  workflow_dispatch:
+permissions: {contents: read}
+jobs:
+  index:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.12"}
+      - name: Install browser
+        run: |
+          pip install playwright
+          python -m playwright install --with-deps chromium
+      - name: Search full Stow permit index
+        run: python -u tools/stow_giga_index.py
+      - name: Preserve index and candidates
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: stow-roof-solar-permit-index
+          path: stow_giga_index/
+          retention-days: 7
+          if-no-files-found: warn
