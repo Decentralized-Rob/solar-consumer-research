@@ -18,7 +18,7 @@ async def main():
    if n>1:
     await page.evaluate("(num) => zenPage.getComponentById('tablen').gotoPage(num)",n)
     try:
-     await page.wait_for_function("(num) => document.querySelector('a.tnbrPageLinkCurr')?.innerText.trim() === String(num)",n,timeout=10000)
+     await page.wait_for_function("(num) => document.querySelector('a.tnbrPageLinkCurr')?.innerText.trim() === String(num)",arg=n,timeout=10000)
     except Exception as e:
      print("PAGING FAILED",n,str(e)[:220],flush=True)
      (OUT/f"failure_page_{n}.html").write_text(await page.content())
