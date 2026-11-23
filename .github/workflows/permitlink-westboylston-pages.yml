@@ -1,0 +1,30 @@
+name: PermitLink West Boylston all public permit pages
+on:
+  push:
+    branches: [research/permitlink-westboylston-20261123]
+    paths:
+      - "tools/permitlink_westboylston_pages.py"
+      - ".github/workflows/permitlink-westboylston-pages.yml"
+  workflow_dispatch:
+permissions: {contents: read}
+jobs:
+  collect-pages:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.12"}
+      - name: Install Playwright
+        run: |
+          pip install playwright
+          python -m playwright install --with-deps chromium
+      - name: Scan pages for Giga and Sunrun candidates
+        run: python -u tools/permitlink_westboylston_pages.py
+      - name: Upload source index and matches
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: westboylston-public-permit-index-pages
+          path: permitlink_westboylston_pages/
+          retention-days: 7
