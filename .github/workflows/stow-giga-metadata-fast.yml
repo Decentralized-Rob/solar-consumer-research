@@ -1,0 +1,34 @@
+name: Stow Giga candidate attachment metadata
+on:
+  push:
+    branches: [research/permitlink-stow-20261123]
+    paths: ["tools/stow_giga_metadata_fast.py",".github/workflows/stow-giga-metadata-fast.yml"]
+  workflow_dispatch:
+permissions: {contents: read, actions: read}
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.12"}
+      - name: Retrieve corrected complete Stow index
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p source_index
+          gh run download 45174625681 -n stow-roof-solar-permit-index -D source_index
+      - name: Install browser
+        run: |
+          pip install playwright
+          python -m playwright install --with-deps chromium
+      - name: Inspect all original permit attachment metadata for Giga
+        run: python -u tools/stow_giga_metadata_fast.py
+      - name: Archive metadata search and any genuine PDFs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: stow-giga-metadata-results
+          path: stow_giga_metadata/
+          retention-days: 7
