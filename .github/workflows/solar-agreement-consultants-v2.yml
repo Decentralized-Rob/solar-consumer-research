@@ -1,0 +1,63 @@
+name: Public solar agreement consultant extraction via existing portal session
+on:
+  push:
+    branches: [research/permitpro-sunrun-giga]
+    paths: ['.github/workflows/solar-agreement-consultants-v2.yml']
+permissions:
+  actions: read
+  contents: read
+jobs:
+  read:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh run download 45377431162 -R ${{ github.repository }} -n contractor-pair-patriot -D index
+      - run: |
+          pip -q install playwright pymupdf
+          python -m playwright install chromium
+      - run: |
+          python -u - <<'PY'
+          import asyncio,re,json,hashlib
+          from pathlib import Path
+          import fitz
+          from playwright.async_api import async_playwright
+          index=json.loads(next(Path("index").rglob("separate_company_search.json")).read_text())
+          rows=[r for r in index["sunrun"] if r["type"] in ("Solar Application","Residential - Building","Standard Permit")]
+          BASE="https://westborough.patriotpermitpro.com/"
+          async def main():
+           async with async_playwright() as p:
+            browser=await p.chromium.launch()
+            context=await browser.new_context()
+            page=await context.new_page()
+            await page.goto(BASE+"index.php?act=dashboard",wait_until="domcontentloaded",timeout=30000)
+            sem=asyncio.Semaphore(4)
+            async def scan(r):
+             async with sem:
+              page=await context.new_page()
+              try:
+               await page.goto(BASE+"index.php?act=process&id="+r["_id"],wait_until="domcontentloaded",timeout=20000)
+               links=await page.locator('a[href]').evaluate_all("""xs=>[...new Set(xs.map(a=>a.href).filter(x=>x.includes('.s3.amazonaws.com/')&&x.toLowerCase().endsWith('.pdf')))]""")
+               for url in links:
+                try:
+                 data=await (await context.request.get(url,timeout=15000)).body()
+                 if not data.startswith(b"%PDF-"):continue
+                 with fitz.open(stream=data,filetype="pdf") as doc:
+                  for pi in range(min(4,len(doc))):
+                   txt=doc[pi].get_text()
+                   if not re.search(r"sales\s+(consultant|representative)",txt,re.I):continue
+                   reps=[e for e in re.findall(r"[\w.+-]+@sunrun\.com",txt,re.I) if not re.search(r"customercare|esign|support|service|info",e,re.I)]
+                   if reps:
+                    print("AGREEMENT",json.dumps({"permit":r["application_id"],"record":r["_id"],"url":url,"page":pi+1,"email":reps,"sha256":hashlib.sha256(data).hexdigest(),"bytes":len(data),"pages":len(doc)}),flush=True)
+                    break
+                except:pass
+               return len(links)
+              except Exception as e:
+               print("RECORD_ERROR",r["_id"],str(e)[:100],flush=True);return 0
+              finally:await page.close()
+            print("CHECKED",sum(await asyncio.gather(*(scan(r) for r in rows))),flush=True)
+            await browser.close()
+          asyncio.run(main())
+          
+          PY
