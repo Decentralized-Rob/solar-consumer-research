@@ -16,21 +16,21 @@ const texasSource = featuredStateSources.TX[0];
 const arizonaSource = featuredStateSources.AZ[0];
 
 export const metadata: Metadata = {
-  title: "Sunrun Ethics Complaint: AllVoices, Code of Conduct & Compliance Guide",
+  title: "How to File a Sunrun Ethics Complaint | AllVoices",
   description:
-    "How to report a Sunrun ethics concern through AllVoices, what Sunrun's current ethics and vendor policies say, who holds relevant leadership roles, and where consumers can go next.",
+    "Learn how to report a Sunrun ethics concern through AllVoices, what the Code of Conduct says, what records to keep and where to escalate consumer complaints.",
   alternates: { canonical: "/companies/sunrun/ethics-compliance" },
   openGraph: {
-    title: "Sunrun Ethics & Compliance: Reporting, Policies and Public Record",
-    description: "An independent, source-first Sunrun ethics and compliance research guide.",
+    title: "How to File a Sunrun Ethics Complaint | AllVoices",
+    description: "Learn how to report a Sunrun ethics concern through AllVoices, what the Code of Conduct says, what records to keep and where to escalate consumer complaints.",
     url: "/companies/sunrun/ethics-compliance",
     type: "article",
     images: [{ url: "https://solarcomplaint.com/og.png", width: 1200, height: 630, alt: "Solar Consumer Research" }],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Sunrun Ethics & Compliance Guide",
-    description: "Current AllVoices reporting, Sunrun policies, leadership roles and consumer resources.",
+    title: "How to File a Sunrun Ethics Complaint | AllVoices",
+    description: "Learn how to report a Sunrun ethics concern through AllVoices, what the Code of Conduct says, what records to keep and where to escalate consumer complaints.",
     images: ["https://solarcomplaint.com/og.png"],
   },
 };
@@ -311,6 +311,7 @@ export default function SunrunEthicsCompliancePage() {
           <h2>If an ethics report is not the right route</h2>
           <p>SolarComplaint.com keeps internal ethics reporting separate from consumer complaints, contractor complaints, financing complaints and legal claims. The appropriate external route depends on the situation and state.</p>
           <div className={styles.nextGrid}>
+            <Link href="/companies/sunrun">Browse Sunrun lawsuits, settlements and consumer complaint research →</Link>
             <Link href="/resources">Find state complaint resources →</Link>
             <Link href="/guides">Consumer documentation and complaint guides →</Link>
             <Link href="/#questions">Ask for free research assistance →</Link>

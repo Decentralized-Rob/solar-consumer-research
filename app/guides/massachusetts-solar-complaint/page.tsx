@@ -4,7 +4,7 @@ import { InfoPage } from "../../../components/info-page";
 
 const canonicalUrl = "https://solarcomplaint.com/guides/massachusetts-solar-complaint";
 const publishedDate = "2026-09-04";
-const reviewedDate = "2026-09-04";
+const reviewedDate = "2026-11-24";
 const agoComplaintUrl = "https://www.mass.gov/how-to/file-a-consumer-complaint";
 
 export const metadata: Metadata = {
@@ -132,6 +132,7 @@ export default function MassachusettsSolarComplaintGuidePage() {
 
         <section className="info-section">
           <h2>Related SolarComplaint.com research</h2>
+          <p>If your dispute involves Sunrun, see our <Link href="/guides/massachusetts-sunrun-complaint">Massachusetts Sunrun complaint center</Link> for company-specific records and complaint preparation, or browse <Link href="/companies/sunrun">Sunrun lawsuits, settlements and consumer resources</Link>.</p>
           <p>
             <Link href="/states/massachusetts">Massachusetts solar complaint and consumer resources</Link>
           </p>

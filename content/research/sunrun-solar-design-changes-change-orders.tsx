@@ -7,9 +7,9 @@ export const story = {
   href: "/research/sunrun-solar-design-changes-change-orders",
   title: "Sunrun SEC Filings Detail Solar Change Orders and Data Discrepancies",
   deck: "Sunrun described a formal process for revising solar designs in 2015. A 2026 KPMG report documented discrepancies in system sizes and contract-payment data.",
-  summary: "Sunrun’s 2015 SEC filing described plan reviews and change orders. A 2026 SEC-filed KPMG report documented discrepancies in sampled system sizes, monthly payments and escalators.",
+  summary: "Sunrun’s SEC filings describe plan reviews and asset-data discrepancies. Massachusetts permit research identifies conflicting panel counts within submitted solar plans.",
   seoTitle: "Sunrun Solar Panel Changes: SEC Records & Change Orders",
-  seoDescription: "Sunrun’s SEC filings describe solar design-change procedures and 2026 KPMG data discrepancies. See the figures, source records and Massachusetts written-change rules.",
+  seoDescription: "Sunrun changed your solar design or panel count? Compare Massachusetts permit records, SEC filings and written change-order and homeowner approval requirements.",
   keywords: ["Sunrun change order", "Sunrun solar design changes", "Sunrun panel count reduced", "Sunrun fewer solar panels", "Sunrun homeowner approval", "Massachusetts solar change order", "solar panel contract changes"],
   openGraphTitle: "Sunrun Solar Design Changes: SEC Records and Change Orders",
   socialDescription: "Sunrun described final-plan reviews in 2015. A 2026 SEC-filed KPMG report records discrepancies in system capacity, payments and escalators.",
@@ -17,7 +17,7 @@ export const story = {
   lede: "Sunrun told investors it checked final solar designs against signed contracts and processed change orders when needed. Eleven years later, an SEC-filed KPMG report documented discrepancies in the system sizes and payment terms of sampled solar assets. The records show why a homeowner’s approved design and final contract details matter.",
   publishedAt: "October 16, 2026",
   datePublished: "2026-10-16",
-  dateModified: "2026-10-16",
+  dateModified: "2026-11-24",
   stateCodes: ["MA"],
   companies: ["Sunrun"],
   topics: ["Sunrun change orders", "solar design changes", "solar panel count", "homeowner approval", "written contract amendments", "home improvement contractor laws"],
@@ -36,6 +36,8 @@ const sunrun10q2026 = "https://www.sec.gov/Archives/edgar/data/1469367/000162828
 const maHicGuidance = "https://www.mass.gov/info-details/home-improvement-contract-sample-language";
 const ma142a2 = "https://malegislature.gov/Laws/GeneralLaws/PartI/TitleXX/Chapter142A/Section2";
 const ma142a17 = "https://malegislature.gov/Laws/GeneralLaws/PartI/TitleXX/Chapter142A/Section17";
+const lancasterSolar = "https://lancaster.patriotpermitpro.com/index.php?act=process&id=5119";
+const lancasterElectrical = "https://lancaster.patriotpermitpro.com/index.php?act=process&id=5120";
 const ftc = "https://consumer.ftc.gov/articles/solar-power-your-home";
 
 export const articleConfig = {
@@ -57,6 +59,8 @@ export const articleConfig = {
     { name: "Massachusetts OCABR home improvement contract sample language", url: maHicGuidance, publisher: "Massachusetts OCABR" },
     { name: "Massachusetts General Laws chapter 142A, section 2", url: ma142a2, publisher: "Massachusetts Legislature" },
     { name: "Massachusetts General Laws chapter 142A, section 17", url: ma142a17, publisher: "Massachusetts Legislature" },
+    { name: "Lancaster, Massachusetts solar permit application 26-00577, original attachments indexed November 18, 2026", url: lancasterSolar },
+    { name: "Lancaster electrical permit application 26-00578", url: lancasterElectrical },
     { name: "FTC: Solar Power for Your Home", url: ftc, publisher: "Federal Trade Commission" },
   ],
 };
@@ -77,6 +81,13 @@ export function SunrunSolarDesignChangesBody() {
       <p>The report&apos;s Exhibit D lists discrepancies remaining after Sunrun revised the data. One selected system was recorded at <strong>1.84 kW</strong> in the final file, compared with <strong>2.28 kW</strong> in the supplied comparison information. Another was recorded at <strong>11.13 kW</strong> against <strong>10.92 kW</strong>. These figures describe differences in the records reviewed, rather than a count of panels on a homeowner&apos;s roof.</p>
       <p>Other differences concerned payment terms. For one sampled agreement, the first-year monthly payment was <strong>$95.72</strong> in the data file and <strong>$102.41</strong> in the supplied information. For another, an annual escalator appeared as <strong>2.90%</strong> in the data and <strong>3.90%</strong> in the comparison material. The original review also recorded 108 inverter-manufacturer exceptions that Sunrun attributed to an Excel formula error; those entries were absent from the final exception table.</p>
       <p>KPMG was hired to compare specified information used in the financing transaction. Its report says it made no representation about whether the customer contracts had been validly executed. It also did not inspect installed systems or determine whether individual homeowners had approved revised designs. The reported discrepancies establish differences between a financial data file and the material used to check it.</p>
+    </section>
+
+    <section className="info-section">
+      <h2>Massachusetts permit investigation: 20 panels or 14?</h2>
+      <p>SolarComplaint.com&apos;s November 18 review of original municipal permit attachments in Lancaster, Massachusetts identified conflicting equipment specifications in a Sunrun project. The customer approval and work-assignment package generated August 25, 2026 lists 20 panels and 8.2 kW. The submitted solar plan set lists the same capacity and panel count on its cover and electrical diagram, but its site-plan table on page 2 lists 14 modules. The battery illustration on page 3 identifies Franklin equipment, while the cover and electrical diagram specify a Tesla Powerwall 3.</p>
+      <p>The town issued solar permit S-2026-0030 and wiring permit E-2026-147 on September 14. The source records are the <a href={lancasterSolar} target="_blank" rel="noreferrer">solar application 26-00577 and its attachments</a> and the <a href={lancasterElectrical} target="_blank" rel="noreferrer">electrical application 26-00578</a>. The relevant downloaded attachments are the customer approval/work assignment (PDF page 2) and solar plans (PDF pages 1, 2, 3 and 5). The conflicting entries establish a discrepancy within the submitted paperwork; they do not establish the equipment actually installed or whether a later revision was approved.</p>
+      <p>For this project, the records that would resolve the discrepancy are the controlling dated plan revision, the corresponding customer approval or written change order, any amended permit and the final equipment or inspection record. Unlike the KPMG asset-data exceptions, these are discrepancies within a municipal project file. Both illustrate why a single field in a permit or portfolio cannot establish which design a customer agreed to.</p>
     </section>
 
     <section className="info-section">
@@ -105,7 +116,7 @@ export function SunrunSolarDesignChangesBody() {
 
     <section className="info-section">
       <h2>Related SolarComplaint.com research</h2>
-      <p>Read <Link href="/companies/sunrun">SolarComplaint.com&apos;s Sunrun research</Link>, the investigation of <Link href="/research/sunrun-25-year-solar-contracts">Sunrun&apos;s long-term solar contracts</Link> and <Link href="/states/massachusetts">Massachusetts solar consumer resources</Link>.</p>
+      <p>Read <Link href="/companies/sunrun">SolarComplaint.com&apos;s Sunrun research</Link>, the investigation of <Link href="/research/sunrun-25-year-solar-contracts">Sunrun&apos;s long-term solar contracts</Link> and <Link href="/states/massachusetts">Massachusetts solar consumer resources</Link>. If your system was changed, use the <Link href="/guides/massachusetts-solar-complaint">Massachusetts complaint filing guide</Link> to organize the documents and contact the Attorney General.</p>
     </section>
   </>;
 }
