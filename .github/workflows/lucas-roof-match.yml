@@ -154,7 +154,8 @@ jobs:
                   print('FILES',r['id'],await links.all_text_contents(),flush=True)
                   for j in range(await links.count()):
                     l=links.nth(j);name=(await l.inner_text()).strip()
-                    if not re.search(r'\.pdf                    try:
+                    if not re.search(r'\.pdf$',name,re.I):continue
+                    try:
                       async with pg.expect_download(timeout=8000) as dl:await l.click(timeout=3500)
                       d=await dl.value
                       f='output/'+r['id']+'_'+re.sub(r'[^a-zA-Z0-9._-]','_',d.suggested_filename)
@@ -185,28 +186,4 @@ jobs:
         if: always()
         with:
           name: lucas-roof-solar-${{ matrix.town }}
-          path: output/
-,name,re.I) or not re.search(r'contract|agreement|customer|cap|author|ppa|signed|document',name,re.I):continue
-                    try:
-                      async with pg.expect_download(timeout=8000) as dl:await l.click(timeout=3500)
-                      d=await dl.value
-                      f='output/'+r['id']+'_'+re.sub(r'[^a-zA-Z0-9._-]','_',d.suggested_filename)
-                      await d.save_as(f);data=open(f,'rb').read()
-                      assert data.startswith((b'%PDF-',b'\xff\xd8\xff',b'\x89PNG'))
-                      pages=len(PdfReader(f).pages) if data.startswith(b'%PDF-') else 'image'
-                      print('VERIFIED',f,len(data),pages,hashlib.sha256(data).hexdigest(),flush=True)
-                      downloads+=1
-                    except Exception as e:print('DOWNLOAD_ERROR',str(e)[:150],flush=True)
-                  close=m.locator('[data-dismiss=modal]:visible').first
-                  if await close.count():await close.click()
-                if len(matches)>=2:break
-              print('SUMMARY',json.dumps({'town':town,'sunrun_records':len(found),'recent_addresses':len(addrs),'scanned':scanned,'matches':len(matches),'pdfs':downloads}),flush=True)
-              open('output/matches.json','w').write(json.dumps(matches,indent=2))
-              await b.close()
-          asyncio.run(main())
-          PY
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: milton-original-roof-solar-${{ matrix.town }}
           path: output/
