@@ -1,0 +1,78 @@
+name: Attleboro original permit PDF test
+on:
+  push:
+    branches: [permit-test-hopedale-20261123]
+    paths: ['.github/workflows/attleboro-pdf-test.yml']
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    steps:
+      - run: |
+          pip -q install playwright pypdf
+          python -m playwright install chromium
+      - run: |
+          mkdir -p output
+          python - <<'PY'
+          import asyncio,os,re,hashlib
+          from playwright.async_api import async_playwright
+          from pypdf import PdfReader
+          async def main():
+            async with async_playwright() as p:
+              b=await p.chromium.launch()
+              c=await b.new_context(accept_downloads=True)
+              pg=await c.new_page()
+              r=await pg.goto('https://permiteyes.us/attleboro/publicview.php',wait_until='domcontentloaded',timeout=40000)
+              print('HTTP',r.status,pg.url,flush=True)
+              await pg.wait_for_timeout(3500)
+              sels=pg.locator('tr:has(a.Attachmentclass[title="Attachment(s) present"]):visible')
+              print('INITIAL_ATTACHMENT_ROWS',await sels.count(),flush=True)
+              inp=pg.locator('input[name=site_add]:visible,input[name=site_address]:visible').first
+              if await inp.count():
+                await inp.fill('67 Woodstock')
+                await inp.dispatch_event('keyup')
+                await inp.press('Enter')
+                await pg.wait_for_timeout(2500)
+              rows=sels.filter(has_text=re.compile(r'67\s+Woodstock',re.I))
+              print('MATCHES',await rows.count(),flush=True)
+              if not await rows.count():
+                print('NO_TARGET_MATCH',flush=True)
+                if await inp.count():
+                  await inp.fill('')
+                  await inp.dispatch_event('keyup')
+                  await inp.press('Enter')
+                  await pg.wait_for_timeout(2000)
+                rows=sels
+              for i in range(min(await rows.count(),5)):
+                row=rows.nth(i)
+                print('RECORD',await row.evaluate("e=>[...e.querySelectorAll('td')].map(x=>x.textContent.trim())"),flush=True)
+                await row.locator('a.Attachmentclass[title="Attachment(s) present"]').first.click(timeout=6000)
+                m=pg.locator('#AttachmentModal')
+                await pg.wait_for_timeout(1500)
+                links=m.locator('a.downloadLink[data-size]:visible')
+                print('FILES',await links.all_text_contents(),flush=True)
+                order=await links.all_text_contents()
+                for j in sorted(range(len(order)),key=lambda j:'contract' not in order[j].lower())[:5]:
+                  l=links.nth(j)
+                  if not order[j].strip().lower().endswith('.pdf'):continue
+                  try:
+                    async with pg.expect_download(timeout=10000) as dl:await l.click(timeout=5000)
+                    d=await dl.value
+                    f='output/'+re.sub(r'[^a-zA-Z0-9._-]','_',d.suggested_filename)
+                    await d.save_as(f)
+                    data=open(f,'rb').read()
+                    assert data.startswith(b'%PDF-')
+                    print('VERIFIED',f,len(data),len(PdfReader(f).pages),hashlib.sha256(data).hexdigest(),flush=True)
+                    await b.close();return
+                  except Exception as e:print('DOWNLOAD_ERROR',str(e)[:180],flush=True)
+                close=m.locator('button[data-dismiss=modal]:visible').first
+                if await close.count():await close.click()
+              await b.close()
+              raise RuntimeError('No original PDF verified')
+          asyncio.run(main())
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: attleboro-original-pdf
+          path: output/
+          if-no-files-found: error
