@@ -1,0 +1,103 @@
+name: Hopedale PermitEyes PDF test
+on:
+  push:
+    branches: [permit-test-hopedale-20261123]
+    paths: ['.github/workflows/hopedale-pdf-test.yml']
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - name: Install browser and PDF tools
+        run: |
+          python -m pip -q install playwright pypdf requests
+          python -m playwright install --with-deps chromium
+      - name: Test public portal and retrieve original PDF
+        run: |
+          mkdir -p hopedale-test
+          python - <<'PY'
+          import asyncio, os, hashlib, json, re
+          from playwright.async_api import async_playwright
+          from pypdf import PdfReader
+          OUT='hopedale-test'
+          async def main():
+              async with async_playwright() as p:
+                  b=await p.chromium.launch(headless=True)
+                  context=await b.new_context(accept_downloads=True)
+                  pg=await context.new_page()
+                  got=[]
+                  async def download(d):
+                      path=os.path.join(OUT, re.sub(r'[^A-Za-z0-9._-]','_',d.suggested_filename))
+                      await d.save_as(path)
+                      got.append(path)
+                      print('DOWNLOAD',path,flush=True)
+                  pg.on('download',lambda d: asyncio.create_task(download(d)))
+                  pg.on('popup',lambda x: print('POPUP',x.url,flush=True))
+                  pg.on('response',lambda r: print('PDF_RESPONSE',r.status,r.url,flush=True) if '.pdf' in r.url.lower() or 'application/pdf' in r.headers.get('content-type','') else None)
+                  resp=await pg.goto('https://permiteyes.us/hopedale/publicview.php',wait_until='domcontentloaded',timeout=60000)
+                  print('PAGE',resp.status,pg.url,flush=True)
+                  await pg.wait_for_timeout(6500)
+                  print('TITLE',await pg.title(),flush=True)
+                  tabs=pg.locator('table')
+                  print('TABLE_COUNT',await tabs.count(),flush=True)
+                  for i in range(min(await tabs.count(),10)):
+                      tab=tabs.nth(i)
+                      info=await tab.evaluate("""el=>({headers:[...el.querySelectorAll('th')].slice(0,30).map(x=>x.innerText.trim()),inputs:[...el.querySelectorAll('input')].slice(0,20).map(x=>({name:x.name,id:x.id,placeholder:x.placeholder,parent:x.parentElement?.innerText.slice(0,40)})),rows:el.querySelectorAll('tbody tr').length})""")
+                      print('TABLE',i,json.dumps(info),flush=True)
+                  # Find and search the building permit table's address filter.
+                  for i in range(min(await tabs.count(),10)):
+                      tab=tabs.nth(i)
+                      headers=await tab.locator('thead th').all_inner_texts()
+                      idx=next((j for j,v in enumerate(headers) if 'Site Address' in v),None)
+                      if idx is None: continue
+                      print('SEARCHING_TABLE',i,'COL',idx,flush=True)
+                      inp=tab.locator('thead tr').last.locator('th,td').nth(idx).locator('input')
+                      if await inp.count()==0:
+                          inp=tab.locator('input').filter(has_not=None).nth(3)
+                      try:
+                          await inp.fill('39 Westcott')
+                          await inp.dispatch_event('keyup')
+                          await inp.press('Enter')
+                          await pg.wait_for_timeout(4000)
+                          print('VISIBLE_ROWS',i,(await tab.locator('tbody').inner_text())[:1200],flush=True)
+                      except Exception as e:
+                          print('FILTER_ERR',i,str(e)[:200],flush=True)
+                  # One match at a time; only interact with Westcott records.
+                  matches=pg.locator('tr').filter(has_text=re.compile('Westcott',re.I))
+                  print('MATCH_COUNT',await matches.count(),flush=True)
+                  for i in range(min(await matches.count(),4)):
+                      row=matches.nth(i)
+                      print('MATCH',i,(await row.inner_text())[:500],flush=True)
+                      print('MATCH_HTML',i,(await row.evaluate('(el)=>el.outerHTML'))[:1700],flush=True)
+                      links=row.locator('a,button,[onclick]')
+                      print('ROW_LINKS',i,await links.count(),flush=True)
+                      if await links.count():
+                          try:
+                              async with pg.expect_popup(timeout=1800) as maybe:
+                                  await links.first.click(timeout=5000)
+                              np=await maybe.value
+                              print('DETAIL_POPUP',np.url,flush=True)
+                          except Exception as e:
+                              print('CLICK_POPUP_TIMEOUT',str(e)[:110],flush=True)
+                          await pg.wait_for_timeout(2500)
+                          print('DETAIL_TEXT',(await pg.locator('body').inner_text())[-2500:],flush=True)
+                          print('DETAIL_LINKS',json.dumps((await pg.locator('a').evaluate_all("els=>els.filter(x=>/pdf|attach|download/i.test((x.textContent||'')+' '+x.href)).map(x=>({t:x.innerText.slice(0,60),href:x.href})).slice(-40)"))),flush=True)
+                          break
+                  await pg.wait_for_timeout(3000)
+                  for path in got:
+                      bts=open(path,'rb').read()
+                      print('FILE_CHECK',os.path.basename(path),len(bts),bts[:8],hashlib.sha256(bts).hexdigest(),flush=True)
+                      if bts.startswith(b'%PDF-'):
+                          try: print('PDF_PAGES',len(PdfReader(path).pages),flush=True)
+                          except Exception as e: print('PDF_PARSE_ERR',str(e),flush=True)
+                  print('FINAL_DOWNLOAD_COUNT',len(got),flush=True)
+                  await b.close()
+          asyncio.run(main())
+          PY
+      - name: Save original files
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: hopedale-original-pdf-test
+          path: hopedale-test/
+          if-no-files-found: ignore
