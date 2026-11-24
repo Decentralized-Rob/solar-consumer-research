@@ -1,0 +1,137 @@
+name: PermitEyes attachment recovery and record export
+on:
+  push:
+    branches: [permit-test-hopedale-20261123]
+    paths: ['.github/workflows/permit-recovery-test.yml']
+jobs:
+  recover:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    strategy:
+      fail-fast: false
+      matrix:
+        town: [attleboro, randolph]
+    steps:
+      - run: |
+          pip -q install playwright pypdf
+          python -m playwright install chromium
+      - run: |
+          mkdir -p output
+          python - <<'PY'
+          import asyncio,os,re,hashlib
+          from playwright.async_api import async_playwright
+          from pypdf import PdfReader
+          town=os.environ['TOWN']
+          target='67 Woodstock' if town=='attleboro' else '5 Joyce'
+          def verify(f):
+            data=open(f,'rb').read()
+            assert data.startswith(b'%PDF-')
+            reader=PdfReader(f)
+            print('VERIFIED',os.path.basename(f),len(data),len(reader.pages),hashlib.sha256(data).hexdigest(),flush=True)
+            return reader
+          async def main():
+            async with async_playwright() as p:
+              b=await p.chromium.launch()
+              c=await b.new_context(accept_downloads=True,viewport={'width':1500,'height':1000})
+              pg=await c.new_page()
+              pg.set_default_timeout(6500)
+              await pg.goto(f'https://permiteyes.us/{town}/publicview.php',wait_until='domcontentloaded',timeout=40000)
+              await pg.wait_for_timeout(4000)
+              inp=pg.locator('input[name=site_add]:visible,input[name=site_address]:visible').first
+              if await inp.count():
+                await inp.fill(target);await inp.dispatch_event('keyup');await inp.press('Enter')
+                await pg.wait_for_timeout(3000)
+              rows=pg.locator('tr:has(a.view_app):visible').filter(has_text=re.compile(target,re.I))
+              print('TARGET_ROWS',await rows.count(),flush=True)
+              if town=='attleboro':
+                for i in range(min(await rows.count(),5)):
+                  row=rows.nth(i)
+                  a=row.locator('a.Attachmentclass[title="Attachment(s) present"]')
+                  if not await a.count():continue
+                  print('ATTACH_CONTROL',await a.first.evaluate('e=>e.outerHTML'),flush=True)
+                  await a.first.click()
+                  m=pg.locator('#AttachmentModal')
+                  try:await m.locator('a[data-href],a[download],a.downloadLink').last.wait_for(state='attached',timeout=8000)
+                  except:pass
+                  await pg.wait_for_timeout(2200)
+                  print('MODAL_VISIBLE',await m.is_visible(),flush=True)
+                  if await m.count():
+                    print('MODAL_LINKS',await m.locator('a,button,[data-href]').evaluate_all("es=>es.map(e=>({text:e.innerText?.trim(),html:e.outerHTML.slice(0,500),visible:!!e.getClientRects().length})).slice(0,25)"),flush=True)
+                    print('MODAL_TEXT',(await m.inner_text())[:1800],flush=True)
+                    links=m.locator('a[data-href]:visible,a[download]:visible,a.downloadLink:visible')
+                    names=await links.all_text_contents()
+                    for j in sorted(range(len(names)),key=lambda j:'contract' not in names[j].lower()):
+                      if not names[j].strip().lower().endswith('.pdf'):continue
+                      try:
+                        async with pg.expect_download(timeout=10000) as dl:await links.nth(j).click()
+                        d=await dl.value
+                        f='output/ORIGINAL_'+re.sub(r'[^a-zA-Z0-9._-]','_',d.suggested_filename)
+                        await d.save_as(f);verify(f)
+                        await b.close();return
+                      except Exception as e:print('DOWNLOAD_ERROR',str(e)[:200],flush=True)
+                    close=m.locator('[data-dismiss=modal]:visible').first
+                    if await close.count():await close.click()
+                    await pg.wait_for_timeout(400)
+              # Fallback: capture a visible application / permit detail only, not the whole listing.
+              # Restrict to target address, prefer solar and issued records.
+              if not await rows.count():
+                print('NO_TARGET',flush=True);await b.close();return
+              candidates=await rows.evaluate_all("es=>es.map((e,i)=>({i:i,text:e.innerText,issued:!!e.querySelector('a.view_permit i.fa-certificate')}))")
+              candidates.sort(key=lambda x:(not bool(re.search(r'sunrun|solar|photovoltaic',x['text'],re.I)),not x['issued']))
+              idx=candidates[0]['i']
+              for mode in ['app','permit']:
+                row=rows.nth(idx)
+                control=row.locator('a.view_'+mode).first
+                if not await control.count():continue
+                if mode=='permit' and not await control.locator('i.fa-certificate').count():continue
+                before=set(c.pages)
+                await control.click()
+                await pg.wait_for_timeout(2200)
+                opened=[x for x in c.pages if x not in before]
+                v=opened[-1] if opened else pg
+                print('DETAIL_VIEW',mode,v.url,flush=True)
+                # Capture displayed form (modal, popup or detail panel).
+                if opened:
+                  await v.wait_for_load_state('domcontentloaded')
+                  visible=await v.locator('body').inner_text()
+                  if len(visible.strip())<120:continue
+                  html=await v.locator('body').evaluate('e=>e.outerHTML')
+                else:
+                  print('DETAIL_CONTAINERS',await v.locator('.modal:visible,.portlet:visible,iframe:visible').evaluate_all("es=>es.map(e=>({id:e.id,cl:e.className,txt:(e.innerText||'').slice(0,100),len:(e.innerText||'').length})).slice(-20)"),flush=True)
+                  # Application may appear in a visible panel instead of a popup.
+                  panels=v.locator('.modal:visible')
+                  if await panels.count():
+                    panel=panels.last
+                    html=await panel.evaluate("e=>e.outerHTML")
+                    visible=await panel.inner_text()
+                  else:
+                    print('DETAIL_NOT_ISOLATED',flush=True)
+                    break
+                print('DETAIL_CHARS',mode,len(visible),flush=True)
+                if len(visible.strip())<120:continue
+                # Keep the source view faithful with cloned form input values and styles.
+                import html as h
+                exp=await c.new_page()
+                # Preserve displayed text; explicitly label the reconstruction.
+                await exp.set_content('<html><head><style>body{font:11pt Arial;line-height:1.4;margin:34px}h1{font-size:16pt}pre{white-space:pre-wrap;overflow-wrap:anywhere;font:10pt Arial;line-height:1.45}</style></head><body><h1>'+h.escape(town.title()+' municipal '+mode+' public record')+'</h1><p>RECONSTRUCTED PDF — visible portal text, not an original uploaded document. Source: '+h.escape(v.url)+'</p><hr><pre>'+h.escape(visible)+'</pre></body></html>')
+                f='output/RECONSTRUCTED_'+town+'_'+mode+'.pdf'
+                await exp.pdf(path=f,format='Letter',print_background=True,margin={'top':'15mm','bottom':'15mm'})
+                reader=verify(f)
+                print('RECONSTRUCTED_TEXT_LENGTH',sum(len(p.extract_text() or '') for p in reader.pages),flush=True)
+                await exp.close()
+                if opened:await v.close()
+                else:
+                  close=v.locator('.modal:visible [data-dismiss=modal]:visible').first
+                  if await close.count():await close.click()
+                  else:break
+              await b.close()
+          asyncio.run(main())
+          PY
+        env:
+          TOWN: ${{ matrix.town }}
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: recovery-${{ matrix.town }}
+          path: output/
+          if-no-files-found: ignore
