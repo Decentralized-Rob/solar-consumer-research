@@ -1,0 +1,131 @@
+name: Contractor pair public original download
+on:
+  push:
+    branches: [research/permitpro-sunrun-giga]
+    paths: ['.github/workflows/manager-agreement-targeted.yml']
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    timeout-minutes: 7
+    strategy:
+      fail-fast: false
+      matrix:
+        town: [lancaster, upton]
+    steps:
+      - run: |
+          pip -q install playwright pymupdf
+          python -m playwright install chromium
+      - env:
+          TOWN: ${{ matrix.town }}
+        run: |
+          python -u - <<'PY'
+          """Scan Boxborough's entire *public* PermitPro index in paginated batches.
+          Independently identify Giga and Sunrun from all company/name fields, then verify PDFs.
+          """
+          import asyncio,copy,json,re,hashlib
+          from pathlib import Path
+          from urllib.parse import parse_qs,urljoin
+          from playwright.async_api import async_playwright
+          
+          import os
+          town=os.environ["TOWN"]
+          BASE="https://"+town+".patriotpermitpro.com/"
+          OUT=Path("contractor_pair_results");OUT.mkdir(exist_ok=True)
+          CHUNK=1500
+          FIELDS=["contractorCompany","contractorName","applicantName","applicantCompany"]
+          def clean(s):return re.sub(r"[^A-Z0-9]","",str(s or "").upper())
+          def record(row,which):
+           values={k:str(row.get(k) or "") for k in FIELDS}
+           return {"_id":str(row.get("_id","")),"application_id":str(row.get("Application ID","")),
+           "date":str(row.get("Application Date","")),"address":str(row.get("address","")),
+           "type":row.get("type") or row.get("_type"),"matched_fields":{k:v for k,v in values.items() if re.search(which,v,re.I)}}
+          async def main():
+           async with async_playwright() as p:
+            browser=await p.chromium.launch(headless=True)
+            ctx=await browser.new_context(accept_downloads=True)
+            page=await ctx.new_page()
+            reqs=[]
+            def listen(r):
+             if "mode=getResults" in r.url:
+              try:reqs.append(json.loads(parse_qs(r.post_data or "").get("jsonData",["{}"])[0]))
+              except:pass
+            page.on("request",listen)
+            savedpdfs=[]
+            try:
+             sample=await ctx.request.get(""+({"lancaster":"https://permitpro-lancaster.s3.amazonaws.com/1789052903.pdf","upton":"https://permitpro-upton-files.s3.amazonaws.com/1749849452.pdf"}[town])+"",timeout=20000)
+             if not (await sample.body()).startswith(b"%PDF-"):raise RuntimeError("Original PDF preflight failed")
+             print("ORIGINAL_PREFLIGHT_OK",flush=True)
+             await page.goto(BASE+"index.php?act=dashboard",wait_until="domcontentloaded",timeout=30000)
+             await page.wait_for_timeout(2400)
+             if not reqs:raise RuntimeError("Cannot obtain original public dashboard request")
+             tpl=reqs[0]
+             resp=await ctx.request.get(BASE+"index.php?act=dashboard&mode=getFieldData",timeout=30000)
+             defs={x["fieldName"]:x for x in await resp.json() if isinstance(x,dict) and "fieldName" in x}
+             for x in FIELDS:
+              if x not in defs:print("MISSING_FIELD",x,flush=True)
+             payload=copy.deepcopy(tpl)
+             payload["activeDashboardView"]["selectedFieldNames"] += [k for k in FIELDS if k in defs]
+             payload["resultsSettings"]["fieldData"]+=[defs[k] for k in FIELDS if k in defs]
+             payload["activeDashboardView"]["filters"]=[]
+             payload["resultsSettings"]["limit"]=CHUNK
+             allrows=[]
+             short_pages=[]
+             skip=0
+             total=9500
+             while skip<total:
+              payload["resultsSettings"]["skip"]=skip
+              res=await ctx.request.post(BASE+"index.php?act=dashboard&mode=getResults",form={"jsonData":json.dumps(payload)},timeout=55000)
+              if res.status!=200:raise RuntimeError("PermitPro getResults returned HTTP "+str(res.status))
+              j=await res.json()
+              rows=j.get("resultsData")
+              if not isinstance(rows,list):raise RuntimeError("Missing resultsData array")
+              total=int(j.get("resultsSettings",{}).get("totalSearchResults",total))
+              allrows+=rows
+              print("INDEX_PAGE","skip",skip,"received",len(rows),"all",total,flush=True)
+              if len(rows)<min(CHUNK,total-skip):short_pages.append({"offset":skip,"received":len(rows),"expected":min(CHUNK,total-skip)})
+              skip+=CHUNK
+              if not rows:print("EMPTY_BACKEND_PAGE","at",skip-CHUNK,flush=True)
+             print("SCANNED",len(allrows),"EXPECTED",total,flush=True)
+             print("SHORT_PAGES",json.dumps(short_pages),flush=True)
+             date_cutoff="2021-11-21"
+             target=[r for r in allrows if str(r.get("Application Date",""))>=date_cutoff]
+             import fitz
+             sunrun=[record(r,r"sun[\s-]*run") for r in target if any(re.search(r"sun[\s-]*run",str(r.get(k) or ""),re.I) for k in FIELDS)]
+             solar=[r for r in sunrun if re.search(r'solar|standard|residential|building',str(r['type']),re.I)]
+             print("SOLAR",len(solar),flush=True)
+             lookup={}
+             for r in target:lookup.setdefault(clean(r.get('address')),[]).append(r)
+             sem=asyncio.Semaphore(3)
+             async def scan(r):
+              async with sem:
+               pp=await ctx.new_page()
+               try:
+                await pp.goto(BASE+"index.php?act=process&id="+r["_id"],wait_until="domcontentloaded",timeout=20000)
+                await pp.wait_for_timeout(1000)
+                urls=await pp.evaluate("""()=>[...new Set([...document.querySelectorAll('a[href]')].map(x=>x.href).filter(x=>x.includes('.s3.amazonaws.com/')||x.toLowerCase().endsWith('.pdf')))]""")
+                for link in urls:
+                 try:
+                  data=await (await ctx.request.get(link,timeout=15000)).body()
+                  if not data.startswith(b"%PDF-"):continue
+                  with fitz.open(stream=data,filetype="pdf") as doc:
+                   cover=' '.join(doc[i].get_text() for i in range(min(3,len(doc))))
+                   if not re.search(r'sales\s+(consultant|representative)',cover,re.I):continue
+                   manager=re.search(r'gregory\s+penn|seyed\s+khadivar|steven\s+chivallatti|gregory\.penn@sunrun\.com|seyed\.khadivar@sunrun\.com|steven\.chivallatti@sunrun\.com',cover,re.I)
+                   if not manager:continue
+                   if re.search(r'20\s+poulin',r['address'],re.I):continue
+                   text=' '.join(p.get_text() for p in doc)
+                   roof=[m.group(0) for m in re.finditer(r'(?i)(?:Roof Work:\s*(?:Entire Home|Multi-Square|Single Plane)|roof replacement|tear off and replacement|re-?roof)',text)]
+                   print("MANAGER_MATCH",json.dumps({"manager":manager.group(0),"address":r['address'],"permit":r['application_id'],"url":link,"roof_language":roof[:5],"record":r['_id'],"related_records":[{"id":str(x.get("_id")),"permit":x.get("Application ID"),"type":x.get("type"),"date":x.get("Application Date")} for x in lookup.get(clean(r['address']),[]) if str(x.get("Application Date",""))[:4]>=r['date'][:4]]}),flush=True)
+                   break
+                 except Exception:pass
+               except Exception as e:print("RECORD_ERROR",r["_id"],str(e)[:100],flush=True)
+               finally:await pp.close()
+             await asyncio.gather(*(scan(r) for r in solar))
+             print("DONE",flush=True)
+            except Exception as e:
+             print("ERROR",repr(e)[:1200],flush=True)
+             (OUT/"error.txt").write_text(repr(e))
+            finally:await ctx.close();await browser.close()
+          asyncio.run(main())
+          
+          PY
