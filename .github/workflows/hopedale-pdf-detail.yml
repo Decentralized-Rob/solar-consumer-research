@@ -1,0 +1,93 @@
+name: Hopedale targeted original PDF attempt
+on:
+  push:
+    branches: [permit-test-hopedale-20261123]
+    paths: ['.github/workflows/hopedale-pdf-detail.yml']
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 7
+    steps:
+      - name: Install browser and PDF tools
+        run: |
+          python -m pip -q install playwright pypdf
+          python -m playwright install --with-deps chromium
+      - name: Open Hopedale record and test attachments
+        run: |
+          mkdir -p hopedale-detail
+          python - <<'PY'
+          import asyncio, os, hashlib, json, re
+          from playwright.async_api import async_playwright
+          from pypdf import PdfReader
+          OUT='hopedale-detail'
+          async def main():
+              async with async_playwright() as p:
+                  b=await p.chromium.launch()
+                  ctx=await b.new_context(accept_downloads=True)
+                  page=await ctx.new_page()
+                  saved=[]
+                  async def sav(d):
+                      name=re.sub(r'[^a-zA-Z0-9._-]','_',d.suggested_filename)
+                      fn=os.path.join(OUT,name)
+                      await d.save_as(fn)
+                      saved.append(fn)
+                      print('DOWNLOADED',fn,flush=True)
+                  page.on('download',lambda d: asyncio.create_task(sav(d)))
+                  page.on('popup',lambda pg: print('POPUP',pg.url,flush=True))
+                  page.on('response',lambda r: print('FILE_RESPONSE',r.status,r.url,flush=True) if '.pdf' in r.url.lower() or 'application/pdf' in r.headers.get('content-type','').lower() else None)
+                  await page.goto('https://permiteyes.us/hopedale/publicview.php',wait_until='domcontentloaded',timeout=45000)
+                  await page.wait_for_timeout(5500)
+                  rec=page.locator('a.view_app[data-id="4644"]')
+                  print('RECORD_COUNT',await rec.count(),flush=True)
+                  if await rec.count()>0:
+                      outer=await rec.first.evaluate("e=>e.closest('tr').outerHTML")
+                      print('RECORD_HTML',outer[:6500],flush=True)
+                      await rec.first.click(timeout=8000)
+                      await page.wait_for_timeout(2800)
+                  else:
+                      print('NO_RECORD',flush=True)
+                  print('URL',page.url,flush=True)
+                  print('BODY_TAIL',(await page.locator('body').inner_text())[-6800:],flush=True)
+                  print('VISIBLE_MODALS',json.dumps(await page.locator('[class*=modal]').evaluate_all("els=>els.filter(x=>x.offsetWidth>0||x.offsetHeight>0).map(x=>({id:x.id,cls:x.className,txt:x.innerText.slice(0,650)})).slice(0,25)")),flush=True)
+                  print('ATT_CONTROLS',json.dumps(await page.locator('a,button,[onclick],input').evaluate_all("""els=>els.filter(x=>/attach|document|files|pdf|download/i.test(x.outerHTML)).slice(0,80).map(x=>({tag:x.tagName,txt:x.innerText.slice(0,60),html:x.outerHTML.slice(0,400)}))""")),flush=True)
+                  os.makedirs(OUT,exist_ok=True)
+                  open(os.path.join(OUT,'details.html'),'w').write(await page.content())
+                  # Only click attachment view controls, never upload/edit/submit.
+                  candidates=page.locator('a,button').filter(has_text=re.compile(r'^attachments?$|^view attachments?$|^documents?$',re.I))
+                  print('ATTACHMENT_BUTTONS',await candidates.count(),flush=True)
+                  for i in range(min(await candidates.count(),2)):
+                      item=candidates.nth(i)
+                      if not await item.is_visible(): continue
+                      try:
+                          await item.click(timeout=3500)
+                          await page.wait_for_timeout(2200)
+                          print('AFTER_ATT_BUTTON',(await page.locator('body').inner_text())[-3800:],flush=True)
+                          print('AFTER_ATT_LINKS',json.dumps(await page.locator('a').evaluate_all("""els=>els.filter(x=>/\\.pdf|download|attach|document/i.test(x.href+' '+x.outerHTML)).map(x=>({t:x.innerText.slice(0,50),href:x.href,html:x.outerHTML.slice(0,260)})).slice(-45)""")),flush=True)
+                          break
+                      except Exception as e: print('ATT_BUTTON_ERROR',str(e)[:180],flush=True)
+                  pdfs=page.locator('a[href*=".pdf"],a[download],a[href*="download"]')
+                  print('DIRECT_PDF_LINKS',await pdfs.count(),flush=True)
+                  for i in range(min(await pdfs.count(),2)):
+                      el=pdfs.nth(i)
+                      if not await el.is_visible(): continue
+                      try:
+                          await el.click(timeout=5000)
+                          await page.wait_for_timeout(2000)
+                      except Exception as e: print('PDF_LINK_ERROR',str(e)[:160],flush=True)
+                  await page.wait_for_timeout(2000)
+                  for path in saved:
+                      data=open(path,'rb').read()
+                      print('FILE_CHECK',os.path.basename(path),len(data),data[:8],hashlib.sha256(data).hexdigest(),flush=True)
+                      if data.startswith(b'%PDF-'):
+                          print('PAGES',len(PdfReader(path).pages),flush=True)
+                  print('TOTAL_PDFS',len(saved),flush=True)
+                  await b.close()
+          asyncio.run(main())
+          PY
+      - name: Preserve PDFs and diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: hopedale-targeted-pdf-test
+          path: hopedale-detail/
+          if-no-files-found: ignore
