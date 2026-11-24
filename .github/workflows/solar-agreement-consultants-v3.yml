@@ -8,18 +8,24 @@ permissions:
 jobs:
   read:
     runs-on: ubuntu-latest
-    timeout-minutes: 12
+    timeout-minutes: 15
     steps:
       - run: pip -q install requests pymupdf
-      - run: |
+      - name: Check public boylston agreements and associated roofing
+        continue-on-error: true
+        env:
+          TOWN: boylston
+          SAMPLE_ID: '4239'
+        run: |
           python -u - <<'PY'
-          import requests,json,re,hashlib,concurrent.futures,threading,time
+          import requests,json,re,hashlib,concurrent.futures,threading,time,os
           from pathlib import Path
           from urllib.parse import quote
           import fitz
           fitz.TOOLS.mupdf_display_errors(False)
-          BASE="https://lancaster.patriotpermitpro.com/"
-          OUT=Path("management_roof_evidence");OUT.mkdir(exist_ok=True)
+          TOWN=os.environ["TOWN"]
+          BASE="https://"+TOWN+".patriotpermitpro.com/"
+          OUT=Path("management_roof_evidence")/TOWN;OUT.mkdir(exist_ok=True,parents=True)
           S=requests.Session();lock=threading.Lock()
           def get(url,data=None):
            for attempt in range(3):
@@ -32,7 +38,10 @@ jobs:
              time.sleep(2**attempt)
           def save(b,name):
            p=OUT/name;p.parent.mkdir(exist_ok=True,parents=True);p.write_bytes(b);return str(p)
-          u="https://permitpro-lancaster.s3.amazonaws.com/1792783839.pdf"
+          sample=json.loads(get(BASE+"index.php?act=process&mode=getApplication",{"id":os.environ["SAMPLE_ID"]}))
+          observed=[d["_identifier"] for d in sample.get("documents",[]) if d.get("documentType")=="file" and str(d.get("_identifier","")).startswith("https://")]
+          assert observed,"PDF gate: no original public attachment"
+          u=observed[0]
           b=get(u);assert b.startswith(b"%PDF");assert len(fitz.open(stream=b,filetype="pdf"))>0
           gate={"url":u,"sha256":hashlib.sha256(b).hexdigest(),"bytes":len(b)}
           S.get(BASE,timeout=25)
@@ -43,7 +52,7 @@ jobs:
           view["selectedFieldNames"]=[n for n in names if n in defs];view["filters"]=[]
           payload={"activeDashboardView":view,"resultsSettings":{"searchValue":"","skip":0,"limit":1500,"sortDirection":"asc","fieldData":[defs[n] for n in view["selectedFieldNames"]]}}
           allrows=[];total=7500
-          for offset in range(0,7500,1500):
+          for offset in range(0,100000,1500):
            payload["resultsSettings"]["skip"]=offset
            j=S.post(BASE+"index.php?act=dashboard&mode=getResults",data={"jsonData":json.dumps(payload)},timeout=50).json()
            allrows+=j.get("resultsData",[]);total=int(j.get("resultsSettings",{}).get("totalSearchResults",0))
@@ -51,7 +60,7 @@ jobs:
           def norm(x):return re.sub("[^A-Z0-9]","",str(x).upper())
           direct=[r for r in allrows if re.search(r"sun[ -]*run"," ".join(str(r.get(k) or "") for k in ["contractorCompany","contractorName","applicantCompany","applicantName"]),re.I)]
           addresses={norm(r["address"]) for r in direct}
-          rows=list({r["_id"]:r for r in direct+[r for r in allrows if r["type"]=="Solar Application" and norm(r["address"]) in addresses]}.values())
+          rows=list({r["_id"]:r for r in direct+[r for r in allrows if re.search("solar",r["type"],re.I) and norm(r["address"]) in addresses]}.values())
           rows=[r for r in rows if r["type"]!="Electrical"]
           rows.sort(key=lambda r:-int(r["_id"]))
           records={};result=[];errors=[]
@@ -86,7 +95,7 @@ jobs:
             item={"record":aid,"application":r.get("Application ID"),"date":r.get("Application Date"),"address":r["address"],"target":target,"overview":j.get("overview"),"documents":docs}
             if target:
              roof=[]
-             related=[x for x in allrows if norm(x["address"])==norm(r["address"]) and x["_id"]!=aid and x["type"] in ["Building Permit Application","Minor Repairs"]]
+             related=[x for x in allrows if norm(x["address"])==norm(r["address"]) and x["_id"]!=aid and re.search("building|minor|roof|residen|standard",x["type"],re.I)]
              for rr in related:
               try:
                jj=record(rr["_id"]);scope=jj.get("overview",{}).get("proposedWork","")
@@ -105,7 +114,119 @@ jobs:
              item["roof_required_in_cap"]=any(re.search("Roof Work:|Roofing:|reroof|re-roof",x["full_text"],re.I) for x in docs if x["target"])
             with lock:
              result.append(item)
-             (OUT/"results.json").write_text(json.dumps({"town":"Lancaster","index_count":len(allrows),"expected_index_total":total,"pdf_gate":gate,"checked":len(result),"scan_total":len(rows),"results":result,"errors":errors},indent=2))
+             (OUT/"results.json").write_text(json.dumps({"town":TOWN,"index_count":len(allrows),"expected_index_total":total,"pdf_gate":gate,"checked":len(result),"scan_total":len(rows),"results":result,"errors":errors},indent=2))
+             print("CHECKED",len(result),"OF",len(rows),"TARGET_COUNT",sum(x["target"] for x in result),flush=True)
+           except Exception as e:
+            with lock:errors.append({"record":aid,"error":str(e)[:150]})
+          with concurrent.futures.ThreadPoolExecutor(max_workers=3) as pool:list(pool.map(scan,rows))
+          (OUT/"index.json").write_text(json.dumps(allrows))
+          print("FINISHED",len(result),"TARGETS",sum(x["target"] for x in result),"ERRORS",len(errors),flush=True)
+          
+          PY
+      - name: Check public upton agreements and associated roofing
+        continue-on-error: true
+        env:
+          TOWN: upton
+          SAMPLE_ID: '11237'
+        run: |
+          python -u - <<'PY'
+          import requests,json,re,hashlib,concurrent.futures,threading,time,os
+          from pathlib import Path
+          from urllib.parse import quote
+          import fitz
+          fitz.TOOLS.mupdf_display_errors(False)
+          TOWN=os.environ["TOWN"]
+          BASE="https://"+TOWN+".patriotpermitpro.com/"
+          OUT=Path("management_roof_evidence")/TOWN;OUT.mkdir(exist_ok=True,parents=True)
+          S=requests.Session();lock=threading.Lock()
+          def get(url,data=None):
+           for attempt in range(3):
+            try:
+             u=quote(url,safe=":/?=&%")
+             r=requests.post(u,data=data,timeout=30) if data else requests.get(u,timeout=30)
+             r.raise_for_status();return r.content
+            except Exception:
+             if attempt==2:raise
+             time.sleep(2**attempt)
+          def save(b,name):
+           p=OUT/name;p.parent.mkdir(exist_ok=True,parents=True);p.write_bytes(b);return str(p)
+          sample=json.loads(get(BASE+"index.php?act=process&mode=getApplication",{"id":os.environ["SAMPLE_ID"]}))
+          observed=[d["_identifier"] for d in sample.get("documents",[]) if d.get("documentType")=="file" and str(d.get("_identifier","")).startswith("https://")]
+          assert observed,"PDF gate: no original public attachment"
+          u=observed[0]
+          b=get(u);assert b.startswith(b"%PDF");assert len(fitz.open(stream=b,filetype="pdf"))>0
+          gate={"url":u,"sha256":hashlib.sha256(b).hexdigest(),"bytes":len(b)}
+          S.get(BASE,timeout=25)
+          fields=S.get(BASE+"index.php?act=dashboard&mode=getFieldData",timeout=25).json()
+          view=S.get(BASE+"index.php?act=dashboard&mode=getDashboardViews",timeout=25).json()[0]
+          defs={x["fieldName"]:x for x in fields}
+          names=list(dict.fromkeys(view["selectedFieldNames"]+["contractorCompany","contractorName","applicantCompany","applicantName"]))
+          view["selectedFieldNames"]=[n for n in names if n in defs];view["filters"]=[]
+          payload={"activeDashboardView":view,"resultsSettings":{"searchValue":"","skip":0,"limit":1500,"sortDirection":"asc","fieldData":[defs[n] for n in view["selectedFieldNames"]]}}
+          allrows=[];total=7500
+          for offset in range(0,100000,1500):
+           payload["resultsSettings"]["skip"]=offset
+           j=S.post(BASE+"index.php?act=dashboard&mode=getResults",data={"jsonData":json.dumps(payload)},timeout=50).json()
+           allrows+=j.get("resultsData",[]);total=int(j.get("resultsSettings",{}).get("totalSearchResults",0))
+           if offset+1500>=total:break
+          def norm(x):return re.sub("[^A-Z0-9]","",str(x).upper())
+          direct=[r for r in allrows if re.search(r"sun[ -]*run"," ".join(str(r.get(k) or "") for k in ["contractorCompany","contractorName","applicantCompany","applicantName"]),re.I)]
+          addresses={norm(r["address"]) for r in direct}
+          rows=list({r["_id"]:r for r in direct+[r for r in allrows if re.search("solar",r["type"],re.I) and norm(r["address"]) in addresses]}.values())
+          rows=[r for r in rows if r["type"]!="Electrical"]
+          rows.sort(key=lambda r:-int(r["_id"]))
+          records={};result=[];errors=[]
+          def record(aid):
+           if aid not in records:records[aid]=json.loads(get(BASE+"index.php?act=process&mode=getApplication",{"id":aid}))
+           return records[aid]
+          def files(j):
+           return [d for d in j.get("documents",[]) if d.get("documentType")=="file" and str(d.get("_identifier","")).startswith("https://")]
+          def roofscope(t):
+           return bool(re.search(r"re[ -]?roof|shingl|roof.{0,50}(repair|replac)|(?:repair|replac|strip|tear).{0,80}roof",t,re.I)) and not bool(re.search(r"installation of.*rooftop.*(?:pv|photovoltaic|solar)",t,re.I))
+          def scan(r):
+           aid=r["_id"]
+           try:
+            j=record(aid);ff=files(j)
+            selected=[a for a in ff if re.search("contract|approval|agreement|work assignment",a["_document"]["name"],re.I)]
+            if not selected:selected=[a for a in ff if re.search("other",a["_document"]["name"],re.I)]
+            docs=[];target=False
+            for a in selected:
+             try:
+              b=get(a["_identifier"])
+              if not b.startswith(b"%PDF"):continue
+              d=fitz.open(stream=b,filetype="pdf")
+              t="\n".join(d[i].get_text() for i in range(min(4,len(d))))
+              hit=bool(re.search(r"Gregory\s+Penn|Seyed\s+Khadivar|gregory\.penn@|seyed\.khadivar@",t,re.I))
+              full="\n".join(pg.get_text() for pg in d) if hit else ""
+              x={"document_id":a["_id"],"label":a["_document"]["name"],"url":a["_identifier"],"sha256":hashlib.sha256(b).hexdigest(),"bytes":len(b),"pages":len(d),"target":hit,"cover_text":t,"full_text":full}
+              docs.append(x)
+              if hit:
+               target=True;x["saved"]=save(b,aid+"/"+a["_id"]+".pdf")
+             except Exception as e:
+              with lock:errors.append({"record":aid,"document":a["_id"],"error":str(e)[:150]})
+            item={"record":aid,"application":r.get("Application ID"),"date":r.get("Application Date"),"address":r["address"],"target":target,"overview":j.get("overview"),"documents":docs}
+            if target:
+             roof=[]
+             related=[x for x in allrows if norm(x["address"])==norm(r["address"]) and x["_id"]!=aid and re.search("building|minor|roof|residen|standard",x["type"],re.I)]
+             for rr in related:
+              try:
+               jj=record(rr["_id"]);scope=jj.get("overview",{}).get("proposedWork","")
+               if not roofscope(scope):continue
+               rt={"record":rr["_id"],"application":rr.get("Application ID"),"date":rr.get("Application Date"),"scope":scope,"row":rr,"documents":[]}
+               for a in files(jj):
+                if not re.search("contract|agreement|authorization|other",a["_document"]["name"],re.I):continue
+                bb=get(a["_identifier"])
+                if not bb.startswith(b"%PDF"):continue
+                dd=fitz.open(stream=bb,filetype="pdf");text="\n".join(pg.get_text() for pg in dd)
+                rt["documents"].append({"label":a["_document"]["name"],"url":a["_identifier"],"pages":len(dd),"sha256":hashlib.sha256(bb).hexdigest(),"bytes":len(bb),"text":text,"saved":save(bb,aid+"/roof_"+rr["_id"]+"_"+a["_id"]+".pdf")})
+               roof.append(rt)
+              except Exception as e:
+               with lock:errors.append({"record":rr["_id"],"error":str(e)[:150]})
+             item["roof_records"]=roof
+             item["roof_required_in_cap"]=any(re.search("Roof Work:|Roofing:|reroof|re-roof",x["full_text"],re.I) for x in docs if x["target"])
+            with lock:
+             result.append(item)
+             (OUT/"results.json").write_text(json.dumps({"town":TOWN,"index_count":len(allrows),"expected_index_total":total,"pdf_gate":gate,"checked":len(result),"scan_total":len(rows),"results":result,"errors":errors},indent=2))
              print("CHECKED",len(result),"OF",len(rows),"TARGET_COUNT",sum(x["target"] for x in result),flush=True)
            except Exception as e:
             with lock:errors.append({"record":aid,"error":str(e)[:150]})
@@ -117,6 +238,6 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: management-roof-evidence
+          name: management-roof-evidence-boylston-upton
           path: management_roof_evidence/
           retention-days: 1
