@@ -43,8 +43,8 @@ jobs:
            c=[html.unescape(re.sub("<[^>]+>","",str(x))).strip() for x in row]
            m=re.search(r"data-application-id=[\"']([^\"']+)",row[0])
            uuid=m.group(1) if m else ""
-           if len(c)>=14 and not c[3] and re.search(r"\\d{2}/\\d{2}/\\d{2}",c[6]):
-            mid=re.search(r"data-id=[\"']?(\\d+)",row[0])
+           if len(c)>=14 and not c[3] and re.search(r"\d{2}/\d{2}/\d{2}",c[6]):
+            mid=re.search(r"data-id=[\"']?(\d+)",row[0])
             aid=mid.group(1) if mid else uuid
             c=["","","",aid,c[6],c[7],c[9],c[8],"",c[10],c[12],c[11],c[13]]
            elif len(c)>=14:c=c[:8]+c[9:]
@@ -141,8 +141,8 @@ jobs:
            c=[html.unescape(re.sub("<[^>]+>","",str(x))).strip() for x in row]
            m=re.search(r"data-application-id=[\"']([^\"']+)",row[0])
            uuid=m.group(1) if m else ""
-           if len(c)>=14 and not c[3] and re.search(r"\\d{2}/\\d{2}/\\d{2}",c[6]):
-            mid=re.search(r"data-id=[\"']?(\\d+)",row[0])
+           if len(c)>=14 and not c[3] and re.search(r"\d{2}/\d{2}/\d{2}",c[6]):
+            mid=re.search(r"data-id=[\"']?(\d+)",row[0])
             aid=mid.group(1) if mid else uuid
             c=["","","",aid,c[6],c[7],c[9],c[8],"",c[10],c[12],c[11],c[13]]
            elif len(c)>=14:c=c[:8]+c[9:]
