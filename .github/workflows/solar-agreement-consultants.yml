@@ -1,0 +1,55 @@
+name: Public solar agreement consultant extraction
+on:
+  push:
+    branches: [research/permitpro-sunrun-giga]
+    paths: ['.github/workflows/solar-agreement-consultants.yml']
+permissions:
+  actions: read
+  contents: read
+jobs:
+  read:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh run download 45377431162 -R ${{ github.repository }} -n contractor-pair-patriot -D index
+      - run: pip -q install requests beautifulsoup4 pymupdf
+      - run: |
+          python -u - <<'PY'
+          import os,re,json,concurrent.futures,io,hashlib
+          from pathlib import Path
+          import requests
+          from bs4 import BeautifulSoup
+          import fitz
+          base="https://westborough.patriotpermitpro.com/"
+          index=json.loads(next(Path("index").rglob("separate_company_search.json")).read_text())
+          rows=[r for r in index["sunrun"] if r["type"] in ("Solar Application","Residential - Building","Standard Permit")]
+          print("RECORDS",len(rows),flush=True)
+          def scan(r):
+           try:
+            response=requests.get(base+"index.php?act=process&id="+r["_id"],timeout=12)
+            soup=BeautifulSoup(response.text,"html.parser")
+            links=list(dict.fromkeys(a["href"] for a in soup.select("a[href]") if ".s3.amazonaws.com/" in a["href"] and a["href"].lower().endswith(".pdf")))
+            for url in links:
+             try:
+              data=requests.get(url,timeout=15).content
+              if not data.startswith(b"%PDF-"):continue
+              with fitz.open(stream=data,filetype="pdf") as doc:
+               for p in range(min(4,len(doc))):
+                page=doc[p]
+                txt=page.get_text()
+                if not re.search(r"sales\s+(consultant|representative)",txt,re.I):continue
+                emails=re.findall(r"[\w.+-]+@sunrun\.com",txt,re.I)
+                if not emails:continue
+                rep=[e for e in emails if not re.search(r"customercare|esign|support|service|info",e,re.I)]
+                if rep:
+                 print("AGREEMENT",json.dumps({"permit":r["application_id"],"record":r["_id"],"url":url,"page":p+1,"email":rep,"sha256":hashlib.sha256(data).hexdigest(),"bytes":len(data),"pages":len(doc)}),flush=True)
+                 break
+             except Exception as e:pass
+            return len(links)
+           except: return 0
+          with concurrent.futures.ThreadPoolExecutor(max_workers=5) as pool:
+           print("CHECKED",sum(pool.map(scan,rows)),flush=True)
+          
+          PY
