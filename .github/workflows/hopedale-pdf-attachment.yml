@@ -1,0 +1,104 @@
+name: Hopedale original attachment download proof
+on:
+  push:
+    branches: [permit-test-hopedale-20261123]
+    paths: ['.github/workflows/hopedale-pdf-attachment.yml']
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 7
+    steps:
+      - name: Install browser and PDF tools
+        run: |
+          python -m pip -q install playwright pypdf
+          python -m playwright install --with-deps chromium
+      - name: Click original public attachment and verify PDF
+        run: |
+          mkdir -p hopedale-verified
+          python - <<'PY'
+          import asyncio, os, hashlib, json, re, urllib.parse
+          from playwright.async_api import async_playwright
+          from pypdf import PdfReader
+          OUT='hopedale-verified'
+          async def main():
+              async with async_playwright() as p:
+                  browser=await p.chromium.launch()
+                  ctx=await browser.new_context(accept_downloads=True)
+                  page=await ctx.new_page()
+                  saved=[]
+                  async def save_download(d):
+                      dest=os.path.join(OUT,re.sub(r'[^a-zA-Z0-9._-]','_',d.suggested_filename))
+                      await d.save_as(dest);saved.append(dest)
+                      print('DOWNLOAD',dest,flush=True)
+                  page.on('download',lambda d: asyncio.create_task(save_download(d)))
+                  page.on('response',lambda r: print('PDF_RESPONSE',r.status,r.url,flush=True) if '.pdf' in r.url.lower() or 'application/pdf' in r.headers.get('content-type','') else None)
+                  ctx.on('page',lambda x: print('NEW_PAGE',x.url,flush=True))
+                  await page.goto('https://permiteyes.us/hopedale/publicview.php',wait_until='domcontentloaded',timeout=45000)
+                  await page.wait_for_timeout(5000)
+                  paperclip=page.locator('a.Attachmentclass[data-id="4644"]')
+                  print('PAPERCLIP_PRESENT',await paperclip.count(),flush=True)
+                  print('ATTACHMENT_CONTROL',await paperclip.first.evaluate('e=>e.outerHTML'),flush=True)
+                  await paperclip.first.click(timeout=7000)
+                  await page.wait_for_timeout(2600)
+                  modal=page.locator('#AttachmentModal')
+                  print('MODAL_VISIBLE',await modal.is_visible(),flush=True)
+                  print('MODAL_TEXT',(await modal.inner_text())[:5600],flush=True)
+                  print('MODAL_HTML',(await modal.evaluate('e=>e.outerHTML'))[:11000],flush=True)
+                  links=await modal.locator('a').evaluate_all("""els=>els.map(x=>({text:x.innerText.trim(),href:x.href,outer:x.outerHTML.slice(0,800)}))""")
+                  print('ATTACHMENT_LINKS',json.dumps(links),flush=True)
+                  # Save an actual PDF from the public attachment list, not a print/export of the permit card.
+                  for i,link in enumerate(links):
+                      url=link.get('href','')
+                      if not url.startswith('http'): continue
+                      if not re.search(r'\.pdf($|\?)|download|attachment|uploads',url,re.I): continue
+                      try:
+                          r=await ctx.request.get(url,timeout=20000)
+                          by=await r.body()
+                          print('DIRECT_TRY',i,r.status,len(by),by[:8],url,flush=True)
+                          if r.ok and by.startswith(b'%PDF-'):
+                              filename=f'original_{i}.pdf'
+                              path=os.path.join(OUT,filename);open(path,'wb').write(by);saved.append(path)
+                              break
+                      except Exception as e: print('DIRECT_ERR',str(e)[:160],flush=True)
+                  if not saved:
+                      clickable=modal.locator('a').filter(has_not=None)
+                      for i in range(min(await clickable.count(),12)):
+                          a=clickable.nth(i)
+                          text=(await a.inner_text()).strip()
+                          meta=await a.evaluate("e=>e.outerHTML.slice(0,600)")
+                          print('CANDIDATE',i,text,meta,flush=True)
+                          if re.search(r'close|dismiss|upload|delete|remove|edit',text+' '+meta,re.I): continue
+                          try:
+                              await a.click(timeout=4000)
+                              await page.wait_for_timeout(2000)
+                              print('CLICKED',i,'PAGE',page.url,'OPEN_TABS',[(x.url) for x in ctx.pages],flush=True)
+                              if saved: break
+                          except Exception as e: print('CLICK_ERR',i,str(e)[:160],flush=True)
+                  await page.wait_for_timeout(3000)
+                  # Direct URL when a PDF opens in a browser tab instead of the download manager.
+                  if not saved:
+                      for pg in ctx.pages:
+                          if pg is page: continue
+                          url=pg.url
+                          if not url.startswith('http'): continue
+                          try:
+                              r=await ctx.request.get(url,timeout=18000);by=await r.body()
+                              print('POPUP_TRY',r.status,len(by),by[:8],url,flush=True)
+                              if r.ok and by.startswith(b'%PDF-'):
+                                  dest=os.path.join(OUT,'popup_original.pdf');open(dest,'wb').write(by);saved.append(dest);break
+                          except Exception as e:print('POPUP_ERR',str(e)[:200],flush=True)
+                  for path in sorted(set(saved)):
+                      data=open(path,'rb').read()
+                      print('FILE_CHECK',os.path.basename(path),len(data),data[:8],hashlib.sha256(data).hexdigest(),flush=True)
+                      if data.startswith(b'%PDF-'):print('PDF_PAGES',len(PdfReader(path).pages),flush=True)
+                  print('TOTAL_DOWNLOADED',len(saved),flush=True)
+                  await browser.close()
+          asyncio.run(main())
+          PY
+      - name: Upload original PDF
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: hopedale-original-permit-attachment
+          path: hopedale-verified/
+          if-no-files-found: ignore
