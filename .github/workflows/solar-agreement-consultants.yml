@@ -11,7 +11,7 @@ jobs:
     timeout-minutes: 15
     steps:
       - run: pip -q install requests pymupdf
-      - name: Check public hopedale consultant and roofing records
+      - name: Recover original hopedale manager and roof attachments
         continue-on-error: true
         env:
           TOWN: hopedale
@@ -41,13 +41,18 @@ jobs:
            return S.post(BASE+"ajax/getbuildingpublichome.php",data=p,timeout=50).json()
           def rowdata(row):
            c=[html.unescape(re.sub("<[^>]+>","",str(x))).strip() for x in row]
-           if len(c)>=14:c=c[:8]+c[9:]
            m=re.search(r"data-application-id=[\"']([^\"']+)",row[0])
-           return {"cells":c,"uuid":m.group(1) if m else ""}
+           uuid=m.group(1) if m else ""
+           if len(c)>=14 and not c[3] and re.search(r"\\d{2}/\\d{2}/\\d{2}",c[6]):
+            mid=re.search(r"data-id=[\"']?(\\d+)",row[0])
+            aid=mid.group(1) if mid else uuid
+            c=["","","",aid,c[6],c[7],c[9],c[8],"",c[10],c[12],c[11],c[13]]
+           elif len(c)>=14:c=c[:8]+c[9:]
+           return {"cells":c,"uuid":uuid}
           index=search("Sunrun")
           (OUT/"index.json").write_text(json.dumps(index))
           rows=[rowdata(r) for r in index["data"]]
-          rows=[r for r in rows if len(r["cells"])>=12 and not re.search("elect",r["cells"][9],re.I) and (re.search("solar",r["cells"][9],re.I) or re.search("solar|photovoltaic|pv system",r["cells"][8],re.I)) and r["cells"][4][-2:] in ["21","22","23","24","25","26"]]
+          rows=[r for r in rows if len(r["cells"])>=12 and not re.search("elect",r["cells"][9],re.I) and (re.search("solar|resi",r["cells"][9],re.I) or re.search("solar|photovoltaic|pv system",r["cells"][8],re.I)) and r["cells"][4][-2:] in ["21","22","23","24","25","26"]]
           results=[];errors=[]
           def attachments(uuid):
            return json.loads(get(BASE+"controller/publicattachments_controller.php",{"action":"displayAttach","ApplicationId":uuid})).get("Attachments") or []
@@ -83,7 +88,7 @@ jobs:
              at=[rowdata(z) for z in jj["data"]];item["address_records"]=at;roof=[]
              for rr in at:
               cc=rr["cells"]
-              if not re.search(r"re[ -]?roof|shingl|roof.{0,40}(repair|replac)|(?:repair|replac|strip|tear).{0,70}roof",cc[8],re.I):continue
+              if not re.search(r"re[ -]?roof|shingl|roof.{0,40}(repair|replac)|(?:repair|replac|strip|tear).{0,70}roof",cc[8],re.I) and not (not cc[8] and re.search("resi",cc[9],re.I) and not re.search("sun.?run|blanchard",cc[7],re.I)):continue
               if re.search("solar|photovoltaic|rooftop pv",cc[8],re.I):continue
               rt={"application":cc[3],"date":cc[4],"permit":cc[10],"applicant":cc[7],"scope":cc[8],"documents":[]}
               for a in attachments(rr["uuid"]):
@@ -104,7 +109,7 @@ jobs:
           print("FINISHED",len(results),"TARGETS",sum(x["target"] for x in results),"ERRORS",len(errors),flush=True)
           
           PY
-      - name: Check public millis consultant and roofing records
+      - name: Recover original millis manager and roof attachments
         continue-on-error: true
         env:
           TOWN: millis
@@ -134,13 +139,18 @@ jobs:
            return S.post(BASE+"ajax/getbuildingpublichome.php",data=p,timeout=50).json()
           def rowdata(row):
            c=[html.unescape(re.sub("<[^>]+>","",str(x))).strip() for x in row]
-           if len(c)>=14:c=c[:8]+c[9:]
            m=re.search(r"data-application-id=[\"']([^\"']+)",row[0])
-           return {"cells":c,"uuid":m.group(1) if m else ""}
+           uuid=m.group(1) if m else ""
+           if len(c)>=14 and not c[3] and re.search(r"\\d{2}/\\d{2}/\\d{2}",c[6]):
+            mid=re.search(r"data-id=[\"']?(\\d+)",row[0])
+            aid=mid.group(1) if mid else uuid
+            c=["","","",aid,c[6],c[7],c[9],c[8],"",c[10],c[12],c[11],c[13]]
+           elif len(c)>=14:c=c[:8]+c[9:]
+           return {"cells":c,"uuid":uuid}
           index=search("Sunrun")
           (OUT/"index.json").write_text(json.dumps(index))
           rows=[rowdata(r) for r in index["data"]]
-          rows=[r for r in rows if len(r["cells"])>=12 and not re.search("elect",r["cells"][9],re.I) and (re.search("solar",r["cells"][9],re.I) or re.search("solar|photovoltaic|pv system",r["cells"][8],re.I)) and r["cells"][4][-2:] in ["21","22","23","24","25","26"]]
+          rows=[r for r in rows if len(r["cells"])>=12 and not re.search("elect",r["cells"][9],re.I) and (re.search("solar|resi",r["cells"][9],re.I) or re.search("solar|photovoltaic|pv system",r["cells"][8],re.I)) and r["cells"][4][-2:] in ["21","22","23","24","25","26"]]
           results=[];errors=[]
           def attachments(uuid):
            return json.loads(get(BASE+"controller/publicattachments_controller.php",{"action":"displayAttach","ApplicationId":uuid})).get("Attachments") or []
@@ -176,7 +186,7 @@ jobs:
              at=[rowdata(z) for z in jj["data"]];item["address_records"]=at;roof=[]
              for rr in at:
               cc=rr["cells"]
-              if not re.search(r"re[ -]?roof|shingl|roof.{0,40}(repair|replac)|(?:repair|replac|strip|tear).{0,70}roof",cc[8],re.I):continue
+              if not re.search(r"re[ -]?roof|shingl|roof.{0,40}(repair|replac)|(?:repair|replac|strip|tear).{0,70}roof",cc[8],re.I) and not (not cc[8] and re.search("resi",cc[9],re.I) and not re.search("sun.?run|blanchard",cc[7],re.I)):continue
               if re.search("solar|photovoltaic|rooftop pv",cc[8],re.I):continue
               rt={"application":cc[3],"date":cc[4],"permit":cc[10],"applicant":cc[7],"scope":cc[8],"documents":[]}
               for a in attachments(rr["uuid"]):
