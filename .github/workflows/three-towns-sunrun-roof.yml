@@ -1,0 +1,164 @@
+name: Three verified towns Sunrun alternate roofer match
+on:
+  push:
+    branches: [permit-test-hopedale-20261123]
+    paths: ['.github/workflows/three-towns-sunrun-roof.yml']
+jobs:
+  search:
+    runs-on: ubuntu-latest
+    timeout-minutes: 9
+    strategy:
+      fail-fast: false
+      matrix:
+        town: [easthampton, stoughton, milton]
+    steps:
+      - run: |
+          pip -q install playwright pypdf
+          python -m playwright install chromium
+      - env:
+          TOWN: ${{ matrix.town }}
+        run: |
+          mkdir -p output
+          python - <<'PY'
+          import asyncio,os,re,json,hashlib,datetime
+          from playwright.async_api import async_playwright
+          from pypdf import PdfReader
+          town=os.environ['TOWN']
+          def norm(s):
+            s=s.lower().strip()
+            for a,b in [('street','st'),('road','rd'),('drive','dr'),('avenue','ave'),('lane','ln'),('court','ct'),('place','pl'),('terrace','ter')]:
+              s=re.sub(r'\b'+a+r'\b',b,s)
+            return re.sub(r'[^a-z0-9]','',s)
+          def date(s):
+            try:return datetime.datetime.strptime(s,'%m/%d/%y')
+            except:return None
+          async def main():
+            async with async_playwright() as p:
+              b=await p.chromium.launch()
+              c=await b.new_context(accept_downloads=True)
+              pg=await c.new_page()
+              pg.set_default_timeout(8000)
+              await pg.goto('https://permiteyes.us/'+town+'/publicview.php',wait_until='domcontentloaded')
+              await pg.wait_for_timeout(3000)
+              table=pg.locator('#PublicHome:visible,#BuildingPublicHome:visible').first
+              heads=await table.locator('thead tr').first.locator('th').all_text_contents()
+              heads=[s.strip().lower() for s in heads]
+              print('HEADERS',heads,flush=True)
+              def ix(*names):
+                return next((i for i,s in enumerate(heads) if s in names),-1)
+              def unpack(r):
+                cs=r['cells']
+                def val(*names):
+                  i=ix(*names)
+                  return cs[i] if i>=0 and i<len(cs) else ''
+                addr=val('site address') or (val('street no','street no.')+' '+val('street name')).strip()
+                return dict(r,address=addr,applicant=val('applicant','applicant name'),date=val('appl. date','application date'),description=val('brief description'),type=val('appl. type','application type'),number=val('permit number'))
+              async def collect(limit=35):
+                records={}
+                for k in range(limit):
+                  rr=await table.locator('tbody tr:has(a.view_app):visible').evaluate_all("""es=>es.map(e=>({cells:[...e.querySelectorAll('td')].map(x=>x.textContent.trim()),id:e.querySelector('a.view_app').dataset.id,attachment:!!e.querySelector('a.Attachmentclass[title="Attachment(s) present"],a.Attachmentclass [title="Attachment(s) present"]')}))""")
+                  for r in rr:records[r['id']]=unpack(r)
+                  nxt=pg.locator('.paginate_button.next:visible:not(.disabled)').first
+                  if not await nxt.count():break
+                  await nxt.click();await pg.wait_for_timeout(350)
+                return list(records.values())
+              async def search(inp,q):
+                await inp.fill(q);await inp.dispatch_event('keyup');await inp.press('Enter');await pg.wait_for_timeout(950)
+              ap=pg.locator('input[name=applicant_name]:visible').first
+              found={}
+              for q in ['sunrun','sun run']:
+                await search(ap,q)
+                for r in await collect():found[r['id']]=r
+              print('SUNRUN_COUNT',len(found),flush=True)
+              open('output/sunrun_index.json','w').write(json.dumps(list(found.values()),indent=2))
+              recent=[r for r in found.values() if date(r['date']) and date(r['date']).year>=2022 and r['address']]
+              addrs={}
+              for r in sorted(recent,key=lambda r:r['date'],reverse=True):addrs.setdefault(norm(r['address']),[]).append(r)
+              print('RECENT_ADDRESSES',len(addrs),flush=True)
+              await search(ap,'')
+              site=pg.locator('input[name=site_address]:visible,input[name=site_add]:visible').first
+              street=pg.locator('input[name=street_name]:visible').first
+              num=pg.locator('input[name=street_no]:visible').first
+              desc=pg.locator('input[name=briefDesc]:visible,input[name=brief_desc]:visible').first
+              async def address_search(addr):
+                if await site.count():await search(site,addr)
+                else:
+                  m=re.match(r'^(\S+)\s+(.+)$',addr)
+                  if not m:return []
+                  await search(num,m.group(1));await search(street,m.group(2))
+                return [r for r in await collect(6) if norm(r['address'])==norm(addr)]
+              async def details(r):
+                a=table.locator('a.view_app[data-id="'+r['id']+'"]:visible').first
+                if not await a.count():return ''
+                try:
+                  await a.click();await pg.wait_for_timeout(550)
+                  visible=pg.locator('#PrintForm:visible')
+                  if await visible.count():s=await visible.inner_text()
+                  else:s=(await pg.locator('body').inner_text())[-14000:]
+                  vals=await pg.locator('textarea:visible,input:visible').evaluate_all("es=>es.map(e=>({name:e.name,value:e.value})).filter(x=>x.value)")
+                  s+=' '+json.dumps(vals)
+                  back=pg.get_by_text('EXIT',exact=True).locator('visible=true').first
+                  if await back.count():await back.click(timeout=2000)
+                  else:await pg.reload(wait_until='domcontentloaded')
+                  await pg.wait_for_timeout(500)
+                  return s
+                except Exception as e:
+                  print('DETAIL_ERROR',str(e)[:150],flush=True)
+                  await pg.reload(wait_until='domcontentloaded');await pg.wait_for_timeout(700)
+                  return ''
+              matches=[];scanned=0;downloads=0
+              # Most recent distinct addresses first. Limit keeps execution bounded.
+              groups=sorted(addrs.values(),key=lambda rs:max(date(r['date']) for r in rs),reverse=True)
+              for rs in groups[:45]:
+                addr=rs[0]['address']
+                rr=await address_search(addr);scanned+=1
+                candidates=[]
+                for r in rr:
+                  if 'sunrun' in norm(r['applicant']) or not date(r['date']):continue
+                  if min(abs((date(r['date'])-date(s['date'])).days) for s in rs)>365:continue
+                  if not re.search(r'roof|shingl|reroof|re-roof|BUILD|RESI',r['description']+' '+r['type'],re.I):continue
+                  # Where a town omits descriptions, inspect public application detail.
+                  if not r['description']:
+                    r['detail']=await details(r)
+                    if not re.search(r'roof|shingl|reroof|re-roof',r['detail'],re.I):continue
+                    await address_search(addr)
+                  elif not re.search(r'roof|shingl|reroof|re-roof',r['description'],re.I):continue
+                  if re.search(r'install(ation)? (of )?(solar|photovoltaic)|solar panel',r['description'],re.I) and not re.search(r'replace|reroof|re-roof|shingl|strip',r['description'],re.I):continue
+                  candidates.append(r)
+                if not candidates:continue
+                print('MATCH',json.dumps({'address':addr,'sunrun':rs,'roof':candidates}),flush=True)
+                matches.append({'address':addr,'sunrun':rs,'roof':candidates})
+                for r in candidates+rs[:2]:
+                  if not r['attachment']:continue
+                  await address_search(addr)
+                  a=table.locator('a.Attachmentclass[data-id="'+r['id']+'"]:visible').first
+                  if not await a.count():continue
+                  await a.click();await pg.wait_for_timeout(1000)
+                  m=pg.locator('#AttachmentModal')
+                  links=m.locator('a[data-href][data-download]:visible,a.downloadLink[data-size]:visible')
+                  print('FILES',r['id'],await links.all_text_contents(),flush=True)
+                  for j in range(await links.count()):
+                    l=links.nth(j);name=(await l.inner_text()).strip()
+                    if not name.lower().endswith('.pdf') or not re.search(r'contract|agreement|proposal|signed|authoriz|signature|docusign|affidavit|estimate|application|change.order|roof',name,re.I):continue
+                    try:
+                      async with pg.expect_download(timeout=8000) as dl:await l.click(timeout=3500)
+                      d=await dl.value
+                      f='output/'+r['id']+'_'+re.sub(r'[^a-zA-Z0-9._-]','_',d.suggested_filename)
+                      await d.save_as(f);data=open(f,'rb').read();assert data.startswith(b'%PDF-')
+                      reader=PdfReader(f)
+                      print('VERIFIED',f,len(data),len(reader.pages),hashlib.sha256(data).hexdigest(),flush=True)
+                      downloads+=1
+                    except Exception as e:print('DOWNLOAD_ERROR',str(e)[:150],flush=True)
+                  close=m.locator('[data-dismiss=modal]:visible').first
+                  if await close.count():await close.click()
+                if len(matches)>=3:break
+              print('SUMMARY',json.dumps({'town':town,'sunrun_records':len(found),'recent_addresses':len(addrs),'scanned':scanned,'matches':len(matches),'pdfs':downloads}),flush=True)
+              open('output/matches.json','w').write(json.dumps(matches,indent=2))
+              await b.close()
+          asyncio.run(main())
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: sunrun-roof-${{ matrix.town }}
+          path: output/
