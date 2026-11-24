@@ -1,0 +1,119 @@
+name: Public solar agreement consultant extraction
+on:
+  push:
+    branches: [permit-test-hopedale-20261123]
+    paths: ['.github/workflows/solar-agreement-consultants-eyes.yml']
+jobs:
+  search:
+    runs-on: ubuntu-latest
+    timeout-minutes: 7
+    strategy:
+      fail-fast: false
+      matrix:
+        town: [bellingham, hopedale, attleboro]
+    steps:
+      - run: |
+          pip -q install playwright pypdf
+          python -m playwright install chromium
+      - env:
+          TOWN: ${{ matrix.town }}
+        run: |
+          mkdir -p output
+          python - <<'PY'
+          import asyncio,os,re,json,hashlib,datetime
+          from playwright.async_api import async_playwright
+          from pypdf import PdfReader
+          town=os.environ['TOWN']
+          def norm(s):
+            s=s.lower().strip()
+            for a,b in [('street','st'),('road','rd'),('drive','dr'),('avenue','ave'),('lane','ln'),('court','ct'),('place','pl'),('terrace','ter')]:
+              s=re.sub(r'\b'+a+r'\b',b,s)
+            return re.sub(r'[^a-z0-9]','',s)
+          def date(s):
+            try:return datetime.datetime.strptime(s,'%m/%d/%y')
+            except:return None
+          async def main():
+            async with async_playwright() as p:
+              b=await p.chromium.launch()
+              c=await b.new_context(accept_downloads=True)
+              pg=await c.new_page()
+              pg.set_default_timeout(8000)
+              await pg.goto('https://permiteyes.us/'+town+'/publicview.php',wait_until='domcontentloaded')
+              await pg.wait_for_timeout(3000)
+              table=pg.locator('#PublicHome:visible,#BuildingPublicHome:visible').first
+              heads=await table.locator('thead tr').first.locator('th').all_text_contents()
+              heads=[s.strip().lower() for s in heads]
+              print('HEADERS',heads,flush=True)
+              def ix(*names):
+                return next((i for i,s in enumerate(heads) if s in names),-1)
+              def unpack(r):
+                cs=r['cells']
+                def val(*names):
+                  i=ix(*names)
+                  return cs[i] if i>=0 and i<len(cs) else ''
+                addr=val('site address') or (val('street no','street no.')+' '+val('street name')).strip()
+                return dict(r,address=addr,applicant=val('applicant','applicant name'),date=val('appl. date','application date'),description=val('brief description'),type=val('appl. type','application type'),number=val('permit number'))
+              async def collect(limit=35):
+                records={}
+                for k in range(limit):
+                  rr=await table.locator('tbody tr:has(a.view_app):visible').evaluate_all("""es=>es.map(e=>({cells:[...e.querySelectorAll('td')].map(x=>x.textContent.trim()),id:e.querySelector('a.view_app').dataset.id,attachment:!!e.querySelector('a.Attachmentclass[title="Attachment(s) present"],a.Attachmentclass [title="Attachment(s) present"]')}))""")
+                  for r in rr:records[r['id']]=unpack(r)
+                  nxt=pg.locator('.paginate_button.next:visible:not(.disabled)').first
+                  if not await nxt.count():break
+                  await nxt.click();await pg.wait_for_timeout(350)
+                return list(records.values())
+              async def search(inp,q):
+                await inp.fill(q);await inp.dispatch_event('keyup');await inp.press('Enter');await pg.wait_for_timeout(950)
+              ap=pg.locator('input[name=applicant_name]:visible').first
+              found={}
+              await search(ap,'sunrun')
+              await pg.wait_for_timeout(2500)
+              for r in await collect(80):
+                if 'sunrun' in norm(r['applicant']):found[r['id']]=r
+              print('SUNRUN_COUNT',len(found),flush=True)
+              # Traverse each result page; read only contract/approval attachments, don't archive customer data.
+              await search(ap,'')
+              await search(ap,'sunrun')
+              await pg.wait_for_timeout(2000)
+              seen=set(); n=0
+              for k in range(80):
+                rr=await table.locator('tbody tr:has(a.view_app):visible').evaluate_all("""es=>es.map(e=>({cells:[...e.querySelectorAll('td')].map(x=>x.textContent.trim()),id:e.querySelector('a.view_app').dataset.id,attachment:true}))""")
+                for row in rr:
+                  r=unpack(row)
+                  if r['id'] in seen or 'sunrun' not in norm(r['applicant']):continue
+                  seen.add(r['id'])
+                  if not re.search(r'building|residential|solar|pv',r['type'],re.I):continue
+                  a=table.locator('a.Attachmentclass[data-id="'+r['id']+'"]:visible').first
+                  if not await a.count():continue
+                  try:
+                    await a.click(timeout=2500);await pg.wait_for_timeout(450)
+                    m=pg.locator('#AttachmentModal')
+                    links=m.locator('a[data-href][data-download]:visible,a.downloadLink[data-size]:visible')
+                    for j,name in enumerate(await links.all_text_contents()):
+                      if not re.search(r'contract|agreement|ppa|cap|proposal|customer.approval',name,re.I):continue
+                      if not name.lower().endswith('.pdf'):continue
+                      try:
+                        async with pg.expect_download(timeout=5500) as dl:await links.nth(j).click(timeout=2500)
+                        d=await dl.value; f='/tmp/agreement.pdf';await d.save_as(f)
+                        data=open(f,'rb').read()
+                        if not data.startswith(b'%PDF-'):continue
+                        reader=PdfReader(f); n+=1
+                        for idx,page in enumerate(reader.pages[:4]):
+                          text=page.extract_text() or ''
+                          if not re.search(r'sales\s+(consultant|representative)',text,re.I):continue
+                          emails=re.findall(r'[\w.+-]+@sunrun\.com',text,re.I)
+                          reps=[e for e in emails if not re.search(r'customercare|esign|support|service|info',e,re.I)]
+                          if reps:
+                            print('AGREEMENT',json.dumps({'record':r['id'],'permit':r['number'],'page':idx+1,'email':reps,'filename':name,'bytes':len(data),'sha256':hashlib.sha256(data).hexdigest()}),flush=True)
+                            break
+                      except Exception as e: print('READ_ERROR',r['id'],str(e)[:70],flush=True)
+                    close=m.locator('[data-dismiss=modal]:visible').first
+                    if await close.count():await close.click(timeout=2500)
+                  except Exception as e:print('MODAL_ERROR',r['id'],str(e)[:70],flush=True)
+                nxt=pg.locator('.paginate_button.next:visible:not(.disabled)').first
+                if not await nxt.count():break
+                await nxt.click();await pg.wait_for_timeout(600)
+              print('CHECKED',len(seen),n,flush=True)
+              await b.close()
+          asyncio.run(main())
+          PY
