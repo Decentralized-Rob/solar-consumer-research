@@ -1,4 +1,4 @@
-name: Targeted solar agreement attachment audit
+name: Bellingham single original PDF retrieval preflight
 on:
   push:
     branches: [research/permitpro-sunrun-giga]
@@ -6,96 +6,83 @@ on:
 permissions:
   contents: read
 jobs:
-  recover:
+  preflight:
     runs-on: ubuntu-latest
-    timeout-minutes: 12
-    strategy:
-      fail-fast: false
-      matrix:
-        town: [bellingham, milton, randolph]
+    timeout-minutes: 5
     steps:
       - run: |
-          pip -q install playwright pymupdf
+          python -m pip install -q playwright pymupdf
           python -m playwright install chromium
-      - env:
-          TOWN: ${{ matrix.town }}
+      - name: Download exactly one known original PDF
         run: |
           mkdir -p output
           python -u - <<'PY'
-          import os, re, json, hashlib, asyncio
-          import pymupdf
-          from playwright.async_api import async_playwright
+          import asyncio, hashlib, json
           from pathlib import Path
-          town=os.environ["TOWN"]
-          targets={"bellingham":["93018","95637","89389","88412","88417","84470","80716","80027","79920","79785","78833","78544","76105","77257","76871","76453"],"milton":["63075","63076","63113"],"randolph":["44002"]}[town]
-          def classify(d):
-              text="\n".join(p.get_text() for p in d)
-              cap=bool(re.search(r"CAP_PACKAGE|review and sign CAP Package|customer approval package",text,re.I)) or ("Optimized Solutions" in text and "Your Design is Ready" in text)
-              change=bool(re.search(r"(?m)^\s*change order\b|following changes to your|changes to your BrightSave",text,re.I))
-              ppa=bool(re.search(r"power purchase agreement|we own the system and provide you with its electricity|cost per kWh|solar rate",text,re.I))
-              lease=bool(re.search(r"(?m)^\s*(?:solar(?: energy system)? lease|solar lease agreement)\s*$",text,re.I))
-              return {"cap_candidate":cap,"ppa_candidate":ppa and not cap,"lease_candidate":lease and not cap,"change_order_candidate":change,"scan_review_required":any(len(p.get_text().strip())<50 for p in d),"signing_certificate":bool(re.search(r"certificate of completion",text,re.I))}
+          from playwright.async_api import async_playwright
+          import pymupdf
+          ROOT=Path("output")
+          AID="93018"
+          FILENAME="CE LETTER STAMPED.pdf"
+          EXPECTED="b5c7175ab3a8e11d96baed3922405ff691d15fce03dfd4bd87b33a944b73af90"
+          result={"town":"Bellingham","application":AID,"permit":"S-25-0071","filename":FILENAME,"expected_sha256":EXPECTED,"attachment_download_attempts":0,"verified_originals":0,"status":"not_started"}
+          def checkpoint():
+              (ROOT/"manifest.json").write_text(json.dumps(result,indent=2))
           async def main():
-              results=[]
               async with async_playwright() as p:
-                  browser=await p.chromium.launch()
-                  ctx=await browser.new_context(accept_downloads=True)
-                  for aid in targets:
-                      rec={"application":aid,"town":town,"attachments":[],"status":"unchecked"}
-                      results.append(rec)
-                      page=await ctx.new_page()
-                      page.set_default_timeout(6000)
-                      try:
-                          await page.goto("https://permiteyes.us/"+town+"/publicview.php",wait_until="domcontentloaded",timeout=25000)
-                          await page.wait_for_timeout(1800)
-                          inp=page.locator("input[name=app_id]:visible").last
-                          if await inp.count():
-                              await inp.fill(aid);await inp.dispatch_event("keyup");await inp.press("Enter")
-                          else:
-                              q=page.locator("input[type=search]:visible").first
-                              await q.fill(aid);await q.press("Enter")
-                          row=page.locator('a.view_app[data-id="'+aid+'"]:visible').first
-                          await row.wait_for(timeout=9000)
-                          control=row.locator("xpath=ancestor::tr[1]").locator("a.Attachmentclass").first
-                          if not await control.count():
-                              rec["status"]="no_visible_attachment_control";continue
-                          await control.click()
-                          modal=page.locator("#AttachmentModal")
-                          await modal.wait_for(state="visible")
-                          await page.wait_for_timeout(1600)
-                          links=modal.locator("a[data-href][data-download]:visible,a.downloadLink[data-size]:visible")
-                          count=await links.count()
-                          rec["status"]="checked" if count else "empty_modal_needs_review"
-                          rec["listed_attachments"]=count
-                          for i in range(count):
-                              item={"ordinal":i+1,"status":"unread"}
-                              rec["attachments"].append(item)
-                              try:
-                                  # No filename filtering: agreements can be embedded under arbitrary names.
-                                  async with page.expect_download(timeout=10000) as dl:
-                                      await links.nth(i).click(timeout=5000)
-                                  download=await dl.value
-                                  tmp=await download.path()
-                                  raw=Path(tmp).read_bytes()
-                                  item.update({"bytes":len(raw),"sha256":hashlib.sha256(raw).hexdigest()})
-                                  if raw.startswith(b"%PDF-"):
-                                      with pymupdf.open(stream=raw,filetype="pdf") as d:
-                                          item.update({"status":"pdf_checked","pages":len(d),**classify(d)})
-                                  else:
-                                      item["status"]="non_pdf_manual_review"
-                              except Exception:
-                                  item["status"]="download_failed"
-                      except Exception:
-                          rec["status"]="portal_or_row_unavailable"
-                      finally:
-                          await page.close()
-                          Path("output/audit.json").write_text(json.dumps(results,indent=2))
-                  await browser.close()
+                  b=await p.chromium.launch(headless=True)
+                  ctx=await b.new_context(accept_downloads=True)
+                  pg=await ctx.new_page()
+                  try:
+                      await pg.goto("https://permiteyes.us/bellingham/publicview.php",wait_until="domcontentloaded",timeout=45000)
+                      await pg.wait_for_timeout(2200)
+                      search=pg.locator('input[type="search"][aria-controls="BuildingPublicHome"]')
+                      await search.fill("46 Pickering")
+                      await search.press("Enter")
+                      rows=pg.locator("#BuildingPublicHome tbody tr")
+                      row=rows.filter(has=pg.locator('td:nth-child(4) span[data-id="93018"]')).first
+                      await row.wait_for(timeout=15000)
+                      cells=await row.locator("td").all_inner_texts()
+                      assert cells[3].strip()==AID and "Pickering" in cells[6] and "Sunrun" in cells[7], "Unexpected record identity"
+                      assert cells[10].strip()=="S-25-0071","Unexpected permit number"
+                      await row.locator("a.Attachmentclass").first.click(timeout=8000)
+                      modal=pg.locator("#AttachmentModal")
+                      await modal.wait_for(state="visible",timeout=10000)
+                      link=modal.locator('a.downloadLink[data-href][data-download="CE LETTER STAMPED.pdf"]').first
+                      await link.wait_for(timeout=10000)
+                      result["attachment_download_attempts"]=1
+                      checkpoint()
+                      # Exactly one click and one attachment download. No fallback or retries.
+                      async with pg.expect_download(timeout=35000) as di:
+                          await link.click(timeout=10000)
+                      download=await di.value
+                      await download.save_as(ROOT/FILENAME)
+                      data=(ROOT/FILENAME).read_bytes()
+                      assert data.startswith(b"%PDF-"),"Not a PDF"
+                      with pymupdf.open(stream=data,filetype="pdf") as doc:
+                          assert len(doc)>0,"Empty PDF"
+                          result["pages"]=len(doc)
+                      result.update({"bytes":len(data),"sha256":hashlib.sha256(data).hexdigest(),"verified_originals":1})
+                      result["hash_matches_archive"]=result["sha256"]==EXPECTED
+                      result["status"]="pass" if result["hash_matches_archive"] and len(data)==391349 and result["pages"]==1 else "source_changed_review_required"
+                      checkpoint()
+                      print("PREFLIGHT_RESULT",json.dumps(result),flush=True)
+                      if result["status"]!="pass":raise RuntimeError("Original differs from archived control")
+                  except Exception as e:
+                      if result["status"]!="source_changed_review_required":
+                          result["status"]="failed"
+                          result["error"]=str(e)[:400]
+                          if not result["verified_originals"]:(ROOT/FILENAME).unlink(missing_ok=True)
+                      checkpoint()
+                      print("PREFLIGHT_RESULT",json.dumps(result),flush=True)
+                      raise
+                  finally:
+                      await b.close()
           asyncio.run(main())
           PY
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: agreement-audit-${{ matrix.town }}
-          path: output/audit.json
+          name: bellingham-single-pdf-preflight
+          path: output/
           retention-days: 7
