@@ -1,0 +1,115 @@
+name: Bellingham attachment count only
+on:
+  push:
+    branches: [research/permitpro-sunrun-giga]
+    paths: ['.github/workflows/bellingham-attachment-count.yml']
+permissions:
+  contents: read
+concurrency:
+  group: bellingham-metadata-count
+  cancel-in-progress: false
+jobs:
+  count:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - run: |
+          python -u - <<'PY'
+          import urllib.request, urllib.parse, http.cookiejar, json, re, html, time, threading
+          from concurrent.futures import ThreadPoolExecutor
+          BASE="https://permiteyes.us/bellingham/"
+          old=json.loads('{"75795":3,"76375":3,"76453":1,"76871":1,"77257":2,"77457":3,"77461":3,"78544":1,"78833":1,"79712":4,"79785":1,"79947":3,"80027":1,"80685":4,"80716":1,"84470":1,"84917":8,"85057":3,"88417":1,"88508":5,"89389":1,"93018":10,"93019":6,"93247":7,"95637":14,"95638":7,"96875":6,"98011":3}')
+          def session():
+              return urllib.request.build_opener(urllib.request.HTTPCookieProcessor(http.cookiejar.CookieJar()))
+          def request(s, endpoint, data=None):
+              req=urllib.request.Request(BASE+endpoint,data=urllib.parse.urlencode(data).encode() if data is not None else None,headers={"User-Agent":"Mozilla/5.0","Referer":BASE+"publicview.php","X-Requested-With":"XMLHttpRequest"})
+              with s.open(req,timeout=12) as r:
+                  return r.read()
+          s=session()
+          request(s,"publicview.php")
+          def search(term):
+              p={"draw":"1","start":"0","length":"2000","search[value]":term,"search[regex]":"false","order[0][column]":"3","order[0][dir]":"desc"}
+              for i in range(13):
+                  for k,v in [("data",str(i)),("name",""),("searchable","true"),("orderable","true"),("search[value]",""),("search[regex]","false")]:p[f"columns[{i}][{k}]"]=v
+              j=json.loads(request(s,"ajax/getbuildingpublichome.php",p))
+              rr=j.get("data",[])
+              print("QUERY",term,"returned",len(rr),"reported",j.get("recordsFiltered"),flush=True)
+              if len(rr)<int(j.get("recordsFiltered",len(rr))):raise RuntimeError("Truncated search; cannot report full count")
+              return rr
+          records={}
+          missing_id=0
+          for term in ["Giga","Espigar","Sunrun","Sun Run"]:
+              for row in search(term):
+                  raw=" ".join(map(str,row))
+                  m=re.search(r'data-application-id=["\x27]([^"\x27]+)',raw)
+                  c=[html.unescape(re.sub("<[^>]+>","",str(x))).strip() for x in row]
+                  if len(c)<13 or not m:
+                      missing_id+=1
+                      continue
+                  if not re.fullmatch(r"\d+",c[3]) or not re.fullmatch(r"\d{1,2}/\d{1,2}/\d{2,4}",c[4]):
+                      missing_id+=1
+                      continue
+                  year=int(c[4].split("/")[-1]);year=year+2000 if year<100 else year
+                  if not 2022<=year<=2026:continue
+                  group="giga" if re.search("giga|espigar",c[7],re.I) else "sunrun" if re.search("sun\\s*run",c[7],re.I) else None
+                  if not group:continue
+                  records[m.group(1)]=(c[3],year,group)
+          print("INDEX",json.dumps({"records":len(records),"giga":sum(v[2]=="giga" for v in records.values()),"sunrun":sum(v[2]=="sunrun" for v in records.values()),"invalid_rows":missing_id,"known_control_present":any(v[0]=="93018" for v in records.values())}),flush=True)
+          if not any(v[0]=="93018" for v in records.values()):raise RuntimeError("Known Bellingham control missing from index")
+          local=threading.local()
+          stop=threading.Event()
+          def scan(item):
+              uuid,(aid,year,group)=item
+              if stop.is_set():return (aid,year,group,None,"stopped")
+              try:
+                  if not hasattr(local,"s"):
+                      local.s=session()
+                      request(local.s,"publicview.php")
+                  j=json.loads(request(local.s,"controller/publicattachments_controller.php",{"action":"displayAttach","ApplicationId":uuid}))
+                  if "Attachments" not in j:raise ValueError("No Attachments key")
+                  a=j["Attachments"] or []
+                  if not isinstance(a,list):raise ValueError("Unexpected attachment response")
+                  pdf=set()
+                  for x in a:
+                      n=str(x.get("FileName",""));p=str(x.get("AttachmentPath",""))
+                      if p and (n.lower().endswith(".pdf") or p.lower().endswith(".pdf")):
+                          if not p.startswith("/mys3bucket/") and x.get("ID_import") in [None,"","0",0]:p="/mys3bucket/permiteyes.us/attachments/bellingham/building/"+p
+                          pdf.add(p)
+                  time.sleep(.15)
+                  return aid,year,group,pdf,None
+              except Exception as e:
+                  if getattr(e,"code",0) in (403,429,503):stop.set()
+                  return aid,year,group,None,type(e).__name__
+          control=next((x for x in records.items() if x[1][0]=="93018"))
+          probe=scan(control)
+          print("CONTROL",json.dumps({"listed_pdf_count":len(probe[3]) if probe[3] is not None else None,"error":probe[4]}),flush=True)
+          if probe[3] is None or len(probe[3])<1:raise RuntimeError("Attachment metadata control failed")
+          totals={}
+          paths=set()
+          seen_known=set()
+          errors=0
+          count=0
+          def add(result):
+              global count,errors
+              aid,year,group,pdf,error=result
+              if error:
+                  errors+=1
+                  return
+              count+=1
+              for key in [group,"all"]+([group+"_2024_26","all_2024_26"] if year>=2024 else []):
+                  t=totals.setdefault(key,{"permits_checked":0,"permits_with_pdfs":0,"pdf_attachment_entries":0,"entries_on_unarchived_permits":0,"additional_entries_on_archived_permits_lower_bound":0})
+                  t["permits_checked"]+=1;t["permits_with_pdfs"]+=bool(pdf);t["pdf_attachment_entries"]+=len(pdf)
+                  if aid not in old:t["entries_on_unarchived_permits"]+=len(pdf)
+                  else:t["additional_entries_on_archived_permits_lower_bound"]+=max(0,len(pdf)-old[aid])
+              paths.update(pdf)
+              if aid in old:seen_known.add(aid)
+          add(probe)
+          remaining=[x for x in records.items() if x[0]!=control[0]]
+          # Two workers, no file requests, no uploads, aggregate logs only.
+          started=time.monotonic()
+          with ThreadPoolExecutor(max_workers=2) as pool:
+              for result in pool.map(scan,remaining):
+                  add(result)
+                  if (count+errors)%100==0:print("COUNT_PROGRESS",json.dumps({"checked":count,"errors":errors,"totals":totals}),flush=True)
+          print("COUNT_RESULT",json.dumps({"indexed":len(records),"checked":count,"errors":errors,"invalid_rows":missing_id,"unique_public_pdf_paths":len(paths),"archived_permits_seen":len(seen_known),"archived_entries_on_seen_permits":sum(old[a] for a in seen_known),"totals":totals,"pdf_downloads":0,"evidence_uploads":0}),flush=True)
+          PY
