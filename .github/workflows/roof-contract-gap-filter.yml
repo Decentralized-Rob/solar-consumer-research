@@ -1,0 +1,52 @@
+name: Classify recovered roof contract and CAP evidence
+on:
+  push:
+    branches: [research/permitpro-sunrun-giga]
+    paths: ['.github/workflows/roof-contract-gap-filter.yml']
+permissions:
+  actions: read
+  contents: read
+jobs:
+  classify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh run download 45592118814 -R ${{ github.repository }} -n roof-contract-gap-originals -D prior
+      - run: |
+          mkdir -p output
+          python -u - <<'PY'
+          import json,re,shutil
+          from pathlib import Path
+          results=[]
+          for f in Path("prior").rglob("records.json"):
+           a=json.loads(f.read_text())
+           rr=[]
+           for r in a:
+            c=r["row"]; aid=r["application"]
+            scope=" ".join(c)
+            row={"row":c,"application":aid,"files":[]}
+            roof=bool(re.search(r"strip and re.?roof|roof replacement|strip.*replace roof|remove existing.*roof|tear off|roof repairs?",scope,re.I)) and not re.search(r"installation of an interconnected rooftop pv|roof mounted photovoltaic",scope,re.I)
+            for x in r["attachments"]:
+             t=x.get("text","")
+             relevant=bool(re.search(r"roofing agreement|roofing renovation contract|roof replacement.{0,60}contract|roofing estimate|subsidy payments|roof work:|roof work required|home upgrade|home improvement contract|client agreement",t,re.I))
+             n=x["name"]
+             keep=bool(x.get("file")) and (roof or bool(re.search("contract|agreement|cap|proposal|customer|author letter",n,re.I)) or relevant)
+             if keep:
+              src=f.parent/x["file"]
+              if src.exists():
+               target=Path("output")/f.parent.name/x["file"];target.parent.mkdir(exist_ok=True);shutil.copy2(src,target)
+             item={k:v for k,v in x.items() if k!="text"}
+             if t and (keep or relevant):item["text"]=t[:22000]
+             row["files"].append(item)
+            rr.append(row)
+           results.append({"address":f.parent.name,"records":rr})
+          Path("output/results.json").write_text(json.dumps(results,indent=2))
+          print("FILES",sum(1 for x in Path("output").rglob("*") if x.is_file()))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: roof-contract-and-cap-evidence
+          path: output/
+          retention-days: 7
