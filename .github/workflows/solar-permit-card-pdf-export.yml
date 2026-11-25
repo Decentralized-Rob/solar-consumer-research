@@ -1,0 +1,76 @@
+name: Export recovered municipal solar permit cards
+on:
+  push:
+    branches: [research/permitpro-sunrun-giga]
+    paths: ['.github/workflows/solar-permit-card-pdf-export.yml']
+permissions:
+  actions: read
+  contents: read
+jobs:
+  export:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    strategy:
+      fail-fast: false
+      matrix:
+        town: [bellingham, milton, randolph]
+    steps:
+      - env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh run download 45590772160 -R ${{ github.repository }} -n solar-permit-files-${{ matrix.town }} -D prior
+      - run: |
+          pip -q install playwright beautifulsoup4 pymupdf
+          python -m playwright install chromium
+      - env:
+          TOWN: ${{ matrix.town }}
+        run: |
+          mkdir -p output
+          python -u - <<'PY'
+          import os,re,json,hashlib,concurrent.futures
+          from pathlib import Path
+          from bs4 import BeautifulSoup
+          from playwright.sync_api import sync_playwright
+          import pymupdf
+          town=os.environ["TOWN"];base="https://permiteyes.us/"+town+"/"
+          paths=list(Path("prior").rglob("permit_card.html"))
+          def export(path):
+           aid=path.parent.name; soup=BeautifulSoup(path.read_text(),"html.parser")
+           card=soup.select_one("#issuepermit #PrintForm")
+           if not card:raise RuntimeError("Actual card DOM not found "+aid)
+           text=card.get_text(" ",strip=True)
+           permit=re.search(r"\b(?:S|R)-\d{2}-\d{4}\b",text,re.I)
+           if not permit:raise RuntimeError("Issued permit number missing "+aid)
+           permit=permit.group(0).upper()
+           head="".join(str(t) for t in soup.head.find_all(["link","style"]) if t.name=="style" or "stylesheet" in (t.get("rel") or []))
+           extra="<style>html,body{margin:0!important;padding:0!important;background:white!important;overflow:visible!important}body{font-size:12px!important}#PrintForm{display:block!important;visibility:visible!important;width:100%!important;overflow:visible!important;position:static!important} .display-none{display:none!important}@page{size:letter;margin:10mm}</style>"
+           doc="<html><head><meta charset='utf-8'><base href='"+base+"'>"+head+extra+"</head><body>"+str(card)+"</body></html>"
+           fn=Path("output")/(aid+"_"+permit+"_MUNICIPAL_PORTAL_EXPORT.pdf")
+           with sync_playwright() as p:
+            b=p.chromium.launch()
+            pg=b.new_page(viewport={"width":900,"height":1200})
+            pg.set_content(doc,wait_until="domcontentloaded",timeout=25000)
+            pg.wait_for_timeout(900)
+            pg.emulate_media(media="screen")
+            pg.pdf(path=str(fn),format="Letter",print_background=True,margin={"top":"10mm","bottom":"10mm","left":"9mm","right":"9mm"})
+            b.close()
+           data=fn.read_bytes();d=pymupdf.open(stream=data,filetype="pdf")
+           rendered=" ".join(x.get_text() for x in d)
+           assert permit in rendered and "BUILDING PERMIT" in rendered.upper(),(aid,permit,rendered[:300])
+           print("VERIFIED_EXPORT",town,aid,permit,len(data),len(d),hashlib.sha256(data).hexdigest(),flush=True)
+           (Path("output")/(aid+"_source_card.html")).write_text(path.read_text())
+           return {"application":aid,"permit":permit,"file":fn.name,"pages":len(d),"sha256":hashlib.sha256(data).hexdigest(),"source_type":"PDF export of municipal issued permit card HTML, not native uploaded PDF"}
+          results=[]
+          with concurrent.futures.ThreadPoolExecutor(max_workers=4) as ex:
+           jobs={ex.submit(export,p):p for p in paths}
+           for f in concurrent.futures.as_completed(jobs):
+            try:results.append(f.result())
+            except Exception as e:print("EXPORT_ERROR",jobs[f],str(e)[:300])
+          Path("output/manifest.json").write_text(json.dumps(results,indent=2))
+          print("COUNT",len(results),"OF",len(paths))
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: verified-permit-card-exports-${{ matrix.town }}
+          path: output/
+          retention-days: 7
