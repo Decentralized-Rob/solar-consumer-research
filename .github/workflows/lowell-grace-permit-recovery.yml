@@ -14,15 +14,27 @@ jobs:
       - run: |
           mkdir -p evidence
           python -u - <<'PY'
-          import requests,fitz,hashlib,json
+          import requests,fitz,hashlib,json,concurrent.futures
           from pathlib import Path
           sources=[
            ("December_2025","https://www.lowellma.gov/DocumentCenter/View/33712/December-2025-permits-issued","SOL202513191"),
            ("January_2026","https://www.lowellma.gov/DocumentCenter/View/33828/January-Permits-Issued","COC202600768")]
           manifest=[]
           for name,url,permit in sources:
-           r=requests.get(url,timeout=45);r.raise_for_status();b=r.content
-           assert b.startswith(b"%PDF")
+           stem=url.split("/DocumentCenter/View/")[1].split("/")[0]
+           candidates=[url,url+"?bidId=",url.replace("www.",""),"https://www.lowellma.gov/DocumentCenter/View/"+stem,"https://lowellma.gov/DocumentCenter/View/"+stem,"https://www.lowellma.gov/DocumentCenter/View/"+stem+"?bidId="]
+           def fetch(u):
+            try:
+             r=requests.get(u,timeout=15,headers={"User-Agent":"Mozilla/5.0","Referer":"https://www.lowellma.gov/1084/Monthly-Permit-Reports"})
+             print("SOURCE",u,r.status_code,len(r.content),flush=True)
+             if r.ok and r.content.startswith(b"%PDF"):return r.content
+            except Exception as e:print("SOURCE_ERROR",u,str(e)[:100],flush=True)
+           with concurrent.futures.ThreadPoolExecutor(max_workers=3) as ex:
+            results=list(ex.map(fetch,candidates))
+           b=next((v for v in results if v),None)
+           if not b:
+            manifest.append({"source":url,"permit":permit,"status":"official PDF bytes unavailable"})
+            continue
            p=Path("evidence")/(name+"_official_report.pdf");p.write_bytes(b)
            doc=fitz.open(stream=b,filetype="pdf")
            matches=[]
@@ -38,6 +50,7 @@ jobs:
           Path("evidence/manifest.json").write_text(json.dumps(manifest,indent=2))
           PY
       - uses: actions/upload-artifact@v4
+        if: always()
         with:
           name: lowell-41-grace-official-permit-reports
           path: evidence/
