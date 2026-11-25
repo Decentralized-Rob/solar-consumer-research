@@ -1,4 +1,4 @@
-name: Lucas Oliveira roof and solar agreement match
+name: Lucas Oliveira direct solar agreement search
 on:
   push:
     branches: [permit-test-hopedale-20261123]
@@ -6,11 +6,11 @@ on:
 jobs:
   search:
     runs-on: ubuntu-latest
-    timeout-minutes: 12
+    timeout-minutes: 25
     strategy:
       fail-fast: false
       matrix:
-        town: [hopedale, bellingham, attleboro, braintree, rehoboth, easthampton]
+        town: [hopedale, bellingham, attleboro, braintree, rehoboth, easthampton, milton, randolph, stoughton, spencer]
     steps:
       - run: |
           pip -q install playwright pypdf
@@ -119,66 +119,53 @@ jobs:
                   print('DETAIL_ERROR',str(e)[:150],flush=True)
                   await pg.reload(wait_until='domcontentloaded');await pg.wait_for_timeout(700)
                   return ''
-              matches=[];scanned=0;downloads=0;lucas=[]
-              # Most recent distinct addresses first. Limit keeps execution bounded.
-              groups=sorted(addrs.values(),key=lambda rs:max(date(r['date']) for r in rs),reverse=True)
-              for rs in sorted(groups,key=lambda x:(norm(x[0]['address']) in priority,max(date(r['date']) for r in x)),reverse=True)[:45]:
-                addr=rs[0]['address']
-                rr=await address_search(addr);scanned+=1
-                candidates=[]
-                for r in rr:
-                  if 'sunrun' in norm(r['applicant']) or not date(r['date']):continue
-                  if min(abs((date(r['date'])-date(s['date'])).days) for s in rs)>365:continue
-                  if not re.search(r'roof|shingl|reroof|re-roof|BUILD|RESI',r['description']+' '+r['type'],re.I):continue
-                  # Where a town omits descriptions, inspect public application detail.
-                  if not r['description']:
-                    r['detail']=await details(r)
-                    m=re.search(r'Brief Description of Proposed Work\s*([\s\S]*?)(?:DEBRIS AFFIDAVIT|5\.2 Existing Site Services|SECTION 6)',r['detail'],re.I)
-                    r['description']=m.group(1).strip() if m else ''
-                    await address_search(addr)
-                  if not re.search(r'\b(?:re[- ]?roof|roofing|shingles?|roof replacement|roof repair|roof tear|roof deck|roof sheathing)\b|(?:replace|repair|strip|remove|tear off).{0,65}\broof\b|\broof\b.{0,65}(?:replace|repair|strip|tear off)',r['description'],re.I):continue
-                  if re.search(r'photovoltaic|solar panels?|solar system|pv system|roof.mount',r['description'],re.I) and not re.search(r're[- ]?roof|roof replacement|roof repair|replace.{0,35}roof|shingles|tear.off|roof sheathing',r['description'],re.I):continue
-                  r.pop('detail',None)
-                  candidates.append(r)
-                if not candidates:continue
-                print('ROOF_SOLAR_CANDIDATE',addr,flush=True)
-                matches.append({'address':addr,'sunrun':rs,'roof':candidates})
-                for r in sorted(rs,key=lambda z:('solar' in (z['type']+' '+z['description']).lower() and 'elect' not in z['type'].lower()),reverse=True)[:3]:
-                  if not r['attachment']:continue
-                  await address_search(addr)
-                  a=table.locator('a.Attachmentclass[data-id="'+r['id']+'"]:visible').first
-                  if not await a.count():continue
-                  await a.click();await pg.wait_for_timeout(1000)
+              # Search solar records directly; roofing is not a prerequisite.
+              scanned=0;downloads=0;lucas=[];errors=0;empty=0
+              targets=[r for r in found.values() if date(r['date']) and date(r['date']).year in (2024,2025,2026)]
+              targets.sort(key=lambda r:(date(r['date']).year==2025, bool(re.search(r'solar|photovoltaic|pv|residential|building',r['type']+' '+r['description'],re.I)), date(r['date'])),reverse=True)
+              pattern=re.compile(r'lucas[. _-]*(?:de[. _-]*)?oliveira|lucas.{0,12}oliveira|oliveira.{0,12}lucas|lewis[. _-]*(?:de[. _-]*)?oliveira',re.I)
+              print('TARGET_COUNT',len(targets),flush=True)
+              # Re-query exact known application ID, no address or roofing gate.
+              for r in targets[:180]:
+                scanned+=1
+                try:
+                  await pg.goto('https://permiteyes.us/'+town+'/publicview.php',wait_until='domcontentloaded',timeout=18000)
+                  await pg.wait_for_timeout(350)
+                  inp=pg.locator('input[name=app_id]:visible').last
+                  if await inp.count():await search(inp,r['id'])
+                  else:
+                    await pg.evaluate("""id=>{const t=document.querySelector('#PublicHome')||document.querySelector('#BuildingPublicHome');if(t&&window.jQuery&&jQuery.fn.dataTable.isDataTable(t))jQuery(t).DataTable().search(id).draw()}""",r['id'])
+                    await pg.wait_for_timeout(650)
+                  a=pg.locator('a.view_app[data-id="'+r['id']+'"]:visible').first
+                  if not await a.count():errors+=1;continue
+                  control=a.locator('xpath=ancestor::tr[1]').locator('a.Attachmentclass').first
+                  if not await control.count():empty+=1;continue
+                  await control.click(timeout=2500)
                   m=pg.locator('#AttachmentModal')
+                  await m.wait_for(state='visible',timeout=3500)
+                  await pg.wait_for_timeout(750)
                   links=m.locator('a[data-href][data-download]:visible,a.downloadLink[data-size]:visible')
-                  print('FILES',r['id'],await links.all_text_contents(),flush=True)
                   for j in range(await links.count()):
-                    l=links.nth(j);name=(await l.inner_text()).strip()
-                    if not re.search(r'\.pdf$',name,re.I):continue
                     try:
-                      async with pg.expect_download(timeout=8000) as dl:await l.click(timeout=3500)
+                      async with pg.expect_download(timeout=6500) as dl:await links.nth(j).click(timeout=2500)
                       d=await dl.value
-                      f='output/'+r['id']+'_'+re.sub(r'[^a-zA-Z0-9._-]','_',d.suggested_filename)
-                      await d.save_as(f);data=open(f,'rb').read()
-                      assert data.startswith((b'%PDF-',b'\xff\xd8\xff',b'\x89PNG'))
-                      pages=len(PdfReader(f).pages) if data.startswith(b'%PDF-') else 'image'
-                      print('VERIFIED',f,len(data),pages,hashlib.sha256(data).hexdigest(),flush=True)
+                      f=await d.path()
+                      with open(f,'rb') as fh:data=fh.read()
+                      if not data.startswith(b'%PDF-'):continue
                       downloads+=1
-                      if data.startswith(b'%PDF-'):
-                        reader=PdfReader(f)
-                        for pn,page in enumerate(reader.pages):
-                          txt=page.extract_text() or ''
-                          if re.search(r'lucas[.\s]+(?:de\s*)?oliveira',txt,re.I):
-                            hit={'address':addr,'solar_permit':r['number'],'solar_id':r['id'],'roof_permits':[{'number':a['number'],'id':a['id'],'applicant':a['applicant']} for a in candidates],'file':f,'page':pn+1}
-                            lucas.append(hit);print('LUCAS_MATCH',json.dumps(hit),flush=True);break
-                      if not any(x['file']==f for x in lucas):os.remove(f)
-                    except Exception as e:print('DOWNLOAD_ERROR',str(e)[:150],flush=True)
-                  close=m.locator('[data-dismiss=modal]:visible').first
-                  if await close.count():await close.click()
-                if len({x['address'] for x in lucas})>=2:break
-              print('SUMMARY',json.dumps({'town':town,'sunrun_records':len(found),'recent_addresses':len(addrs),'scanned':scanned,'matches':len(matches),'pdfs':downloads,'lucas_matches':len(lucas)}),flush=True)
-              open('output/matches.json','w').write(json.dumps(matches,indent=2))
-              open('output/lucas_matches.json','w').write(json.dumps(lucas,indent=2))
+                      reader=PdfReader(f)
+                      for pn,pdfpage in enumerate(reader.pages):
+                        txt=pdfpage.extract_text() or ''
+                        if pattern.search(txt):
+                          hit={'town':town,'application':r['id'],'permit':r['number'],'page':pn+1,'sha256':hashlib.sha256(data).hexdigest(),'sales_field_near_match':bool(re.search(r'sales.{0,30}(consultant|representative)',txt,re.I))}
+                          lucas.append(hit);print('LUCAS_MATCH',json.dumps(hit),flush=True);break
+                    except Exception:errors+=1
+                except Exception:errors+=1
+                finally:
+                  open('output/lucas_matches.json','w').write(json.dumps(lucas,indent=2))
+                  open('output/coverage.json','w').write(json.dumps({'town':town,'eligible_records':len(targets),'scanned':scanned,'pdfs':downloads,'errors':errors,'no_attachment_control':empty,'matches':len(lucas)},indent=2))
+                if scanned%10==0:print('PROGRESS',town,scanned,downloads,errors,len(lucas),flush=True)
+              print('SUMMARY',town,scanned,downloads,errors,len(lucas),flush=True)
               await b.close()
           asyncio.run(main())
           PY
@@ -186,4 +173,6 @@ jobs:
         if: always()
         with:
           name: lucas-roof-solar-${{ matrix.town }}
-          path: output/
+          path: |
+            output/lucas_matches.json
+            output/coverage.json
