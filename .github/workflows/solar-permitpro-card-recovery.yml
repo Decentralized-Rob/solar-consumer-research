@@ -1,0 +1,90 @@
+name: Recover four PermitPro solar building records
+on:
+  push:
+    branches: [research/permitpro-sunrun-giga]
+    paths: ['.github/workflows/solar-permitpro-card-recovery.yml']
+jobs:
+  recover:
+    runs-on: ubuntu-latest
+    timeout-minutes: 7
+    strategy:
+      fail-fast: false
+      matrix:
+        town: [upton, lancaster, brimfield, westford]
+    steps:
+      - run: |
+          pip -q install playwright pymupdf
+          python -m playwright install chromium
+      - env:
+          TOWN: ${{ matrix.town }}
+        run: |
+          mkdir -p output
+          python -u - <<'PY'
+          import json,re,os,copy,hashlib
+          from pathlib import Path
+          from urllib.parse import parse_qs
+          from playwright.sync_api import sync_playwright
+          import pymupdf
+          town=os.environ["TOWN"];out=Path("output")
+          with sync_playwright() as p:
+           b=p.chromium.launch();ctx=b.new_context(accept_downloads=True);pg=ctx.new_page()
+           pg.set_default_timeout(7000)
+           if town=="westford":
+            url="https://permits.westfordma.gov/building/res/view1.php?i=%2ADBCDE4A9304DD8BB4523C5DC4B9727359DA7B4AE"
+            pg.goto(url,wait_until="domcontentloaded",timeout=30000)
+            pg.wait_for_timeout(500)
+            (out/"record.txt").write_text(pg.locator("body").inner_text())
+            (out/"record.html").write_text(pg.content())
+            pg.emulate_media(media="screen");pg.pdf(path=str(out/"westford_application_PORTAL_EXPORT.pdf"),print_background=True)
+            print("WESTFORD",pg.locator("body").inner_text()[:1500]);b.close();raise SystemExit
+           base="https://"+town+".patriotpermitpro.com/"
+           req=[]
+           def listener(r):
+            if "mode=getResults" in r.url:
+             try:req.append(json.loads(parse_qs(r.post_data or "").get("jsonData",["{}"])[0]))
+             except:pass
+           pg.on("request",listener);pg.goto(base+"index.php?act=dashboard",wait_until="domcontentloaded",timeout=30000);pg.wait_for_timeout(2200)
+           if not req:raise RuntimeError("No public dashboard query")
+           template=req[0];fields=["contractorCompany","contractorName","applicantName","applicantCompany"]
+           defs={x["fieldName"]:x for x in ctx.request.get(base+"index.php?act=dashboard&mode=getFieldData",timeout=25000).json() if isinstance(x,dict) and "fieldName" in x}
+           payload=copy.deepcopy(template);payload["activeDashboardView"]["selectedFieldNames"] += [x for x in fields if x in defs and x not in payload["activeDashboardView"]["selectedFieldNames"]];payload["resultsSettings"]["fieldData"] += [defs[x] for x in fields if x in defs];payload["activeDashboardView"]["filters"]=[];payload["resultsSettings"]["limit"]=1500
+           targets={"upton":["6 CROSS"],"lancaster":["20 POULIN"],"brimfield":["15 MILL LANE","285 BROOKFIELD"]}[town];matched=[];skip=0;total=1
+           while skip<total:
+            payload["resultsSettings"]["skip"]=skip
+            j=ctx.request.post(base+"index.php?act=dashboard&mode=getResults",form={"jsonData":json.dumps(payload)},timeout=45000).json()
+            total=int(j.get("resultsSettings",{}).get("totalSearchResults",0));rows=j.get("resultsData") or []
+            matched.extend(r for r in rows if any(str(r.get("address","")).upper().startswith(t) for t in targets))
+            skip+=1500
+           (out/"address_records.json").write_text(json.dumps(matched,indent=2));print("ADDRESS_MATCHES",town,json.dumps(matched),flush=True)
+           for r in matched:
+            rid=str(r.get("_id",""));aid=str(r.get("Application ID",""));d=out/(aid or rid);d.mkdir(exist_ok=True)
+            pg.goto(base+"index.php?act=process&id="+rid,wait_until="domcontentloaded",timeout=30000);pg.wait_for_timeout(600)
+            t=pg.locator("body").inner_text()
+            (d/"record.txt").write_text(t)
+            if not re.search("sun.?run",t,re.I) or not re.search("solar|photovoltaic|pv system",t,re.I):continue
+            links=pg.locator("a[href]").evaluate_all("es=>es.map(e=>({url:e.href,text:e.innerText.trim(),html:e.outerHTML}))")
+            (d/"links.json").write_text(json.dumps(links,indent=2))
+            print("SOLAR_RECORD",aid,rid,t[:1400],flush=True)
+            for i,l in enumerate(links):
+             u=l["url"]
+             if not re.search(r"permit|application|document|\.pdf",l["text"]+" "+u,re.I):continue
+             if not u.startswith(base) and ".s3.amazonaws.com/" not in u:continue
+             try:
+              res=ctx.request.get(u,timeout=15000);data=res.body()
+              if data.startswith(b"%PDF-"):
+               fn="native_"+str(i)+".pdf";(d/fn).write_bytes(data);print("PDF",aid,fn,l["text"],hashlib.sha256(data).hexdigest())
+              elif re.search(r"issued.*permit|building permit|view permit|permit card",l["text"],re.I) and res.ok and u.startswith(base):
+               q=ctx.new_page();q.goto(u,wait_until="domcontentloaded",timeout=18000);q.wait_for_timeout(400)
+               st=q.locator("body").inner_text();(d/("source_"+str(i)+".txt")).write_text(st)
+               if re.search("permit",st,re.I):
+                q.emulate_media(media="screen");q.pdf(path=str(d/("portal_export_"+str(i)+".pdf")),print_background=True)
+               q.close()
+             except Exception as e:print("LINK_ERROR",aid,str(e)[:140])
+           b.close()
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: solar-permitpro-${{ matrix.town }}
+          path: output/
+          retention-days: 7
