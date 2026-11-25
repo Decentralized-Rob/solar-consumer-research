@@ -1,0 +1,44 @@
+name: Lowell 41 Grace municipal permit source recovery
+on:
+  push:
+    branches: [permit-test-hopedale-20261123]
+    paths: ['.github/workflows/lowell-grace-permit-recovery.yml']
+permissions:
+  contents: read
+jobs:
+  recover:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - run: pip -q install requests pymupdf
+      - run: |
+          mkdir -p evidence
+          python -u - <<'PY'
+          import requests,fitz,hashlib,json
+          from pathlib import Path
+          sources=[
+           ("December_2025","https://www.lowellma.gov/DocumentCenter/View/33712/December-2025-permits-issued","SOL202513191"),
+           ("January_2026","https://www.lowellma.gov/DocumentCenter/View/33828/January-Permits-Issued","COC202600768")]
+          manifest=[]
+          for name,url,permit in sources:
+           r=requests.get(url,timeout=45);r.raise_for_status();b=r.content
+           assert b.startswith(b"%PDF")
+           p=Path("evidence")/(name+"_official_report.pdf");p.write_bytes(b)
+           doc=fitz.open(stream=b,filetype="pdf")
+           matches=[]
+           for i,page in enumerate(doc):
+            t=" ".join(page.get_text().split())
+            if permit in t and "193059" in t:
+             matches.append(i)
+             sub=fitz.open();sub.insert_pdf(doc,from_page=i,to_page=i)
+             sub.save("evidence/"+name+"_source_page_"+str(i+1)+".pdf")
+             print("MATCH",name,permit,"page",i+1,"bytes",len(b),flush=True)
+           assert matches
+           manifest.append({"source":url,"file":p.name,"sha256":hashlib.sha256(b).hexdigest(),"pages":len(doc),"matching_pages":[i+1 for i in matches],"permit":permit})
+          Path("evidence/manifest.json").write_text(json.dumps(manifest,indent=2))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: lowell-41-grace-official-permit-reports
+          path: evidence/
+          retention-days: 7
