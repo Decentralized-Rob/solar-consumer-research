@@ -13,60 +13,71 @@ jobs:
     steps:
       - env:
           GH_TOKEN: ${{ github.token }}
-        run: gh run download 45389709079 -R ${{ github.repository }} -n management-roof-evidence-bellingham -D prior
+        run: gh run download 45391613492 -R ${{ github.repository }} -n verified-management-roof-packets -D prior
       - run: pip -q install requests pymupdf
       - run: |
           python -u - <<'PY'
-          import requests,json,re,hashlib,datetime,concurrent.futures,shutil
+          import requests,json,re,hashlib,html
           from pathlib import Path
-          from urllib.parse import quote
+          from urllib.parse import quote,urljoin
           import fitz
-          fitz.TOOLS.mupdf_display_errors(False)
-          src=next(Path("prior").rglob("results.json"));j=json.loads(src.read_text());root=src.parent
-          OUT=Path("verified_management_roof_packets");OUT.mkdir(exist_ok=True)
-          def norm(s):return re.sub("[^A-Z0-9]","",s.upper())
-          candidates=[]
-          for r in j["results"]:
-           if not r["target"] or norm(r["address"])=="46PICKERINGAV":continue
-           sd=datetime.datetime.strptime(r["date"],"%m/%d/%y")
-           for roof in r.get("roof_records",[]):
-            exact=[x for x in r.get("address_records",[]) if x["cells"][3]==roof["application"] and norm(x["cells"][6])==norm(r["address"])]
-            if not exact:continue
-            rd=datetime.datetime.strptime(roof["date"],"%m/%d/%y")
-            if abs((sd-rd).days)>365:continue
-            candidates.append((sd,r,roof,exact[0]))
-          candidates.sort(key=lambda x:x[0],reverse=True);candidates=candidates[:12]
-          def get(u,data=None):
-           rr=requests.post(u,data=data,timeout=35) if data else requests.get(u,timeout=35);rr.raise_for_status();return rr.content
-          def work(row):
-           sd,r,roof,exact=row;folder=OUT/r["application"];folder.mkdir(exist_ok=True)
-           paired=[]
-           for d in r["documents"]:
-            if not d["target"]:continue
-            p=root/Path(d["saved"]).relative_to("management_roof_evidence")
-            dest=folder/("Sunrun_"+p.name);shutil.copyfile(p,dest);paired.append(d)
-           aa=json.loads(get("https://permiteyes.us/bellingham/controller/publicattachments_controller.php",{"action":"displayAttach","ApplicationId":exact["uuid"]})).get("Attachments") or []
-           docs=[]
-           for a in aa:
-            if not a["FileName"].lower().endswith(".pdf"):continue
-            path="/mys3bucket/permiteyes.us/attachments/bellingham/building/"+a["AttachmentPath"]
-            u="https://permiteyes.us/readfiles2.php?file="+quote(path)
-            b=get(u)
-            if not b.startswith(b"%PDF"):continue
-            d=fitz.open(stream=b,filetype="pdf");p=folder/("Roof_"+roof["application"]+"_"+re.sub("[^A-Za-z0-9_.-]","_",a["FileName"]));p.write_bytes(b)
-            docs.append({"filename":a["FileName"],"source":u,"path":path,"saved":str(p),"bytes":len(b),"sha256":hashlib.sha256(b).hexdigest(),"pages":len(d),"text":"\n".join(pg.get_text() for pg in d)})
-           out={"solar_application":r["application"],"solar_date":r["date"],"address":r["address"],"solar_documents":paired,"roof_record":roof,"exact_address_record":exact,"roof_documents":docs}
-           (folder/"provenance.json").write_text(json.dumps(out,indent=2));print("PAIRED_PACKET",len(docs),flush=True)
-           return out
-          out=[]
-          with concurrent.futures.ThreadPoolExecutor(max_workers=2) as p:
-           for f in p.map(work,candidates):out.append(f)
-          (OUT/"results.json").write_text(json.dumps(out,indent=2));print("COMPLETE",len(out),flush=True)
-          
+          BASE="https://permiteyes.us/bellingham/"
+          OUT=Path("public_attachment_recheck");OUT.mkdir(exist_ok=True)
+          S=requests.Session()
+          page=S.get(BASE+"publicview.php",timeout=25);page.raise_for_status()
+          for src in re.findall(r'<script[^>]+src=["']([^"']+)',page.text,re.I):
+           u=urljoin(page.url,src)
+           if not u.startswith(BASE):continue
+           try:
+            t=S.get(u,timeout=15).text
+            for line in t.splitlines():
+             if re.search(r'publicattachments|displayAttach|public.*(?:document|inspection|permit)',line,re.I):print("PUBLIC_UI",line[:250])
+           except Exception:pass
+          prior=json.loads(next(Path("prior").rglob("results.json")).read_text())
+          ids={"77457","77461","79156","79947","85057","76375","79712","80685"}
+          result=[]
+          for r in prior:
+           if r["roof_record"]["application"] not in ids:continue
+           address=r["address"]; print("ADDRESS",address)
+           p={"draw":"1","start":"0","length":"200","search[value]":address,"search[regex]":"false","order[0][column]":"3","order[0][dir]":"desc"}
+           for i in range(13):
+            for k,v in [("data",str(i)),("name",""),("searchable","true"),("orderable","true"),("search[value]",""),("search[regex]","false")]:p[f"columns[{i}][{k}]"]=v
+           j=S.post(BASE+"ajax/getbuildingpublichome.php",data=p,timeout=35).json()
+           def norm(x):return re.sub("[^a-z0-9]","",x.lower())
+           for rr in j.get("data",[]):
+            c=[html.unescape(re.sub("<[^>]+>","",str(x))).strip() for x in rr]
+            if len(c)<12 or norm(c[6])!=norm(address):continue
+            m=re.search(r'data-application-id=["\x27]([^"\x27]+)',rr[0])
+            if not m:continue
+            aid=c[3];uuid=m.group(1)
+            ar=S.post(BASE+"controller/publicattachments_controller.php",data={"action":"displayAttach","ApplicationId":uuid},timeout=30);ar.raise_for_status()
+            raw=ar.json();aa=raw.get("Attachments") or []
+            print("RECORD",aid,c[10],c[7],"attachment_count",len(aa),"response_keys",list(raw))
+            entry={"address":address,"application":aid,"permit":c[10],"scope":c[8],"raw":raw,"docs":[]}
+            for a in aa:
+             name=a.get("FileName","");path=a.get("AttachmentPath","")
+             if not path:continue
+             if not path.startswith("/mys3bucket/") and a.get("ID_import") in [None,"","0",0]:path="/mys3bucket/permiteyes.us/attachments/bellingham/building/"+path
+             u="https://permiteyes.us/readfiles2.php?file="+quote(path)
+             try:
+              b=S.get(u,timeout=30); data=b.content
+              pdf=data.startswith(b"%PDF"); info={"name":name,"status":b.status_code,"bytes":len(data),"pdf":pdf}
+              if pdf:
+               d=fitz.open(stream=data,filetype="pdf");t="\n".join(pg.get_text() for pg in d)
+               hits=bool(re.search(r"roofing agreement|roofing renovation contract|sunrun subsidy|roofing contract|total roofing price",t,re.I))
+               info.update({"pages":len(d),"contract_keywords":hits,"sha256":hashlib.sha256(data).hexdigest()})
+               if hits and r["roof_record"]["application"] not in {"79712","80685"}:
+                (OUT/(aid+"_"+re.sub("[^A-Za-z0-9_.-]","_",name)+("" if name.lower().endswith(".pdf") else ".pdf"))).write_bytes(data)
+              print("ATTACHMENT",aid,name,info)
+              entry["docs"].append(info)
+             except Exception as e:print("ERROR",aid,name,str(e)[:180])
+            result.append(entry)
+          (OUT/"audit.json").write_text(json.dumps(result,indent=2))
+          print("FINISHED",len(result))
           PY
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: verified-management-roof-packets
-          path: verified_management_roof_packets/
+          name: public-attachment-recheck
+          path: public_attachment_recheck/
           retention-days: 1
