@@ -10,48 +10,41 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
-      - run: pip -q install requests pymupdf
+      - run: |
+          pip -q install playwright
+          python -m playwright install chromium
       - run: |
           mkdir -p evidence
           python -u - <<'PY'
-          import requests,fitz,hashlib,json,concurrent.futures
+          from playwright.sync_api import sync_playwright
           from pathlib import Path
-          sources=[
-           ("December_2025","https://www.lowellma.gov/DocumentCenter/View/33712/December-2025-permits-issued","SOL202513191"),
-           ("January_2026","https://www.lowellma.gov/DocumentCenter/View/33828/January-Permits-Issued","COC202600768")]
-          manifest=[]
-          for name,url,permit in sources:
-           stem=url.split("/DocumentCenter/View/")[1].split("/")[0]
-           candidates=[url,url+"?bidId=",url.replace("www.",""),"https://www.lowellma.gov/DocumentCenter/View/"+stem,"https://lowellma.gov/DocumentCenter/View/"+stem,"https://www.lowellma.gov/DocumentCenter/View/"+stem+"?bidId="]
-           def fetch(u):
-            try:
-             r=requests.get(u,timeout=15,headers={"User-Agent":"Mozilla/5.0","Referer":"https://www.lowellma.gov/1084/Monthly-Permit-Reports"})
-             print("SOURCE",u,r.status_code,len(r.content),flush=True)
-             if r.ok and r.content.startswith(b"%PDF"):return r.content
-            except Exception as e:print("SOURCE_ERROR",u,str(e)[:100],flush=True)
-           with concurrent.futures.ThreadPoolExecutor(max_workers=3) as ex:
-            results=list(ex.map(fetch,candidates))
-           b=next((v for v in results if v),None)
-           if not b:
-            manifest.append({"source":url,"permit":permit,"status":"official PDF bytes unavailable"})
-            continue
-           p=Path("evidence")/(name+"_official_report.pdf");p.write_bytes(b)
-           doc=fitz.open(stream=b,filetype="pdf")
-           matches=[]
-           for i,page in enumerate(doc):
-            t=" ".join(page.get_text().split())
-            if permit in t and "193059" in t:
-             matches.append(i)
-             sub=fitz.open();sub.insert_pdf(doc,from_page=i,to_page=i)
-             sub.save("evidence/"+name+"_source_page_"+str(i+1)+".pdf")
-             print("MATCH",name,permit,"page",i+1,"bytes",len(b),flush=True)
-           assert matches
-           manifest.append({"source":url,"file":p.name,"sha256":hashlib.sha256(b).hexdigest(),"pages":len(doc),"matching_pages":[i+1 for i in matches],"permit":permit})
-          Path("evidence/manifest.json").write_text(json.dumps(manifest,indent=2))
+          import json,re
+          with sync_playwright() as p:
+           b=p.chromium.launch()
+           c=b.new_context(accept_downloads=True)
+           pg=c.new_page()
+           pg.goto("https://cityoflowellma.munisselfservice.com/css/",wait_until="domcontentloaded",timeout=45000)
+           pg.wait_for_timeout(1500)
+           def capture(name):
+            t=pg.locator("body").inner_text()
+            links=pg.locator("a[href]").evaluate_all("es=>es.map(e=>({text:e.innerText.trim(),href:e.href})).filter(x=>x.text)")
+            print("PAGE",name,pg.url,t[:4000],json.dumps(links),flush=True)
+            Path("evidence/"+name+".txt").write_text(pg.url+"\n"+t+"\n"+json.dumps(links,indent=2))
+            pg.screenshot(path="evidence/"+name+".png",full_page=True)
+            return links
+           links=capture("home")
+           for l in links:
+            if re.search("permit|citizen self service",l["text"],re.I) and l["href"].startswith("https://cityoflowellma.munisselfservice.com/"):
+             try:
+              pg.goto(l["href"],wait_until="domcontentloaded",timeout=25000)
+              pg.wait_for_timeout(700)
+              capture("public_navigation_"+str(links.index(l)))
+             except Exception as e:print("NAV_ERROR",str(e)[:200])
+           b.close()
           PY
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: lowell-41-grace-official-permit-reports
+          name: lowell-public-portal-access-test
           path: evidence/
           retention-days: 7
