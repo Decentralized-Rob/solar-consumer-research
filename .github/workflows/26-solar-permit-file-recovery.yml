@@ -1,0 +1,124 @@
+name: Solar building permit file recovery by known application ID
+on:
+  push:
+    branches: [research/permitpro-sunrun-giga]
+    paths: ['.github/workflows/26-solar-permit-file-recovery.yml']
+permissions:
+  contents: read
+jobs:
+  recover:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        town: [bellingham, milton, randolph]
+    steps:
+      - run: |
+          pip -q install requests playwright pymupdf
+          python -m playwright install chromium
+      - env:
+          TOWN: ${{ matrix.town }}
+        run: |
+          mkdir -p output
+          python -u - <<'PY'
+          import requests, re, html, json, os, hashlib, concurrent.futures
+          from pathlib import Path
+          from urllib.parse import quote
+          from playwright.sync_api import sync_playwright
+          import pymupdf
+          town=os.environ["TOWN"];base="https://permiteyes.us/"+town+"/";out=Path("output")
+          targets={"bellingham":["93018","95637","89389","88417","84470","80716","80027","79785","78833","78544","77257","76871","76453"],"milton":["63075","63113"],"randolph":["44002"]}[town]
+          def scan(aid):
+           s=requests.Session();s.get(base+"publicview.php",timeout=20)
+           p={"draw":"1","start":"0","length":"200","search[value]":aid,"search[regex]":"false","order[0][column]":"3","order[0][dir]":"desc"}
+           for i in range(13):
+            for k,v in [("data",str(i)),("name",""),("searchable","true"),("orderable","true"),("search[value]",""),("search[regex]","false")]:p[f"columns[{i}][{k}]"]=v
+           d=out/aid;d.mkdir(exist_ok=True)
+           try:
+            j=s.post(base+"ajax/getbuildingpublichome.php",data=p,timeout=30).json()
+            rows=[]
+            for r in j.get("data",[]):
+             c=[html.unescape(re.sub("<[^>]+>","",str(x))).strip() for x in r]
+             if aid not in c and not any(re.search(r'data-id=["\x27]'+aid+r'["\x27]',str(v)) for v in r):continue
+             rows.append({"cells":c,"raw":r})
+            result={"application":aid,"town":town,"rows":rows,"attachments":[]}
+            for r in rows:
+             m=re.search(r'data-application-id=["\x27]([^"\x27]+)'," ".join(map(str,r["raw"])))
+             if not m:continue
+             uuid=m.group(1)
+             ar=s.post(base+"controller/publicattachments_controller.php",data={"action":"displayAttach","ApplicationId":uuid},timeout=25).json()
+             for a in ar.get("Attachments") or []:
+              name=a.get("FileName","");path=a.get("AttachmentPath","")
+              item={"name":name,"path":path}
+              if path and re.search(r'permit|application|certificate|approval',name,re.I) and name.lower().endswith(".pdf"):
+               if not path.startswith("/mys3bucket/") and a.get("ID_import") in [None,"","0",0]:path="/mys3bucket/permiteyes.us/attachments/"+town+"/building/"+path
+               u="https://permiteyes.us/readfiles2.php?file="+quote(path)
+               try:
+                b=s.get(u,timeout=25).content
+                if b.startswith(b"%PDF"):
+                 doc=pymupdf.open(stream=b,filetype="pdf");fn="native_"+re.sub("[^a-zA-Z0-9_.-]","_",name);(d/fn).write_bytes(b)
+                 item.update({"file":fn,"url":u,"sha256":hashlib.sha256(b).hexdigest(),"pages":len(doc),"text_excerpt":" ".join(doc[0].get_text().split())[:1200]})
+               except Exception as e:item["error"]=str(e)
+              result["attachments"].append(item)
+            (d/"record.json").write_text(json.dumps(result,indent=2))
+            print("RECORD",aid,[(r["cells"]) for r in rows],"FILES",[a["name"] for a in result["attachments"]],flush=True)
+           except Exception as e:print("ERROR",aid,str(e),flush=True);(d/"error.txt").write_text(str(e))
+          with concurrent.futures.ThreadPoolExecutor(max_workers=4) as pool:list(pool.map(scan,targets))
+          # Public interface: capture the issued permit card when the row exposes one.
+          with sync_playwright() as p:
+           b=p.chromium.launch()
+           ctx=b.new_context(accept_downloads=True)
+           pg=ctx.new_page();pg.set_default_timeout(5000)
+           for aid in targets:
+            d=out/aid
+            try:
+             pg.goto(base+"publicview.php",wait_until="domcontentloaded",timeout=25000)
+             pg.wait_for_timeout(1000)
+             table=pg.locator("#PublicHome:visible,#BuildingPublicHome:visible").first
+             pg.evaluate("""id=>{const t=document.querySelector('#PublicHome')||document.querySelector('#BuildingPublicHome');if(t&&window.jQuery&&jQuery.fn.dataTable.isDataTable(t))jQuery(t).DataTable().search(id).draw()}""",aid)
+             pg.wait_for_timeout(700)
+             row=table.locator("tbody tr").filter(has_text=aid).first
+             if not row.count():
+              q=pg.locator('input[type=search]:visible').first
+              if q.count():q.fill(aid);q.press("Enter");pg.wait_for_timeout(800)
+             if not row.count():print("UI_NO_ROW",aid);continue
+             controls=row.locator("a,button").evaluate_all("es=>es.map(e=>({html:e.outerHTML,text:e.innerText,title:e.title}))")
+             (d/"ui_controls.json").write_text(json.dumps(controls,indent=2))
+             print("UI_CONTROLS",aid,json.dumps(controls),flush=True)
+             # Use only actual visible permit-card control; never manufacture native attachment.
+             card=row.locator("a[title*='Permit' i],button[title*='Permit' i],a[class*='permit' i]").first
+             if card.count():
+              print("CARD_CONTROL",aid,card.evaluate("e=>e.outerHTML"),flush=True)
+              downloads=[];pages=[]
+              pg.on("download",lambda dl:downloads.append(dl))
+              ctx.on("page",lambda p:pages.append(p))
+              card.click(timeout=5000);pg.wait_for_timeout(900)
+              if downloads:
+               dl=downloads[-1];dl.save_as(str(d/("portal_download_"+dl.suggested_filename)))
+              else:
+               q=pages[-1] if pages else pg
+               q.wait_for_timeout(500)
+               (d/"permit_card_text.txt").write_text(q.locator("body").inner_text())
+               (d/"permit_card.html").write_text(q.content())
+               q.pdf(path=str(d/"portal_rendered_card_NOT_native.pdf"),print_background=True)
+               if q!=pg:q.close()
+             else:
+              print("NO_PERMIT_CARD_CONTROL",aid,flush=True)
+             # Capture full public application detail independently.
+             pg.goto(base+"publicview.php",wait_until="domcontentloaded",timeout=25000);pg.wait_for_timeout(800)
+             pg.evaluate("""id=>{const t=document.querySelector('#PublicHome')||document.querySelector('#BuildingPublicHome');if(t&&window.jQuery&&jQuery.fn.dataTable.isDataTable(t))jQuery(t).DataTable().search(id).draw()}""",aid);pg.wait_for_timeout(700)
+             a=pg.locator('a.view_app[data-id="'+aid+'"]:visible').first
+             if a.count():
+              a.click();pg.wait_for_timeout(700)
+              (d/"application_text.txt").write_text(pg.locator("body").inner_text())
+              (d/"application.html").write_text(pg.content())
+            except Exception as e:print("UI_ERROR",aid,str(e)[:300],flush=True)
+           b.close()
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: solar-permit-files-${{ matrix.town }}
+          path: output/
+          retention-days: 7
