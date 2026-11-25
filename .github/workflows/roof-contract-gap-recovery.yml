@@ -1,0 +1,66 @@
+name: Roof contract gap recovery for known solar jobs
+on:
+  push:
+    branches: [research/permitpro-sunrun-giga]
+    paths: ['.github/workflows/roof-contract-gap-recovery.yml']
+jobs:
+  recover:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - run: pip -q install requests pymupdf
+      - run: |
+          mkdir -p evidence
+          python -u - <<'PY'
+          import requests,html,json,re,hashlib,concurrent.futures
+          from pathlib import Path
+          from urllib.parse import quote
+          import pymupdf
+          targets={"bellingham":["37 susan ln","3 caryville crossing","73 hixon st","66 locust st","72 highridge rd","29 squire ln","47 taunton st","78 highridge rd","8 fleuette dr"],"randolph":["5 joyce ci"],"milton":["1749 canton ave"]}
+          def scan(task):
+           town,addr=task;base="https://permiteyes.us/"+town+"/";s=requests.Session();s.get(base+"publicview.php",timeout=25)
+           dest=Path("evidence")/town/re.sub("[^a-z0-9]+","_",addr);dest.mkdir(parents=True,exist_ok=True)
+           p={"draw":"1","start":"0","length":"200","search[value]":addr,"search[regex]":"false","order[0][column]":"3","order[0][dir]":"desc"}
+           for i in range(13):
+            for k,v in [("data",str(i)),("name",""),("searchable","true"),("orderable","true"),("search[value]",""),("search[regex]","false")]:p[f"columns[{i}][{k}]"]=v
+           result=[]
+           try:
+            j=s.post(base+"ajax/getbuildingpublichome.php",data=p,timeout=30).json()
+            for r in j.get("data",[]):
+             c=[html.unescape(re.sub("<[^>]+>","",str(x))).strip() for x in r]
+             m=re.search(r'data-application-id=["\x27]([^"\x27]+)'," ".join(map(str,r)))
+             if not m:continue
+             if not any(addr.lower()==v.lower() for v in c):continue
+             aid=c[3];uuid=m.group(1)
+             a=s.post(base+"controller/publicattachments_controller.php",data={"action":"displayAttach","ApplicationId":uuid},timeout=25).json()
+             entry={"row":c,"application":aid,"attachments":[]}
+             for x in a.get("Attachments") or []:
+              n=x.get("FileName","");path=x.get("AttachmentPath","");item={"name":n,"path":path}
+              if not path:continue
+              # Download all non-routine attachments, including unlabelled images and PDFs.
+              if re.search(r'workers?\s*comp|liability|insurance|\bcoi\b|\bwc\b|\blicen[sc]e\b|\bhic\b|\bcsl\b|inverter|datasheet|debris|fire setback|signed nem',n,re.I):entry["attachments"].append(item);continue
+              if not path.startswith("/mys3bucket/") and x.get("ID_import") in [None,"","0",0]:path="/mys3bucket/permiteyes.us/attachments/"+town+"/building/"+path
+              u="https://permiteyes.us/readfiles2.php?file="+quote(path)
+              try:
+               b=s.get(u,timeout=30).content
+               if b.startswith((b"%PDF",b"\xff\xd8",b"\x89PNG")):
+                fn=aid+"_"+re.sub("[^A-Za-z0-9_.-]","_",n)
+                (dest/fn).write_bytes(b);item.update({"file":fn,"url":u,"bytes":len(b),"sha256":hashlib.sha256(b).hexdigest()})
+                if b.startswith(b"%PDF"):
+                 doc=pymupdf.open(stream=b,filetype="pdf");t="\n".join(pg.get_text() for pg in doc)
+                 item["pages"]=len(doc);item["text"]=t[:25000]
+               else:item["error"]="not original PDF or image"
+              except Exception as e:item["error"]=str(e)
+              entry["attachments"].append(item)
+             result.append(entry)
+            print("ADDRESS",town,addr,"records",len(result),"files",sum(bool(x.get("file")) for r in result for x in r["attachments"]),flush=True)
+           except Exception as e:print("ERROR",town,addr,str(e),flush=True)
+           (dest/"records.json").write_text(json.dumps(result,indent=2))
+          with concurrent.futures.ThreadPoolExecutor(max_workers=5) as ex:list(ex.map(scan,[(t,a) for t,aa in targets.items() for a in aa]))
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: roof-contract-gap-originals
+          path: evidence/
+          retention-days: 7
