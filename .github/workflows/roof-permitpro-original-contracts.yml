@@ -1,0 +1,46 @@
+name: Recover original Upton and Brimfield roofing agreements
+on:
+  push:
+    branches: [research/permitpro-sunrun-giga]
+    paths: ['.github/workflows/roof-permitpro-original-contracts.yml']
+jobs:
+  recover:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - run: |
+          pip -q install playwright pymupdf
+          python -m playwright install chromium
+      - run: |
+          mkdir -p output
+          python -u - <<'PY'
+          import re,json,hashlib
+          from pathlib import Path
+          from playwright.sync_api import sync_playwright
+          import pymupdf
+          with sync_playwright() as p:
+           b=p.chromium.launch();c=b.new_context();pg=c.new_page()
+           for town,rid,aid in [("upton","11237","25-00509"),("brimfield","2283","22-00442")]:
+            out=Path("output")/town;out.mkdir()
+            url="https://"+town+".patriotpermitpro.com/index.php?act=process&id="+rid
+            pg.goto(url,wait_until="domcontentloaded",timeout=30000);pg.wait_for_timeout(1000)
+            links=pg.locator("a[href]").evaluate_all("es=>es.map(a=>({url:a.href,label:(a.closest('tr')?.innerText||a.innerText||'').slice(0,250)}))")
+            (out/"links.json").write_text(json.dumps(links,indent=2))
+            for i,l in enumerate(links):
+             if ".s3.amazonaws.com/" not in l["url"] and not re.search(r'\.pdf(?:\?|$)',l["url"],re.I):continue
+             try:
+              r=c.request.get(l["url"],timeout=20000);data=r.body()
+              if not data.startswith(b"%PDF-"):continue
+              doc=pymupdf.open(stream=data,filetype="pdf")
+              fn=aid+"_"+str(i)+"_"+re.sub("[^A-Za-z0-9_.-]","_",l["url"].split("/")[-1].split("?")[0])
+              (out/fn).write_bytes(data)
+              print("PDF",town,fn,l["label"],len(doc),hashlib.sha256(data).hexdigest(),flush=True)
+             except Exception as e:print("ERROR",str(e)[:120])
+           b.close()
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: roof-permitpro-original-contracts
+          path: output/
+          retention-days: 7
