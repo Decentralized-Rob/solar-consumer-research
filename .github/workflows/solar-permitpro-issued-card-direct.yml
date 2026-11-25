@@ -1,0 +1,55 @@
+name: Direct public PermitPro issued solar card downloads
+on:
+  push:
+    branches: [research/permitpro-sunrun-giga]
+    paths: ['.github/workflows/solar-permitpro-issued-card-direct.yml']
+jobs:
+  recover:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - run: |
+          pip -q install playwright pymupdf
+          python -m playwright install chromium
+      - run: |
+          mkdir -p output
+          python -u - <<'PY'
+          import json,re,hashlib
+          from pathlib import Path
+          from playwright.sync_api import sync_playwright
+          import pymupdf
+          records=[("upton","11144","25-00416","SO-2025-0026","6 CROSS"),("lancaster","5119","26-00577","S-2026-0030","20 POULIN"),("brimfield","2282","22-00441","R-22-00115","15 MILL LANE"),("brimfield","3244","25-00300","P-2025-0134","285 BROOKFIELD")]
+          with sync_playwright() as p:
+           b=p.chromium.launch();ctx=b.new_context(accept_downloads=True);pg=ctx.new_page()
+           for town,rid,aid,permit,address in records:
+            try:
+             base="https://"+town+".patriotpermitpro.com/"
+             url=base+"index.php?act=process&id="+rid
+             pg.goto(url,wait_until="domcontentloaded",timeout=20000);pg.wait_for_timeout(400)
+             d=Path("output")/town/aid;d.mkdir(parents=True,exist_ok=True)
+             links=pg.locator("a[href]").evaluate_all("es=>es.map(a=>({url:a.href,label:(a.closest('tr')?.innerText||a.innerText||'').slice(0,250)}))")
+             (d/"links.json").write_text(json.dumps(links,indent=2))
+             for i,l in enumerate(links):
+              if "act=form/certificate/" not in l["url"] and "act=form/view/" not in l["url"]:continue
+              q=ctx.new_page()
+              try:
+               q.goto(l["url"],wait_until="domcontentloaded",timeout=15000);q.wait_for_timeout(500)
+               text=q.locator("body").inner_text()
+               if permit not in text and address not in text.upper():continue
+               typ="issued_card" if "certificate" in l["url"] and permit in text and not re.search("completion|occupancy",l["label"],re.I) else "application_or_other"
+               fn=d/(aid+"_"+permit+"_"+typ+"_"+str(i)+"_PORTAL_EXPORT.pdf")
+               q.pdf(path=str(fn),format="Letter",print_background=True,margin={"top":"0.3in","bottom":"0.3in","left":"0.3in","right":"0.3in"})
+               doc=pymupdf.open(fn);rendered=" ".join(x.get_text() for x in doc)
+               if not rendered.strip():fn.unlink();continue
+               (fn.with_suffix(".txt")).write_text(l["url"]+"\n"+text)
+               print("VERIFIED",town,aid,permit,typ,l["label"],l["url"],len(doc),flush=True)
+              finally:q.close()
+            except Exception as e:print("ERROR",town,aid,str(e)[:200])
+           b.close()
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: permitpro-issued-card-direct
+          path: output/
+          retention-days: 7
