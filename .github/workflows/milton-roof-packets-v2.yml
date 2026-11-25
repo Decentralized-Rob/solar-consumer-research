@@ -84,12 +84,12 @@ jobs:
                       global_search=pg.locator('input[type=search]:visible').first
                       await search(global_search,m.group(2))
                 return [r for r in await collect(6) if norm(r['address'])==norm(addr)]
-              rr=await address_search('939 brush hill rd')
+              rr=await address_search('1749 canton ave')
               print('EXACT_ADDRESS_ROWS',json.dumps(rr),flush=True)
               open('output/exact_address.json','w').write(json.dumps(rr,indent=2))
               for r in rr:
                 if not r['attachment']:continue
-                if not re.search(r'pv|photovoltaic|solar',r['description'],re.I) or re.search('elect',r['type'],re.I):continue
+                if re.search('elect|plumb|gas',r['type'],re.I):continue
                 a=table.locator('a.Attachmentclass[data-id="'+r['id']+'"]:visible').first
                 if not await a.count():continue
                 await a.click();await pg.wait_for_timeout(800)
@@ -114,5 +114,5 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: milton-939-brush-hill-${{ matrix.town }}
+          name: milton-1749-canton-${{ matrix.town }}
           path: output/
