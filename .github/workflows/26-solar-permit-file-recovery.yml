@@ -18,6 +18,7 @@ jobs:
           mkdir -p output
           python -u - <<'PY'
           import asyncio, hashlib, json
+          from urllib.parse import quote
           from pathlib import Path
           from playwright.async_api import async_playwright
           import pymupdf
@@ -48,16 +49,21 @@ jobs:
                       await row.locator("a.Attachmentclass").first.click(timeout=8000)
                       modal=pg.locator("#AttachmentModal")
                       await modal.wait_for(state="visible",timeout=10000)
-                      link=modal.locator('a.downloadLink[data-href][data-download="CE LETTER STAMPED.pdf"]').first
-                      await link.wait_for(timeout=10000)
+                      links=modal.locator('a.downloadLink[data-href][data-download="CE LETTER STAMPED.pdf"]')
+                      await links.first.wait_for(state="attached",timeout=10000)
+                      paths=await links.evaluate_all("es=>[...new Set(es.map(e=>e.dataset.href).filter(Boolean))]")
+                      assert len(paths)==1,"Ambiguous attachment path"
+                      attachment=paths[0]
+                      assert attachment.startswith("/mys3bucket/permiteyes.us/attachments/bellingham/"),"Unexpected attachment path"
+                      url="https://permiteyes.us/readfiles2.php?file="+quote(attachment,safe="")
                       result["attachment_download_attempts"]=1
                       checkpoint()
-                      # Exactly one click and one attachment download. No fallback or retries.
-                      async with pg.expect_download(timeout=35000) as di:
-                          await link.click(timeout=10000)
-                      download=await di.value
-                      await download.save_as(ROOT/FILENAME)
-                      data=(ROOT/FILENAME).read_bytes()
+                      # One original file request via the proven public attachment endpoint.
+                      response=await ctx.request.get(url,timeout=35000)
+                      result["http_status"]=response.status
+                      assert response.ok,"Attachment request failed"
+                      data=await response.body()
+                      (ROOT/FILENAME).write_bytes(data)
                       assert data.startswith(b"%PDF-"),"Not a PDF"
                       with pymupdf.open(stream=data,filetype="pdf") as doc:
                           assert len(doc)>0,"Empty PDF"
