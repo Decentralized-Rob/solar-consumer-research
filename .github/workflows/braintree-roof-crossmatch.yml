@@ -1,0 +1,141 @@
+name: Braintree independent roofing index crossmatch
+on:
+  push:
+    branches: [permit-test-hopedale-20261123]
+    paths: ['.github/workflows/braintree-roof-crossmatch.yml']
+permissions:
+  contents: read
+jobs:
+  search:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - run: pip -q install playwright pypdf cryptography && python -m playwright install chromium
+      - run: |
+          python -u - <<'PY'
+          PUBLIC_KEY="-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAzTRFM3sYczJPrWEyU3Qs\nMSitKYFrltykYF7Igm1inmjba5ufJI4RbdrSVhNfaEn5qEQTXSTQmjzDAc4sedgi\n5TsgRkvkwX5WP9hufgDgdpAipa5PsWwSKXAjNfeAzIVVpyYwffwFR5M1fPKybZBy\nDHHWPOcl2WiYDSA6x7A3DgBeeleUNugGDTnxoaeJgFkIMws8v/R3qhxWqY2uieHS\nQLM08rPIBNNuy1BvomHGlfi7t7kUPaPJK3uaNvgR7RNt575+oH3ZnbhSNJ23zieE\nYQEMGi967/BOwsDA45lJGY2UBjDGFlG+7SD724j0srqvwWk7xhN4FUhp46fDclRx\nNQIDAQAB\n-----END PUBLIC KEY-----\n".encode()
+          import asyncio,os,re,json,hashlib,datetime,io,zipfile
+          from playwright.async_api import async_playwright
+          from pypdf import PdfReader
+          from cryptography.hazmat.primitives import serialization,hashes
+          from cryptography.hazmat.primitives.asymmetric import padding
+          from cryptography.hazmat.primitives.ciphers.aead import AESGCM
+          from pathlib import Path
+          def norm(s):
+              s=s.lower().strip()
+              for a,b in [('street','st'),('road','rd'),('drive','dr'),('avenue','ave'),('lane','ln'),('court','ct'),('place','pl'),('terrace','ter')]:s=re.sub(r'\b'+a+r'\b',b,s)
+              return re.sub(r'[^a-z0-9]','',s)
+          def date(s):
+              for fmt in ('%m/%d/%y','%m/%d/%Y'):
+                  try:return datetime.datetime.strptime(s,fmt)
+                  except ValueError:pass
+              return None
+          exclude=re.compile(r'insurance|certificate.of.insurance|(^|[^a-z])coi([^a-z]|$)|workers?.?comp|w.?c.?affidavit|debris|disposal|dumpster|building.plan|structural.plan|solar.plan|pv.plan|drawing|engineering.plan|plan.set|license|licence',re.I)
+          include=re.compile(r'contract|agreement|proposal|estimate|signed|authoriz|change.?order|customer|confirmation|(^|[^a-z])cap([^a-z]|$)|permit|application',re.I)
+          roof=re.compile(r'\bre.?roof|\broof(?:ing)?\s+(?:replacement|repair|tear|shingle|work)|replace.{0,35}roof|strip.{0,35}roof|shingle|giga|espigar',re.I)
+          async def main():
+              async with async_playwright() as p:
+                  b=await p.chromium.launch()
+                  c=await b.new_context(accept_downloads=True)
+                  pg=await c.new_page()
+                  pg.set_default_timeout(8000)
+                  await pg.goto('https://permiteyes.us/braintree/publicview.php',wait_until='domcontentloaded')
+                  await pg.wait_for_timeout(3500)
+                  table=pg.locator('#PublicHome:visible,#BuildingPublicHome:visible').first
+                  heads=[s.strip().lower() for s in await table.locator('thead tr').first.locator('th').all_text_contents()]
+                  print('HEADERS',heads,flush=True)
+                  def val(cs,*names):
+                      i=next((i for i,s in enumerate(heads) if s in names),-1)
+                      return cs[i] if 0<=i<len(cs) else ''
+                  def unpack(r):
+                      cs=r['cells']
+                      return dict(r,address=val(cs,'site address'),applicant=val(cs,'applicant name','applicant'),date=val(cs,'appl. date','application date'),description=val(cs,'brief description'),type=val(cs,'appl. type','application type'),number=val(cs,'permit number'))
+                  async def collect(limit=100):
+                      records={}; complete=False
+                      for k in range(limit):
+                          rr=await table.locator('tbody tr:has(a.view_app):visible').evaluate_all("""es=>es.map(e=>({cells:[...e.querySelectorAll('td')].map(x=>x.textContent.trim()),id:e.querySelector('a.view_app').dataset.id,attachment:!!e.querySelector('a.Attachmentclass')}))""")
+                          before=len(records)
+                          for r in rr:records[r['id']]=unpack(r)
+                          nxt=pg.locator('.paginate_button.next:visible:not(.disabled)').first
+                          if not await nxt.count():complete=True;break
+                          if len(records)==before:break
+                          await nxt.click();await pg.wait_for_timeout(500)
+                      return list(records.values()),complete
+                  async def search(inp,q):
+                      await inp.fill(q);await inp.dispatch_event('keyup');await inp.press('Enter');await pg.wait_for_timeout(1400)
+                  ap=pg.locator('input[name=applicant_name]:visible').first
+                  desc=pg.locator('input[name=briefDesc]:visible').first
+                  site=pg.locator('input[name=site_add]:visible').first
+                  suns={};roofs={}; coverage=[]
+                  for q in ['sunrun','sun run']:
+                      await search(ap,q);rs,complete=await collect(50)
+                      coverage.append({'field':'applicant','term':q,'rows':len(rs),'complete':complete})
+                      for r in rs:
+                          if 'sunrun' in norm(r['applicant']):suns[r['id']]=r
+                  await search(ap,'')
+                  for q in ['roof','shingle']:
+                      await search(desc,q);rs,complete=await collect(100)
+                      coverage.append({'field':'description','term':q,'rows':len(rs),'complete':complete})
+                      for r in rs:
+                          if roof.search(r['description']) and not re.search(r'solar|photovoltaic|\bpv\b',r['description'],re.I):roofs[r['id']]=r
+                  await search(desc,'')
+                  for q in ['giga','espigar']:
+                      await search(ap,q);rs,complete=await collect(30)
+                      coverage.append({'field':'applicant','term':q,'rows':len(rs),'complete':complete})
+                      for r in rs:
+                          if re.search('giga|espigar',r['applicant'],re.I):roofs[r['id']]=r
+                  await search(ap,'')
+                  suns=[r for r in suns.values() if date(r['date']) and date(r['date']).year>=2022]
+                  roofs=[r for r in roofs.values() if date(r['date']) and date(r['date']).year>=2022]
+                  pairs=[]
+                  for s in suns:
+                      for r in roofs:
+                          if norm(s['address']) and norm(s['address'])==norm(r['address']) and abs((date(s['date'])-date(r['date'])).days)<=365:pairs.append((s,r))
+                  print('CROSSMATCH',json.dumps({'solar':len(suns),'roof':len(roofs),'pairs':len(pairs),'coverage':coverage}),flush=True)
+                  pairs.sort(key=lambda sr:(bool(re.search('giga|espigar',sr[1]['applicant'],re.I)),date(sr[0]['date'])),reverse=True)
+                  buf=io.BytesIO();manifest=[];downloaded=0
+                  with zipfile.ZipFile(buf,'w',zipfile.ZIP_DEFLATED) as z:
+                      z.writestr('crossmatch.json',json.dumps({'coverage':coverage,'solar':suns,'roofs':roofs,'pairs':pairs},indent=2))
+                      # Only one new matched property; no unrelated PDF proof downloads.
+                      if pairs:
+                          s,r=pairs[0]
+                          for rec in [r,s]:
+                              await search(site,rec['address'])
+                              a=table.locator('a.Attachmentclass[data-id="'+rec['id']+'"]:visible').first
+                              if not await a.count():continue
+                              await a.click();await pg.wait_for_timeout(1800)
+                              modal=pg.locator('#AttachmentModal')
+                              links=modal.locator('a.downloadLink[data-size]:visible,a[data-href][data-download]:visible')
+                              for i in range(min(await links.count(),40)):
+                                  l=links.nth(i);name=(await l.inner_text()).strip()
+                                  if not name.lower().endswith('.pdf') or exclude.search(name) or not include.search(name):continue
+                                  item={'application':rec['id'],'filename':name}
+                                  try:
+                                      async with pg.expect_download(timeout=12000) as dl:await l.click(timeout=5000)
+                                      d=await dl.value;data=Path(await d.path()).read_bytes()
+                                      assert data.startswith(b'%PDF-')
+                                      pages=len(PdfReader(io.BytesIO(data)).pages);assert pages>0
+                                      sha=hashlib.sha256(data).hexdigest()
+                                      target=rec['id']+'/'+re.sub(r'[^a-zA-Z0-9._-]','_',name)
+                                      z.writestr(target,data)
+                                      item.update(status='verified_original',pages=pages,sha256=sha,bytes=len(data),archive_file=target)
+                                      downloaded+=1
+                                  except Exception as e:item.update(status='failed',error=type(e).__name__)
+                                  manifest.append(item)
+                              close=modal.locator('[data-dismiss=modal]:visible').first
+                              if await close.count():await close.click()
+                      z.writestr('manifest.json',json.dumps(manifest,indent=2))
+                  await b.close()
+                  pub=serialization.load_pem_public_key(PUBLIC_KEY)
+                  key=AESGCM.generate_key(bit_length=256);nonce=os.urandom(12)
+                  out=Path('encrypted');out.mkdir()
+                  (out/'key.enc').write_bytes(pub.encrypt(key,padding.OAEP(mgf=padding.MGF1(hashes.SHA256()),algorithm=hashes.SHA256(),label=None)))
+                  (out/'evidence.enc').write_bytes(nonce+AESGCM(key).encrypt(nonce,buf.getvalue(),None))
+                  print('RESULT',json.dumps({'pairs':len(pairs),'properties_downloaded':int(bool(pairs)),'verified_originals':downloaded,'eligible_attachments':len(manifest)}),flush=True)
+          asyncio.run(main())
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: braintree-roof-crossmatch-encrypted
+          path: encrypted/
+          retention-days: 7
