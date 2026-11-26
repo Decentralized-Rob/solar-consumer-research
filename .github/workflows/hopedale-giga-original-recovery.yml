@@ -22,54 +22,46 @@ jobs:
           from cryptography.hazmat.primitives.ciphers.aead import AESGCM
           from pathlib import Path
           BASE="https://permiteyes.us/hopedale/"
-          s=urllib.request.build_opener(urllib.request.HTTPCookieProcessor(http.cookiejar.CookieJar()))
-          def request(endpoint,data=None):
-              req=urllib.request.Request(BASE+endpoint,data=urllib.parse.urlencode(data).encode() if data is not None else None,headers={"User-Agent":"Mozilla/5.0","Referer":BASE+"publicview.php","X-Requested-With":"XMLHttpRequest"})
-              with s.open(req,timeout=20) as r: return r.read()
-          request("publicview.php")
           records={}
-          for term in ["Giga","Espigar"]:
-              p={"draw":"1","start":"0","length":"2000","search[value]":term,"search[regex]":"false","order[0][column]":"3","order[0][dir]":"desc"}
-              for i in range(13):
-                  for k,v in [("data",str(i)),("name",""),("searchable","true"),("orderable","true"),("search[value]",""),("search[regex]","false")]:p[f"columns[{i}][{k}]"]=v
-              j=json.loads(request("ajax/getbuildingpublichome.php",p))
-              assert len(j["data"])>=int(j.get("recordsFiltered",0))
-              for row in j["data"]:
-                  m=re.search(r'data-application-id=["\x27]([^"\x27]+)'," ".join(map(str,row)))
-                  c=[html.unescape(re.sub("<[^>]+>","",str(x))).strip() for x in row]
-                  if m and len(c)>=13 and re.fullmatch(r"\d+",c[3]) and re.search("giga|espigar",c[7],re.I):
-                      year=int(c[4].split("/")[-1]);year=year+2000 if year<100 else year
-                      if 2022<=year<=2026:records[m.group(1)]=(c[3],c[6],c[10])
-          assert len(records)<=10, "Unexpected Giga count; review required"
-          roof_count=len(records)
-          addresses={re.sub(r"[^a-z0-9]","",v[1].lower()) for v in records.values()}
-          for address in set(v[1] for v in records.values()):
-              if not address:continue
-              p={"draw":"1","start":"0","length":"2000","search[value]":address,"search[regex]":"false","order[0][column]":"3","order[0][dir]":"desc"}
-              for i in range(13):
-                  for k,v in [("data",str(i)),("name",""),("searchable","true"),("orderable","true"),("search[value]",""),("search[regex]","false")]:p[f"columns[{i}][{k}]"]=v
-              j=json.loads(request("ajax/getbuildingpublichome.php",p))
-              assert len(j["data"])>=int(j.get("recordsFiltered",0))
-              for row in j["data"]:
-                  m=re.search(r'data-application-id=["\x27]([^"\x27]+)'," ".join(map(str,row)))
-                  c=[html.unescape(re.sub("<[^>]+>","",str(x))).strip() for x in row]
-                  if m and len(c)>=13 and re.fullmatch(r"\d+",c[3]) and re.search(r"sun\s*run",c[7],re.I) and re.sub(r"[^a-z0-9]","",c[6].lower()) in addresses:
-                      year=int(c[4].split("/")[-1]);year=year+2000 if year<100 else year
-                      if 2022<=year<=2026:records[m.group(1)]=(c[3],c[6],c[10])
-              time.sleep(.3)
-          print("MATCH_COUNTS",json.dumps({"roof":roof_count,"solar":len(records)-roof_count}),flush=True)
           entries=[]
-          for uuid,(aid,addr,permit) in records.items():
-              j=json.loads(request("controller/publicattachments_controller.php",{"action":"displayAttach","ApplicationId":uuid}))
-              assert isinstance(j.get("Attachments"),list)
-              seen=set()
-              for x in j["Attachments"]:
-                  n=str(x.get("FileName",""));p=str(x.get("AttachmentPath",""))
-                  if not p or not (n.lower().endswith(".pdf") or p.lower().endswith(".pdf")):continue
-                  if not p.startswith("/mys3bucket/") and x.get("ID_import") in [None,"","0",0]:p="/mys3bucket/permiteyes.us/attachments/hopedale/building/"+p
-                  if p in seen:continue
-                  seen.add(p)
-                  entries.append({"application":aid,"address":addr,"permit":permit,"filename":n,"path":p})
+          with sync_playwright() as pw:
+              b=pw.chromium.launch()
+              ctx=b.new_context(accept_downloads=True)
+              pg=ctx.new_page()
+              pg.goto(BASE+"publicview.php",wait_until="domcontentloaded",timeout=45000)
+              inp=pg.locator('input[name="applicant_name"]:visible').first
+              inp.wait_for(timeout=15000)
+              inp.fill("espigar")
+              inp.dispatch_event("keyup")
+              inp.press("Enter")
+              pg.wait_for_timeout(2800)
+              for aid in ["3725","3681"]:
+                  a=pg.locator('a.Attachmentclass[data-id="'+aid+'"]').first
+                  a.wait_for(timeout=12000)
+                  row=a.locator("xpath=ancestor::tr")
+                  c=row.locator("td").all_inner_texts()
+                  assert len(c)>=12 and re.search("espigar",c[7],re.I)
+                  addr=c[8].strip();permit=c[11].strip()
+                  records[aid]=(aid,addr,permit)
+                  a.click(timeout=7000)
+                  modal=pg.locator("#AttachmentModal")
+                  modal.wait_for(state="visible",timeout=10000)
+                  pg.wait_for_timeout(1300)
+                  links=modal.locator("a[data-href][data-download],a.downloadLink").evaluate_all("es=>es.map(e=>({path:e.dataset.href||'',filename:e.dataset.download||e.innerText.trim(),href:e.href}))")
+                  seen=set()
+                  for x in links:
+                      n=x["filename"];p=x["path"]
+                      if not p or not (n.lower().endswith(".pdf") or p.lower().endswith(".pdf")):continue
+                      if not p.startswith("/mys3bucket/"):continue
+                      if p in seen:continue
+                      seen.add(p)
+                      entries.append({"application":aid,"address":addr,"permit":permit,"filename":n,"path":p})
+                  close=modal.locator('[data-dismiss="modal"]:visible').first
+                  if close.count():close.click()
+                  else:pg.keyboard.press("Escape")
+                  pg.wait_for_timeout(400)
+              b.close()
+          assert len(records)==2 and entries,"Known controls or attachment metadata missing"
           assert len(entries)<=60, "Unexpected scope"
           print("METADATA_COUNT",len(entries),flush=True)
           buf=io.BytesIO();manifest=[];blocked=False
