@@ -8,7 +8,7 @@ permissions:
 jobs:
   search:
     runs-on: ubuntu-latest
-    timeout-minutes: 8
+    timeout-minutes: 12
     steps:
       - run: pip -q install playwright pypdf cryptography && python -m playwright install chromium
       - run: |
@@ -50,43 +50,83 @@ jobs:
                   def unpack(r):
                       cs=r['cells']
                       return dict(r,address=val(cs,'site address'),applicant=val(cs,'applicant name','applicant'),date=val(cs,'appl. date','application date'),description=val(cs,'brief description'),type=val(cs,'appl. type','application type'),number=val(cs,'permit number'))
+                  async def rows():
+                      return await table.locator('tbody tr:has(a.view_app):visible').evaluate_all("""es=>es.map(e=>({cells:[...e.querySelectorAll('td')].map(x=>x.textContent.trim()),id:e.querySelector('a.view_app').dataset.id,attachment:!!e.querySelector('a.Attachmentclass[title="Attachment(s) present"]')}))""")
+                  async def info():
+                      return await table.evaluate("""e=>{let d=jQuery(e).DataTable(),i=d.page.info();return {page:i.page,pages:i.pages,records:i.recordsDisplay,length:i.length,serverSide:i.serverSide,search:d.search(),columns:d.columns().search().toArray()}}""")
+                  async def draw(js,arg):
+                      # Wait for the actual DataTables draw, not an arbitrary sleep.
+                      await table.evaluate(js,arg)
+                      await pg.wait_for_timeout(400)
+                  async def search_field(field,q,global_mode=False):
+                      idx=heads.index(field)
+                      await draw("""(e,a)=>new Promise((resolve,reject)=>{const d=jQuery(e).DataTable();let t=setTimeout(()=>reject(Error('DataTables draw timeout')),18000);jQuery(e).one('draw.dt',()=>{clearTimeout(t);resolve()});d.search('');d.columns().search('');d.page.len(100);if(a.global)d.search(a.q);else d.column(a.idx).search(a.q);d.draw();})""",{'idx':idx,'q':q,'global':global_mode})
                   async def collect(limit=100):
-                      records={}; complete=False
+                      records={};complete=False
                       for k in range(limit):
-                          rr=await table.locator('tbody tr:has(a.view_app):visible').evaluate_all("""es=>es.map(e=>({cells:[...e.querySelectorAll('td')].map(x=>x.textContent.trim()),id:e.querySelector('a.view_app').dataset.id,attachment:!!e.querySelector('a.Attachmentclass')}))""")
-                          before=len(records)
+                          rr=await rows()
                           for r in rr:records[r['id']]=unpack(r)
-                          nxt=pg.locator('.paginate_button.next:visible:not(.disabled)').first
-                          if not await nxt.count():complete=True;break
-                          if len(records)==before:break
-                          await nxt.click();await pg.wait_for_timeout(500)
-                      return list(records.values()),complete
-                  async def search(inp,q):
-                      await inp.fill(q);await inp.dispatch_event('keyup');await inp.press('Enter');await pg.wait_for_timeout(1400)
-                  ap=pg.locator('input[name=applicant_name]:visible').first
-                  desc=pg.locator('input[name=briefDesc]:visible').first
-                  site=pg.locator('input[name=site_add]:visible').first
-                  suns={};roofs={}; coverage=[]
+                          meta=await info()
+                          if meta['page']+1>=meta['pages']:
+                              complete=len(records)==meta['records'];break
+                          await draw("""(e,_)=>new Promise((resolve,reject)=>{const d=jQuery(e).DataTable();let t=setTimeout(()=>reject(Error('pagination draw timeout')),18000);jQuery(e).one('draw.dt',()=>{clearTimeout(t);resolve()});d.page('next').draw('page');})""",None)
+                      return list(records.values()),complete,meta['records']
+                  async def query(field,q,match,limit=100):
+                      # Try server-side column filter, global search, and the scoped real UI input.
+                      for mode in ['column','global','ui']:
+                          try:
+                              if mode=='ui':
+                                  await search_field(field,'')
+                                  names={'applicant name':'applicant_name','brief description':'briefDesc','site address':'site_add'}
+                                  inp=table.locator('input[name="'+names[field]+'"]:visible').last
+                                  if not await inp.count():continue
+                                  await inp.fill(q);await inp.dispatch_event('input');await inp.dispatch_event('change');await inp.dispatch_event('keyup');await inp.press('Enter');await pg.wait_for_timeout(2000)
+                              else:await search_field(field,q,mode=='global')
+                              sample=[unpack(r) for r in await rows()]
+                              meta=await info()
+                              # A nonempty unfiltered sample is not proof of search.
+                              good=sum(bool(match(r)) for r in sample)
+                              print('FILTER_CHECK',json.dumps({'field':field,'term':q,'mode':mode,'sample':len(sample),'matching':good,'reported':meta['records']}),flush=True)
+                              if sample and not good:continue
+                              if sample and good<len(sample) and mode!='global':continue
+                              if not sample and mode!='ui':continue
+                              rs,complete,total=await collect(limit)
+                              valid=[r for r in rs if match(r)]
+                              if rs and not valid:continue
+                              return valid,complete,total,mode
+                          except Exception as ex:print('FILTER_ERROR',field,mode,type(ex).__name__,flush=True)
+                      return [],False,0,'unverified'
+                  suns={};roofs={};coverage=[]
                   for q in ['sunrun','sun run']:
-                      await search(ap,q);rs,complete=await collect(50)
-                      coverage.append({'field':'applicant','term':q,'rows':len(rs),'complete':complete})
-                      for r in rs:
-                          if 'sunrun' in norm(r['applicant']):suns[r['id']]=r
-                  await search(ap,'')
+                      rs,complete,total,mode=await query('applicant name',q,lambda r:'sunrun' in norm(r['applicant']))
+                      coverage.append({'field':'applicant','term':q,'rows':len(rs),'complete':complete,'reported':total,'mode':mode})
+                      for r in rs:suns[r['id']]=r
+                  if not suns:
+                      # Independently search solar descriptions; applicant may be an individual.
+                      for q in ['solar','photovoltaic']:
+                          rs,complete,total,mode=await query('brief description',q,lambda r:bool(re.search(r'solar|photovoltaic',r['description'],re.I)))
+                          coverage.append({'field':'description','term':q,'rows':len(rs),'complete':complete,'reported':total,'mode':mode})
+                          for r in rs:
+                              if 'sunrun' in norm(r['applicant']+' '+r['description']):suns[r['id']]=r
                   for q in ['roof','shingle']:
-                      await search(desc,q);rs,complete=await collect(100)
-                      coverage.append({'field':'description','term':q,'rows':len(rs),'complete':complete})
+                      rs,complete,total,mode=await query('brief description',q,lambda r:q in r['description'].lower(),50)
+                      coverage.append({'field':'description','term':q,'rows':len(rs),'complete':complete,'reported':total,'mode':mode})
                       for r in rs:
                           if roof.search(r['description']) and not re.search(r'solar|photovoltaic|\bpv\b',r['description'],re.I):roofs[r['id']]=r
-                  await search(desc,'')
                   for q in ['giga','espigar']:
-                      await search(ap,q);rs,complete=await collect(30)
-                      coverage.append({'field':'applicant','term':q,'rows':len(rs),'complete':complete})
-                      for r in rs:
-                          if re.search('giga|espigar',r['applicant'],re.I):roofs[r['id']]=r
-                  await search(ap,'')
+                      rs,complete,total,mode=await query('applicant name',q,lambda r:bool(re.search('giga|espigar',r['applicant'],re.I)))
+                      coverage.append({'field':'applicant','term':q,'rows':len(rs),'complete':complete,'reported':total,'mode':mode})
+                      for r in rs:roofs[r['id']]=r
                   suns=[r for r in suns.values() if date(r['date']) and date(r['date']).year>=2022]
                   roofs=[r for r in roofs.values() if date(r['date']) and date(r['date']).year>=2022]
+                  async def address_search(addr):
+                      return await query('site address',addr,lambda r:norm(r['address'])==norm(addr),10)
+                  # Cross-check same-address roofing records if the independent index is incomplete.
+                  for s in suns[:50]:
+                      rr,complete,total,mode=await address_search(s['address'])
+                      for r in rr:
+                          if date(r['date']) and date(r['date']).year>=2022 and roof.search(r['description']) and not re.search(r'solar|photovoltaic|\bpv\b',r['description'],re.I) and 'sunrun' not in norm(r['applicant']):
+                              if not any(x['id']==r['id'] for x in roofs):roofs.append(r)
                   pairs=[]
                   for s in suns:
                       for r in roofs:
@@ -100,7 +140,7 @@ jobs:
                       if pairs:
                           s,r=pairs[0]
                           for rec in [r,s]:
-                              await search(site,rec['address'])
+                              await address_search(rec['address'])
                               a=table.locator('a.Attachmentclass[data-id="'+rec['id']+'"]:visible').first
                               if not await a.count():continue
                               await a.click();await pg.wait_for_timeout(1800)
