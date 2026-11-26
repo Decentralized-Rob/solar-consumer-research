@@ -1,0 +1,142 @@
+name: Search public solar agreements by name
+on:
+  push:
+    branches: [permit-test-hopedale-20261123]
+    paths: ['.github/workflows/name-search.yml']
+permissions:
+  contents: read
+jobs:
+  search:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      TARGET_NAME: Zoe Haley
+      TOWNS: bellingham,hopedale,attleboro
+    steps:
+      - uses: actions/cache@v4
+        with:
+          path: name_search_cache
+          key: public-agreements-v1-${{ github.run_id }}
+          restore-keys: public-agreements-v1-
+      - run: pip -q install requests pymupdf
+      - name: Search agreements using existing PermitEyes retrieval
+        run: |
+          python -u - <<'PY'
+          """Search public PermitEyes agreements using the existing retrieval endpoints."""
+          import os, re, json, html, hashlib, time
+          from pathlib import Path
+          from urllib.parse import quote
+          import requests
+          import fitz
+          
+          NAME = os.environ.get('TARGET_NAME', 'Zoe Haley')
+          TOWNS = os.environ.get('TOWNS', 'bellingham,hopedale,attleboro').split(',')
+          OUT = Path('name_search_results'); OUT.mkdir(exist_ok=True)
+          CACHE = Path('name_search_cache'); CACHE.mkdir(exist_ok=True)
+          pattern = re.compile(r'(?<!\w)' + r'\s+'.join(map(re.escape, NAME.split())) + r'(?!\w)', re.I)
+          LABELS = ['SALES CONSULTANT', 'SALES REPRESENTATIVE', 'SALES REP']
+          report = {'name': NAME, 'towns': [], 'matches': [], 'errors': [], 'downloads': 0, 'cache_hits': 0}
+          
+          def save():
+              (OUT / 'results.json').write_text(json.dumps(report, indent=2))
+          
+          def request(session, method, url, **kwargs):
+              for attempt in range(2):
+                  try:
+                      r = session.request(method, url, timeout=40, **kwargs)
+                      r.raise_for_status()
+                      return r
+                  except requests.RequestException:
+                      if attempt: raise
+                      time.sleep(1)
+          
+          def page_data(page):
+              text = page.get_text()
+              fields = []
+              for label in LABELS:
+                  for rect in page.search_for(label):
+                      # The consultant sits below this heading in its own column.
+                      clip = fitz.Rect(rect.x0-3, rect.y1, min(page.rect.width, rect.x0+230), rect.y1+55)
+                      fields.append({'label': label, 'text': page.get_text(clip=clip), 'bbox': list(clip)})
+              return {'text': text, 'fields': fields, 'needs_ocr': len(text.strip()) < 30}
+          
+          for town in TOWNS:
+              town = town.strip()
+              if not re.fullmatch('[a-z]+', town): raise ValueError('Invalid town')
+              base = 'https://permiteyes.us/' + town + '/'
+              s = requests.Session()
+              stats = {'town': town, 'applications': 0, 'agreements': 0, 'pages': 0, 'needs_ocr': 0, 'index_complete': True}
+              report['towns'].append(stats)
+              try:
+                  request(s, 'GET', base + 'publicview.php')
+                  unique = {}
+                  for term in ['Sunrun', 'Sun Run']:
+                      start = 0
+                      while True:
+                          p = {'draw': '1', 'start': str(start), 'length': '200', 'search[value]': term,
+                               'search[regex]': 'false', 'order[0][column]': '3', 'order[0][dir]': 'desc'}
+                          for i in range(13):
+                              for k,v in [('data',str(i)),('name',''),('searchable','true'),('orderable','true'),('search[value]',''),('search[regex]','false')]:
+                                  p[f'columns[{i}][{k}]'] = v
+                          j = request(s, 'POST', base+'ajax/getbuildingpublichome.php', data=p).json()
+                          rows = j.get('data', [])
+                          for row in rows:
+                              m = re.search(r'data-application-id=[\"\x27]([^\"\x27]+)', str(row[0]))
+                              if m: unique[m.group(1)] = row
+                              else: stats['index_complete'] = False
+                          start += len(rows)
+                          if start >= int(j.get('recordsFiltered', start)): break
+                          if not rows: stats['index_complete'] = False; break
+                  stats['applications'] = len(unique)
+                  (OUT / (town+'_index.json')).write_text(json.dumps(unique, indent=2))
+                  for uuid, row in unique.items():
+                      cells = [html.unescape(re.sub('<[^>]+>', '', str(x))).strip() for x in row]
+                      try:
+                          j = request(s, 'POST', base+'controller/publicattachments_controller.php', data={'action':'displayAttach','ApplicationId':uuid}).json()
+                          for a in j.get('Attachments') or []:
+                              filename = a.get('FileName','')
+                              if not re.search(r'contract|agreement|customer|\bcap\b|proposal', filename, re.I) or not filename.lower().endswith('.pdf'): continue
+                              path = a['AttachmentPath'] if a.get('ID_import') not in [None,'','0',0] else '/mys3bucket/permiteyes.us/attachments/'+town+'/building/'+a['AttachmentPath']
+                              url = 'https://permiteyes.us/readfiles2.php?file='+quote(path)
+                              key = hashlib.sha256(url.encode()).hexdigest()
+                              pdf = CACHE/(key+'.pdf'); datafile = CACHE/(key+'.json')
+                              if pdf.exists() and datafile.exists():
+                                  data = json.loads(datafile.read_text()); report['cache_hits'] += 1
+                              else:
+                                  b = request(s,'GET',url).content
+                                  if not b.startswith(b'%PDF'): raise ValueError('Attachment is not a PDF: '+filename)
+                                  with fitz.open(stream=b, filetype='pdf') as d:
+                                      data = {'sha256': hashlib.sha256(b).hexdigest(), 'pages': [page_data(pg) for pg in d]}
+                                  pdf.write_bytes(b); datafile.write_text(json.dumps(data)); report['downloads'] += 1
+                              stats['agreements'] += 1
+                              for n, pg in enumerate(data['pages'],1):
+                                  stats['pages'] += 1
+                                  stats['needs_ocr'] += int(pg['needs_ocr'])
+                                  if not pattern.search(pg['text']): continue
+                                  fieldhits = [f for f in pg['fields'] if pattern.search(f['text'])]
+                                  match = pattern.search(pg['text'])
+                                  record = {'town': town, 'application_uuid': uuid, 'permit_row': cells, 'filename': filename, 'url': url,
+                                            'sha256': data['sha256'], 'page': n, 'match_type': 'sales_consultant_field' if fieldhits else 'document_mention',
+                                            'fields': fieldhits, 'excerpt': pg['text'][max(0,match.start()-120):match.end()+180]}
+                                  dest = OUT/(town+'_'+key[:16]+'.pdf')
+                                  if not dest.exists(): dest.write_bytes(pdf.read_bytes())
+                                  record['saved_pdf'] = dest.name
+                                  report['matches'].append(record)
+                                  print('MATCH',town,filename,n,record['match_type'],flush=True)
+                              save()
+                      except Exception as e:
+                          report['errors'].append({'town':town,'application_uuid':uuid,'error':str(e)})
+                          save()
+                  print('TOWN',json.dumps(stats),flush=True)
+              except Exception as e:
+                  report['errors'].append({'town':town,'error':str(e)})
+              save()
+          print('SUMMARY',json.dumps({k:v for k,v in report.items() if k not in ['matches','errors']}),flush=True)
+          print('MATCHES',len(report['matches']),'ERRORS',len(report['errors']),flush=True)
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: solar-agreement-name-search
+          path: name_search_results/
+          retention-days: 7
