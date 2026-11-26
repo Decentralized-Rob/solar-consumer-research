@@ -1,0 +1,105 @@
+name: Hopedale Freedom Street solar originals
+on:
+  push:
+    branches: [permit-test-hopedale-20261123]
+    paths: ['.github/workflows/hopedale-freedom-solar-originals.yml']
+permissions:
+  contents: read
+jobs:
+  recover:
+    runs-on: ubuntu-latest
+    timeout-minutes: 7
+    steps:
+      - run: pip -q install playwright pypdf cryptography && python -m playwright install chromium
+      - run: |
+          python -u - <<'PY'
+          PUBLIC_KEY="-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAzTRFM3sYczJPrWEyU3Qs\nMSitKYFrltykYF7Igm1inmjba5ufJI4RbdrSVhNfaEn5qEQTXSTQmjzDAc4sedgi\n5TsgRkvkwX5WP9hufgDgdpAipa5PsWwSKXAjNfeAzIVVpyYwffwFR5M1fPKybZBy\nDHHWPOcl2WiYDSA6x7A3DgBeeleUNugGDTnxoaeJgFkIMws8v/R3qhxWqY2uieHS\nQLM08rPIBNNuy1BvomHGlfi7t7kUPaPJK3uaNvgR7RNt575+oH3ZnbhSNJ23zieE\nYQEMGi967/BOwsDA45lJGY2UBjDGFlG+7SD724j0srqvwWk7xhN4FUhp46fDclRx\nNQIDAQAB\n-----END PUBLIC KEY-----\n".encode()
+          import asyncio,re,json,hashlib,io,zipfile,os
+          from playwright.async_api import async_playwright
+          from pypdf import PdfReader
+          from cryptography.hazmat.primitives import serialization,hashes
+          from cryptography.hazmat.primitives.asymmetric import padding
+          from cryptography.hazmat.primitives.ciphers.aead import AESGCM
+          from pathlib import Path
+          # Two verified Luiz Espigar permit records, not previously recovered.
+          ids=['3678','3679']
+          skip=re.compile(r'insurance|workers.?comp|^w.?c[_. -]|(^|[^a-z])coi([^a-z]|$)|debris|disposal|dumpster|affidavit|licen[cs]e|csl|hic.card|(^|[^a-z])plans?([^a-z]|$)|drawings?|schematic|layout|spec.sheet|datasheet|cut.sheet|engineering|engineer.letter|structural.letter|certificate.of.completion',re.I)
+          wanted=re.compile(r'contract|agreement|proposal|estimate|signed|authoriz|change.?order|customer|confirmation|(^|[^a-z])cap([^a-z]|$)|permit|application|docusign|signature',re.I)
+          async def main():
+              buf=io.BytesIO();manifest=[];coverage=[];seen=set();confirmed=0;chosen=None
+              async with async_playwright() as p:
+                  b=await p.chromium.launch()
+                  c=await b.new_context(accept_downloads=True)
+                  pg=await c.new_page();pg.set_default_timeout(8000)
+                  await pg.goto('https://permiteyes.us/hopedale/publicview.php',wait_until='domcontentloaded')
+                  await pg.wait_for_timeout(3000)
+                  table=pg.locator('#PublicHome:visible,#BuildingPublicHome:visible').first
+                  async def exact(aid):
+                      inp=pg.locator('input[name=site_add]:visible,input[name=site_address]:visible').first
+                      await inp.fill('126 freedom');await inp.dispatch_event('keyup');await inp.press('Enter')
+                      await pg.wait_for_timeout(1600)
+                      a=table.locator('a.Attachmentclass[data-id="'+aid+'"]:visible').first
+                      await a.wait_for(timeout=12000)
+                      return a
+                  async def fetch(aid,z):
+                      nonlocal confirmed
+                      rec={'id':aid,'listed':0,'retained':0,'status':'no exact row'}
+                      coverage.append(rec)
+                      a=await exact(aid)
+                      if not await a.count():return None
+                      row=await a.locator('xpath=ancestor::tr[1]').inner_text()
+                      if not re.search(r'marc blanchard',row,re.I):rec['status']='wrong applicant';return None
+                      rec['status']='matched permit row'
+                      await a.click();await pg.wait_for_timeout(1400)
+                      m=pg.locator('#AttachmentModal')
+                      links=m.locator('a[data-href][data-download]:visible,a.downloadLink[data-size]:visible')
+                      rec['listed']=await links.count()
+                      print('TARGET',aid,'attachments',rec['listed'],flush=True)
+                      best=False
+                      for i in range(rec['listed']):
+                          l=links.nth(i);name=(await l.inner_text()).strip()
+                          if not name.lower().endswith('.pdf') or skip.search(name):continue
+                          try:
+                              async with pg.expect_download(timeout=10000) as event:await l.click(timeout=5000)
+                              d=await event.value;data=Path(await d.path()).read_bytes()
+                              if not data.startswith(b'%PDF-'):continue
+                              sha=hashlib.sha256(data).hexdigest()
+                              if sha in seen:continue
+                              reader=PdfReader(io.BytesIO(data));texts=[]
+                              for page in reader.pages:
+                                  try:texts.append(page.extract_text() or '')
+                                  except: texts.append('')
+                              txt='\n'.join(texts);chars=len(re.sub(r'\s','',txt))
+                              if not reader.pages:continue
+                              relevant=bool(wanted.search(name) or re.search(r'customer agreement|roofing contract|home improvement contract|change order|power purchase agreement|permit application|customer confirmation package|authorization letter|roofing estimate|solar agreement|solar lease|home improvement agreement',txt,re.I))
+                              if not relevant and chars>=100:continue
+                              # Only retain documents tied to a verified Sunrun application.
+                              target=aid+'/'+sha[:12]+'_'+re.sub(r'[^a-zA-Z0-9._-]','_',name)
+                              item={'application':aid,'filename':name,'pages':len(reader.pages),'sha256':sha,'bytes':len(data),'text_chars':chars,'sunrun_text':bool(re.search(r'\bsun\s*run\b',txt,re.I)),'archive_file':target,'status':'scan review' if chars<100 else 'original verified'}
+                              seen.add(sha);manifest.append(item);z.writestr(target,data);rec['retained']+=1
+                              best=best or bool(re.search(r'contract|agreement|change.?order|customer|confirmation|(^|[^a-z])cap([^a-z]|$)',name,re.I) or re.search(r'customer agreement|power purchase agreement|change order|customer confirmation package|roofing contract',txt,re.I))
+                              print('VERIFIED',json.dumps({'application':aid,'pages':item['pages'],'sha256':sha,'sunrun_text':item['sunrun_text'],'contract_candidate':best}),flush=True)
+                          except Exception as ex:print('DOWNLOAD_ERROR',type(ex).__name__,flush=True)
+                      close=m.locator('[data-dismiss=modal]:visible').first
+                      if await close.count():await close.click()
+                      return row if best else None
+                  with zipfile.ZipFile(buf,'w',zipfile.ZIP_DEFLATED) as z:
+                      for aid in ids:
+                          try:
+                              row=await fetch(aid,z)
+                              if row:
+                                  confirmed+=1;chosen=aid
+                                  z.writestr('selected_record.txt',row)
+                          except Exception as ex:print('TARGET_ERROR',aid,type(ex).__name__,flush=True)
+                      z.writestr('manifest.json',json.dumps(manifest,indent=2));z.writestr('coverage.json',json.dumps(coverage,indent=2))
+                  await b.close()
+              pub=serialization.load_pem_public_key(PUBLIC_KEY);key=AESGCM.generate_key(bit_length=256);nonce=os.urandom(12)
+              out=Path('encrypted');out.mkdir();(out/'key.enc').write_bytes(pub.encrypt(key,padding.OAEP(mgf=padding.MGF1(hashes.SHA256()),algorithm=hashes.SHA256(),label=None)));(out/'evidence.enc').write_bytes(nonce+AESGCM(key).encrypt(nonce,buf.getvalue(),None))
+              print('RESULT',json.dumps({'attempted':len(coverage),'unique_originals':len(manifest),'contract_property':chosen}),flush=True)
+          asyncio.run(main())
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: hopedale-freedom-solar-originals
+          path: encrypted/
+          retention-days: 7
