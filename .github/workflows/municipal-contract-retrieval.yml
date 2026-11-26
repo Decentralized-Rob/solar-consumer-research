@@ -1,4 +1,4 @@
-name: Municipal original contract retrieval
+name: Worcester original contract retrieval
 on:
   push:
     branches: [permit-test-hopedale-20261123]
@@ -12,66 +12,58 @@ jobs:
           pip -q install playwright pypdf
           python -m playwright install chromium
       - run: |
-          mkdir -p output
           python - <<'PY'
-          import asyncio,os,re,hashlib,json
+          import asyncio,json,re,os
+          from pathlib import Path
           from playwright.async_api import async_playwright
-          from pypdf import PdfReader
+          OUT=Path('output');OUT.mkdir(exist_ok=True)
           async def main():
-            async with async_playwright() as p:
-              b=await p.chromium.launch()
-              c=await b.new_context(accept_downloads=True)
-              pg=await c.new_page()
-              pg.set_default_timeout(6500)
-              for town,address,ids in [('milton','15 magnolia rd',['63806','63108']),('milton','52 hollingsworth rd',['64243','63650']),('stoughton','47 water st',['23968','23365']),('stoughton','24 warren ave',['23176','23391'])]:
-                await pg.goto('https://permiteyes.us/'+town+'/publicview.php',wait_until='domcontentloaded')
-                await pg.wait_for_timeout(3000)
-                async def search(sel,value):
-                  inp=pg.locator(sel).first
-                  await inp.fill(value)
-                  await inp.dispatch_event('keyup')
-                  await inp.press('Enter')
-                  await pg.wait_for_timeout(1250)
-                if town=='milton':
-                  await search('input[name=site_address]:visible',address)
-                else:
-                  num,street=address.split(' ',1)
-                  await search('input[name=street_no]:visible',num)
-                  await search('input[name=street_name]:visible',street)
-                print('ADDRESS_RESULTS',town,[await x.get_attribute('data-id') for x in await pg.locator('a.view_app:visible').all()],flush=True)
-                for ident in ids:
-                  a=pg.locator('a.Attachmentclass[data-id="'+ident+'"]:visible').first
-                  if not await a.count():
-                    print('NO_CONTROL',ident,flush=True);continue
-                  try:
-                    await a.click()
-                    await pg.wait_for_timeout(1500)
-                    m=pg.locator('#AttachmentModal')
-                    links=m.locator('a[data-href][data-download]:visible,a.downloadLink[data-size]:visible')
-                    names=await links.all_text_contents()
-                    print('FILES',ident,len(names),flush=True)
-                    for j,name in enumerate(names):
-                      name=name.strip()
-                      if not re.search(r'\.(pdf|jpe?g|png)$',name,re.I):continue
-                      if ident in ['63108','63650','23365','23391'] and not re.search(r'contract|agreement|auth|affidavit',name,re.I):continue
-                      try:
-                        async with pg.expect_download(timeout=6500) as d:await links.nth(j).click(timeout=3000)
-                        dl=await d.value
-                        f='output/'+ident+'_'+re.sub(r'[^a-zA-Z0-9._-]','_',dl.suggested_filename)
-                        await dl.save_as(f)
-                        data=open(f,'rb').read()
-                        assert data.startswith((b'%PDF-',b'\xff\xd8\xff',b'\x89PNG'))
-                        print('VERIFIED',ident,os.path.splitext(f)[1],len(data),hashlib.sha256(data).hexdigest(),flush=True)
-                      except Exception as e:print('DOWNLOAD_ERROR',ident,str(e)[:90],flush=True)
-                    close=m.locator('[data-dismiss=modal]:visible').first
-                    if await close.count():await close.click()
-                  except Exception as e:print('MODAL_ERROR',ident,str(e)[:90],flush=True)
-              await b.close()
+           async with async_playwright() as p:
+            b=await p.chromium.launch()
+            c=await b.new_context(accept_downloads=True)
+            pg=await c.new_page()
+            events=[];pending=[]
+            async def capture(r):
+             item={'url':r.url,'status':r.status,'type':r.request.resource_type,'content_type':r.headers.get('content-type','')}
+             events.append(item)
+             if r.request.resource_type in ['xhr','fetch'] or 'application/pdf' in item['content_type']:
+              try:
+               data=await r.body()
+               name='response_'+str(len(events))
+               if data.startswith(b'%PDF-'): ext='.pdf'
+               elif 'json' in item['content_type']: ext='.json'
+               else: ext='.txt'
+               if len(data)<15000000:
+                f=OUT/(name+ext);f.write_bytes(data);item['file']=f.name
+              except Exception as e:item['error']=str(e)[:200]
+            pg.on('response',lambda r:pending.append(asyncio.create_task(capture(r))))
+            for label,u in [
+              ('roof','https://www.worcesterma.gov/inspections/permit-history/permit-details/B-25-5033'),
+              ('solar','https://www.worcesterma.gov/inspections/permit-history/permit-details/B-25-4594'),
+              ('portal','https://worcesterma.portal.opengov.com/search')]:
+             try:
+              await pg.goto(u,wait_until='domcontentloaded',timeout=45000)
+              await pg.wait_for_timeout(6000)
+              text=await pg.locator('body').inner_text()
+              (OUT/(label+'.txt')).write_text(text)
+              (OUT/(label+'.html')).write_text(await pg.content())
+              await pg.screenshot(path=str(OUT/(label+'.png')),full_page=True)
+              links=await pg.locator('a,button,input,iframe,embed,object').evaluate_all("es=>es.map(e=>({tag:e.tagName,text:e.innerText?.trim(),href:e.getAttribute('href'),src:e.getAttribute('src'),data:e.getAttribute('data'),type:e.getAttribute('type'),name:e.getAttribute('name')}))")
+              (OUT/(label+'_controls.json')).write_text(json.dumps(links,indent=2))
+              print('PAGE',label,pg.url,'TEXT',text[:450].replace('\n',' '),'CONTROLS',len(links),flush=True)
+              if label=='portal' and 'portal does not exist' not in text.lower():
+               print('PORTAL_READY',flush=True)
+             except Exception as e: print('PAGE_ERROR',label,str(e)[:300],flush=True)
+            if pending:await asyncio.gather(*pending,return_exceptions=True)
+            (OUT/'network.json').write_text(json.dumps(events,indent=2))
+            print('NETWORK',json.dumps([e for e in events if e['type'] in ['xhr','fetch']]),flush=True)
+            await b.close()
           asyncio.run(main())
+          
           PY
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: municipal-contracts
+          name: worcester-marion-retrieval
           path: output/
-          retention-days: 1
+          retention-days: 7
