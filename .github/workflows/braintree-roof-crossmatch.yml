@@ -97,73 +97,81 @@ jobs:
                           except Exception as ex:print('FILTER_ERROR',field,mode,type(ex).__name__,flush=True)
                       return [],False,0,'unverified'
                   suns={};roofs={};coverage=[]
-                  for q in ['sunrun','sun run']:
-                      rs,complete,total,mode=await query('applicant name',q,lambda r:'sunrun' in norm(r['applicant']))
-                      coverage.append({'field':'applicant','term':q,'rows':len(rs),'complete':complete,'reported':total,'mode':mode})
-                      for r in rs:suns[r['id']]=r
-                  if not suns:
-                      # Independently search solar descriptions; applicant may be an individual.
-                      for q in ['solar','photovoltaic']:
-                          rs,complete,total,mode=await query('brief description',q,lambda r:bool(re.search(r'solar|photovoltaic',r['description'],re.I)))
-                          coverage.append({'field':'description','term':q,'rows':len(rs),'complete':complete,'reported':total,'mode':mode})
-                          for r in rs:
-                              if 'sunrun' in norm(r['applicant']+' '+r['description']):suns[r['id']]=r
-                  for q in ['roof','shingle']:
-                      rs,complete,total,mode=await query('brief description',q,lambda r:q in r['description'].lower(),50)
-                      coverage.append({'field':'description','term':q,'rows':len(rs),'complete':complete,'reported':total,'mode':mode})
+                  # Global searches are the proven working filter in this portal.
+                  for term in ['solar','photovoltaic','roof','shingle','reroof']:
+                      await search_field('brief description',term,True)
+                      rs,complete,total=await collect(100)
+                      coverage.append({'term':term,'rows':len(rs),'complete':complete,'reported':total})
                       for r in rs:
-                          if roof.search(r['description']) and not re.search(r'solar|photovoltaic|\bpv\b',r['description'],re.I):roofs[r['id']]=r
-                  for q in ['giga','espigar']:
-                      rs,complete,total,mode=await query('applicant name',q,lambda r:bool(re.search('giga|espigar',r['applicant'],re.I)))
-                      coverage.append({'field':'applicant','term':q,'rows':len(rs),'complete':complete,'reported':total,'mode':mode})
-                      for r in rs:roofs[r['id']]=r
-                  suns=[r for r in suns.values() if date(r['date']) and date(r['date']).year>=2022]
-                  roofs=[r for r in roofs.values() if date(r['date']) and date(r['date']).year>=2022]
-                  async def address_search(addr):
-                      return await query('site address',addr,lambda r:norm(r['address'])==norm(addr),10)
-                  # Cross-check same-address roofing records if the independent index is incomplete.
-                  for s in suns[:50]:
-                      rr,complete,total,mode=await address_search(s['address'])
-                      for r in rr:
-                          if date(r['date']) and date(r['date']).year>=2022 and roof.search(r['description']) and not re.search(r'solar|photovoltaic|\bpv\b',r['description'],re.I) and 'sunrun' not in norm(r['applicant']):
-                              if not any(x['id']==r['id'] for x in roofs):roofs.append(r)
+                          if not date(r['date']) or date(r['date']).year<2022 or not r['address']:continue
+                          if re.search(r'\bsolar\b|photovoltaic|\bpv\b',r['description'],re.I):suns[r['id']]=r
+                          elif roof.search(r['description']) or re.search(r'\broof\b',r['description'],re.I):roofs[r['id']]=r
                   pairs=[]
-                  for s in suns:
-                      for r in roofs:
-                          if norm(s['address']) and norm(s['address'])==norm(r['address']) and abs((date(s['date'])-date(r['date'])).days)<=365:pairs.append((s,r))
+                  for s in suns.values():
+                      for r in roofs.values():
+                          if norm(s['address'])==norm(r['address']) and abs((date(s['date'])-date(r['date'])).days)<=365:pairs.append((s,r))
+                  pairs.sort(key=lambda sr:(bool(re.search('giga|espigar',sr[1]['applicant'],re.I)),bool(sr[0]['attachment'] and sr[1]['attachment']),date(sr[0]['date'])),reverse=True)
                   print('CROSSMATCH',json.dumps({'solar':len(suns),'roof':len(roofs),'pairs':len(pairs),'coverage':coverage}),flush=True)
-                  pairs.sort(key=lambda sr:(bool(re.search('giga|espigar',sr[1]['applicant'],re.I)),date(sr[0]['date'])),reverse=True)
+                  async def address_search(rec):
+                      # Reopen exact row using global address search and page through results.
+                      addr=rec['address']
+                      for term in [addr, ' '.join(addr.split()[:2])]:
+                          await search_field('site address',term,True)
+                          for _ in range(20):
+                              a=table.locator('a.Attachmentclass[data-id="'+rec['id']+'"]:visible').first
+                              if await a.count():return a
+                              meta=await info()
+                              if meta['page']+1>=meta['pages']:break
+                              await draw("""(e,_)=>new Promise((resolve,reject)=>{const d=jQuery(e).DataTable();let t=setTimeout(()=>reject(Error('pagination draw timeout')),18000);jQuery(e).one('draw.dt',()=>{clearTimeout(t);resolve()});d.page('next').draw('page');})""",None)
+                      return table.locator('a.Attachmentclass[data-id="'+rec['id']+'"]:visible').first
+                  suns=list(suns.values());roofs=list(roofs.values())
                   buf=io.BytesIO();manifest=[];downloaded=0
                   with zipfile.ZipFile(buf,'w',zipfile.ZIP_DEFLATED) as z:
                       z.writestr('crossmatch.json',json.dumps({'coverage':coverage,'solar':suns,'roofs':roofs,'pairs':pairs},indent=2))
-                      # Only one new matched property; no unrelated PDF proof downloads.
-                      if pairs:
-                          s,r=pairs[0]
-                          for rec in [r,s]:
-                              await address_search(rec['address'])
-                              a=table.locator('a.Attachmentclass[data-id="'+rec['id']+'"]:visible').first
+                      # Inspect paired solar permits first. Only retain a property if Sunrun is confirmed in original PDF.
+                      seen=set();confirmed=0;attempts=0
+                      for s,r in pairs[:30]:
+                          if norm(s['address']) in seen:continue
+                          seen.add(norm(s['address']))
+                          attempts+=1;docs=[];solar_confirmed=False
+                          for rec in [s,r]:
+                              if rec is r and not solar_confirmed:break
+                              a=await address_search(rec)
                               if not await a.count():continue
-                              await a.click();await pg.wait_for_timeout(1800)
+                              await a.click();await pg.wait_for_timeout(1500)
                               modal=pg.locator('#AttachmentModal')
                               links=modal.locator('a.downloadLink[data-size]:visible,a[data-href][data-download]:visible')
+                              print('ATTACHMENT_COUNT', 'solar' if rec is s else 'roof',await links.count(),flush=True)
                               for i in range(min(await links.count(),40)):
                                   l=links.nth(i);name=(await l.inner_text()).strip()
-                                  if not name.lower().endswith('.pdf') or exclude.search(name) or not include.search(name):continue
-                                  item={'application':rec['id'],'filename':name}
+                                  if not name.lower().endswith('.pdf') or exclude.search(name) or re.search(r'\bplans?\b|schematic|layout|engineering|certificate.of.completion|installation.methods|affidavit',name,re.I):continue
+                                  # Ambiguous PDFs are not automatically rejected; verify actual content.
                                   try:
-                                      async with pg.expect_download(timeout=12000) as dl:await l.click(timeout=5000)
-                                      d=await dl.value;data=Path(await d.path()).read_bytes()
-                                      assert data.startswith(b'%PDF-')
-                                      pages=len(PdfReader(io.BytesIO(data)).pages);assert pages>0
+                                      async with pg.expect_download(timeout=12000) as event:await l.click(timeout=5000)
+                                      d=await event.value;data=Path(await d.path()).read_bytes()
+                                      if not data.startswith(b'%PDF-'):continue
+                                      reader=PdfReader(io.BytesIO(data));pages=len(reader.pages)
+                                      if not pages:continue
+                                      texts=[x.extract_text() or '' for x in reader.pages]
+                                      txt='\n'.join(texts)
+                                      relevant=bool(include.search(name) or re.search(r'customer agreement|roofing contract|home improvement contract|change order|power purchase agreement|permit application|customer confirmation package|authorization letter|roofing estimate',txt,re.I))
+                                      if not relevant:continue
+                                      sr=bool(re.search(r'\bsun\s*run\b',txt,re.I))
+                                      if rec is s and sr:solar_confirmed=True
                                       sha=hashlib.sha256(data).hexdigest()
-                                      target=rec['id']+'/'+re.sub(r'[^a-zA-Z0-9._-]','_',name)
-                                      z.writestr(target,data)
-                                      item.update(status='verified_original',pages=pages,sha256=sha,bytes=len(data),archive_file=target)
-                                      downloaded+=1
-                                  except Exception as e:item.update(status='failed',error=type(e).__name__)
-                                  manifest.append(item)
+                                      item={'application':rec['id'],'filename':name,'pages':pages,'sha256':sha,'bytes':len(data),'sunrun_text':sr,'status':'verified_original','archive_file':rec['id']+'/'+re.sub(r'[^a-zA-Z0-9._-]','_',name)}
+                                      docs.append((item,data))
+                                      print('PDF_CHECK',json.dumps({'role':'solar' if rec is s else 'roof','pages':pages,'sunrun_text':sr,'contract_terms':bool(re.search(r'contract|agreement',txt,re.I)),'hash':sha}),flush=True)
+                                  except Exception as e:print('PDF_ERROR',type(e).__name__,flush=True)
                               close=modal.locator('[data-dismiss=modal]:visible').first
                               if await close.count():await close.click()
+                          if solar_confirmed:
+                              confirmed+=1
+                              for item,data in docs:
+                                  z.writestr(item['archive_file'],data);manifest.append(item);downloaded+=1
+                              z.writestr('confirmed_property.json',json.dumps({'solar':s,'roof':r},indent=2))
+                              break
+                      print('PROPERTY_SCREEN',json.dumps({'attempted':attempts,'sunrun_confirmed':confirmed}),flush=True)
                       z.writestr('manifest.json',json.dumps(manifest,indent=2))
                   await b.close()
                   pub=serialization.load_pem_public_key(PUBLIC_KEY)
@@ -171,7 +179,7 @@ jobs:
                   out=Path('encrypted');out.mkdir()
                   (out/'key.enc').write_bytes(pub.encrypt(key,padding.OAEP(mgf=padding.MGF1(hashes.SHA256()),algorithm=hashes.SHA256(),label=None)))
                   (out/'evidence.enc').write_bytes(nonce+AESGCM(key).encrypt(nonce,buf.getvalue(),None))
-                  print('RESULT',json.dumps({'pairs':len(pairs),'properties_downloaded':int(bool(pairs)),'verified_originals':downloaded,'eligible_attachments':len(manifest)}),flush=True)
+                  print('RESULT',json.dumps({'pairs':len(pairs),'properties_downloaded':confirmed,'verified_originals':downloaded,'eligible_attachments':len(manifest)}),flush=True)
           asyncio.run(main())
           PY
       - uses: actions/upload-artifact@v4
