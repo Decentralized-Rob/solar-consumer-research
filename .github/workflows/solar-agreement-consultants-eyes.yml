@@ -1,119 +1,109 @@
-name: Public solar agreement consultant extraction
+name: Find Zoe Haley original Sunrun agreement
 on:
   push:
     branches: [permit-test-hopedale-20261123]
     paths: ['.github/workflows/solar-agreement-consultants-eyes.yml']
+permissions:
+  contents: read
 jobs:
-  search:
+  read:
     runs-on: ubuntu-latest
-    timeout-minutes: 7
-    strategy:
-      fail-fast: false
-      matrix:
-        town: [bellingham, hopedale, attleboro]
+    timeout-minutes: 12
     steps:
+      - run: pip -q install requests pymupdf
       - run: |
-          pip -q install playwright pypdf
-          python -m playwright install chromium
-      - env:
-          TOWN: ${{ matrix.town }}
-        run: |
-          mkdir -p output
-          python - <<'PY'
-          import asyncio,os,re,json,hashlib,datetime
-          from playwright.async_api import async_playwright
-          from pypdf import PdfReader
-          town=os.environ['TOWN']
-          def norm(s):
-            s=s.lower().strip()
-            for a,b in [('street','st'),('road','rd'),('drive','dr'),('avenue','ave'),('lane','ln'),('court','ct'),('place','pl'),('terrace','ter')]:
-              s=re.sub(r'\b'+a+r'\b',b,s)
-            return re.sub(r'[^a-z0-9]','',s)
-          def date(s):
-            try:return datetime.datetime.strptime(s,'%m/%d/%y')
-            except:return None
-          async def main():
-            async with async_playwright() as p:
-              b=await p.chromium.launch()
-              c=await b.new_context(accept_downloads=True)
-              pg=await c.new_page()
-              pg.set_default_timeout(8000)
-              await pg.goto('https://permiteyes.us/'+town+'/publicview.php',wait_until='domcontentloaded')
-              await pg.wait_for_timeout(3000)
-              table=pg.locator('#PublicHome:visible,#BuildingPublicHome:visible').first
-              heads=await table.locator('thead tr').first.locator('th').all_text_contents()
-              heads=[s.strip().lower() for s in heads]
-              print('HEADERS',heads,flush=True)
-              def ix(*names):
-                return next((i for i,s in enumerate(heads) if s in names),-1)
-              def unpack(r):
-                cs=r['cells']
-                def val(*names):
-                  i=ix(*names)
-                  return cs[i] if i>=0 and i<len(cs) else ''
-                addr=val('site address') or (val('street no','street no.')+' '+val('street name')).strip()
-                return dict(r,address=addr,applicant=val('applicant','applicant name'),date=val('appl. date','application date'),description=val('brief description'),type=val('appl. type','application type'),number=val('permit number'))
-              async def collect(limit=35):
-                records={}
-                for k in range(limit):
-                  rr=await table.locator('tbody tr:has(a.view_app):visible').evaluate_all("""es=>es.map(e=>({cells:[...e.querySelectorAll('td')].map(x=>x.textContent.trim()),id:e.querySelector('a.view_app').dataset.id,attachment:!!e.querySelector('a.Attachmentclass[title="Attachment(s) present"],a.Attachmentclass [title="Attachment(s) present"]')}))""")
-                  for r in rr:records[r['id']]=unpack(r)
-                  nxt=pg.locator('.paginate_button.next:visible:not(.disabled)').first
-                  if not await nxt.count():break
-                  await nxt.click();await pg.wait_for_timeout(350)
-                return list(records.values())
-              async def search(inp,q):
-                await inp.fill(q);await inp.dispatch_event('keyup');await inp.press('Enter');await pg.wait_for_timeout(950)
-              ap=pg.locator('input[name=applicant_name]:visible').first
-              found={}
-              await search(ap,'sunrun')
-              await pg.wait_for_timeout(2500)
-              for r in await collect(80):
-                if 'sunrun' in norm(r['applicant']):found[r['id']]=r
-              print('SUNRUN_COUNT',len(found),flush=True)
-              # Traverse each result page; read only contract/approval attachments, don't archive customer data.
-              await search(ap,'')
-              await search(ap,'sunrun')
-              await pg.wait_for_timeout(2000)
-              seen=set(); n=0
-              for k in range(80):
-                rr=await table.locator('tbody tr:has(a.view_app):visible').evaluate_all("""es=>es.map(e=>({cells:[...e.querySelectorAll('td')].map(x=>x.textContent.trim()),id:e.querySelector('a.view_app').dataset.id,attachment:true}))""")
-                for row in rr:
-                  r=unpack(row)
-                  if r['id'] in seen or 'sunrun' not in norm(r['applicant']):continue
-                  seen.add(r['id'])
-                  if not re.search(r'building|residential|solar|pv',r['type'],re.I):continue
-                  a=table.locator('a.Attachmentclass[data-id="'+r['id']+'"]:visible').first
-                  if not await a.count():continue
-                  try:
-                    await a.click(timeout=2500);await pg.wait_for_timeout(450)
-                    m=pg.locator('#AttachmentModal')
-                    links=m.locator('a[data-href][data-download]:visible,a.downloadLink[data-size]:visible')
-                    for j,name in enumerate(await links.all_text_contents()):
-                      if not re.search(r'contract|agreement|ppa|cap|proposal|customer.approval',name,re.I):continue
-                      if not name.lower().endswith('.pdf'):continue
-                      try:
-                        async with pg.expect_download(timeout=5500) as dl:await links.nth(j).click(timeout=2500)
-                        d=await dl.value; f='/tmp/agreement.pdf';await d.save_as(f)
-                        data=open(f,'rb').read()
-                        if not data.startswith(b'%PDF-'):continue
-                        reader=PdfReader(f); n+=1
-                        for idx,page in enumerate(reader.pages[:4]):
-                          text=page.extract_text() or ''
-                          if not re.search(r'sales\s+(consultant|representative)',text,re.I):continue
-                          emails=re.findall(r'[\w.+-]+@sunrun\.com',text,re.I)
-                          reps=[e for e in emails if not re.search(r'customercare|esign|support|service|info',e,re.I)]
-                          if reps:
-                            print('AGREEMENT',json.dumps({'record':r['id'],'permit':r['number'],'page':idx+1,'email':reps,'filename':name,'bytes':len(data),'sha256':hashlib.sha256(data).hexdigest()}),flush=True)
-                            break
-                      except Exception as e: print('READ_ERROR',r['id'],str(e)[:70],flush=True)
-                    close=m.locator('[data-dismiss=modal]:visible').first
-                    if await close.count():await close.click(timeout=2500)
-                  except Exception as e:print('MODAL_ERROR',r['id'],str(e)[:70],flush=True)
-                nxt=pg.locator('.paginate_button.next:visible:not(.disabled)').first
-                if not await nxt.count():break
-                await nxt.click();await pg.wait_for_timeout(600)
-              print('CHECKED',len(seen),n,flush=True)
-              await b.close()
-          asyncio.run(main())
+          python -u - <<'PY'
+          import requests,json,re,hashlib,concurrent.futures,threading,time,html
+          from pathlib import Path
+          from urllib.parse import quote
+          import fitz
+          fitz.TOOLS.mupdf_display_errors(False)
+          BASE="https://permiteyes.us/bellingham/"
+          OUT=Path("zoe_haley_job");OUT.mkdir(exist_ok=True)
+          lock=threading.Lock();S=requests.Session();S.get(BASE+"publicview.php",timeout=30)
+          def get(url,data=None):
+           for attempt in range(3):
+            try:
+             r=requests.post(url,data=data,timeout=30) if data else requests.get(url,timeout=30)
+             r.raise_for_status();return r.content
+            except Exception:
+             if attempt==2:raise
+             time.sleep(2**attempt)
+          def search(term,length=2000):
+           p={"draw":"1","start":"0","length":str(length),"search[value]":term,"search[regex]":"false","order[0][column]":"3","order[0][dir]":"desc"}
+           for i in range(13):
+            for k,v in [("data",str(i)),("name",""),("searchable","true"),("orderable","true"),("search[value]",""),("search[regex]","false")]:p[f"columns[{i}][{k}]"]=v
+           return S.post(BASE+"ajax/getbuildingpublichome.php",data=p,timeout=50).json()
+          def rowdata(row):
+           c=[html.unescape(re.sub("<[^>]+>","",str(x))).strip() for x in row]
+           m=re.search(r"data-application-id=[\"']([^\"']+)",row[0])
+           return {"cells":c,"uuid":m.group(1) if m else ""}
+          index=search("Sunrun")
+          rows=[rowdata(r) for r in index["data"]]
+          rows=[r for r in rows if r["cells"][9].upper()=="SOLAR" and r["cells"][4][-2:] in ["24","25","26"]]
+          results=[];errors=[];stop=threading.Event()
+          def attachments(uuid):
+           return json.loads(get(BASE+"controller/publicattachments_controller.php",{"action":"displayAttach","ApplicationId":uuid})).get("Attachments") or []
+          def docurl(a):
+           path=a["AttachmentPath"] if a.get("ID_import") not in [None,"","0",0] else "/mys3bucket/permiteyes.us/attachments/bellingham/building/"+a["AttachmentPath"]
+           return "https://permiteyes.us/readfiles2.php?file="+quote(path),path
+          def scan(r):
+           if stop.is_set():return
+           c=r["cells"];aid=c[3]
+           try:
+            aa=attachments(r["uuid"]);docs=[];target=False
+            for a in aa:
+             if not re.search(r"contract|agreement|customer|\bcap\b",a["FileName"],re.I) or not a["FileName"].lower().endswith(".pdf"):continue
+             try:
+              u,path=docurl(a);b=get(u)
+              if not b.startswith(b"%PDF"):continue
+              d=fitz.open(stream=b,filetype="pdf");t="\n".join(d[i].get_text() for i in range(min(4,len(d))))
+              hit=bool(re.search(r"Zo[eë]\s+Haley|zoe\.haley@",t,re.I))
+              full="\n".join(pg.get_text() for pg in d) if hit else ""
+              x={"filename":a["FileName"],"url":u,"path":path,"sha256":hashlib.sha256(b).hexdigest(),"bytes":len(b),"pages":len(d),"target":hit,"text":t if hit else "","full_text":full}
+              if hit:
+               stop.set()
+               target=True;p=OUT/aid/re.sub("[^A-Za-z0-9_.-]","_",a["FileName"]);p.parent.mkdir(exist_ok=True);p.write_bytes(b);x["saved"]=str(p)
+              docs.append(x)
+             except Exception as e:
+              with lock:errors.append({"application":aid,"error":str(e)[:150]})
+            item={"application":aid,"date":c[4],"address":c[6],"permit":c[10],"scope":c[8],"target":target,"documents":docs}
+            if target:
+             # Separate short public address search, using the same portal search form.
+             ss=requests.Session();ss.get(BASE+"publicview.php",timeout=25)
+             p={"draw":"1","start":"0","length":"200","search[value]":c[6],"search[regex]":"false","order[0][column]":"3","order[0][dir]":"desc"}
+             for i in range(13):
+              for k,v in [("data",str(i)),("name",""),("searchable","true"),("orderable","true"),("search[value]",""),("search[regex]","false")]:p[f"columns[{i}][{k}]"]=v
+             jj=ss.post(BASE+"ajax/getbuildingpublichome.php",data=p,timeout=35).json()
+             at=[rowdata(z) for z in jj["data"]];item["address_records"]=at;roof=[]
+             for rr in at:
+              cc=rr["cells"]
+              if not re.search(r"re[ -]?roof|shingl|roof.{0,40}(repair|replac)|(?:repair|replac|strip|tear).{0,70}roof",cc[8],re.I):continue
+              if re.search("solar|photovoltaic|rooftop pv",cc[8],re.I):continue
+              rt={"application":cc[3],"date":cc[4],"permit":cc[10],"applicant":cc[7],"scope":cc[8],"documents":[]}
+              for a in attachments(rr["uuid"]):
+               if not re.search("contract|agreement|application|permit",a["FileName"],re.I) or not a["FileName"].lower().endswith(".pdf"):continue
+               u,path=docurl(a);bb=get(u)
+               if not bb.startswith(b"%PDF"):continue
+               dd=fitz.open(stream=bb,filetype="pdf");pp=OUT/aid/("roof_"+cc[3]+"_"+re.sub("[^A-Za-z0-9_.-]","_",a["FileName"]));pp.write_bytes(bb)
+               rt["documents"].append({"filename":a["FileName"],"url":u,"path":path,"pages":len(dd),"sha256":hashlib.sha256(bb).hexdigest(),"bytes":len(bb),"text":"\n".join(pg.get_text() for pg in dd),"saved":str(pp)})
+              roof.append(rt)
+             item["roof_records"]=roof
+             item["roof_required_in_cap"]=any(re.search("Roof Work:|Roofing:|reroof|re-roof",x["full_text"],re.I) for x in docs if x["target"])
+            with lock:
+             results.append(item);(OUT/"results.json").write_text(json.dumps({"town":"Bellingham","index_returned":len(index["data"]),"index_total":index["recordsFiltered"],"checked":len(results),"scan_total":len(rows),"results":results,"errors":errors},indent=2))
+             print("CHECKED",len(results),"OF",len(rows),"TARGET_COUNT",sum(x["target"] for x in results),flush=True)
+           except Exception as e:
+            with lock:errors.append({"application":aid,"error":str(e)[:150]})
+          with concurrent.futures.ThreadPoolExecutor(max_workers=3) as pool:list(pool.map(scan,rows))
+          print("FINISHED",len(results),"TARGETS",sum(x["target"] for x in results),"ERRORS",len(errors),flush=True)
+          for x in results:
+           if x["target"]:print("MATCH",json.dumps({k:v for k,v in x.items() if k not in ["documents","address_records"]}),flush=True)
+          
           PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: zoe-haley-job
+          path: zoe_haley_job/
+          retention-days: 7
