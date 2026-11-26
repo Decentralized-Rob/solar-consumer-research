@@ -16,7 +16,7 @@ async function render(path) {
 
 test("high-impression Sunrun contract page gives an immediate sourced answer and clear SERP title", async () => {
   const html = await render("/research/sunrun-25-year-solar-contracts");
-  assert.match(html, /<title>Sunrun 25-Year Solar Lease: Transfers, Buyouts &amp; Guarantees<\/title>/i);
+  assert.match(html, /<title>Sunrun 25-Year Solar Contract: Lease, PPA &amp; Buyout Terms<\/title>/i);
   assert.match(html, /rel="canonical"[^>]*href="https:\/\/solarcomplaint\.com\/research\/sunrun-25-year-solar-contracts"/i);
   assert.match(html, /Selling your home:/);
   assert.match(html, /End of the lease:/);

@@ -9,15 +9,15 @@ export const story = {
   title: "Sunrun’s 25-Year Solar Contracts: The Homeowner View and the Investor View",
   deck: "Sunrun’s own filings show why a 20- or 25-year solar agreement looks very different from the roof than it does in the financial statements.",
   summary: "A source-backed analysis of Sunrun solar leases and PPAs, recurring customer payments, subscriber value, transfers, escalators and the terms homeowners should examine.",
-  seoTitle: "Sunrun 25-Year Solar Lease: Transfers, Buyouts & Guarantees",
-  seoDescription: "Sunrun 25-year lease or PPA? See 2026 filings on home-sale transfers, end-of-term options and why some reviewed agreements have a 0% production guarantee.",
+  seoTitle: "Sunrun 25-Year Solar Contract: Lease, PPA & Buyout Terms",
+  seoDescription: "What happens when you sell your home with Sunrun solar? Compare lease and PPA payments, annual increases, transfers, buyouts and production guarantees.",
   keywords: ["Sunrun 25 year contract", "Sunrun solar contract", "Sunrun lease 25 years", "Sunrun PPA", "Sunrun contract terms", "Sunrun solar lease", "Sunrun contract transfer", "Sunrun buyout", "Sunrun performance guarantee", "Sunrun Flex"],
-  openGraphTitle: "Sunrun 25-Year Solar Contracts: Transfers, Buyouts & Guarantees",
+  openGraphTitle: "Sunrun 25-Year Solar Contract: Lease, PPA & Buyout Terms",
   socialDescription: "Current SEC records explain the term, performance guarantees, transfers and financial value behind Sunrun leases and PPAs.",
   twitterDescription: "Current 2026 records on what a long-term Sunrun agreement means for homeowners.",
   lede: "A Sunrun lease or power purchase agreement can last longer than many homeowners stay in the same house. New 2026 SEC records add unusually specific details about what those agreements contain and how Sunrun values them.",
-  displayTitle: "Sunrun 25-Year Solar Lease: Transfers, Buyouts & Guarantees",
-  publishedAt: "September 7, 2026", datePublished: "2026-09-07", dateModified: "2026-09-16",
+  displayTitle: "Sunrun 25-Year Solar Contract: Lease, PPA & Buyout Terms",
+  publishedAt: "September 7, 2026", datePublished: "2026-09-07", dateModified: "2026-11-24",
   stateCodes: [], companies: ["Sunrun"],
   topics: ["Sunrun contracts", "solar leases", "power purchase agreements", "subscriber value", "contract transfers"],
   section: "Research", featured: true,
@@ -62,6 +62,8 @@ export function SunrunContractsBody() {
           <li><strong>Production guarantee:</strong> A 2026 SEC-filed review found newer agreements with guarantee percentages of 90%, 85% or 0%. Your signed terms determine your coverage. <a href="#guarantee">Read the source details</a>.</li>
         </ul>
       </section>
+
+      <p>If you are comparing an offer or disputing an existing agreement, see the <Link href="/companies/sunrun">Sunrun lawsuits, settlements and consumer complaint research center</Link> for the underlying public records.</p>
 
       <section id="new" className="info-section"><p className="eyebrow">Fresh records</p><h2>What new 2026 SEC filings tell us about Sunrun contracts</h2><p>An April 2026 third-party review filed with the SEC examined Sunrun’s solar fleet and sample customer agreements. It says Sunrun began offering SHIFT, Flex and Storage Add-on agreements in 2024. The reviewed SHIFT and Flex agreements typically had 25-year terms. The storage-only lease was described as having a 10-year term.</p><p>The same filing says newer agreements reviewed for the report carried performance-guarantee percentages of 90%, 85% or 0%, depending on the agreement. That is important: the words <em>performance guarantee</em> do not by themselves tell a homeowner how much production is guaranteed. The percentage and calculation in the individual agreement matter.</p><p><a href={secFleetReview} target="_blank" rel="noreferrer">Read the April 2026 fleet review filed with the SEC ↗</a></p></section>
 

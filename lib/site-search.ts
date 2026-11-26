@@ -22,6 +22,7 @@ const directoryPages: SiteSearchResult[] = [
   { href: "/cases/freedom-forever/warning-signs", title: "Freedom Forever bankruptcy warning signs", section: "Bankruptcy reporting", summary: "The public record preceding Freedom Forever's bankruptcy." },
   { href: "/guides", title: "Solar consumer help and guides", section: "Consumer help", summary: "Contracts, complaints, home improvement issues and official complaint resources." },
   { href: "/guides/massachusetts-solar-complaint", title: "How to file a solar complaint in Massachusetts", section: "Consumer help", summary: "Massachusetts Attorney General complaint process for Sunrun and other solar companies." },
+  { href: "/guides/massachusetts-sunrun-complaint", title: "Massachusetts Sunrun complaint center", section: "Consumer help", summary: "Sunrun complaint filing routes in Massachusetts and the contract, production and permit records to gather." },
   { href: "/guides/massachusetts-30-day-demand-letter", title: "Massachusetts Chapter 93A 30-day demand letter", section: "Consumer help", summary: "Massachusetts consumer protection demand letters and solar disputes." },
   { href: "/guides/solar-complaint-record-checklist", title: "Solar complaint records checklist", section: "Consumer help", summary: "Documents and evidence to collect for a solar complaint." },
   { href: "/resources", title: "Solar consumer resources by state", section: "State resources", summary: "Browse solar consumer protection resources and complaint channels by state." },

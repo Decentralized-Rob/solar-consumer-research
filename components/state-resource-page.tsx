@@ -122,6 +122,7 @@ export function StateResourcePage({ state }: { state: { code: string; name: stri
         <p>{consumerProtection.summary}</p>
         <p className="state-source-note">For a residential-solar complaint, keep the sales proposal, signed or electronic contract, financing or lease documents, utility bills, production records, permits, inspection records, cancellation attempts, and company correspondence.</p>
         <a href={consumerProtection.url} target="_blank" rel="noreferrer">Open the official {state.name} complaint page ↗</a>
+        {state.code === "MA" && <p><Link href="/guides/massachusetts-sunrun-complaint">Massachusetts Sunrun complaint center: filing routes and records to gather →</Link></p>}
       </section>
 
       {currentEnforcementSources.length > 0 && (

@@ -53,6 +53,11 @@ export default async function GuidesPage() {
       lede="These guides summarize published procedures. They do not assess individual situations, recommend claims, or predict outcomes."
     >
       <div className="guide-page-list">
+        <section className="guide-page-item">
+          <h2>Massachusetts Sunrun complaints</h2>
+          <p>Find official complaint routes and the contract, production and permit records to gather for a Sunrun dispute.</p>
+          <p><Link href="/guides/massachusetts-sunrun-complaint">Open the Massachusetts Sunrun complaint center →</Link></p>
+        </section>
         {items.map((guide, index) => {
           const standaloneHref = standaloneGuideHrefById[guide.id];
           return (

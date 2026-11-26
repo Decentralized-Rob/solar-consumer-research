@@ -207,12 +207,13 @@ export default function SunrunCompanyPage() {
         <section className="info-section" aria-labelledby="sunrun-contract">
           <h2 id="sunrun-contract">Sunrun leases and power purchase agreements</h2>
           <p><Link href="/research/sunrun-25-year-solar-contracts">Read what Sunrun’s long-term agreements say about payments, transfers, and buyouts</Link>.</p>
+          <p><Link href="/research/sunrun-solar-design-changes-change-orders">Sunrun changed your panel count or system design? See the Massachusetts permit findings and change-order requirements.</Link></p>
         </section>
 
         <section className="info-section" aria-labelledby="sunrun-complaint-help">
           <h2 id="sunrun-complaint-help">Where to file a Sunrun complaint</h2>
           <p>For an independent complaint, find the consumer protection office for your state. Keep the agreement, the records you’re disputing and any written response.</p>
-          <p><Link href="/resources">Find your state’s complaint routes</Link> · <Link href="/guides/massachusetts-solar-complaint">Massachusetts complaint guide</Link></p>
+          <p><Link href="/resources">Find your state’s complaint routes</Link> · <Link href="/guides/massachusetts-sunrun-complaint">Massachusetts Sunrun complaint center</Link> · <Link href="/guides/massachusetts-solar-complaint">General Massachusetts solar complaint guide</Link></p>
           <p><Link href="/research/sunrun-complaints-what-to-check">Read documented Sunrun complaints and find out where to file</Link></p>
         </section>
 

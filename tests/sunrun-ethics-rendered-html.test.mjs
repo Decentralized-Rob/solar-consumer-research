@@ -22,7 +22,7 @@ test("renders Sunrun ethics guide as an independent source-first editorial page"
   assert.equal(response.status, 200);
   const html = await response.text();
 
-  assert.match(html, /<title>Sunrun Ethics Complaint: AllVoices, Code of Conduct &amp; Compliance Guide/i);
+  assert.match(html, /<title>How to File a Sunrun Ethics Complaint \| AllVoices<\/title>/i);
   assert.match(html, /<h1[^>]*>Sunrun Ethics &amp; Compliance<\/h1>/i);
   assert.match(html, /independent consumer research and editorial publication/i);
   assert.match(html, /not affiliated with, endorsed by or sponsored by Sunrun/i);
