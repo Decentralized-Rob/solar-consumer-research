@@ -1,0 +1,111 @@
+name: Bellingham Giga original attachment recovery
+on:
+  push:
+    branches: [research/permitpro-sunrun-giga]
+    paths: ['.github/workflows/bellingham-giga-original-recovery.yml']
+permissions:
+  contents: read
+jobs:
+  recover:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - run: pip -q install pymupdf cryptography playwright && python -m playwright install chromium
+      - name: Recover original public attachments and encrypt evidence
+        run: |
+          python -u - <<'PY'
+          import urllib.request, urllib.parse, http.cookiejar, json, re, html, time, hashlib, os, io, zipfile
+          import pymupdf
+          from playwright.sync_api import sync_playwright
+          from cryptography.hazmat.primitives import serialization, hashes
+          from cryptography.hazmat.primitives.asymmetric import padding
+          from cryptography.hazmat.primitives.ciphers.aead import AESGCM
+          from pathlib import Path
+          BASE="https://permiteyes.us/bellingham/"
+          s=urllib.request.build_opener(urllib.request.HTTPCookieProcessor(http.cookiejar.CookieJar()))
+          def request(endpoint,data=None):
+              req=urllib.request.Request(BASE+endpoint,data=urllib.parse.urlencode(data).encode() if data is not None else None,headers={"User-Agent":"Mozilla/5.0","Referer":BASE+"publicview.php","X-Requested-With":"XMLHttpRequest"})
+              with s.open(req,timeout=20) as r: return r.read()
+          request("publicview.php")
+          records={}
+          for term in ["Giga","Espigar"]:
+              p={"draw":"1","start":"0","length":"2000","search[value]":term,"search[regex]":"false","order[0][column]":"3","order[0][dir]":"desc"}
+              for i in range(13):
+                  for k,v in [("data",str(i)),("name",""),("searchable","true"),("orderable","true"),("search[value]",""),("search[regex]","false")]:p[f"columns[{i}][{k}]"]=v
+              j=json.loads(request("ajax/getbuildingpublichome.php",p))
+              assert len(j["data"])>=int(j.get("recordsFiltered",0))
+              for row in j["data"]:
+                  m=re.search(r'data-application-id=["\x27]([^"\x27]+)'," ".join(map(str,row)))
+                  c=[html.unescape(re.sub("<[^>]+>","",str(x))).strip() for x in row]
+                  if m and len(c)>=13 and re.fullmatch(r"\d+",c[3]) and re.search("giga|espigar",c[7],re.I):
+                      year=int(c[4].split("/")[-1]);year=year+2000 if year<100 else year
+                      if 2022<=year<=2026:records[m.group(1)]=(c[3],c[6],c[10])
+          assert len(records)==4, "Giga control count changed; review required"
+          entries=[]
+          for uuid,(aid,addr,permit) in records.items():
+              j=json.loads(request("controller/publicattachments_controller.php",{"action":"displayAttach","ApplicationId":uuid}))
+              assert isinstance(j.get("Attachments"),list)
+              seen=set()
+              for x in j["Attachments"]:
+                  n=str(x.get("FileName",""));p=str(x.get("AttachmentPath",""))
+                  if not p or not (n.lower().endswith(".pdf") or p.lower().endswith(".pdf")):continue
+                  if not p.startswith("/mys3bucket/") and x.get("ID_import") in [None,"","0",0]:p="/mys3bucket/permiteyes.us/attachments/bellingham/building/"+p
+                  if p in seen:continue
+                  seen.add(p)
+                  entries.append({"application":aid,"address":addr,"permit":permit,"filename":n,"path":p})
+          assert len(entries)<=30, "Unexpected scope"
+          print("METADATA_COUNT",len(entries),flush=True)
+          buf=io.BytesIO();manifest=[];blocked=False
+          with zipfile.ZipFile(buf,"w",zipfile.ZIP_DEFLATED) as z:
+              with sync_playwright() as pw:
+                  browser=pw.chromium.launch();ctx=browser.new_context();pg=ctx.new_page()
+                  pg.goto(BASE+"publicview.php",wait_until="domcontentloaded",timeout=45000)
+                  for i,e in enumerate(entries):
+                      r=dict(e)
+                      if blocked:
+                          r["status"]="not_attempted_after_access_block";manifest.append(r);continue
+                      try:
+                          assert e["path"].startswith("/mys3bucket/permiteyes.us/attachments/bellingham/"),"Unexpected attachment path"
+                          url="https://permiteyes.us/readfiles2.php?file="+urllib.parse.quote(e["path"],safe="")
+                          res=ctx.request.get(url,timeout=25000)
+                          r["http_status"]=res.status
+                          if res.status in (401,403,429,503):blocked=True
+                          if not res.ok:raise ValueError("HTTP response not successful")
+                          data=res.body()
+                          if not data.startswith(b"%PDF-"):raise ValueError("Not original PDF")
+                          with pymupdf.open(stream=data,filetype="pdf") as d:
+                              if not len(d):raise ValueError("Empty PDF")
+                              r["pages"]=len(d)
+                          name=re.sub(r"[^a-zA-Z0-9._ -]","_",e["filename"] or "attachment.pdf")[:150]
+                          target=f'{e["application"]}/{i+1:02d}_{name}'
+                          if not target.lower().endswith(".pdf"):target+=".pdf"
+                          z.writestr(target,data)
+                          r.update(status="verified_original",sha256=hashlib.sha256(data).hexdigest(),bytes=len(data),archive_file=target)
+                      except Exception as ex:
+                          r.update(status="failed",error=type(ex).__name__)
+                      manifest.append(r)
+                      time.sleep(.35)
+                  browser.close()
+              z.writestr("manifest.json",json.dumps(manifest,indent=2))
+          pub=serialization.load_pem_public_key(b"""-----BEGIN PUBLIC KEY-----
+          MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAzTRFM3sYczJPrWEyU3Qs
+          MSitKYFrltykYF7Igm1inmjba5ufJI4RbdrSVhNfaEn5qEQTXSTQmjzDAc4sedgi
+          5TsgRkvkwX5WP9hufgDgdpAipa5PsWwSKXAjNfeAzIVVpyYwffwFR5M1fPKybZBy
+          DHHWPOcl2WiYDSA6x7A3DgBeeleUNugGDTnxoaeJgFkIMws8v/R3qhxWqY2uieHS
+          QLM08rPIBNNuy1BvomHGlfi7t7kUPaPJK3uaNvgR7RNt575+oH3ZnbhSNJ23zieE
+          YQEMGi967/BOwsDA45lJGY2UBjDGFlG+7SD724j0srqvwWk7xhN4FUhp46fDclRx
+          NQIDAQAB
+          -----END PUBLIC KEY-----""")
+          key=AESGCM.generate_key(bit_length=256);nonce=os.urandom(12)
+          encrypted_key=pub.encrypt(key,padding.OAEP(mgf=padding.MGF1(hashes.SHA256()),algorithm=hashes.SHA256(),label=None))
+          out=Path("encrypted");out.mkdir()
+          (out/"key.enc").write_bytes(encrypted_key)
+          (out/"evidence.enc").write_bytes(nonce+AESGCM(key).encrypt(nonce,buf.getvalue(),None))
+          count=sum(r["status"]=="verified_original" for r in manifest)
+          print("RECOVERY_RESULT",json.dumps({"permits":len(records),"listed":len(entries),"verified_originals":count,"not_verified":len(entries)-count,"encrypted":True}),flush=True)
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: bellingham-giga-originals-encrypted
+          path: encrypted/
+          retention-days: 7
