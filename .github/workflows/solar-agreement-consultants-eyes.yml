@@ -36,11 +36,11 @@ jobs:
            for a,b in [("street","st"),("road","rd"),("drive","dr"),("avenue","ave"),("lane","ln"),("court","ct")]:x=re.sub(r"\b"+a+r"\b",b,x)
            return re.sub("[^a-z0-9]","",x)
           found={}
-          for term in ["Capital","Gonzalez","199150"]:
+          for term in ["Capital Roofing","Daniel","Danny","Gonzales","Gonzalez","capitalroofing","199150"]:
            j,rs=search(term)
            print("INDEX",term,"total",j.get("recordsFiltered"),"returned",len(rs),flush=True)
            for r in rs:
-            if re.search(r"capital|gonzalez",r["cells"][7],re.I):found[r["uuid"]]=r
+            if re.search(r"capital roofing|daniel|danny|gonzale[sz]",r["cells"][7],re.I) and re.search(r"roof|shingl",r["cells"][8],re.I) and not re.search(r"solar|photovoltaic",r["cells"][8],re.I):found[r["uuid"]]=r
           (OUT/"roofer_index.json").write_text(json.dumps(list(found.values()),indent=2))
           print("ROOFER_ROWS",json.dumps(list(found.values())),flush=True)
           results=[]
