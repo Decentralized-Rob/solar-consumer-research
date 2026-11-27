@@ -1,0 +1,114 @@
+name: Sea Bass roof audit and matching Sunrun agreements
+on:
+  push:
+    branches: [research/permitlink-sterling-20261127]
+    paths: [.github/workflows/stoughton-seabass-solar-match.yml]
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  get:
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    steps:
+      - run: pip -q install playwright pypdf && python -m playwright install chromium
+      - uses: actions/download-artifact@v4
+        with:
+          name: seabass-stoughton-contracts
+          run-id: 45990092625
+          github-token: ${{ github.token }}
+          path: roof
+      - name: Audit roof clauses
+        run: |
+          python -u - <<'PY'
+          from pathlib import Path
+          from pypdf import PdfReader
+          import re,json
+          for f in Path("roof").rglob("*.pdf"):
+            if "COI" in f.name:continue
+            r=PdfReader(f);t="\n".join(p.extract_text() or "" for p in r.pages)
+            checks={"start":r"start date|commenc|scheduled to begin|begin on|beginning on","completion_date":r"completion date|substantially completed|scheduled to be completed|finish date|complete by","cancellation":r"cancel|rescission","warning":r"blank spaces","guaranty_fund":r"guarant[yie]+ fund","registration_advisory":r"director|consumer affairs|business regulation","registration_number":r"\bHIC\b|registration (?:no|number)|licen[cs]e (?:no|number)","warranty":r"warrant","belneau":r"Belneau","special_order":r"special.order|custom.made"}
+            evidence={k:[t[max(0,m.start()-25):m.end()+85] for m in re.finditer(v,t,re.I)] for k,v in checks.items()}
+            for k,ss in evidence.items():
+              evidence[k]=[re.sub(r"\S+@\S+","[email]",s) for s in ss[:6]]
+            audit=r.pages[-1].extract_text() or ""
+            audit=re.sub(r"\S+@\S+","[email]",audit)
+            audit=re.sub(r"\b(?:\d{1,3}\.){3}\d{1,3}\b","[IP]",audit)
+            print("AUDIT",f.name,json.dumps(evidence),repr(audit[:1800]),flush=True)
+          PY
+      - name: Retrieve exact building permit and original attachments
+        run: |
+          mkdir -p output
+          python -u - <<'PY'
+          import asyncio,re,json,hashlib,io
+          from pathlib import Path
+          from playwright.async_api import async_playwright
+          from pypdf import PdfReader
+          O=Path("output")
+          async def main():
+            async with async_playwright() as pw:
+              b=await pw.chromium.launch()
+              c=await b.new_context(accept_downloads=True)
+              p=await c.new_page()
+              await p.goto("https://permiteyes.us/stoughton/publicview.php",wait_until="domcontentloaded",timeout=15000)
+              await p.wait_for_timeout(2000)
+              saved=[]
+              async def recover(row,label):
+                record=await row.inner_text()
+                print("CHECK",label,record.replace(chr(10)," "),flush=True)
+                att=row.locator('a.Attachmentclass')
+                if not await att.count():return
+                await att.first.click(timeout=5000)
+                m=p.locator("#AttachmentModal");await p.wait_for_timeout(900)
+                links=m.locator('a.downloadLink[data-size]:visible,a[data-href][data-download]:visible')
+                print("ATTACHMENTS",label,await links.all_text_contents(),flush=True)
+                print("MODAL", (await m.inner_text())[:2500],flush=True)
+                for j in range(min(await links.count(),20)):
+                  l=links.nth(j);name=(await l.inner_text()).strip()
+                  if not name.lower().endswith(".pdf") or re.search(r"insurance|liability|affidavit|workers.?comp|debris|plans?|drawing|license|credentials|measurement|roofr|eagleview|\\bcoi\\b|\\bcsl\\b|\\bhic\\b",name,re.I):continue
+                  try:
+                    async with p.expect_download(timeout=6000) as dl:await l.click(timeout=3000)
+                    d=await dl.value;f=O/(label+"_"+re.sub(r"[^a-zA-Z0-9._-]","_",d.suggested_filename))
+                    await d.save_as(f);data=f.read_bytes()
+                    if not data.startswith(b"%PDF-"):f.unlink();continue
+                    reader=PdfReader(io.BytesIO(data))
+                    item={"record":record,"name":name,"file":str(f),"pages":len(reader.pages),"bytes":len(data),"sha256":hashlib.sha256(data).hexdigest()}
+                    t="\n".join(pg.extract_text() or "" for pg in reader.pages)
+                    item["text_chars"]=len(t)
+                    item["evidence"]=[]
+                    if not re.search(r"certificate of (liability )?insurance|ACORD|construction supervisor license",t,re.I):
+                      for line in t.splitlines():
+                        if re.search(r"@|\b\d{3}[-. ]\d{3}[-. ]\d{4}\b",line):continue
+                        if re.search(r"roof|shingle|square|payment|deposit|balance|signature|sunrun|subsid|agreement|contract|estimate|start|completion|date|cancel|guarant|registration|consumer|permit|warrant|homeowner|owner|price|total|cost|\\$|sign|rights|work|accept|Belneau|sales consultant|solar specialist",line,re.I):
+                          item["evidence"].append(line[:500])
+                      item["evidence"]=item["evidence"][:100]
+                    (O/(f.stem+".txt")).write_text(t)
+                    saved.append(item);print("VERIFIED PDF",json.dumps(item),flush=True)
+                    (O/"manifest.json").write_text(json.dumps(saved,indent=2))
+                  except Exception as e:print("DOWNLOAD ERROR",repr(e),flush=True)
+                close=m.locator('[data-dismiss=modal]:visible').first
+                if await close.count():await close.click()
+              for pid in ["B-26-0049","B-26-1019"]:
+                try:
+                  await p.goto("https://permiteyes.us/stoughton/publicview.php",wait_until="domcontentloaded",timeout=15000)
+                  await p.wait_for_timeout(2000)
+                  permit=p.locator('input[name="permit_num"]:visible').first
+                  await permit.wait_for(state="visible",timeout=15000)
+                  await permit.fill(pid);await permit.dispatch_event("keyup");await permit.press("Enter");await p.wait_for_timeout(1400)
+                  target=p.locator("tr:has(a.view_app):visible").filter(has_text=pid).first
+                  record=await target.inner_text(timeout=6000)
+                  if not re.search(r"Sunrun",record,re.I):raise RuntimeError("Wrong record")
+                  await recover(target,pid)
+                except Exception as e:print("RECORD ERROR",pid,repr(e),flush=True)
+
+              await b.close()
+              if not saved:raise RuntimeError("No original permit documents recovered")
+          asyncio.run(asyncio.wait_for(main(),140))
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: seabass-solar-agreements
+          path: output/
+          retention-days: 14
