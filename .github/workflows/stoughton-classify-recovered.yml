@@ -1,0 +1,34 @@
+name: Classify recovered Stoughton contracts
+on:
+  push:
+    branches: [research/permitlink-sterling-20261127]
+    paths: [.github/workflows/stoughton-classify-recovered.yml]
+permissions:
+  actions: read
+  contents: read
+jobs:
+  classify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: stoughton-sunrun-ppa-originals
+          run-id: 45984557246
+          github-token: ${{ github.token }}
+          path: input
+      - run: pip -q install pypdf
+      - run: |
+          python -u - <<'PY'
+          from pathlib import Path
+          from pypdf import PdfReader
+          import re,json
+          for f in sorted(Path("input").rglob("*.pdf")):
+            r=PdfReader(f)
+            t="\n".join(p.extract_text() or "" for p in r.pages)
+            terms={}
+            for term in ["roof replacement","roofing agreement","roofing contract","reroof","re-roof","roof work","roofing","power purchase agreement","solar service agreement","solar agreement","solar lease","lease agreement","home improvement contract","customer agreement","installation agreement","monthly payment","price per kwh","per kWh","energy rate","energy service","authorization","solar system","certificate of completion"]:
+              hits=list(re.finditer(re.escape(term),t,re.I))
+              if hits:terms[term]=len(hits)
+            print("CLASSIFY",json.dumps({"file":f.name,"pages":len(r.pages),"terms":terms,"first_heading_candidates":[s.strip() for s in t.splitlines()[:60] if re.search(r"agreement|contract|lease|authorization|disclosure|roof|purchase|solar service",s,re.I) and len(s.strip())<100][:12]}),flush=True)
+          PY
