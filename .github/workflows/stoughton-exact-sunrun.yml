@@ -52,7 +52,7 @@ jobs:
                 inp=p.locator("input[name=applicant_name]:visible").first
                 await inp.fill("sunrun");await inp.dispatch_event("keyup");await inp.press("Enter");await p.wait_for_timeout(1300)
                 for i in range(5):
-                  rows=p.locator('tr:has(a.Attachmentclass[title="Attachment(s) present"]):visible')
+                  rows=p.locator('tr:has(a.Attachmentclass:is([title="Attachment(s) present"],:has([title="Attachment(s) present"]))):visible')
                   for j in range(await rows.count()):
                     row=rows.nth(j);t=await row.inner_text()
                     if re.search(r"sunrun",t,re.I) and "BUILD" in t.upper() and "B-26-" in t:target=row;break
@@ -67,7 +67,7 @@ jobs:
               async def recover(row,label):
                 record=await row.inner_text()
                 print("CHECK",label,record.replace(chr(10)," "),flush=True)
-                att=row.locator('a.Attachmentclass[title="Attachment(s) present"]')
+                att=row.locator('a.Attachmentclass:is([title="Attachment(s) present"],:has([title="Attachment(s) present"]))')
                 if not await att.count():return
                 await att.first.click(timeout=5000)
                 m=p.locator("#AttachmentModal");await p.wait_for_timeout(900)
@@ -94,7 +94,7 @@ jobs:
                 inp=p.locator("input[name=applicant_name]:visible").first
                 await inp.fill("sunrun");await inp.dispatch_event("keyup");await inp.press("Enter");await p.wait_for_timeout(1300)
                 for i in range(6):
-                  rows=p.locator('tr:has(a.Attachmentclass[title="Attachment(s) present"]):visible')
+                  rows=p.locator('tr:has(a.Attachmentclass:is([title="Attachment(s) present"],:has([title="Attachment(s) present"]))):visible')
                   for j in range(await rows.count()):
                     row=rows.nth(j);t=await row.inner_text()
                     if not re.search("sunrun",t,re.I) or "BUILD" not in t.upper():continue
