@@ -1,0 +1,74 @@
+name: Stoughton exact Sunrun permit PDF
+on:
+  push:
+    branches: [research/permitlink-sterling-20261127]
+    paths: [.github/workflows/stoughton-exact-sunrun.yml]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  get:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - run: pip -q install playwright pypdf && python -m playwright install chromium
+      - name: Retrieve exact building permit and original attachments
+        run: |
+          mkdir -p output
+          python -u - <<'PY'
+          import asyncio,re,json,hashlib,io
+          from pathlib import Path
+          from playwright.async_api import async_playwright
+          from pypdf import PdfReader
+          O=Path("output")
+          async def main():
+            async with async_playwright() as pw:
+              b=await pw.chromium.launch()
+              c=await b.new_context(accept_downloads=True)
+              p=await c.new_page()
+              await p.goto("https://permiteyes.us/stoughton/publicview.php",wait_until="domcontentloaded",timeout=15000)
+              await p.wait_for_timeout(2000)
+              inp=p.locator("input[name=applicant_name]:visible").first
+              await inp.fill("sunrun");await inp.dispatch_event("keyup");await inp.press("Enter");await p.wait_for_timeout(1200)
+              saved=[];target=None
+              for i in range(8):
+                rows=p.locator("tr:has(a.view_app):visible")
+                for j in range(await rows.count()):
+                  row=rows.nth(j);t=await row.inner_text()
+                  if re.search(r"26-0114|1648\s+WEST",t,re.I):target=row;break
+                if target:break
+                nxt=p.locator(".paginate_button.next:visible:not(.disabled)").first
+                if not await nxt.count():break
+                await nxt.click();await p.wait_for_timeout(550)
+              if not target:
+                print("NO EXACT MATCH",await p.locator("body").inner_text(),flush=True)
+                raise RuntimeError("Target not found")
+              record=await target.inner_text();print("TARGET",record,flush=True)
+              (O/"record.txt").write_text(record)
+              await target.locator('a.Attachmentclass[title="Attachment(s) present"]').first.click(timeout=5000)
+              m=p.locator("#AttachmentModal");await p.wait_for_timeout(900)
+              links=m.locator('a.downloadLink[data-size]:visible,a[data-href][data-download]:visible')
+              print("ATTACHMENTS",await links.all_text_contents(),flush=True)
+              for j in range(min(await links.count(),20)):
+                l=links.nth(j);name=(await l.inner_text()).strip()
+                if not name.lower().endswith(".pdf") or re.search(r"insurance|affidavit|workers.?comp|debris|plans?|drawing|license|\bcoi\b|\bcsl\b|\bhic\b",name,re.I):continue
+                try:
+                  async with p.expect_download(timeout=7000) as dl:await l.click(timeout=4000)
+                  d=await dl.value;f=O/re.sub(r"[^a-zA-Z0-9._-]","_",d.suggested_filename)
+                  await d.save_as(f);data=f.read_bytes()
+                  if not data.startswith(b"%PDF-"):f.unlink();continue
+                  reader=PdfReader(io.BytesIO(data))
+                  item={"name":name,"file":str(f),"pages":len(reader.pages),"bytes":len(data),"sha256":hashlib.sha256(data).hexdigest()}
+                  saved.append(item);print("VERIFIED PDF",json.dumps(item),flush=True)
+                  (O/"manifest.json").write_text(json.dumps(saved,indent=2))
+                except Exception as e:print("DOWNLOAD ERROR",repr(e),flush=True)
+              await b.close()
+              if not saved:raise RuntimeError("No original permit documents recovered")
+          asyncio.run(asyncio.wait_for(main(),100))
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: stoughton-1648-west-sunrun
+          path: output/
+          retention-days: 14
