@@ -1,0 +1,79 @@
+name: Capital Roofing 105 Canton Street originals
+on:
+  push:
+    branches: [research/permitlink-sterling-20261127]
+    paths: [.github/workflows/stoughton-capital-contract.yml]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  get:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - run: pip -q install playwright pypdf && python -m playwright install chromium
+      - name: Retrieve exact building permit and original attachments
+        run: |
+          mkdir -p output
+          python -u - <<'PY'
+          import asyncio,re,json,hashlib,io
+          from pathlib import Path
+          from playwright.async_api import async_playwright
+          from pypdf import PdfReader
+          O=Path("output")
+          async def main():
+            async with async_playwright() as pw:
+              b=await pw.chromium.launch()
+              c=await b.new_context(accept_downloads=True)
+              p=await c.new_page()
+              await p.goto("https://permiteyes.us/stoughton/publicview.php",wait_until="domcontentloaded",timeout=15000)
+              await p.wait_for_timeout(2000)
+              permit=p.locator('input[name="permit_num"]:visible').first
+              await permit.wait_for(state="visible",timeout=15000)
+              await permit.fill("B-25-0728");await permit.dispatch_event("keyup");await permit.press("Enter");await p.wait_for_timeout(1400)
+              target=p.locator("tr:has(a.view_app):visible").filter(has_text="B-25-0728").first
+              record=await target.inner_text(timeout=6000)
+              if not re.search(r"Capital Roofing",record,re.I):raise RuntimeError("Wrong record")
+              print("TARGET",record.replace(chr(10)," "),flush=True)
+              (O/"record.txt").write_text(record)
+              saved=[]
+              async def recover(row,label):
+                record=await row.inner_text()
+                print("CHECK",label,record.replace(chr(10)," "),flush=True)
+                att=row.locator('a.Attachmentclass')
+                if not await att.count():return
+                await att.first.click(timeout=5000)
+                m=p.locator("#AttachmentModal");await p.wait_for_timeout(900)
+                links=m.locator('a.downloadLink[data-size]:visible,a[data-href][data-download]:visible')
+                print("ATTACHMENTS",label,await links.all_text_contents(),flush=True)
+                print("MODAL", (await m.inner_text())[:2500],flush=True)
+                for j in range(min(await links.count(),20)):
+                  l=links.nth(j);name=(await l.inner_text()).strip()
+                  if not name.lower().endswith(".pdf") or re.search(r"insurance|liability|affidavit|workers.?comp|debris|plans?|drawing|license|credentials|measurement|roofr|eagleview|\\bcoi\\b|\\bcsl\\b|\\bhic\\b",name,re.I):continue
+                  try:
+                    async with p.expect_download(timeout=6000) as dl:await l.click(timeout=3000)
+                    d=await dl.value;f=O/(label+"_"+re.sub(r"[^a-zA-Z0-9._-]","_",d.suggested_filename))
+                    await d.save_as(f);data=f.read_bytes()
+                    if not data.startswith(b"%PDF-"):f.unlink();continue
+                    reader=PdfReader(io.BytesIO(data))
+                    item={"record":record,"name":name,"file":str(f),"pages":len(reader.pages),"bytes":len(data),"sha256":hashlib.sha256(data).hexdigest()}
+                    t="\n".join(pg.extract_text() or "" for pg in reader.pages)
+                    item["text_chars"]=len(t)
+                    item["evidence"]=[t[max(0,h.start()-90):h.end()+180] for h in list(re.finditer(r"roofing|shingles|squares|payment|signature|sunrun|subsidy|agreement|contract|estimate",t,re.I))[:35]]
+                    (O/(f.stem+".txt")).write_text(t)
+                    saved.append(item);print("VERIFIED PDF",json.dumps(item),flush=True)
+                    (O/"manifest.json").write_text(json.dumps(saved,indent=2))
+                  except Exception as e:print("DOWNLOAD ERROR",repr(e),flush=True)
+                close=m.locator('[data-dismiss=modal]:visible').first
+                if await close.count():await close.click()
+              await recover(target,"B-25-0728")
+              await b.close()
+              if not saved:raise RuntimeError("No original permit documents recovered")
+          asyncio.run(asyncio.wait_for(main(),100))
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: capital-105-canton-originals
+          path: output/
+          retention-days: 14
