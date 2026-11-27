@@ -1,0 +1,44 @@
+name: Analyze 97 Willow original agreement
+on:
+  push:
+    branches: [research/permitlink-sterling-20261127]
+    paths: [.github/workflows/stoughton-willow-analysis.yml]
+permissions:
+  actions: read
+  contents: read
+jobs:
+  analyze:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: stoughton-sunrun-ppa-originals
+          run-id: 45984557246
+          github-token: ${{ github.token }}
+          path: input
+      - run: pip -q install pypdf
+      - run: |
+          mkdir -p analysis
+          python -u - <<'PY'
+          from pathlib import Path
+          from pypdf import PdfReader
+          import re,json
+          f=next(Path("input").rglob("*97_Willow*.pdf"))
+          r=PdfReader(f)
+          pages=[]
+          for i,p in enumerate(r.pages,1):
+            t=p.extract_text() or ""
+            pages.append(t)
+            print("PAGE SUMMARY",i,len(t),repr(t[:550]),flush=True)
+            patterns=r"roof replacement|roofing|re.roof|roof work|roof repair|roof condition|roof contractor|subsid|change order|monthly payment|per kWh|energy service|escalat|initial term|sales (?:rep|consultant|representative)|signed by|signature|DocuSign|envelope ID|certificate of completion|signing|home improvement contract"
+            for m in list(re.finditer(patterns,t,re.I))[:22]:
+              print("EVIDENCE",i,repr(t[max(0,m.start()-150):m.end()+320]),flush=True)
+          Path("analysis/97-willow-text.txt").write_text("\n\n".join(f"PAGE {i}\n{t}" for i,t in enumerate(pages,1)))
+          print("METADATA",repr(r.metadata),flush=True)
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: willow-contract-text
+          path: analysis/
+          retention-days: 7
