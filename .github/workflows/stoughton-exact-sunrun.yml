@@ -52,7 +52,7 @@ jobs:
                 inp=p.locator("input[name=applicant_name]:visible").first
                 await inp.fill("sunrun");await inp.dispatch_event("keyup");await inp.press("Enter");await p.wait_for_timeout(1300)
                 for i in range(5):
-                  rows=p.locator('tr:has(a.Attachmentclass:is([title="Attachment(s) present"],:has([title="Attachment(s) present"]))):visible')
+                  rows=p.locator('tr:has(a.Attachmentclass):visible')
                   for j in range(await rows.count()):
                     row=rows.nth(j);t=await row.inner_text()
                     if re.search(r"sunrun",t,re.I) and "BUILD" in t.upper() and "B-26-" in t:target=row;break
@@ -67,12 +67,13 @@ jobs:
               async def recover(row,label):
                 record=await row.inner_text()
                 print("CHECK",label,record.replace(chr(10)," "),flush=True)
-                att=row.locator('a.Attachmentclass:is([title="Attachment(s) present"],:has([title="Attachment(s) present"]))')
+                att=row.locator('a.Attachmentclass')
                 if not await att.count():return
                 await att.first.click(timeout=5000)
                 m=p.locator("#AttachmentModal");await p.wait_for_timeout(900)
                 links=m.locator('a.downloadLink[data-size]:visible,a[data-href][data-download]:visible')
                 print("ATTACHMENTS",label,await links.all_text_contents(),flush=True)
+                print("MODAL", (await m.inner_text())[:2500],flush=True)
                 for j in range(min(await links.count(),20)):
                   l=links.nth(j);name=(await l.inner_text()).strip()
                   if not name.lower().endswith(".pdf") or re.search(r"insurance|affidavit|workers.?comp|debris|plans?|drawing|license|\\bcoi\\b|\\bcsl\\b|\\bhic\\b",name,re.I):continue
@@ -90,17 +91,52 @@ jobs:
                 if await close.count():await close.click()
               await recover(target,"B-26-0114")
               if not saved:
+                # The public issue-permit button is independent of the attachment list.
+                async def capture(resp):
+                  try:
+                    if "application/pdf" not in (await resp.all_headers()).get("content-type","").lower():return
+                    data=await resp.body()
+                    if not data.startswith(b"%PDF-"):return
+                    f=O/"B-26-0114_issued_permit.pdf";f.write_bytes(data)
+                    item={"file":str(f),"pages":len(PdfReader(io.BytesIO(data)).pages),"bytes":len(data),"sha256":hashlib.sha256(data).hexdigest(),"source":resp.url}
+                    saved.append(item);print("VERIFIED PDF",json.dumps(item),flush=True)
+                    (O/"manifest.json").write_text(json.dumps(saved,indent=2))
+                  except Exception as e:print("RESPONSE ERROR",repr(e),flush=True)
+                c.on("response",lambda resp:asyncio.create_task(capture(resp)))
+                async def dl_capture(d):
+                  try:
+                    f=O/("B-26-0114_"+re.sub(r"[^a-zA-Z0-9._-]","_",d.suggested_filename));await d.save_as(f);data=f.read_bytes()
+                    if not data.startswith(b"%PDF-"):f.unlink();return
+                    item={"file":str(f),"pages":len(PdfReader(io.BytesIO(data)).pages),"bytes":len(data),"sha256":hashlib.sha256(data).hexdigest(),"source":d.url}
+                    saved.append(item);print("VERIFIED PDF",json.dumps(item),flush=True);(O/"manifest.json").write_text(json.dumps(saved,indent=2))
+                  except Exception as e:print("ISSUE DOWNLOAD ERROR",repr(e),flush=True)
+                p.on("download",lambda d:asyncio.create_task(dl_capture(d)))
+                c.on("page",lambda q:q.on("download",lambda d:asyncio.create_task(dl_capture(d))))
+                try:
+                  await target.locator("a.view_permit").click(timeout=4000)
+                  await p.wait_for_timeout(2200)
+                  for q in c.pages:
+                    print("ISSUE PAGE",q.url,(await q.locator("body").inner_text(timeout=3000))[:2500],flush=True)
+                    print("ISSUE CONTROLS",await q.locator("a:visible,button:visible,input[type=button]:visible").evaluate_all("es=>es.map(e=>({text:e.innerText||e.value,title:e.title,href:e.getAttribute('href'),onclick:e.getAttribute('onclick')})).slice(0,40)"),flush=True)
+                  await p.wait_for_timeout(1500)
+                except Exception as e:print("ISSUE VIEW ERROR",repr(e),flush=True)
+                if not saved:
+                  for q in c.pages:
+                    if q!=p:await q.close()
+
+              if not saved:
                 await p.reload(wait_until="domcontentloaded");await p.wait_for_timeout(1300)
                 inp=p.locator("input[name=applicant_name]:visible").first
                 await inp.fill("sunrun");await inp.dispatch_event("keyup");await inp.press("Enter");await p.wait_for_timeout(1300)
-                for i in range(6):
-                  rows=p.locator('tr:has(a.Attachmentclass:is([title="Attachment(s) present"],:has([title="Attachment(s) present"]))):visible')
+                for i in range(2):
+                  rows=p.locator('tr:has(a.Attachmentclass):visible')
                   for j in range(await rows.count()):
                     row=rows.nth(j);t=await row.inner_text()
                     if not re.search("sunrun",t,re.I) or "BUILD" not in t.upper():continue
                     label=re.search(r"B-\\d{2}-\\d+",t)
                     if not label:continue
-                    await recover(row,label.group())
+                    try:await recover(row,label.group())
+                    except Exception as e:print("RECOVER ERROR",repr(e),flush=True)
                     if saved:break
                   if saved:break
                   nxt=p.locator(".paginate_button.next:visible:not(.disabled)").first
