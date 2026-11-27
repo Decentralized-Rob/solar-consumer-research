@@ -48,12 +48,13 @@ jobs:
                 print("MODAL", (await m.inner_text())[:2500],flush=True)
                 for j in range(min(await links.count(),20)):
                   l=links.nth(j);name=(await l.inner_text()).strip()
-                  if re.search(r"insurance|liability|affidavit|workers.?comp|debris|plans?|drawing|license|credentials|measurement|roofr|eagleview|\\bcoi\\b|\\bcsl\\b|\\bhic\\b",name,re.I):continue
+                  if re.search(r"insurance|liability|affidavit|workers.?comp|debris|plans?|drawing|license|credentials|measurement|roofr|eagleview|\bcoi\b|\bcsl\b|\bhic\b",name,re.I):continue
                   try:
                     async with p.expect_download(timeout=6000) as dl:await l.click(timeout=3000)
                     d=await dl.value;f=O/(label+"_"+re.sub(r"[^a-zA-Z0-9._-]","_",d.suggested_filename))
                     await d.save_as(f);data=f.read_bytes()
-                    if not data.startswith(b"%PDF-"):\n                      print("NONPDF ORIGINAL",label,name,len(data),flush=True);continue
+                    if not data.startswith(b"%PDF-"):
+                      print("NONPDF ORIGINAL",label,name,len(data),flush=True);continue
                     reader=PdfReader(io.BytesIO(data))
                     item={"record":record,"name":name,"file":str(f),"pages":len(reader.pages),"bytes":len(data),"sha256":hashlib.sha256(data).hexdigest()}
                     t="\n".join(pg.extract_text() or "" for pg in reader.pages)
