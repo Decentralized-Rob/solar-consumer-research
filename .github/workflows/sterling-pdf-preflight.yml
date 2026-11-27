@@ -1,0 +1,82 @@
+name: Sterling PermitLink one original PDF
+on:
+  push:
+    branches: [research/permitlink-sterling-20261127]
+    paths: [.github/workflows/sterling-pdf-preflight.yml]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  preflight:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install browser and validator
+        run: |
+          pip -q install playwright pypdf
+          python -m playwright install chromium
+      - name: Recover one original PDF
+        run: |
+          python -u - <<'PY'
+          import asyncio, re, json, hashlib, io
+          from pathlib import Path
+          from playwright.async_api import async_playwright
+          from pypdf import PdfReader
+          BASE="https://www.permitlinkonline.com/csp/sterlinglive/"
+          OUT=Path("sterling-preflight"); OUT.mkdir(exist_ok=True)
+          async def main():
+            async with async_playwright() as pw:
+              browser=await pw.chromium.launch(headless=True,args=["--no-sandbox"])
+              ctx=await browser.new_context(accept_downloads=True)
+              page=await ctx.new_page()
+              await page.goto(BASE+"DocumentLink.GuestPermitListCenter.cls",wait_until="domcontentloaded",timeout=40000)
+              await page.wait_for_function("typeof zenPage !== 'undefined' && !!zenPage.getComponentById('table')",timeout=20000)
+              js="""() => {const t=zenPage.getComponentById('table');let n=Number(t.getProperty('rowCount'))||0;let rows=[];for(let i=0;i<Math.min(n,15000);i++){try{let r=t.getRowData(i);if(r)rows.push(r)}catch(e){}}return {n,rows}}"""
+              data=await page.evaluate(js)
+              rows=data["rows"]
+              print("Index rows",data["n"],"read",len(rows), "keys", list(rows[0]) if rows else [])
+              roof=[r for r in rows if re.search(r"roof|shingle|solar|photovoltaic",str(r.get("WorkDescription","")),re.I) and r.get("DocumentId") and r.get("Maid")]
+              roof.sort(key=lambda r:(not bool(re.search("roof|shingle",str(r.get("WorkDescription","")),re.I)),str(r.get("PermitID","")).lower()=="draft"))
+              print("Roof/solar candidates",len(roof))
+              errors=[]
+              for r in roof[:35]:
+                try:
+                  uri=BASE+"DocumentLink.PublicAttachmentCenter.cls?DocumentId="+str(r["DocumentId"])+"&QueryId="+str(r["DocumentId"])+"&Maid="+str(r["Maid"])
+                  await page.goto(uri,wait_until="domcontentloaded",timeout=15000)
+                  await page.wait_for_function("typeof zenPage !== 'undefined' && !!zenPage.getComponentById('table')",timeout=8000)
+                  att=await page.evaluate(js)
+                  docs=[d for d in att["rows"] if d.get("ImageId")]
+                  docs.sort(key=lambda d:not bool(re.search(r"contract|proposal|estimate|agreement|ppa",str(d),re.I)))
+                  for d in docs:
+                    meta=" ".join(str(d.get(k,"")) for k in ("FileName","FileDescription","FileType"))
+                    if re.search(r"insurance|affidavit|workers.?comp|debris|plans?|drawing|license",meta,re.I):continue
+                    if not re.search(r"pdf|contract|proposal|estimate|agreement|permit|application",meta,re.I):continue
+                    url=BASE+"TaxLink.ImageServer.cls?ImageID="+str(d["ImageId"])+"&Decrypt=0"
+                    response=await ctx.request.get(url,timeout=15000)
+                    body=await response.body()
+                    if not body.startswith(b"%PDF-"):continue
+                    reader=PdfReader(io.BytesIO(body))
+                    pages=len(reader.pages)
+                    if pages<1:continue
+                    (OUT/"original.pdf").write_bytes(body)
+                    manifest={"municipality":"Sterling","permit":r.get("PermitID"),"document_id":r["DocumentId"],"attachment":d.get("FileName"),"description":d.get("FileDescription"),"pages":pages,"bytes":len(body),"sha256":hashlib.sha256(body).hexdigest(),"source_url":url}
+                    (OUT/"manifest.json").write_text(json.dumps(manifest,indent=2))
+                    print("VERIFIED ORIGINAL",json.dumps(manifest),flush=True)
+                    await browser.close()
+                    return
+                except Exception as e:
+                  errors.append(str(e)[:220]);print("Candidate error",str(e)[:160],flush=True)
+              (OUT/"diagnostic.json").write_text(json.dumps({"index":data["n"],"candidates":len(roof),"errors":errors},indent=2))
+              await browser.close()
+              raise SystemExit("No qualifying original PDF")
+          asyncio.run(main())
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: sterling-original-pdf-preflight
+          path: sterling-preflight/
+          retention-days: 7
