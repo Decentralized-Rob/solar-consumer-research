@@ -1,0 +1,96 @@
+name: Stoughton recover Sunrun PPAs
+on:
+  push:
+    branches: [research/permitlink-sterling-20261127]
+    paths: [.github/workflows/stoughton-sunrun-ppa.yml]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  ppa:
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    steps:
+      - run: pip -q install playwright pypdf && python -m playwright install chromium
+      - name: Recover and classify original agreements
+        run: |
+          mkdir -p output
+          python -u - <<'PY'
+          import asyncio,re,json,hashlib,io
+          from pathlib import Path
+          from playwright.async_api import async_playwright
+          from pypdf import PdfReader
+          O=Path("output")
+          PPA=re.compile(r"power purchase agreement|solar power purchase|\bPPA\b",re.I)
+          async def main():
+            async with async_playwright() as pw:
+              b=await pw.chromium.launch()
+              c=await b.new_context(accept_downloads=True)
+              p=await c.new_page()
+              await p.goto("https://permiteyes.us/stoughton/publicview.php",wait_until="domcontentloaded",timeout=18000)
+              await p.wait_for_timeout(1800)
+              inp=p.locator("input[name=applicant_name]:visible").first
+              await inp.fill("sunrun");await inp.dispatch_event("keyup");await inp.press("Enter");await p.wait_for_timeout(1300)
+              found=[];checked=[];seen=set()
+              for page in range(8):
+                rows=p.locator("tr:has(a.view_app):visible")
+                for j in range(await rows.count()):
+                  row=rows.nth(j);t=await row.inner_text()
+                  if "SUNRUN" not in t.upper() or "BUILD" not in t.upper():continue
+                  permit=re.search(r"B-\d{2}-\d+",t)
+                  if not permit:continue
+                  pid=permit.group()
+                  if pid in seen:continue
+                  seen.add(pid)
+                  att=row.locator("a.Attachmentclass").first
+                  if not await att.count():continue
+                  try:
+                    await att.click(timeout=4000)
+                    m=p.locator("#AttachmentModal");await p.wait_for_timeout(700)
+                    links=m.locator('a.downloadLink[data-size]:visible,a[data-href][data-download]:visible')
+                    names=await links.all_text_contents()
+                    checked.append({"permit":pid,"record":t,"attachment_names":names})
+                    print("CHECKED",pid,t.replace(chr(10)," "),names,flush=True)
+                    for k,name in enumerate(names):
+                      name=name.strip()
+                      if not name.lower().endswith(".pdf") or not re.search(r"contract|agreement|\bppa\b|proposal|customer|lease|\bcap\b|power.purchase",name,re.I):continue
+                      if re.search(r"insurance|affidavit|workers.?comp|debris|plans?|drawing|license",name,re.I):continue
+                      try:
+                        async with p.expect_download(timeout=6000) as dl:await links.nth(k).click(timeout=3000)
+                        d=await dl.value;f=O/(pid+"_"+re.sub(r"[^a-zA-Z0-9._-]","_",d.suggested_filename));await d.save_as(f)
+                        data=f.read_bytes()
+                        if not data.startswith(b"%PDF-"):f.unlink();continue
+                        reader=PdfReader(io.BytesIO(data));txt=""
+                        for pg in reader.pages[:35]:
+                          try:txt+="\n"+(pg.extract_text() or "")
+                          except:pass
+                        match=PPA.search(txt)
+                        item={"permit":pid,"record":t,"name":name,"file":str(f),"pages":len(reader.pages),"bytes":len(data),"sha256":hashlib.sha256(data).hexdigest(),"text_chars":len(txt),"ppa_confirmed":bool(match),"ppa_filename":bool(PPA.search(name)),"evidence":txt[max(0,match.start()-45):match.end()+100] if match else ""}
+                        found.append(item);print("AGREEMENT",json.dumps(item),flush=True)
+                        (O/"manifest.json").write_text(json.dumps(found,indent=2))
+                      except Exception as e:print("PDF ERROR",pid,repr(e)[:250],flush=True)
+                    close=m.locator('[data-dismiss=modal]:visible').first
+                    if await close.count():await close.click(timeout=3000)
+                    await p.wait_for_timeout(200)
+                  except Exception as e:
+                    print("ROW ERROR",pid,repr(e)[:200],flush=True)
+                    try:await p.keyboard.press("Escape")
+                    except:pass
+                  (O/"checked.json").write_text(json.dumps(checked,indent=2))
+                  if sum(x["ppa_confirmed"] for x in found)>=3:break
+                  if len(found)>=12:break
+                if sum(x["ppa_confirmed"] for x in found)>=3 or len(found)>=12:break
+                nxt=p.locator(".paginate_button.next:visible:not(.disabled)").first
+                if not await nxt.count():break
+                await nxt.click();await p.wait_for_timeout(400)
+              print("RESULT",len(checked),"permits",len(found),"agreements",sum(x["ppa_confirmed"] for x in found),"confirmed PPAs",flush=True)
+              await b.close()
+              if not found:raise RuntimeError("No original agreements recovered")
+          asyncio.run(asyncio.wait_for(main(),160))
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: stoughton-sunrun-ppa-originals
+          path: output/
+          retention-days: 14
