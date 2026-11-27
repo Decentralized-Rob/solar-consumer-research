@@ -1,0 +1,49 @@
+name: Sterling search smoke test
+on:
+  push:
+    branches: [research/permitlink-sterling-20261127]
+    paths: [.github/workflows/sterling-search-smoke.yml]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - run: pip -q install playwright && python -m playwright install chromium
+      - name: Verify one public search page
+        run: |
+          mkdir -p probe
+          python -u - <<'PY'
+          import asyncio,json,traceback
+          from pathlib import Path
+          from playwright.async_api import async_playwright
+          B="https://www.permitlinkonline.com/csp/sterlinglive/"
+          async def main():
+            async with async_playwright() as pw:
+              b=await pw.chromium.launch()
+              p=await b.new_page()
+              p.set_default_timeout(5000)
+              try:
+                await p.goto(B+"DocumentLink.PublicLogin.cls",wait_until="domcontentloaded",timeout=12000)
+                await p.locator("#control_95").click()
+                await p.wait_for_url("**/DocumentLink.GuestPermitListCenter.cls*",timeout=8000)
+                await p.locator("#control_41").fill("solar")
+                await p.locator("#control_43").click()
+                await p.wait_for_timeout(1000)
+                x=await p.evaluate("""() => {let t=zenPage.getComponent(76);let n=Number(t.getProperty('rowCount'))||0;let rows=[];for(let i=0;i<Math.min(n||15,15);i++){try{let r=t.getRowData(i);if(r&&r.PermitID)rows.push({permit:r.PermitID,number:r.HouseNumber,street:r.Location,description:r.WorkDescription,document:r.DocumentId,maid:r.Maid})}catch(e){}}return {n,rows,text:document.body.innerText.slice(-6000)}}""")
+                Path("probe/result.json").write_text(json.dumps(x,indent=2))
+                print("SEARCH RESULT",json.dumps(x),flush=True)
+                if not any("solar" in (r.get("description") or "").lower() or "photovoltaic" in (r.get("description") or "").lower() for r in x["rows"]):raise RuntimeError("Search did not demonstrate solar results")
+              finally:await b.close()
+          try:asyncio.run(asyncio.wait_for(main(),30))
+          except Exception:
+            Path("probe/error.txt").write_text(traceback.format_exc());raise
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: sterling-search-proof
+          path: probe/
+          retention-days: 7
