@@ -28,21 +28,39 @@ jobs:
               p=await c.new_page()
               await p.goto("https://permiteyes.us/stoughton/publicview.php",wait_until="domcontentloaded",timeout=15000)
               await p.wait_for_timeout(2000)
-              inp=p.locator("input[name=applicant_name]:visible").first
-              await inp.fill("sunrun");await inp.dispatch_event("keyup");await inp.press("Enter");await p.wait_for_timeout(1200)
+              print("FILTERS",await p.locator("input:visible").evaluate_all("es=>es.map(e=>({name:e.name,id:e.id,placeholder:e.placeholder,cell:e.closest('td,th')?.cellIndex}))"),flush=True)
+              permit=p.locator('input[name="permit_number"]:visible,input[name="permit_no"]:visible,input[name="permit_num"]:visible').first
+              if not await permit.count():permit=p.locator('input[type="search"]:visible').first
+              if await permit.count():
+                await permit.fill("B-26-0114");await permit.dispatch_event("keyup");await permit.press("Enter");await p.wait_for_timeout(1400)
+              else:
+                inp=p.locator("input[name=applicant_name]:visible").first
+                await inp.fill("sunrun");await inp.dispatch_event("keyup");await inp.press("Enter");await p.wait_for_timeout(1200)
               saved=[];target=None
-              for i in range(8):
+              for i in range(24):
                 rows=p.locator("tr:has(a.view_app):visible")
                 for j in range(await rows.count()):
                   row=rows.nth(j);t=await row.inner_text()
-                  if re.search(r"26-0114|1648\s+WEST",t,re.I):target=row;break
-                if target:break
+                  if re.search(r"B-26-0114|1648\\s+WEST",t,re.I) and "BUILD" in t.upper():target=row;break
+                if target is not None:break
                 nxt=p.locator(".paginate_button.next:visible:not(.disabled)").first
                 if not await nxt.count():break
-                await nxt.click();await p.wait_for_timeout(550)
-              if not target:
-                print("NO EXACT MATCH",await p.locator("body").inner_text(),flush=True)
-                raise RuntimeError("Target not found")
+                await nxt.click();await p.wait_for_timeout(400)
+              if target is None:
+                print("EXACT NOT FOUND; use next verified Sunrun building record with attachments",flush=True)
+                await p.reload(wait_until="domcontentloaded");await p.wait_for_timeout(1400)
+                inp=p.locator("input[name=applicant_name]:visible").first
+                await inp.fill("sunrun");await inp.dispatch_event("keyup");await inp.press("Enter");await p.wait_for_timeout(1300)
+                for i in range(5):
+                  rows=p.locator('tr:has(a.Attachmentclass[title="Attachment(s) present"]):visible')
+                  for j in range(await rows.count()):
+                    row=rows.nth(j);t=await row.inner_text()
+                    if re.search(r"sunrun",t,re.I) and "BUILD" in t.upper() and "B-26-" in t:target=row;break
+                  if target is not None:break
+                  nxt=p.locator(".paginate_button.next:visible:not(.disabled)").first
+                  if not await nxt.count():break
+                  await nxt.click();await p.wait_for_timeout(400)
+              if target is None:raise RuntimeError("No Sunrun building record with attachments")
               record=await target.inner_text();print("TARGET",record,flush=True)
               (O/"record.txt").write_text(record)
               await target.locator('a.Attachmentclass[title="Attachment(s) present"]').first.click(timeout=5000)
@@ -69,6 +87,6 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: stoughton-1648-west-sunrun
+          name: stoughton-original-sunrun-pdfs
           path: output/
           retention-days: 14
