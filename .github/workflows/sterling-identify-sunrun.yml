@@ -1,0 +1,92 @@
+name: Sterling identify Sunrun directly
+on:
+  push:
+    branches: [research/permitlink-sterling-20261127]
+    paths: [.github/workflows/sterling-identify-sunrun.yml]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  identify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    steps:
+      - run: pip -q install playwright pypdf && python -m playwright install chromium
+      - name: Identify Sunrun in actual solar attachments
+        run: |
+          mkdir -p results
+          python -u - <<'PY'
+          import asyncio, re, json, io, hashlib, datetime
+          from pathlib import Path
+          from playwright.async_api import async_playwright
+          from pypdf import PdfReader
+          B="https://www.permitlinkonline.com/csp/sterlinglive/"
+          O=Path("results")
+          ATT="""() => {let z=window.zenPage;if(!z)return [];let out=[];let seen=new Set();for(let i=1;i<180;i++){try{let t=z.getComponent(i);if(!t||typeof t.getRowData!=='function')continue;let n=Number(t.getProperty('rowCount'))||0;for(let j=0;j<Math.min(n,80);j++){try{let r=t.getRowData(j);if(r&&r.ImageId&&!seen.has(r.ImageId)){out.push(r);seen.add(r.ImageId)}}catch(e){}}}catch(e){}}return out}"""
+          async def main():
+            async with async_playwright() as pw:
+              b=await pw.chromium.launch()
+              c=await b.new_context()
+              p=await c.new_page()
+              p.set_default_timeout(6000)
+              await p.goto(B+"DocumentLink.PublicLogin.cls",wait_until="domcontentloaded",timeout=15000)
+              await p.locator("#control_95").click()
+              await p.wait_for_url("**/DocumentLink.GuestPermitListCenter.cls*",timeout=10000)
+              await p.locator("#control_41").fill("solar")
+              await p.locator("#control_43").click()
+              await p.wait_for_timeout(1000)
+              rows=await p.evaluate("""() => {let t=zenPage.getComponent(76);let n=Number(t.getProperty('rowCount'))||0;let rows=[];for(let i=0;i<Math.min(n,1000);i++){try{let r=t.getRowData(i);if(r&&r.DocumentId&&r.PermitID)rows.push(r)}catch(e){}}return rows}""")
+              targets=[]
+              for r in rows:
+                d=str(r.get("WorkDescription",""))
+                if r["PermitID"]=="Draft":continue
+                if not re.search(r"solar|photovoltaic|\bpv\b",d,re.I):continue
+                if re.search(r"ground.mount|water heater|attic.*fan|no solar|commercial|demolition",d+" "+str(r.get("PermitType","")),re.I):continue
+                targets.append(r)
+              targets.sort(key=lambda r:(not str(r["PermitID"]).endswith("RB"),not bool(re.search("sunrun",str(r),re.I))))
+              print("TARGETS",[(r["PermitID"],r["HouseNumber"],r["Location"]) for r in targets],flush=True)
+              results=[]
+              for r in targets[:30]:
+                u=B+"DocumentLink.GuestAttachmentCenter.cls?DocumentId="+str(r["DocumentId"])+"&QueryId="+str(r["DocumentId"])+"&Maid="+str(r["Maid"])
+                result={"permit":r["PermitID"],"address":str(r["HouseNumber"])+" "+str(r["Location"]),"description":r.get("WorkDescription"),"attachments":[],"sunrun":False}
+                try:
+                  await p.goto(u,wait_until="domcontentloaded",timeout=8000)
+                  await p.wait_for_function("!!window.zenPage",timeout=4000)
+                  await p.wait_for_timeout(600)
+                  docs=await p.evaluate(ATT)
+                  for d in docs:
+                    name=str(d.get("FileName") or d.get("FileDescription") or "")
+                    if not re.search(r"pdf|contract|agreement|permit|application",name,re.I):continue
+                    if re.search(r"insurance|affidavit|workers.?comp|debris|plans?|drawing|license|\bcoi\b|\bcsl\b|\bhic\b",name,re.I):continue
+                    url=B+"TaxLink.ImageServer.cls?ImageID="+str(d["ImageId"])+"&Decrypt=0"
+                    item={"name":name,"source":url};result["attachments"].append(item)
+                    try:
+                      resp=await c.request.get(url,timeout=8000);body=await resp.body()
+                      if not body.startswith(b"%PDF-"):continue
+                      reader=PdfReader(io.BytesIO(body));t=""
+                      for pg in reader.pages[:25]:
+                        try:t+=" "+(pg.extract_text() or "")
+                        except:pass
+                      item.update(pages=len(reader.pages),text_chars=len(t),sunrun=bool(re.search(r"sun\s*run",name+" "+t,re.I)),sha256=hashlib.sha256(body).hexdigest())
+                      if item["sunrun"]:
+                        result["sunrun"]=True
+                        fn=re.sub(r"[^A-Za-z0-9_.-]","_",r["PermitID"]+"_"+name)
+                        if not fn.lower().endswith(".pdf"):fn+=".pdf"
+                        (O/fn).write_bytes(body);item["file"]=fn
+                        print("CONFIRMED SUNRUN",result["permit"],result["address"],name,flush=True)
+                    except Exception as e:item["error"]=repr(e)[:250]
+                except Exception as e:result["error"]=repr(e)[:250]
+                results.append(result)
+                (O/"summary.json").write_text(json.dumps(results,indent=2))
+                print("CHECKED",json.dumps(result),flush=True)
+                if sum(x["sunrun"] for x in results)>=3:break
+              print("FINAL SUNRUN",sum(x["sunrun"] for x in results),"checked",len(results),flush=True)
+              await b.close()
+          asyncio.run(asyncio.wait_for(main(),150))
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: sterling-confirmed-sunrun
+          path: results/
+          retention-days: 14
