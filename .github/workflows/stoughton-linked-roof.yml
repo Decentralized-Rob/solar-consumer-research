@@ -1,0 +1,90 @@
+name: Stoughton Sunrun linked roof contracts
+on:
+  push:
+    branches: [research/permitlink-sterling-20261127]
+    paths: [.github/workflows/stoughton-linked-roof.yml]
+permissions:
+  contents: read
+jobs:
+  find:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - run: pip -q install playwright pypdf && python -m playwright install chromium
+      - run: |
+          mkdir -p output
+          python -u - <<'PY'
+          import asyncio,re,json,hashlib,io
+          from pathlib import Path
+          from playwright.async_api import async_playwright
+          from pypdf import PdfReader
+          O=Path("output")
+          URL="https://permiteyes.us/stoughton/publicview.php"
+          async def fill(p,name,val):
+            l=p.locator('input[name="'+name+'"]:visible').first
+            await l.fill(val);await l.dispatch_event("keyup");await l.press("Enter");await p.wait_for_timeout(850)
+          async def main():
+            async with async_playwright() as pw:
+              b=await pw.chromium.launch();c=await b.new_context(accept_downloads=True)
+              p=await c.new_page();await p.goto(URL,wait_until="domcontentloaded",timeout=18000);await p.wait_for_timeout(1400)
+              # Search roofing applicants first; verify solar via the exact property.
+              found=[];checked=[];leads=[]
+              for company in ["giga","espigar","remi","freedom roofing","roofix","roofing"]:
+                await fill(p,"applicant_name",company)
+                for i in range(3):
+                  rows=await p.locator("tr:has(a.view_app):visible").evaluate_all("""es=>es.map(e=>({cells:[...e.querySelectorAll('td')].map(x=>x.textContent.trim()),record:e.innerText,id:e.querySelector('a.view_app').dataset.id}))""")
+                  for r in rows:
+                    if len(r["cells"])<15 or "BUILD" not in r["record"].upper():continue
+                    if not re.search(r"B-2[2-6]-",r["record"]):continue
+                    if r["id"] not in {x["id"] for x in leads}:leads.append(r)
+                  nxt=p.locator(".paginate_button.next:visible:not(.disabled)").first
+                  if not await nxt.count():break
+                  await nxt.click();await p.wait_for_timeout(400)
+                print("ROOF LEADS",company,len(leads),flush=True)
+              q=await c.new_page()
+              for r in leads[:60]:
+                cells=r["cells"];num=cells[10];street=cells[11]
+                if not num or not street:continue
+                try:
+                  await q.goto(URL,wait_until="domcontentloaded",timeout=10000);await q.wait_for_timeout(500)
+                  await fill(q,"street_no",num);await fill(q,"street_name",street)
+                  rr=q.locator("tr:has(a.view_app):visible")
+                  records=await rr.all_inner_texts()
+                  solar=[x for x in records if re.search("sunrun",x,re.I) and "BUILD" in x.upper() and re.search(r"B-2[2-6]-",x)]
+                  if not solar:continue
+                  print("MATCH",num,street,r["record"].replace(chr(10)," "),[x.replace(chr(10)," ") for x in solar],flush=True)
+                  row=rr.filter(has_text=re.search(r"\b"+re.escape(r["id"])+r"\b")).first
+                  if not await row.count():continue
+                  await row.locator("a.Attachmentclass").first.click(timeout=4000)
+                  m=q.locator("#AttachmentModal");await q.wait_for_timeout(700)
+                  links=m.locator('a.downloadLink[data-size]:visible,a[data-href][data-download]:visible')
+                  names=await links.all_text_contents();print("ROOF ATTACHMENTS",names,flush=True)
+                  for k,n in enumerate(names):
+                    if not n.lower().strip().endswith(".pdf") or not re.search(r"contract|agreement|proposal|estimate|roof",n,re.I):continue
+                    if re.search(r"insurance|liability|worker|affidavit|debris|plan|drawing|license|measurement|roofr|eagleview",n,re.I):continue
+                    async with q.expect_download(timeout=6000) as dl:await links.nth(k).click(timeout=3000)
+                    d=await dl.value;f=O/(r["id"]+"_"+re.sub(r"[^A-Za-z0-9._-]","_",d.suggested_filename));await d.save_as(f)
+                    data=f.read_bytes()
+                    if not data.startswith(b"%PDF-"):f.unlink();continue
+                    reader=PdfReader(io.BytesIO(data));t="\n".join(pg.extract_text() or "" for pg in reader.pages)
+                    evidence=[]
+                    for hit in list(re.finditer(r"roof replacement|reroof|roofing|shingles|contract price|total price|payment|signature|sunrun|subsidy|agreement|estimate",t,re.I))[:30]:
+                      evidence.append(t[max(0,hit.start()-70):hit.end()+130])
+                    item={"roof_record":r["record"],"solar_records":solar,"name":n,"file":f.name,"pages":len(reader.pages),"sha256":hashlib.sha256(data).hexdigest(),"text_chars":len(t),"evidence":evidence}
+                    found.append(item);(O/"manifest.json").write_text(json.dumps(found,indent=2))
+                    (O/(f.stem+".txt")).write_text(t)
+                    print("ROOF DOCUMENT",json.dumps(item),flush=True)
+                  if found:break
+                except Exception as e:print("ERROR",num,street,repr(e)[:180],flush=True)
+              (O/"leads.json").write_text(json.dumps(leads,indent=2))
+              print("FINAL",len(found),"documents",flush=True)
+              await b.close()
+              if not found:raise RuntimeError("No linked roof document recovered")
+          asyncio.run(asyncio.wait_for(main(),225))
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: stoughton-linked-roof-originals
+          path: output/
+          retention-days: 14
