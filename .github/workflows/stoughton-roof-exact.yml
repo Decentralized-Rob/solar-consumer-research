@@ -1,4 +1,4 @@
-name: Retrieve four matched Stoughton roofing contracts
+name: Stoughton Sunrun and roof permit packets
 on:
   push:
     branches: [research/permitlink-sterling-20261127]
@@ -8,57 +8,149 @@ permissions:
 jobs:
   recover:
     runs-on: ubuntu-latest
-    timeout-minutes: 3
+    timeout-minutes: 16
     steps:
       - run: pip -q install playwright pypdf && python -m playwright install chromium
       - run: |
-          mkdir -p output
           python -u - <<'PY'
-          import asyncio,re,json,io,hashlib
+          import asyncio,re,json,hashlib,io,os
           from pathlib import Path
           from playwright.async_api import async_playwright
           from pypdf import PdfReader
-          O=Path("output")
-          permits=["B-26-1133","B-26-0368","B-25-0728","B-25-0398"]
-          async def retrieve(b,pid):
-            c=await b.new_context(accept_downloads=True);p=await c.new_page();results=[]
+          O=Path("output"); O.mkdir(exist_ok=True)
+          URL="https://permiteyes.us/stoughton/publicview.php"
+          ROW="tr:has(a.view_app):visible"
+          ICON='a.Attachmentclass[title="Attachment(s) present"]'
+          EXCLUDE=re.compile(r'insurance|liability|workers?[ _-]*(?:comp|compensation)|debris|disposal|(?:building|solar|pv|electrical|roof|site|design)[ _-]*(?:plans?|drawings?)|(?:^|[ _-])(?:plans?|drawings?|coi|wca)(?:[ _.-]|$)',re.I)
+          KEEP_CONTRACT=re.compile(r'contract|agreement|proposal|estimate|change.?order|customer.?approval|authorization|audit.?trail|completion.?certificate|PPA|CAP',re.I)
+          YEARS=re.compile(r'\b[A-Z]+-2[2-6]-',re.I)
+          ROOF=re.compile(r'roof|reroof|re-roof|shingle',re.I)
+          manifest=[]; errors=[]; completed=[]
+          def safe(s): return re.sub(r'[^a-zA-Z0-9._-]+','_',s)[:130]
+          def save():
+           (O/'manifest.json').write_text(json.dumps(manifest,indent=2))
+           (O/'errors.json').write_text(json.dumps(errors,indent=2))
+           (O/'completed.json').write_text(json.dumps(completed,indent=2))
+          async def fill(p,name,val):
+           l=p.locator(f'input[name="{name}"]:visible').first
+           await l.fill(str(val),timeout=7000); await l.dispatch_event("keyup"); await l.press("Enter"); await p.wait_for_timeout(850)
+          async def rows(p):
+           out=[];seen=set()
+           for _ in range(200):
+            rs=await p.locator(ROW).evaluate_all("""es=>es.map(e=>({cells:[...e.querySelectorAll('td')].map(x=>x.textContent.trim()),record:e.innerText,id:e.querySelector('a.view_app').dataset.id}))""")
+            new=[r for r in rs if r['id'] not in seen]
+            if not new: break
+            for r in new: seen.add(r['id']);out.append(r)
+            nxt=p.locator('.paginate_button.next:visible:not(.disabled)').first
+            if not await nxt.count():break
+            await nxt.click(timeout=5000);await p.wait_for_timeout(500)
+           return out
+          def permit(r):
+           m=YEARS.search(r['record'])
+           if not m:return ''
+           return re.search(r'\b[A-Z]+-2[2-6]-[A-Z0-9]+',r['record'],re.I).group(0)
+          def addr(r):
+           c=r['cells'];return (c[10],c[11]) if len(c)>14 else ('','')
+          async def packet(p,r,folder):
+           pid=permit(r);rid=r['id'];rec=r['record'];folder.mkdir(parents=True,exist_ok=True)
+           (folder/(safe(pid or rid)+'_record.txt')).write_text(rec)
+           row=p.locator(ROW).filter(has_text=re.compile(r'\b'+re.escape(rid)+r'\b')).first
+           icon=row.locator(ICON)
+           if not await icon.count():
+            completed.append({'permit':pid,'id':rid,'status':'no attachment icon'});save();return
+           try:
+            await icon.first.click(timeout=7000)
+            m=p.locator('#AttachmentModal'); await m.wait_for(state='visible',timeout=8000)
+            await p.wait_for_timeout(650)
+            links=m.locator('a.downloadLink[data-size]:visible')
+            names=await links.all_text_contents()
+            (folder/(safe(pid or rid)+'_attachments.json')).write_text(json.dumps(names,indent=2))
+            for i,name in enumerate(names):
+             name=name.strip()
+             if EXCLUDE.search(name) and not KEEP_CONTRACT.search(name):
+              manifest.append({'permit':pid,'name':name,'status':'excluded'});continue
+             try:
+              async with p.expect_download(timeout=12000) as dl: await links.nth(i).click(timeout=5000)
+              d=await dl.value; f=folder/(safe(pid or rid)+'_'+str(i)+'_'+safe(d.suggested_filename))
+              await d.save_as(f); data=f.read_bytes()
+              if not data.startswith(b'%PDF-'):
+               # Keep original documents with non-PDF formats only if explicitly identifiable.
+               if f.suffix.lower() not in ('.doc','.docx','.txt','.jpg','.jpeg','.png','.tif','.tiff'):
+                f.unlink();raise ValueError('not a recognized original file')
+               pages=None
+              else:pages=len(PdfReader(io.BytesIO(data)).pages)
+              manifest.append({'permit':pid,'id':rid,'record':rec,'name':name,'file':str(f.relative_to(O)),'pages':pages,'sha256':hashlib.sha256(data).hexdigest(),'status':'downloaded'})
+              print('PDF',pid,f.name,pages,flush=True)
+             except Exception as e:errors.append({'permit':pid,'name':name,'error':str(e)[:400]})
+             save()
+            completed.append({'permit':pid,'id':rid,'status':'attachment list checked','attachments':len(names)})
+           finally:
             try:
-              await p.goto("https://permiteyes.us/stoughton/publicview.php",wait_until="domcontentloaded",timeout=15000)
-              l=p.locator('input[name="permit_num"]:visible').first
-              await l.fill(pid);await l.dispatch_event("keyup");await l.press("Enter");await p.wait_for_timeout(1000)
-              row=p.locator("tr:has(a.view_app):visible").filter(has_text=pid).first
-              record=await row.inner_text(timeout=5000);print("EXACT",pid,record.replace(chr(10)," "),flush=True)
-              await row.locator("a.Attachmentclass").first.click(timeout=4000)
-              m=p.locator("#AttachmentModal");await p.wait_for_timeout(900)
-              links=m.locator('a.downloadLink[data-size]:visible,a[data-href][data-download]:visible')
-              names=await links.all_text_contents();print("NAMES",pid,names,flush=True)
-              for i,n in enumerate(names):
-                if not n.lower().strip().endswith(".pdf"):continue
-                if re.search(r"insurance|liability|worker|affidavit|debris|plan|drawing|license|measurement|roofr|eagleview|credentials|\bcoi\b|\bcsl\b|\bhic\b",n,re.I):continue
-                try:
-                  async with p.expect_download(timeout=6000) as dl:await links.nth(i).click(timeout=3000)
-                  d=await dl.value;f=O/(pid+"_"+re.sub(r"[^a-zA-Z0-9._-]","_",d.suggested_filename));await d.save_as(f)
-                  data=f.read_bytes()
-                  if not data.startswith(b"%PDF-"):f.unlink();continue
-                  reader=PdfReader(io.BytesIO(data));t="\n".join(pg.extract_text() or "" for pg in reader.pages)
-                  item={"permit":pid,"record":record,"name":n,"file":f.name,"pages":len(reader.pages),"text_chars":len(t),"sha256":hashlib.sha256(data).hexdigest(),"text":t[:14000]}
-                  results.append(item);print("DOCUMENT",json.dumps(item),flush=True)
-                except Exception as e:print("PDF ERROR",pid,repr(e),flush=True)
-            except Exception as e:print("ERROR",pid,repr(e),flush=True)
-            finally:await c.close()
-            return results
+             close=m.locator('button.close:visible,button[data-dismiss="modal"]:visible,button[data-bs-dismiss="modal"]:visible').first
+             if await close.count():await close.click(timeout=3000)
+             else:await p.keyboard.press('Escape')
+             await m.wait_for(state='hidden',timeout=4000)
+            except Exception:pass
+            save()
+          async def property_job(browser,num,street):
+           c=await browser.new_context(accept_downloads=True);p=await c.new_page()
+           folder=O/safe(num+'_'+street)
+           try:
+            await p.goto(URL,wait_until='domcontentloaded',timeout=20000)
+            await fill(p,'street_no',num);await fill(p,'street_name',street)
+            rs=await rows(p)
+            rs=[r for r in rs if tuple(s.lower().strip() for s in addr(r))==(num.lower().strip(),street.lower().strip()) and permit(r)]
+            solar=[r for r in rs if re.search('sunrun',r['record'],re.I)]
+            roofs=[r for r in rs if 'BUILD' in r['record'].upper() and ROOF.search(r['record']) and r not in solar]
+            # Other building permits at the same address may contain roof work; retain
+            # building records even when public row does not identify scope.
+            other=[r for r in rs if 'BUILD' in r['record'].upper() and r not in solar and r not in roofs]
+            folder.mkdir(parents=True,exist_ok=True)
+            (folder/'property_records.json').write_text(json.dumps(rs,indent=2))
+            wanted=solar+roofs+other
+            for r in wanted:
+             try:
+              # Reset filters and find the target record, including later result pages.
+              await p.goto(URL,wait_until='domcontentloaded',timeout=20000)
+              await fill(p,'street_no',num);await fill(p,'street_name',street)
+              for _ in range(50):
+               if await p.locator(ROW).filter(has_text=re.compile(r'\b'+re.escape(r['id'])+r'\b')).count():
+                await packet(p,r,folder);break
+               nxt=p.locator('.paginate_button.next:visible:not(.disabled)').first
+               if not await nxt.count():raise RuntimeError('target row missing')
+               await nxt.click(timeout=5000);await p.wait_for_timeout(450)
+             except Exception as e:errors.append({'permit':permit(r),'error':str(e)[:400]});save()
+            print('PROPERTY',num,street,'solar',len(solar),'roof',len(roofs),'other building candidates',len(other),flush=True)
+           except Exception as e:errors.append({'address':num+' '+street,'error':str(e)[:400]});save()
+           finally:await c.close()
           async def main():
-            async with async_playwright() as pw:
-              b=await pw.chromium.launch()
-              r=await asyncio.gather(*(retrieve(b,pid) for pid in permits))
-              out=[x for a in r for x in a];(O/"manifest.json").write_text(json.dumps(out,indent=2))
-              await b.close()
-              if not out:raise RuntimeError("No PDF recovered")
-          asyncio.run(asyncio.wait_for(main(),85))
+           async with async_playwright() as pw:
+            b=await pw.chromium.launch()
+            c=await b.new_context();p=await c.new_page()
+            await p.goto(URL,wait_until='domcontentloaded',timeout=25000)
+            await fill(p,'applicant_name','sunrun');rs=await rows(p)
+            (O/'sunrun_index.json').write_text(json.dumps(rs,indent=2))
+            print('INDEX',len(rs),flush=True)
+            addrs={addr(r) for r in rs if permit(r) and all(addr(r))}
+            priority=[('81','Joyce Dr'),('210','Plain Dr'),('105','Canton St'),('39','Kelsey Dr'),('1648','West St'),('97','Willow St')]
+            ordered=sorted(addrs,key=lambda a:max((permit(r) for r in rs if addr(r)==a),default=''),reverse=True)
+            seen=set();targets=[]
+            for a in priority+ordered:
+             k=tuple(s.lower() for s in a)
+             if k not in seen:seen.add(k);targets.append(a)
+            (O/'target_addresses.json').write_text(json.dumps(targets,indent=2))
+            await c.close()
+            sem=asyncio.Semaphore(4)
+            async def one(a):
+             async with sem:await property_job(b,*a)
+            await asyncio.gather(*(one(a) for a in targets))
+            save();await b.close()
+          try:asyncio.run(asyncio.wait_for(main(),780))
+          except BaseException as e:errors.append({'run_error':str(e)});save();raise
           PY
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: stoughton-four-roof-contracts
+          name: stoughton-sunrun-roof-packets
           path: output/
           retention-days: 14
