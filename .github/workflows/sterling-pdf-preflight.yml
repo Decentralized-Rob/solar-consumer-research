@@ -33,7 +33,8 @@ jobs:
               ctx=await browser.new_context(accept_downloads=True)
               page=await ctx.new_page()
               await page.goto(BASE+"DocumentLink.GuestPermitListCenter.cls",wait_until="domcontentloaded",timeout=40000)
-              await page.wait_for_function("typeof zenPage !== 'undefined' && !!zenPage.getComponentById('table')",timeout=20000)
+              await page.wait_for_timeout(1500)
+              await page.wait_for_function("typeof zenPage !== 'undefined' && !!zenPage && !!zenPage.getComponentById('table')",timeout=20000)
               js="""() => {const t=zenPage.getComponentById('table');let n=Number(t.getProperty('rowCount'))||0;let rows=[];for(let i=0;i<Math.min(n,15000);i++){try{let r=t.getRowData(i);if(r)rows.push(r)}catch(e){}}return {n,rows}}"""
               data=await page.evaluate(js)
               rows=data["rows"]
@@ -46,7 +47,7 @@ jobs:
                 try:
                   uri=BASE+"DocumentLink.PublicAttachmentCenter.cls?DocumentId="+str(r["DocumentId"])+"&QueryId="+str(r["DocumentId"])+"&Maid="+str(r["Maid"])
                   await page.goto(uri,wait_until="domcontentloaded",timeout=15000)
-                  await page.wait_for_function("typeof zenPage !== 'undefined' && !!zenPage.getComponentById('table')",timeout=8000)
+                  await page.wait_for_function("typeof zenPage !== 'undefined' && !!zenPage && !!zenPage.getComponentById('table')",timeout=8000)
                   att=await page.evaluate(js)
                   docs=[d for d in att["rows"] if d.get("ImageId")]
                   docs.sort(key=lambda d:not bool(re.search(r"contract|proposal|estimate|agreement|ppa",str(d),re.I)))
