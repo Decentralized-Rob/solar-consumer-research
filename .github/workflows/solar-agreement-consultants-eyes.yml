@@ -36,7 +36,7 @@ jobs:
            for a,b in [("street","st"),("road","rd"),("drive","dr"),("avenue","ave"),("lane","ln"),("court","ct")]:x=re.sub(r"\b"+a+r"\b",b,x)
            return re.sub("[^a-z0-9]","",x)
           found={}
-          for term in ["Capital Roofing","Daniel Gonzalez"]:
+          for term in ["Capital","Gonzalez","199150"]:
            j,rs=search(term)
            print("INDEX",term,"total",j.get("recordsFiltered"),"returned",len(rs),flush=True)
            for r in rs:
@@ -52,7 +52,7 @@ jobs:
            print("PROPERTY",addr,"rows",len(ar),"solar",len(solar),flush=True)
            item={"roof_record":r,"address_search_total":j.get("recordsFiltered"),"address_records":ar,"solar_records":solar,"documents":[]}
            results.append(item)
-           if solar:continue
+           print("ADDRESS_RECORDS",json.dumps(ar),flush=True)
            rr=S.post(BASE+"controller/publicattachments_controller.php",data={"action":"displayAttach","ApplicationId":r["uuid"]},timeout=35);rr.raise_for_status()
            aa=rr.json().get("Attachments") or [];item["attachment_listing"]=aa
            for a in aa:
@@ -72,7 +72,7 @@ jobs:
             except Exception as e:print("DOC_ERROR",str(e),flush=True)
            (OUT/"results.json").write_text(json.dumps(results,indent=2))
            good=[z for z in results if not z["solar_records"] and any(re.search(r"capital roofing",x["text"],re.I) and re.search(r"customer|signature|acceptance|contract|proposal",x["text"],re.I) for x in z["documents"])]
-           if len(good)>=2:break
+           if len(good)>=3:break
           (OUT/"results.json").write_text(json.dumps(results,indent=2))
           print("FINISHED",len(results),flush=True)
           
