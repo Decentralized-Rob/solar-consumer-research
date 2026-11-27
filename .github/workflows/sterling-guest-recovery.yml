@@ -75,7 +75,7 @@ jobs:
                 login=await snap(p,"login")
                 for i in login.get("controls",[]):
                   desc=" ".join(str(i.get(k) or "") for k in ("title","alt","value","text","onclick","id"))
-                  if re.search(r"guest|view information",desc,re.I) and i.get("id"):
+                  if re.search(r"guest|view information",desc,re.I) and i.get("id") and (i.get("tag") in ("BUTTON","IMG","A") or i.get("type") in ("button","submit","image")):
                     loc=p.locator("[id="+json.dumps(i["id"])+"]")
                     if await loc.count() and await loc.first.is_visible():
                       print("CLICK GUEST",i["id"],flush=True)
@@ -95,8 +95,8 @@ jobs:
                       field=p.locator("[id="+json.dumps(f["id"])+"]")
                       await field.fill(TARGET);await field.press("Enter");await p.wait_for_timeout(1500);break
                 if not await row.count():
-                  # A visible roofing record is sufficient for the one-file portal test.
-                  row=p.locator("td").filter(has_text=re.compile(r"strip roof shingles|re-roof|reroof|roof replacement|replace roof|asphalt shingles",re.I))
+                  # Keep the manifest tied to the exact public permit.
+                  raise RuntimeError("Target permit not rendered; see filter diagnostics")
                 if not await row.count():raise RuntimeError("No matching rendered roofing row; see index snapshot")
                 await row.first.click(timeout=4500)
                 ctl=p.locator('input[value*="View Attachments" i],input[title*="View Attachments" i],img[title*="View Attachments" i],img[alt*="View Attachments" i],button:has-text("View Attachments")').filter(visible=True)
