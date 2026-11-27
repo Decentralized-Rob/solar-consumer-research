@@ -1,0 +1,135 @@
+name: Stoughton Belneau contract and roof scan
+on:
+  push:
+    branches: [research/permitlink-sterling-20261127]
+    paths: [.github/workflows/stoughton-belneau-roof-pairs.yml]
+permissions:
+  contents: read
+  actions: read
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: seabass-solar-agreements
+          run-id: 45990261854
+          github-token: ${{ github.token }}
+          path: prior
+      - uses: actions/download-artifact@v4
+        with:
+          name: stoughton-sunrun-ppa-originals
+          run-id: 45984557246
+          github-token: ${{ github.token }}
+          path: prior2
+      - run: pip -q install playwright pypdf && python -m playwright install chromium
+      - run: |
+          mkdir -p output
+          python -u - <<'PY'
+          import asyncio,re,json,hashlib,io
+          from pathlib import Path
+          from playwright.async_api import async_playwright
+          from pypdf import PdfReader
+          O=Path("output")
+          URL="https://permiteyes.us/stoughton/publicview.php"
+          found=[]; checked=[]; seen=set()
+          def inspect(f,pid,record=""):
+            try:
+              r=PdfReader(f);pages=[p.extract_text() or "" for p in r.pages]; t="\n".join(pages)
+              hit=bool(re.search(r"belneau",t,re.I))
+              item={"permit":pid,"record":record,"file":f.name,"pages":len(r.pages),"belneau":hit,"text_chars":len(t),"sha256":hashlib.sha256(f.read_bytes()).hexdigest()}
+              checked.append(item)
+              if hit:
+                import shutil
+                dest=O/(pid+"_"+f.name)
+                if f!=dest:shutil.copy2(f,dest)
+                matches=[]
+                for i,s in enumerate(pages,1):
+                  for m in re.finditer(r"belneau",s,re.I):
+                    snippet=s[max(0,m.start()-65):m.end()+90]
+                    snippet=re.sub(r"\S+@\S+","[email]",snippet)
+                    matches.append({"page":i,"text":snippet})
+                item["matches"]=matches[:12]
+                found.append(item)
+                print("BELNEAU",json.dumps(item),flush=True)
+              else: print("CHECKED",pid,len(r.pages),len(t),flush=True)
+              (O/"checked.json").write_text(json.dumps(checked,indent=2))
+              (O/"matches.json").write_text(json.dumps(found,indent=2))
+              return hit
+            except Exception as e:print("PDF ERROR",pid,str(e)[:120],flush=True);return False
+          async def fill(p,name,val):
+            l=p.locator('input[name="'+name+'"]:visible').first
+            await l.fill(val,timeout=6000);await l.dispatch_event("keyup");await l.press("Enter");await p.wait_for_timeout(850)
+          async def main():
+            for f in list(Path("prior").rglob("*.pdf"))+list(Path("prior2").rglob("*.pdf")):
+              if not re.search(r"contract|agreement|ppa",f.name,re.I):continue
+              m=re.search(r"B-\d{2}-\d+",f.name)
+              if not m:continue
+              pid=m.group();seen.add(pid);inspect(f,pid)
+            async with async_playwright() as pw:
+              b=await pw.chromium.launch();c=await b.new_context(accept_downloads=True)
+              p=await c.new_page();await p.goto(URL,wait_until="domcontentloaded",timeout=18000);await p.wait_for_timeout(1600)
+              await fill(p,"applicant_name","sunrun")
+              candidates=[]
+              for page in range(15):
+                rows=p.locator("tr:has(a.view_app):visible")
+                records=await rows.all_inner_texts()
+                for rec in records:
+                  m=re.search(r"\bB-2[2-6]-\d+\b",rec)
+                  if m and "SUNRUN" in rec.upper() and m.group() not in [x[0] for x in candidates]:candidates.append((m.group(),rec))
+                print("INDEX",page,len(records),len(candidates),flush=True)
+                nexts=p.locator(".paginate_button.next:visible:not(.disabled), li.next:visible:not(.disabled)")
+                if not await nexts.count():break
+                await nexts.first.click(timeout=4000);await p.wait_for_timeout(450)
+              (O/"index.json").write_text(json.dumps(candidates,indent=2))
+              # Most recent records first; skip previously downloaded agreements.
+              for pid,record in [x for x in candidates if x[0] not in seen][:30]:
+                try:
+                  await p.goto(URL,wait_until="domcontentloaded",timeout=12000);await p.wait_for_timeout(700)
+                  await fill(p,"permit_num",pid)
+                  row=p.locator("tr:has(a.view_app):visible").filter(has_text=pid).first
+                  await row.locator("a.Attachmentclass").first.click(timeout=4000)
+                  m=p.locator("#AttachmentModal");await p.wait_for_timeout(650)
+                  links=m.locator('a.downloadLink[data-size]:visible,a[data-href][data-download]:visible')
+                  names=await links.all_text_contents()
+                  for j,n in enumerate(names):
+                    if not re.search(r"\.pdf$",n.strip(),re.I) or not re.search(r"contract|agreement|ppa|change order|\bCAP\b",n,re.I):continue
+                    try:
+                      async with p.expect_download(timeout=5000) as dl:await links.nth(j).click(timeout=2500)
+                      d=await dl.value
+                      f=Path("tmp_"+pid+"_"+re.sub(r"[^A-Za-z0-9._-]","_",d.suggested_filename))
+                      await d.save_as(f)
+                      if f.read_bytes().startswith(b"%PDF-"):inspect(f,pid,record)
+                      f.unlink(missing_ok=True)
+                    except Exception as e:print("DOWNLOAD ERROR",pid,str(e)[:130],flush=True)
+                except Exception as e:print("RECORD ERROR",pid,str(e)[:130],flush=True)
+              # Search same-property records for every new name match.
+              for item in found:
+                if not item.get("record"):continue
+                cells=item["record"].split("\t")
+                pid=item["permit"]
+                try:
+                  await p.goto(URL,wait_until="domcontentloaded",timeout=12000);await p.wait_for_timeout(700)
+                  await fill(p,"permit_num",pid)
+                  row=p.locator("tr:has(a.view_app):visible").filter(has_text=pid).first
+                  cols=await row.locator("td").all_inner_texts()
+                  num,street=cols[10].strip(),cols[11].strip()
+                  await p.goto(URL,wait_until="domcontentloaded",timeout=12000);await p.wait_for_timeout(700)
+                  await fill(p,"street_no",num);await fill(p,"street_name",street)
+                  rs=await p.locator("tr:has(a.view_app):visible").all_inner_texts()
+                  print("PROPERTY MATCH",pid,json.dumps(rs),flush=True)
+                  item["property_records"]=rs
+                  (O/"matches.json").write_text(json.dumps(found,indent=2))
+                except Exception as e:print("PAIR ERROR",pid,str(e)[:130],flush=True)
+              await b.close()
+          try:asyncio.run(asyncio.wait_for(main(),265))
+          except asyncio.TimeoutError:print("SCAN LIMIT",flush=True)
+          print("TOTAL",len(checked),len(found),flush=True)
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: stoughton-belneau-matches
+          path: output/
+          retention-days: 14
