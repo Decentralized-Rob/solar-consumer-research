@@ -6,151 +6,203 @@ on:
   workflow_dispatch:
 permissions:
   contents: read
+concurrency:
+  group: sterling-sunrun-roof
+  cancel-in-progress: true
 jobs:
   match:
     runs-on: ubuntu-latest
-    timeout-minutes: 9
+    timeout-minutes: 8
     steps:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
       - run: pip -q install playwright pypdf && python -m playwright install chromium
-      - name: Crossmatch roof and solar permits and verify original contracts
+      - name: Build bounded solar-first index
         run: |
-          python -u - <<'PY'
-          import asyncio, re, json, io, hashlib, datetime
+          mkdir -p sterling-index sterling-roof
+          cat > /tmp/sterling.py <<'PY'
+          import asyncio, re, json, io, hashlib, datetime, sys, time
           from pathlib import Path
           from playwright.async_api import async_playwright
           from pypdf import PdfReader
           B="https://www.permitlinkonline.com/csp/sterlinglive/"
-          O=Path("sterling-roof");O.mkdir(exist_ok=True)
           IDX=B+"DocumentLink.GuestPermitListCenter.cls"
+          I=Path("sterling-index"); O=Path("sterling-roof")
           ROOF=re.compile(r"roof|shingle|reroof",re.I)
           SOLAR=re.compile(r"solar|photovoltaic|\bpv\b",re.I)
           SUN=re.compile(r"sun\s*run",re.I)
-          records={}; errors=[]; results=[]; files=[]
-          def checkpoint():
-            (O/"summary.json").write_text(json.dumps({"records":len(records),"results":results,"files":files,"errors":errors},indent=2))
-          def addr(r):
-            return (str(r.get("HouseNumber","")).strip().upper(),re.sub(r"\W","",str(r.get("Location",""))).upper())
+          JS="""() => {let t=zenPage.getComponent(76);let n=Number(t.getProperty('rowCount'))||0;let rows=[];for(let i=0;i<Math.min(n||100,100);i++){try{let r=t.getRowData(i);if(r&&r.PermitID&&r.DocumentId)rows.push(r)}catch(e){}}return {n,rows}}"""
+          ATT="""() => {let z=window.zenPage;if(!z)return [];let out=[];let seen=new Set();for(let i=1;i<180;i++){try{let t=z.getComponent(i);if(!t||typeof t.getRowData!=='function')continue;let n=Number(t.getProperty('rowCount'))||0;for(let j=0;j<Math.min(n,80);j++){try{let r=t.getRowData(j);if(r&&r.ImageId&&!seen.has(r.ImageId)){out.push(r);seen.add(r.ImageId)}}catch(e){}}}catch(e){}}return out}"""
+          def dump(p,x):p.write_text(json.dumps(x,indent=2))
+          def addr(r):return (str(r.get("HouseNumber","")).strip().upper(),re.sub(r"\W","",str(r.get("Location",""))).upper())
           def date(r):
             for k in ("Issued","Applied"):
               try:return datetime.datetime.strptime(r.get(k,""),"%m/%d/%Y")
               except:pass
+          def recent(r):return bool(date(r) and date(r).year>=2022)
+          def clean(r):return {k:r.get(k) for k in ("HouseNumber","Location","PermitID","PermitType","Applied","Issued","WorkDescription","DocumentId","Maid")}
+          async def login(p):
+            await p.goto(B+"DocumentLink.PublicLogin.cls",wait_until="domcontentloaded",timeout=18000)
+            await p.locator("#control_95").click(timeout=6000)
+            await p.wait_for_url("**/DocumentLink.GuestPermitListCenter.cls*",timeout=12000)
+            await p.wait_for_timeout(600)
+          async def pages(p,limit):
+            seen=set(); out=[]
+            for i in range(limit):
+              v=await p.evaluate(JS); rows=v["rows"]
+              sig=tuple(str(r["DocumentId"]) for r in rows)
+              if not sig or sig in seen:break
+              seen.add(sig);out.extend(rows)
+              nxt=p.locator('a[title="Go to next page"]').filter(visible=True)
+              if not await nxt.count():break
+              try:await nxt.first.click(timeout=2500)
+              except:break
+              await p.wait_for_timeout(500)
+            return out
+          async def search(p,term):
+            await p.locator("#control_48").click(timeout=4000)
+            await p.wait_for_timeout(300)
+            await p.locator("#control_41").fill(term)
+            await p.locator("#control_43").click(timeout=4000)
+            await p.wait_for_timeout(850)
+            return await pages(p,10)
+          async def index(p):
+            records={}; status=[]
+            for term in ("Sunrun","solar","photovoltaic"):
+              try:
+                rows=await asyncio.wait_for(search(p,term),20)
+                for r in rows:
+                  if recent(r) and addr(r)[0] and (SOLAR.search(str(r.get("WorkDescription",""))) or SUN.search(str(r))):
+                    records[str(r["DocumentId"])]=clean(r)
+                status.append({"term":term,"rows":len(rows),"solar_candidates":len(records)})
+              except Exception as e:status.append({"term":term,"error":str(e)[:300]})
+              print("INDEX",json.dumps(status[-1]),flush=True)
+              ordered=sorted(records.values(),key=lambda r:(not bool(SUN.search(str(r))),-(date(r).toordinal())))
+              dump(I/"solar-index.json",ordered);dump(I/"search-status.json",status)
+            print("SOLAR CANDIDATES",len(records),flush=True)
+          async def address_records(p,s):
+            await p.locator("#control_48").click(timeout=4000)
+            await p.wait_for_timeout(300)
+            n=p.locator("#filter1_HouseNumber_76");await n.fill(str(s["HouseNumber"]));await n.press("Enter")
+            await p.wait_for_timeout(450)
+            l=p.locator("#filter1_Location_76");await l.fill(str(s["Location"]));await l.press("Enter")
+            await p.wait_for_timeout(650)
+            rows=await pages(p,3)
+            return [r for r in rows if addr(r)==addr(s) and recent(r)]
+          async def getdocs(a,r):
+            u=B+"DocumentLink.GuestAttachmentCenter.cls?DocumentId="+str(r["DocumentId"])+"&QueryId="+str(r["DocumentId"])+"&Maid="+str(r["Maid"])
+            await a.goto(u,wait_until="domcontentloaded",timeout=10000)
+            await a.wait_for_function("!!window.zenPage",timeout=5000)
+            await a.wait_for_timeout(900)
+            return await a.evaluate(ATT)
+          def eligible(d):
+            x=" ".join(str(d.get(k,"")) for k in ("FileName","FileDescription","FileType"))
+            return bool(re.search(r"contract|proposal|estimate|agreement|ppa|change.order|\bcap\b|permit|application",x,re.I)) and not re.search(r"insurance|affidavit|workers.?comp|debris|plans?|drawing|license|\bcoi\b|\bcsl\b|\bhic\b",x,re.I)
+          async def fetch(ctx,r,d):
+            u=B+"TaxLink.ImageServer.cls?ImageID="+str(d["ImageId"])+"&Decrypt=0"
+            resp=await ctx.request.get(u,timeout=8000);body=await resp.body()
+            if not body.startswith(b"%PDF-"):return None
+            reader=PdfReader(io.BytesIO(body))
+            text=""
+            for pg in reader.pages[:25]:
+              try:text+=" "+(pg.extract_text() or "")
+              except:pass
+            name=str(d.get("FileName") or d.get("FileDescription") or "original.pdf")
+            m={"permit":r["PermitID"],"name":name,"pages":len(reader.pages),"bytes":len(body),"sha256":hashlib.sha256(body).hexdigest(),"source":u,"sunrun_text":bool(SUN.search(text)),"giga_text":bool(re.search(r"giga property|espigar",text,re.I)),"text_chars":len(text)}
+            return body,m
+          async def recover(p,ctx,a,s):
+            rows=await address_records(p,s)
+            roofs=[r for r in rows if r["DocumentId"]!=s["DocumentId"] and ROOF.search(str(r.get("WorkDescription",""))) and not SOLAR.search(str(r.get("WorkDescription",""))) and abs((date(r)-date(s)).days)<=365]
+            print("ADDRESS CHECK",s["PermitID"],"roof candidates",len(roofs),flush=True)
+            if not roofs:return None
+            sd=await getdocs(a,s)
+            hit=bool(SUN.search(str(s))) or any(SUN.search(str(d)) for d in sd)
+            sol=[]
+            for d in sorted(sd,key=lambda d:not bool(re.search(r"sunrun|agreement|contract|ppa",str(d),re.I))):
+              if not eligible(d):continue
+              try:
+                f=await fetch(ctx,s,d)
+                if f:sol.append(f);hit=hit or f[1]["sunrun_text"]
+              except Exception as e:print("SOLAR PDF ERROR",str(e)[:120])
+            if not hit:return None
+            for r in sorted(roofs,key=lambda r:abs((date(r)-date(s)).days)):
+              rd=await getdocs(a,r);roof=[]
+              for d in rd:
+                if not eligible(d):continue
+                try:
+                  f=await fetch(ctx,r,d)
+                  if f:roof.append(f)
+                except Exception as e:print("ROOF PDF ERROR",str(e)[:120])
+              contracts=[f[1]["name"] for f in roof if re.search(r"contract|proposal|estimate|agreement",f[1]["name"],re.I)]
+              if not contracts:continue
+              result={"address":str(s["HouseNumber"])+" "+str(s["Location"]),"solar_permit":s["PermitID"],"roof_permit":r["PermitID"],"solar_date":str(date(s).date()),"roof_date":str(date(r).date()),"roof_contracts":contracts,"files":[]}
+              folder=O/re.sub(r"[^A-Za-z0-9_-]","_",s["PermitID"]);folder.mkdir(exist_ok=True)
+              for body,m in sol+roof:
+                fn=re.sub(r"[^A-Za-z0-9_.-]","_",m["permit"]+"_"+m["name"])
+                if not fn.lower().endswith(".pdf"):fn+=".pdf"
+                (folder/fn).write_bytes(body);m["file"]=fn;result["files"].append(m)
+              dump(folder/"manifest.json",result)
+              print("VERIFIED SUNRUN ROOF",json.dumps(result),flush=True)
+              return result
             return None
-          def recent(r):
-            d=date(r);return d is not None and d.year>=2022
-          JS="""() => {let t=zenPage.getComponent(76);let rows=[];let n=Number(t.getProperty('rowCount'))||0;for(let i=0;i<Math.min(n||100,100);i++){try{let r=t.getRowData(i);if(r&&r.PermitID&&r.DocumentId)rows.push(r)}catch(e){}}return {n,rows}}"""
-          ATT="""() => {let z=window.zenPage;if(!z)return [];let out=[];let seen=new Set();for(let i=1;i<180;i++){try{let t=z.getComponent(i);if(!t||typeof t.getRowData!=='function')continue;let n=Number(t.getProperty('rowCount'))||0;for(let j=0;j<Math.min(n,80);j++){try{let r=t.getRowData(j);if(r&&r.ImageId&&!seen.has(r.ImageId)){out.push(r);seen.add(r.ImageId)}}catch(e){}}}catch(e){}}return out}"""
+          async def batch(p,ctx,number):
+            statefile=O/"state.json"
+            state=json.loads(statefile.read_text()) if statefile.exists() else {"cursor":0,"matches":[],"errors":[]}
+            candidates=json.loads((I/"solar-index.json").read_text()) if (I/"solar-index.json").exists() else []
+            a=await ctx.new_page();start=time.monotonic();attempts=0
+            while state["cursor"]<len(candidates) and len(state["matches"])<3 and attempts<12 and time.monotonic()-start<65:
+              s=candidates[state["cursor"]];state["cursor"]+=1;attempts+=1
+              if any(x["address"]==str(s["HouseNumber"])+" "+str(s["Location"]) for x in state["matches"]):continue
+              result=None
+              try:
+                result=await asyncio.wait_for(recover(p,ctx,a,s),35)
+                if result:state["matches"].append(result)
+              except Exception as e:state["errors"].append({"permit":s["PermitID"],"error":str(e)[:250]})
+              dump(statefile,state)
+              if result:break
+            dump(statefile,state);print("BATCH",number,"checked",state["cursor"],"of",len(candidates),"matches",len(state["matches"]),flush=True)
           async def main():
             async with async_playwright() as pw:
-              browser=await pw.chromium.launch(headless=True)
-              ctx=await browser.new_context(accept_downloads=True)
-              p=await ctx.new_page()
-              await p.goto(B+"DocumentLink.PublicLogin.cls",wait_until="domcontentloaded",timeout=20000)
-              await p.locator("#control_95").click()
-              await p.wait_for_url("**/DocumentLink.GuestPermitListCenter.cls*",timeout=15000)
-              await p.wait_for_timeout(1000)
-              print("INDEX READY",flush=True)
-              # Use public search and visible pagination, not guessed document IDs.
-              for term in ("solar","photovoltaic","Sunrun","roof","shingle"):
-                try:
-                  await p.locator("#control_48").click(timeout=4000)
-                  await p.wait_for_timeout(350)
-                  await p.locator("#control_41").fill(term)
-                  await p.locator("#control_43").click(timeout=4000)
-                  await p.wait_for_timeout(1000)
-                  seen=set(); count=0
-                  for page in range(100):
-                    v=await p.evaluate(JS)
-                    rows=v["rows"]
-                    if not rows:
-                      print("NO ROW DATA",term,v["n"],(await p.locator("body").inner_text())[-1200:],flush=True);break
-                    sig=tuple(str(r["DocumentId"]) for r in rows)
-                    if sig in seen:break
-                    seen.add(sig)
-                    for r in rows:records[str(r["DocumentId"])]=r
-                    count+=len(rows)
-                    nxt=p.locator('a[title="Go to next page"]').filter(visible=True)
-                    if not await nxt.count():break
-                    await nxt.first.click(timeout=4000)
-                    await p.wait_for_timeout(400)
-                  print("SEARCH",term,"records",count,"pages",len(seen),flush=True)
-                except Exception as e:errors.append({"term":term,"error":str(e)[:300]})
-              (O/"index.json").write_text(json.dumps(list(records.values()),indent=2))
-              rows=[r for r in records.values() if recent(r)]
-              solar=[r for r in rows if SOLAR.search(str(r.get("WorkDescription",""))) and addr(r)[0]]
-              roofs=[r for r in rows if ROOF.search(str(r.get("WorkDescription",""))) and not SOLAR.search(str(r.get("WorkDescription",""))) and addr(r)[0]]
-              pairs=[]
-              for s in solar:
-                for r in roofs:
-                  if addr(s)!=addr(r):continue
-                  gap=abs((date(s)-date(r)).days)
-                  if gap<=365:pairs.append((gap,s,r))
-              pairs.sort(key=lambda x:(not bool(SUN.search(str(x[1]))),x[0]))
-              print("MATCH COUNTS",len(solar),len(roofs),len(pairs),flush=True)
-              checkpoint()
-              a=await ctx.new_page()
-              async def getdocs(r):
-                u=B+"DocumentLink.GuestAttachmentCenter.cls?DocumentId="+str(r["DocumentId"])+"&QueryId="+str(r["DocumentId"])+"&Maid="+str(r["Maid"])
-                await a.goto(u,wait_until="domcontentloaded",timeout=15000)
-                await a.wait_for_function("!!window.zenPage",timeout=8000)
-                await a.wait_for_timeout(700)
-                docs=await a.evaluate(ATT)
-                return docs
-              async def fetch(r,d):
-                name=str(d.get("FileName") or d.get("FileDescription") or "original.pdf")
-                u=B+"TaxLink.ImageServer.cls?ImageID="+str(d["ImageId"])+"&Decrypt=0"
-                resp=await ctx.request.get(u,timeout=10000)
-                body=await resp.body()
-                if not body.startswith(b"%PDF-"):return None
-                rd=PdfReader(io.BytesIO(body))
-                txt=" ".join((pg.extract_text() or "") for pg in rd.pages[:25])
-                return (body,{"permit":r["PermitID"],"name":name,"pages":len(rd.pages),"bytes":len(body),"sha256":hashlib.sha256(body).hexdigest(),"source":u,"sunrun_text":bool(SUN.search(txt)),"giga_text":bool(re.search(r"giga property|espigar",txt,re.I)),"text_chars":len(txt)},txt)
-              def eligible(d):
-                x=" ".join(str(d.get(k,"")) for k in ("FileName","FileDescription","FileType"))
-                return bool(re.search(r"contract|proposal|estimate|agreement|ppa|change.order|cap\b|permit|application",x,re.I)) and not re.search(r"insurance|affidavit|workers.?comp|debris|plans?|drawing|license|\bcoi\b|\bcs[l]?\b|\bhic\b",x,re.I)
-              done=set()
-              for gap,s,r in pairs[:35]:
-                key=addr(s)
-                if key in done:continue
-                try:
-                  sd=await getdocs(s)
-                  print("SOLAR ATTACHMENTS",s["PermitID"],[d.get("FileName") for d in sd],flush=True)
-                  hit=bool(SUN.search(str(s))) or any(SUN.search(str(d)) for d in sd)
-                  recovered=[]
-                  for d in sorted(sd,key=lambda x:not bool(re.search(r"sunrun|agreement|contract|ppa",str(x),re.I))):
-                    if not eligible(d):continue
-                    f=await fetch(s,d)
-                    if f:
-                      recovered.append(f)
-                      hit=hit or f[1]["sunrun_text"]
-                  if not hit:continue
-                  rd=await getdocs(r)
-                  print("ROOF ATTACHMENTS",r["PermitID"],[d.get("FileName") for d in rd],flush=True)
-                  roofdocs=[]
-                  for d in rd:
-                    if not eligible(d):continue
-                    f=await fetch(r,d)
-                    if f:roofdocs.append(f)
-                  result={"address":str(s["HouseNumber"])+" "+str(s["Location"]),"solar_permit":s["PermitID"],"roof_permit":r["PermitID"],"solar_date":str(date(s).date()),"roof_date":str(date(r).date()),"days_apart":gap,"roof_contracts":[f[1]["name"] for f in roofdocs if re.search(r"contract|proposal|estimate|agreement",f[1]["name"],re.I)]}
-                  for body,m,txt in recovered+roofdocs:
-                    fn=re.sub(r"[^A-Za-z0-9_.-]","_",m["permit"]+"_"+m["name"])
-                    if not fn.lower().endswith(".pdf"):fn+=".pdf"
-                    (O/fn).write_bytes(body);m["file"]=fn;files.append(m)
-                  result["pdf_count"]=len(recovered+roofdocs);results.append(result);done.add(key)
-                  print("CONFIRMED SUNRUN ROOF PAIR",json.dumps(result),flush=True)
-                  checkpoint()
-                  if len(results)>=3:break
-                except Exception as e:errors.append({"solar":s["PermitID"],"roof":r["PermitID"],"error":str(e)[:350]});checkpoint()
-              checkpoint()
-              print("FINAL",json.dumps({"pairs":results,"files":files,"errors":errors})[:18000],flush=True)
-              await browser.close()
+              b=await pw.chromium.launch(headless=True);ctx=await b.new_context();p=await ctx.new_page();p.set_default_timeout(5000)
+              try:
+                await login(p)
+                if sys.argv[1]=="index":await index(p)
+                else:await batch(p,ctx,sys.argv[1])
+              finally:await b.close()
           asyncio.run(main())
           PY
+          python -u /tmp/sterling.py index
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: sterling-sunrun-roof-contracts
+          name: sterling-solar-index
+          path: sterling-index/
+          retention-days: 14
+      - name: First property or bounded search
+        if: always()
+        run: python -u /tmp/sterling.py 1
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: sterling-roof-batch-1
+          path: sterling-roof/
+          retention-days: 14
+      - name: Second property or bounded search
+        if: always()
+        run: python -u /tmp/sterling.py 2
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: sterling-roof-batch-2
+          path: sterling-roof/
+          retention-days: 14
+      - name: Third property or bounded search
+        if: always()
+        run: python -u /tmp/sterling.py 3
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: sterling-roof-batch-3
           path: sterling-roof/
           retention-days: 14
