@@ -1,0 +1,38 @@
+name: Audit Belneau Plain Drive original contract
+on:
+  push:
+    branches: [research/permitlink-sterling-20261127]
+    paths: [.github/workflows/belneau-plain-drive-audit.yml]
+permissions:
+  actions: read
+  contents: read
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: seabass-solar-agreements
+          run-id: 45990261854
+          github-token: ${{ github.token }}
+          path: input
+      - run: pip -q install pypdf
+      - run: |
+          python -u - <<'PY'
+          from pathlib import Path
+          from pypdf import PdfReader
+          import re,json
+          for f in Path("input").rglob("*.pdf"):
+            if not re.search(r"B-26-0049_CONTRACT|B-26-1019_81_JOYCE_CONTRACT",f.name,re.I):continue
+            r=PdfReader(f)
+            print("FILE",f.name,len(r.pages),flush=True)
+            for i,p in enumerate(r.pages,1):
+              s=p.extract_text() or ""
+              s=re.sub(r"\S+@\S+","[email]",s)
+              s=re.sub(r"\b(?:\d{1,3}\.){3}\d{1,3}\b","[IP]",s)
+              for m in re.finditer(r"Belneau|solar specialist|sales consultant|roof replacement|re.roof|roofing|home upgrades|home upgrade|subsidy|7,000|14,000|customer approved project|certificate of completion|change order|work order|paid by|payment for",s,re.I):
+                print("CLAUSE",i,repr(s[max(0,m.start()-100):m.end()+190]),flush=True)
+              if i==1 or re.search(r"Certificate Of Completion",s,re.I):
+                print("HEADER",i,repr(s[:1100]),flush=True)
+          PY
