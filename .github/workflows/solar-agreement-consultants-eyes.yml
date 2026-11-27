@@ -1,4 +1,4 @@
-name: Retrieve roofing contract for Zoe Haley Caroline job
+name: Capital Roofing Bellingham non-solar comparison
 on:
   push:
     branches: [permit-test-hopedale-20261123]
@@ -8,41 +8,78 @@ permissions:
 jobs:
   retrieve:
     runs-on: ubuntu-latest
-    timeout-minutes: 4
+    timeout-minutes: 10
     steps:
       - run: pip -q install requests pymupdf
       - run: |
           python -u - <<'PY'
-          import requests,json,re,hashlib
+          import requests,json,re,html,hashlib,time
           from pathlib import Path
           from urllib.parse import quote
           import fitz
-          OUT=Path("zoe_caroline_roof");OUT.mkdir(exist_ok=True)
           BASE="https://permiteyes.us/bellingham/"
-          s=requests.Session();s.get(BASE+"publicview.php",timeout=30)
-          u=BASE+"controller/publicattachments_controller.php"
-          r=s.post(u,data={"action":"displayAttach","ApplicationId":"70b34e47-da1b-11f1-b346-12716692ccab"},timeout=30);r.raise_for_status()
-          j=r.json();aa=j.get("Attachments") or []
-          (OUT/"attachment_listing.json").write_text(json.dumps(j,indent=2))
-          manifest=[]
-          for a in aa:
-           name=a.get("FileName","");print("ATTACHMENT",name,flush=True)
-           if not name.lower().endswith(".pdf") or re.search(r"insurance|workers|compensation|debris|disposal|dumpster|affidavit|licen[cs]e|csl|plans|drawing|specification",name,re.I):continue
-           path=a["AttachmentPath"] if a.get("ID_import") not in [None,"","0",0] else "/mys3bucket/permiteyes.us/attachments/bellingham/building/"+a["AttachmentPath"]
-           url="https://permiteyes.us/readfiles2.php?file="+quote(path)
-           rr=s.get(url,timeout=45);rr.raise_for_status();b=rr.content
-           if not b.startswith(b"%PDF"):continue
-           d=fitz.open(stream=b,filetype="pdf");text="\n".join(p.get_text() for p in d)
-           fp=OUT/re.sub("[^A-Za-z0-9_.-]","_",name);fp.write_bytes(b)
-           manifest.append({"name":name,"url":url,"pages":len(d),"sha256":hashlib.sha256(b).hexdigest(),"text":text,"file":fp.name})
-           print("SAVED",fp.name,len(d),flush=True)
-          (OUT/"manifest.json").write_text(json.dumps(manifest,indent=2))
-          print("RESULT",len(aa),len(manifest),flush=True)
+          OUT=Path("capital_non_solar");OUT.mkdir(exist_ok=True)
+          S=requests.Session();S.get(BASE+"publicview.php",timeout=30)
+          def search(term):
+           p={"draw":"1","start":"0","length":"3000","search[value]":term,"search[regex]":"false","order[0][column]":"3","order[0][dir]":"desc"}
+           for i in range(13):
+            for k,v in [("data",str(i)),("name",""),("searchable","true"),("orderable","true"),("search[value]",""),("search[regex]","false")]:p[f"columns[{i}][{k}]"]=v
+           r=S.post(BASE+"ajax/getbuildingpublichome.php",data=p,timeout=60);r.raise_for_status()
+           j=r.json()
+           return j,[row(z) for z in j.get("data",[])]
+          def row(z):
+           c=[html.unescape(re.sub("<[^>]+>","",str(x))).strip() for x in z]
+           m=re.search(r"data-application-id=[\"']([^\"']+)",str(z[0]))
+           return {"cells":c,"uuid":m.group(1) if m else ""}
+          def norm(x):
+           x=x.lower()
+           for a,b in [("street","st"),("road","rd"),("drive","dr"),("avenue","ave"),("lane","ln"),("court","ct")]:x=re.sub(r"\b"+a+r"\b",b,x)
+           return re.sub("[^a-z0-9]","",x)
+          found={}
+          for term in ["Capital Roofing","Daniel Gonzalez"]:
+           j,rs=search(term)
+           print("INDEX",term,"total",j.get("recordsFiltered"),"returned",len(rs),flush=True)
+           for r in rs:
+            if re.search(r"capital|gonzalez",r["cells"][7],re.I):found[r["uuid"]]=r
+          (OUT/"roofer_index.json").write_text(json.dumps(list(found.values()),indent=2))
+          print("ROOFER_ROWS",json.dumps(list(found.values())),flush=True)
+          results=[]
+          for r in list(found.values())[:80]:
+           c=r["cells"];addr=c[6]
+           if norm(addr)=="198carolinedr":continue
+           j,ar=search(addr);ar=[z for z in ar if norm(z["cells"][6])==norm(addr)]
+           solar=[z for z in ar if re.search(r"sunrun|solar|photovoltaic", " ".join(z["cells"]),re.I)]
+           print("PROPERTY",addr,"rows",len(ar),"solar",len(solar),flush=True)
+           item={"roof_record":r,"address_search_total":j.get("recordsFiltered"),"address_records":ar,"solar_records":solar,"documents":[]}
+           results.append(item)
+           if solar:continue
+           rr=S.post(BASE+"controller/publicattachments_controller.php",data={"action":"displayAttach","ApplicationId":r["uuid"]},timeout=35);rr.raise_for_status()
+           aa=rr.json().get("Attachments") or [];item["attachment_listing"]=aa
+           for a in aa:
+            name=a.get("FileName","")
+            print("FILE",addr,name,flush=True)
+            if not name.lower().endswith(".pdf") or re.search(r"insurance|workers|compensation|debris|disposal|dumpster|affidavit|licen[cs]e|csl|plans|drawing|specification",name,re.I):continue
+            path=a["AttachmentPath"] if a.get("ID_import") not in [None,"","0",0] else "/mys3bucket/permiteyes.us/attachments/bellingham/building/"+a["AttachmentPath"]
+            url="https://permiteyes.us/readfiles2.php?file="+quote(path)
+            try:
+             q=S.get(url,timeout=50);q.raise_for_status();b=q.content
+             if not b.startswith(b"%PDF"):continue
+             d=fitz.open(stream=b,filetype="pdf");txt="\n".join(pg.get_text() for pg in d)
+             fn=c[3]+"_"+re.sub("[^A-Za-z0-9_.-]","_",name);(OUT/fn).write_bytes(b)
+             doc={"name":name,"url":url,"file":fn,"pages":len(d),"sha256":hashlib.sha256(b).hexdigest(),"text":txt}
+             item["documents"].append(doc)
+             print("DOCUMENT",json.dumps({"address":addr,**doc}),flush=True)
+            except Exception as e:print("DOC_ERROR",str(e),flush=True)
+           (OUT/"results.json").write_text(json.dumps(results,indent=2))
+           good=[z for z in results if not z["solar_records"] and any(re.search(r"capital roofing",x["text"],re.I) and re.search(r"customer|signature|acceptance|contract|proposal",x["text"],re.I) for x in z["documents"])]
+           if len(good)>=2:break
+          (OUT/"results.json").write_text(json.dumps(results,indent=2))
+          print("FINISHED",len(results),flush=True)
           
           PY
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: zoe-caroline-roof
-          path: zoe_caroline_roof/
-          retention-days: 7
+          name: capital-bellingham-non-solar
+          path: capital_non_solar/
+          retention-days: 30
