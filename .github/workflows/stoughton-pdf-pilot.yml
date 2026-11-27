@@ -1,0 +1,69 @@
+name: Stoughton single property PDF validation
+on:
+  push:
+    branches: [research/permitlink-sterling-20261127]
+    paths: [.github/workflows/stoughton-pdf-pilot.yml]
+permissions:
+  contents: read
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    steps:
+      - run: pip -q install playwright pypdf && python -m playwright install chromium
+      - run: |
+          python -u - <<'PY'
+          import asyncio,json,re,hashlib,io
+          from pathlib import Path
+          from playwright.async_api import async_playwright
+          from pypdf import PdfReader
+          O=Path("output");O.mkdir(exist_ok=True)
+          manifest=[]
+          exclude=re.compile(r'insurance|liability|worker.?s?.?comp|debris|disposal|(?:^|[ _.-])(?:plans?|drawings?|coi|wca)(?:[ _.-]|$)',re.I)
+          async def main():
+           async with async_playwright() as pw:
+            b=await pw.chromium.launch()
+            c=await b.new_context(accept_downloads=True)
+            p=await c.new_page()
+            for pid in ['B-25-0665','B-25-0728']:
+             try:
+              await p.goto('https://permiteyes.us/stoughton/publicview.php',wait_until='domcontentloaded',timeout=20000)
+              for n,v in [('street_no','105'),('street_name','Canton St')]:
+               l=p.locator(f'input[name="{n}"]:visible').first
+               await l.fill(v,timeout=7000);await l.dispatch_event('keyup');await l.press('Enter');await p.wait_for_timeout(850)
+              row=p.locator('tr:has(a.view_app):visible').filter(has_text=pid).first
+              await row.wait_for(timeout=7000)
+              icons=row.locator('a.Attachmentclass')
+              print('ICONS',pid,await icons.evaluate_all('es=>es.map(e=>({title:e.title,html:e.outerHTML.slice(0,500)}))'),flush=True)
+              icon=row.locator('a.Attachmentclass[title="Attachment(s) present"]')
+              if not await icon.count():icon=icons.filter(has=p.locator('img[title="Attachment(s) present"]'))
+              if not await icon.count():icon=icons
+              await icon.first.click(timeout=5000)
+              m=p.locator('#AttachmentModal');await m.wait_for(state='visible',timeout=7000);await p.wait_for_timeout(650)
+              links=m.locator('a.downloadLink[data-size]:visible')
+              if not await links.count():links=m.locator('a[data-href][data-download]:visible')
+              names=await links.all_text_contents();print('ATTACHMENTS',pid,names,flush=True)
+              for i,n in enumerate(names):
+               if exclude.search(n) and not re.search(r'contract|agreement|proposal|estimate|change.?order',n,re.I):continue
+               try:
+                async with p.expect_download(timeout=8000) as dl:await links.nth(i).click(timeout=4000)
+                d=await dl.value;f=O/(pid+'_'+str(i)+'_'+re.sub(r'[^a-zA-Z0-9._-]+','_',d.suggested_filename))
+                await d.save_as(f);data=f.read_bytes()
+                if not data.startswith(b'%PDF-'):f.unlink();continue
+                reader=PdfReader(io.BytesIO(data));t=' '.join((pg.extract_text() or '') for pg in reader.pages)
+                contract=bool(re.search(r'contract|agreement|proposal|estimate|PPA|CAP',n+' '+d.suggested_filename,re.I) or re.search(r'power purchase agreement|home improvement contract|roofing agreement|roofing proposal',t,re.I))
+                item={'permit':pid,'name':n,'file':f.name,'pages':len(reader.pages),'bytes':len(data),'sha256':hashlib.sha256(data).hexdigest(),'contract_candidate':contract}
+                manifest.append(item);print('VERIFIED PDF',json.dumps(item),flush=True)
+               except Exception as e:print('DOWNLOAD ERROR',pid,str(e)[:350],flush=True)
+             except Exception as e:print('PERMIT ERROR',pid,str(e)[:350],flush=True)
+             finally:(O/'manifest.json').write_text(json.dumps(manifest,indent=2))
+            await b.close()
+           if not all(any(x['permit']==pid and x['contract_candidate'] for x in manifest) for pid in ['B-25-0665','B-25-0728']):raise RuntimeError('No verified contract candidate for both permits')
+          asyncio.run(asyncio.wait_for(main(),150))
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: stoughton-105-canton-pilot
+          path: output/
+          retention-days: 14
