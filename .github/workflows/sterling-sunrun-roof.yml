@@ -61,34 +61,39 @@ jobs:
               await p.wait_for_timeout(500)
             return out
           async def search(p,term):
-            await p.locator("#control_48").click(timeout=4000)
-            await p.wait_for_timeout(300)
+            # Exact sequence validated by the successful standalone test.
             await p.locator("#control_41").fill(term)
-            await p.locator("#control_43").click(timeout=4000)
-            await p.wait_for_timeout(850)
-            return await pages(p,10)
+            await p.locator("#control_43").click(timeout=5000)
+            await p.wait_for_timeout(1000)
+            return await p.evaluate("""() => {let t=zenPage.getComponent(76);let n=Number(t.getProperty('rowCount'))||0;let rows=[];for(let i=0;i<Math.min(n,1500);i++){try{let r=t.getRowData(i);if(r&&r.PermitID&&r.DocumentId)rows.push(r)}catch(e){}}return {n,rows}}""")
           async def index(p):
-            records={}; status=[]
-            for term in ("Sunrun","solar","photovoltaic"):
+            records={}; roofs={}; status=[]
+            for term in ("solar","roof"):
+              q=await p.context.new_page()
               try:
-                rows=await asyncio.wait_for(search(p,term),20)
+                await login(q)
+                v=await asyncio.wait_for(search(q,term),20)
+                rows=v["rows"]
                 for r in rows:
-                  if recent(r) and addr(r)[0] and (SOLAR.search(str(r.get("WorkDescription",""))) or SUN.search(str(r))):
+                  if not recent(r) or not addr(r)[0] or r.get("PermitID")=="Draft":continue
+                  desc=str(r.get("WorkDescription",""))
+                  if SOLAR.search(desc) and re.search(r"panel|photovoltaic|array|\\bpv\\b|solar system",desc,re.I) and not re.search(r"ground.mount|attic.*fan|water heater|no solar",desc,re.I):
                     records[str(r["DocumentId"])]=clean(r)
-                status.append({"term":term,"rows":len(rows),"solar_candidates":len(records)})
-              except Exception as e:status.append({"term":term,"error":str(e)[:300]})
+                  if ROOF.search(desc) and not re.search(r"solar panels|photovoltaic|solar array|\\bpv\\b",desc,re.I):
+                    roofs[str(r["DocumentId"])]=clean(r)
+                status.append({"term":term,"reported":v["n"],"read":len(rows),"solar_candidates":len(records),"roof_candidates":len(roofs)})
+              except Exception as e:status.append({"term":term,"error":repr(e)[:300]})
+              finally:await q.close()
               print("INDEX",json.dumps(status[-1]),flush=True)
               ordered=sorted(records.values(),key=lambda r:(not bool(SUN.search(str(r))),-(date(r).toordinal())))
-              dump(I/"solar-index.json",ordered);dump(I/"search-status.json",status)
-            print("SOLAR CANDIDATES",len(records),flush=True)
+              dump(I/"solar-index.json",ordered);dump(I/"roof-index.json",list(roofs.values()));dump(I/"search-status.json",status)
+            pairs=[s for s in ordered if any(addr(r)==addr(s) and abs((date(r)-date(s)).days)<=365 for r in roofs.values())]
+            dump(I/"solar-index.json",pairs)
+            print("INDEX COMPLETE",len(records),"solar",len(roofs),"roof",len(pairs),"paired solar permits",flush=True)
+            if not records or not roofs:raise RuntimeError("Index incomplete; no valid solar or roof records")
           async def address_records(p,s):
-            await p.locator("#control_48").click(timeout=4000)
-            await p.wait_for_timeout(300)
-            n=p.locator("#filter1_HouseNumber_76");await n.fill(str(s["HouseNumber"]));await n.press("Enter")
-            await p.wait_for_timeout(450)
-            l=p.locator("#filter1_Location_76");await l.fill(str(s["Location"]));await l.press("Enter")
-            await p.wait_for_timeout(650)
-            rows=await pages(p,3)
+            # Match against the recovered public roof index, without another portal search.
+            rows=json.loads((I/"roof-index.json").read_text())
             return [r for r in rows if addr(r)==addr(s) and recent(r)]
           async def getdocs(a,r):
             u=B+"DocumentLink.GuestAttachmentCenter.cls?DocumentId="+str(r["DocumentId"])+"&QueryId="+str(r["DocumentId"])+"&Maid="+str(r["Maid"])
@@ -180,7 +185,7 @@ jobs:
           path: sterling-index/
           retention-days: 14
       - name: First property or bounded search
-        if: always()
+        if: success()
         run: python -u /tmp/sterling.py 1
       - uses: actions/upload-artifact@v4
         if: always()
@@ -189,7 +194,7 @@ jobs:
           path: sterling-roof/
           retention-days: 14
       - name: Second property or bounded search
-        if: always()
+        if: success()
         run: python -u /tmp/sterling.py 2
       - uses: actions/upload-artifact@v4
         if: always()
@@ -198,7 +203,7 @@ jobs:
           path: sterling-roof/
           retention-days: 14
       - name: Third property or bounded search
-        if: always()
+        if: success()
         run: python -u /tmp/sterling.py 3
       - uses: actions/upload-artifact@v4
         if: always()
