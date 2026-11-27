@@ -1,0 +1,143 @@
+name: Sterling guest session and attachment recovery
+on:
+  push:
+    branches: [research/permitlink-sterling-20261127]
+    paths: [.github/workflows/sterling-guest-recovery.yml]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  recover:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip -q install playwright pypdf && python -m playwright install chromium
+      - name: Inspect guest session and recover original
+        run: |
+          python -u - <<'PY'
+          import asyncio,json,re,io,hashlib,traceback
+          from pathlib import Path
+          from urllib.parse import urljoin
+          from playwright.async_api import async_playwright
+          from pypdf import PdfReader
+          B="https://www.permitlinkonline.com/csp/sterlinglive/"
+          O=Path("sterling-guest");O.mkdir(exist_ok=True)
+          pending=[];saved=[];events=[]
+          async def save(body,source):
+            if saved or not body.startswith(b"%PDF-"):return
+            try:
+              n=len(PdfReader(io.BytesIO(body)).pages)
+              if not n:return
+              m={"pages":n,"bytes":len(body),"sha256":hashlib.sha256(body).hexdigest(),"source":source}
+              (O/"original.pdf").write_bytes(body);(O/"manifest.json").write_text(json.dumps(m,indent=2));saved.append(m);print("VERIFIED ORIGINAL",m)
+            except Exception as e:print("PDF parse",e)
+          async def response(r):
+            try:
+              h=r.headers;typ=h.get("content-type","")
+              if "pdf" in typ or "octet-stream" in typ or "ImageServer" in r.url:
+                await save(await r.body(),r.url)
+            except:pass
+          async def download(d):
+            try:
+              p=O/"temporary.bin";await d.save_as(p);await save(p.read_bytes(),d.url);p.unlink(missing_ok=True)
+            except:pass
+          async def snapshot(p,label):
+            try:
+              data=await p.evaluate("""() => ({url:location.href,title:document.title,text:document.body.innerText.slice(0,1500),zen:typeof zenPage,zenReady:!!window.zenPage,components:window.zenPage?Object.keys(zenPage).slice(0,100):[],controls:[...document.querySelectorAll('input,button,a,img')].filter(x=>x.getClientRects().length).slice(0,100).map(x=>({tag:x.tagName,id:x.id,value:x.value,title:x.title,alt:x.alt,text:(x.innerText||'').slice(0,80),onclick:x.getAttribute('onclick')})),tables:[...document.querySelectorAll('table')].map(t=>({id:t.id,rows:t.rows.length,head:t.innerText.slice(0,100)}))})""")
+              (O/(label+".json")).write_text(json.dumps(data,indent=2));(O/(label+".html")).write_text(await p.content());print("PAGE",label,json.dumps(data)[:11000])
+              return data
+            except Exception as e:print("snapshot error",e);return {}
+          async def main():
+            async with async_playwright() as pw:
+              browser=await pw.chromium.launch(headless=True,args=["--disable-popup-blocking"])
+              ctx=await browser.new_context(accept_downloads=True)
+              ctx.on("response",lambda r:pending.append(asyncio.create_task(response(r))))
+              ctx.on("page",lambda p:p.on("download",lambda d:pending.append(asyncio.create_task(download(d)))))
+              p=await ctx.new_page()
+              try:
+                await p.goto(B+"DocumentLink.PublicLogin.cls",wait_until="domcontentloaded",timeout=30000)
+                await p.wait_for_timeout(1500);data=await snapshot(p,"login")
+                selectors=['input[value*="Guest" i]','input[value*="View Information" i]','button:has-text("Guest")','a:has-text("Guest")']
+                for sel in selectors:
+                  loc=p.locator(sel).filter(visible=True)
+                  if await loc.count():
+                    print("Guest control",sel);await loc.first.click(timeout=5000);await p.wait_for_timeout(1800);break
+                if len(ctx.pages)>1:p=ctx.pages[-1]
+                if "GuestPermitListCenter" not in p.url:
+                  await p.goto(B+"DocumentLink.GuestPermitListCenter.cls",wait_until="domcontentloaded",timeout=25000)
+                await p.wait_for_timeout(2500);data=await snapshot(p,"guest")
+                if re.search(r"captcha|verify you are human",data.get("text",""),re.I):raise RuntimeError("Human verification required")
+                # Inspect rendered ZEN component identifiers, rather than assuming West Boylston's table ID.
+                js="""() => {let z=window.zenPage;if(!z)return [];let ids=[...new Set(['table','permitList','myPermitList',...Array.from(document.querySelectorAll('[id]')).map(x=>x.id)])];let out=[];for(let id of ids){try{let t=z.getComponentById(id);if(!t||typeof t.getRowData!=='function')continue;let n=Number(t.getProperty('rowCount'))||0;let rows=[];for(let i=0;i<Math.min(n,10000);i++){try{let r=t.getRowData(i);if(r)rows.push(r)}catch(e){}}if(rows.length)out.push({id,n,rows})}catch(e){}}return out}"""
+                tables=await p.evaluate(js);print("ZEN tables",[(t["id"],t["n"],list(t["rows"][0])) for t in tables])
+                # Try known public permit using visible controls/filter.
+                selected=False
+                for t in tables:
+                  for i,r in enumerate(t["rows"]):
+                    if re.search(r"roof|shingle|solar|photovoltaic",str(r.get("WorkDescription","")),re.I):
+                      print("Selected candidate",r.get("PermitID"),"table",t["id"])
+                      if r.get("DocumentId") and r.get("Maid"):
+                        # Use only IDs returned by the public permit table.
+                        u=B+"DocumentLink.PublicAttachmentCenter.cls?DocumentId="+str(r["DocumentId"])+"&QueryId="+str(r["DocumentId"])+"&Maid="+str(r["Maid"])
+                        await p.goto(u,wait_until="domcontentloaded",timeout=15000);selected=True;break
+                  if selected:break
+                if not selected:
+                  row=p.locator('tr').filter(has_text=re.compile(r"strip roof shingles|re-roof|reroof|roof replacement|photovoltaic",re.I))
+                  for j in range(await row.count()):
+                    x=row.nth(j)
+                    if await x.locator('td').count()>4 and await x.locator('tr').count()==0:
+                      await x.click();selected=True;break
+                  if not selected:
+                    # Filter by a permit number visible in the public index.
+                    controls=p.locator('input[type=text]:visible')
+                    for j in range(await controls.count()):
+                      x=controls.nth(j);info=await x.evaluate("(e)=>({id:e.id,title:e.title,outer:e.outerHTML})")
+                      if re.search(r"permit.*(id|number|filter)|filter.*permit",str(info),re.I):
+                        await x.fill("26-252RB");await x.press("Enter");await p.wait_for_timeout(1200);break
+                    row=p.get_by_text("26-252RB",exact=True)
+                    if await row.count():await row.first.click();selected=True
+                  if selected:
+                    ctl=p.locator('input[title*="Attachment" i],input[value*="View Attachments" i],img[title*="Attachment" i],button:has-text("View Attachments")').filter(visible=True)
+                    if await ctl.count():
+                      await ctl.first.click();await p.wait_for_timeout(1800)
+                      if len(ctx.pages)>1:p=ctx.pages[-1]
+                await p.wait_for_timeout(1000);await snapshot(p,"attachment")
+                at=await p.evaluate(js)
+                for t in at:
+                  docs=[d for d in t["rows"] if d.get("ImageId")]
+                  print("Attachment metadata",[(d.get("FileName"),d.get("FileDescription"),d.get("FileType")) for d in docs])
+                  docs.sort(key=lambda d:not bool(re.search(r"contract|proposal|estimate|agreement|ppa",str(d),re.I)))
+                  for d in docs:
+                    meta=" ".join(str(d.get(k,"")) for k in ("FileName","FileDescription","FileType"))
+                    if re.search(r"insurance|affidavit|workers.?comp|debris|plans?|drawing|license",meta,re.I):continue
+                    if not re.search(r"pdf|contract|proposal|estimate|agreement|permit|application",meta,re.I):continue
+                    u=B+"TaxLink.ImageServer.cls?ImageID="+str(d["ImageId"])+"&Decrypt=0"
+                    try:r=await ctx.request.get(u,timeout=12000);await save(await r.body(),u)
+                    except Exception as e:print("download error",e)
+                    if saved:break
+                  if saved:break
+                if not saved:
+                  x=p.get_by_text(re.compile(r"contract|proposal|estimate|agreement",re.I))
+                  for j in range(await x.count()):
+                    if await x.nth(j).is_visible():
+                      await x.nth(j).click(timeout=3000)
+                      ctl=p.locator('input[value*="Open Selected" i],button:has-text("Open Selected"),input[onclick*="getDocument"]').filter(visible=True)
+                      if await ctl.count():await ctl.first.click();await p.wait_for_timeout(3000)
+                      break
+                if pending:await asyncio.gather(*pending,return_exceptions=True)
+              except Exception as e:
+                print("ERROR",repr(e));(O/"error.txt").write_text(traceback.format_exc())
+              finally:
+                await browser.close()
+              if not saved:raise SystemExit("No original PDF verified")
+          asyncio.run(main())
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: sterling-guest-diagnostic
+          path: sterling-guest/
+          retention-days: 7
