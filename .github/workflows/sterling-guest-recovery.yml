@@ -99,6 +99,8 @@ jobs:
                   raise RuntimeError("Target permit not rendered; see filter diagnostics")
                 if not await row.count():raise RuntimeError("No matching rendered roofing row; see index snapshot")
                 await row.first.click(timeout=4500)
+                print("ROW",await row.first.locator("xpath=ancestor::tr[1]").inner_text(),flush=True)
+                print("SELECTED",await p.evaluate("""() => {let t=zenPage.getComponent(76);let i=t.getProperty("selectedIndex");return {i,row:i>=0?t.getRowData(i):null}}"""),flush=True)
                 ctl=p.locator('input[value*="View Attachments" i],input[title*="View Attachments" i],img[title*="View Attachments" i],img[alt*="View Attachments" i],button:has-text("View Attachments")').filter(visible=True)
                 if not await ctl.count():
                   for i in data.get("controls",[]):
@@ -106,11 +108,18 @@ jobs:
                       ctl=p.locator("[id="+json.dumps(i["id"])+"]").filter(visible=True)
                       if await ctl.count():break
                 if not await ctl.count():raise RuntimeError("No public attachment control found")
-                await ctl.first.click(timeout=4500);await p.wait_for_timeout(1800)
-                for q in reversed(pages):
-                  if "Attachment" in q.url:p=q;break
+                await p.locator("#control_22").click(timeout=4500)
+                for _ in range(20):
+                  await p.wait_for_timeout(500)
+                  for q in reversed(pages):
+                    if "Attachment" in q.url and await q.locator("body").count():
+                      p=q;break
+                  if "Attachment" in p.url and await p.locator("body").count():break
+                print("OPEN PAGES",[(q.url) for q in pages],flush=True)
+                await p.wait_for_load_state("domcontentloaded",timeout=12000)
+                await p.wait_for_timeout(1500)
                 data=await snap(p,"attachments")
-                js="""() => {let z=window.zenPage;if(!z)return [];let ids=['table',...Array.from(document.querySelectorAll('table[id]')).map(x=>x.id)];let out=[];for(let id of ids){try{let t=z.getComponentById(id);if(!t||typeof t.getRowData!=='function')continue;let n=Number(t.getProperty('rowCount'))||0;for(let i=0;i<Math.min(n,80);i++){try{let r=t.getRowData(i);if(r&&r.ImageId)out.push(r)}catch(e){}}}catch(e){}}return out}"""
+                js="""() => {let z=window.zenPage;if(!z)return [];let out=[];let seen=new Set();for(let i=1;i<180;i++){try{let t=z.getComponent(i);if(!t||typeof t.getRowData!=='function')continue;let n=Number(t.getProperty('rowCount'))||0;for(let j=0;j<Math.min(n,80);j++){try{let r=t.getRowData(j);if(r&&r.ImageId&&!seen.has(r.ImageId)){out.push(r);seen.add(r.ImageId)}}catch(e){}}}catch(e){}}return out}"""
                 docs=await p.evaluate(js);print("PUBLIC ATTACHMENTS",[(d.get("FileName"),d.get("FileDescription"),d.get("FileType")) for d in docs],flush=True)
                 docs.sort(key=lambda d:not bool(re.search(r"contract|proposal|estimate|agreement",str(d),re.I)))
                 for d in docs[:12]:
