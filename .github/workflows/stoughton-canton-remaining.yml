@@ -1,0 +1,89 @@
+name: Canton Street remaining exact attachments
+on:
+  push:
+    branches: [research/permitlink-sterling-20261127]
+    paths: [.github/workflows/stoughton-canton-remaining.yml]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  get:
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    steps:
+      - run: pip -q install playwright pypdf && python -m playwright install chromium
+      - name: Retrieve exact building permit and original attachments
+        run: |
+          mkdir -p output
+          python -u - <<'PY'
+          import asyncio,re,json,hashlib,io
+          from pathlib import Path
+          from playwright.async_api import async_playwright
+          from pypdf import PdfReader
+          O=Path("output")
+          async def main():
+            async with async_playwright() as pw:
+              b=await pw.chromium.launch()
+              c=await b.new_context(accept_downloads=True)
+              p=await c.new_page()
+              await p.goto("https://permiteyes.us/stoughton/publicview.php",wait_until="domcontentloaded",timeout=15000)
+              await p.wait_for_timeout(2000)
+              for field,val in [("street_no","105"),("street_name","canton")]:
+                l=p.locator('input[name="'+field+'"]:visible').first
+                await l.fill(val,timeout=8000);await l.dispatch_event("keyup");await l.press("Enter");await p.wait_for_timeout(900)
+              rows=p.locator("tr:has(a.view_app):visible")
+              records=await rows.all_inner_texts()
+              print("PROPERTY RECORDS",json.dumps(records),flush=True)
+              (O/"property-records.json").write_text(json.dumps(records,indent=2))
+              saved=[]
+              async def reset_modal():
+                m=p.locator("#AttachmentModal")
+                if await m.is_visible():
+                  try:await m.locator('[data-dismiss=modal]:visible').first.click(timeout=1800)
+                  except:await p.evaluate("() => window.jQuery('#AttachmentModal').modal('hide')")
+                  await p.wait_for_timeout(350)
+              for i,record in enumerate(records):
+                if not re.search(r"\b105\s+Canton\s+St\b",record,re.I):continue
+                pid=re.search(r"\b[A-Z]+-\d{2}-\d+\b",record).group()
+                if pid not in ["B-25-0665","E-25-0392","G-24-1079","P-24-1078"]:continue
+                row=rows.nth(i)
+                try:
+                  await reset_modal()
+                  await row.locator("a.Attachmentclass").first.click(timeout=4000)
+                  await p.wait_for_timeout(700)
+                  m=p.locator("#AttachmentModal")
+                  links=m.locator('a.downloadLink[data-size]:visible,a[data-href][data-download]:visible')
+                  names=await links.all_text_contents()
+                  print("NAMES",pid,json.dumps(names),flush=True)
+                  await reset_modal()
+                  for name in dict.fromkeys(n.strip() for n in names):
+                    if not re.search(r"\.(pdf|jpg|jpeg|png)$",name,re.I):continue
+                    if re.search(r"insurance|liability|affidavit|workers.?comp|debris|license|creds|credentials|HIC|COI",name,re.I):continue
+                    if pid=="B-25-0665" and re.search(r"solar design|structural review|105 Canton St CONTRACT|Post Install Letter",name,re.I):continue
+                    try:
+                      await reset_modal()
+                      await row.locator("a.Attachmentclass").first.click(timeout=4000)
+                      await p.wait_for_timeout(600)
+                      l=m.locator('a.downloadLink[data-size]:visible,a[data-href][data-download]:visible').filter(has_text=re.compile("^"+re.escape(name)+"$")).first
+                      async with p.expect_download(timeout=4500) as dl:await l.click(timeout=2500)
+                      d=await dl.value
+                      f=O/(pid+"_"+re.sub(r"[^a-zA-Z0-9._-]","_",d.suggested_filename))
+                      await d.save_as(f);data=f.read_bytes()
+                      item={"permit":pid,"name":name,"file":str(f),"bytes":len(data),"sha256":hashlib.sha256(data).hexdigest()}
+                      if data.startswith(b"%PDF-"):item["pages"]=len(PdfReader(io.BytesIO(data)).pages)
+                      saved.append(item);print("RECOVERED",json.dumps(item),flush=True)
+                      (O/"manifest.json").write_text(json.dumps(saved,indent=2))
+                    except Exception as e:print("MISSING",pid,name,str(e)[:150],flush=True)
+                    finally:await reset_modal()
+                except Exception as e:print("RECORD ERROR",pid,str(e)[:180],flush=True)
+              print("RESULT",len(saved),flush=True)
+              await b.close()
+
+          asyncio.run(asyncio.wait_for(main(),160))
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: canton-105-remaining-originals
+          path: output/
+          retention-days: 14
