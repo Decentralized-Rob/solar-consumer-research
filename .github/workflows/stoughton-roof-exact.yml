@@ -1,0 +1,64 @@
+name: Retrieve four matched Stoughton roofing contracts
+on:
+  push:
+    branches: [research/permitlink-sterling-20261127]
+    paths: [.github/workflows/stoughton-roof-exact.yml]
+permissions:
+  contents: read
+jobs:
+  recover:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - run: pip -q install playwright pypdf && python -m playwright install chromium
+      - run: |
+          mkdir -p output
+          python -u - <<'PY'
+          import asyncio,re,json,io,hashlib
+          from pathlib import Path
+          from playwright.async_api import async_playwright
+          from pypdf import PdfReader
+          O=Path("output")
+          permits=["B-26-1133","B-26-0368","B-25-0728","B-25-0398"]
+          async def retrieve(b,pid):
+            c=await b.new_context(accept_downloads=True);p=await c.new_page();results=[]
+            try:
+              await p.goto("https://permiteyes.us/stoughton/publicview.php",wait_until="domcontentloaded",timeout=15000)
+              l=p.locator('input[name="permit_num"]:visible').first
+              await l.fill(pid);await l.dispatch_event("keyup");await l.press("Enter");await p.wait_for_timeout(1000)
+              row=p.locator("tr:has(a.view_app):visible").filter(has_text=pid).first
+              record=await row.inner_text(timeout=5000);print("EXACT",pid,record.replace(chr(10)," "),flush=True)
+              await row.locator("a.Attachmentclass").first.click(timeout=4000)
+              m=p.locator("#AttachmentModal");await p.wait_for_timeout(900)
+              links=m.locator('a.downloadLink[data-size]:visible,a[data-href][data-download]:visible')
+              names=await links.all_text_contents();print("NAMES",pid,names,flush=True)
+              for i,n in enumerate(names):
+                if not n.lower().strip().endswith(".pdf"):continue
+                if re.search(r"insurance|liability|worker|affidavit|debris|plan|drawing|license|measurement|roofr|eagleview|credentials|\bcoi\b|\bcsl\b|\bhic\b",n,re.I):continue
+                try:
+                  async with p.expect_download(timeout=6000) as dl:await links.nth(i).click(timeout=3000)
+                  d=await dl.value;f=O/(pid+"_"+re.sub(r"[^a-zA-Z0-9._-]","_",d.suggested_filename));await d.save_as(f)
+                  data=f.read_bytes()
+                  if not data.startswith(b"%PDF-"):f.unlink();continue
+                  reader=PdfReader(io.BytesIO(data));t="\n".join(pg.extract_text() or "" for pg in reader.pages)
+                  item={"permit":pid,"record":record,"name":n,"file":f.name,"pages":len(reader.pages),"text_chars":len(t),"sha256":hashlib.sha256(data).hexdigest(),"text":t[:14000]}
+                  results.append(item);print("DOCUMENT",json.dumps(item),flush=True)
+                except Exception as e:print("PDF ERROR",pid,repr(e),flush=True)
+            except Exception as e:print("ERROR",pid,repr(e),flush=True)
+            finally:await c.close()
+            return results
+          async def main():
+            async with async_playwright() as pw:
+              b=await pw.chromium.launch()
+              r=await asyncio.gather(*(retrieve(b,pid) for pid in permits))
+              out=[x for a in r for x in a];(O/"manifest.json").write_text(json.dumps(out,indent=2))
+              await b.close()
+              if not out:raise RuntimeError("No PDF recovered")
+          asyncio.run(asyncio.wait_for(main(),85))
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: stoughton-four-roof-contracts
+          path: output/
+          retention-days: 14
