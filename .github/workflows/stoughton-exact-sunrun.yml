@@ -63,23 +63,49 @@ jobs:
               if target is None:raise RuntimeError("No Sunrun building record with attachments")
               record=await target.inner_text();print("TARGET",record,flush=True)
               (O/"record.txt").write_text(record)
-              await target.locator('a.Attachmentclass[title="Attachment(s) present"]').first.click(timeout=5000)
-              m=p.locator("#AttachmentModal");await p.wait_for_timeout(900)
-              links=m.locator('a.downloadLink[data-size]:visible,a[data-href][data-download]:visible')
-              print("ATTACHMENTS",await links.all_text_contents(),flush=True)
-              for j in range(min(await links.count(),20)):
-                l=links.nth(j);name=(await l.inner_text()).strip()
-                if not name.lower().endswith(".pdf") or re.search(r"insurance|affidavit|workers.?comp|debris|plans?|drawing|license|\bcoi\b|\bcsl\b|\bhic\b",name,re.I):continue
-                try:
-                  async with p.expect_download(timeout=7000) as dl:await l.click(timeout=4000)
-                  d=await dl.value;f=O/re.sub(r"[^a-zA-Z0-9._-]","_",d.suggested_filename)
-                  await d.save_as(f);data=f.read_bytes()
-                  if not data.startswith(b"%PDF-"):f.unlink();continue
-                  reader=PdfReader(io.BytesIO(data))
-                  item={"name":name,"file":str(f),"pages":len(reader.pages),"bytes":len(data),"sha256":hashlib.sha256(data).hexdigest()}
-                  saved.append(item);print("VERIFIED PDF",json.dumps(item),flush=True)
-                  (O/"manifest.json").write_text(json.dumps(saved,indent=2))
-                except Exception as e:print("DOWNLOAD ERROR",repr(e),flush=True)
+              print("EXACT LINKS",await target.locator("a").evaluate_all("es=>es.map(e=>({outer:e.outerHTML}))"),flush=True)
+              async def recover(row,label):
+                record=await row.inner_text()
+                print("CHECK",label,record.replace(chr(10)," "),flush=True)
+                att=row.locator('a.Attachmentclass[title="Attachment(s) present"]')
+                if not await att.count():return
+                await att.first.click(timeout=5000)
+                m=p.locator("#AttachmentModal");await p.wait_for_timeout(900)
+                links=m.locator('a.downloadLink[data-size]:visible,a[data-href][data-download]:visible')
+                print("ATTACHMENTS",label,await links.all_text_contents(),flush=True)
+                for j in range(min(await links.count(),20)):
+                  l=links.nth(j);name=(await l.inner_text()).strip()
+                  if not name.lower().endswith(".pdf") or re.search(r"insurance|affidavit|workers.?comp|debris|plans?|drawing|license|\\bcoi\\b|\\bcsl\\b|\\bhic\\b",name,re.I):continue
+                  try:
+                    async with p.expect_download(timeout=6000) as dl:await l.click(timeout=3000)
+                    d=await dl.value;f=O/(label+"_"+re.sub(r"[^a-zA-Z0-9._-]","_",d.suggested_filename))
+                    await d.save_as(f);data=f.read_bytes()
+                    if not data.startswith(b"%PDF-"):f.unlink();continue
+                    reader=PdfReader(io.BytesIO(data))
+                    item={"record":record,"name":name,"file":str(f),"pages":len(reader.pages),"bytes":len(data),"sha256":hashlib.sha256(data).hexdigest()}
+                    saved.append(item);print("VERIFIED PDF",json.dumps(item),flush=True)
+                    (O/"manifest.json").write_text(json.dumps(saved,indent=2))
+                  except Exception as e:print("DOWNLOAD ERROR",repr(e),flush=True)
+                close=m.locator('[data-dismiss=modal]:visible').first
+                if await close.count():await close.click()
+              await recover(target,"B-26-0114")
+              if not saved:
+                await p.reload(wait_until="domcontentloaded");await p.wait_for_timeout(1300)
+                inp=p.locator("input[name=applicant_name]:visible").first
+                await inp.fill("sunrun");await inp.dispatch_event("keyup");await inp.press("Enter");await p.wait_for_timeout(1300)
+                for i in range(6):
+                  rows=p.locator('tr:has(a.Attachmentclass[title="Attachment(s) present"]):visible')
+                  for j in range(await rows.count()):
+                    row=rows.nth(j);t=await row.inner_text()
+                    if not re.search("sunrun",t,re.I) or "BUILD" not in t.upper():continue
+                    label=re.search(r"B-\\d{2}-\\d+",t)
+                    if not label:continue
+                    await recover(row,label.group())
+                    if saved:break
+                  if saved:break
+                  nxt=p.locator(".paginate_button.next:visible:not(.disabled)").first
+                  if not await nxt.count():break
+                  await nxt.click();await p.wait_for_timeout(400)
               await b.close()
               if not saved:raise RuntimeError("No original permit documents recovered")
           asyncio.run(asyncio.wait_for(main(),100))
