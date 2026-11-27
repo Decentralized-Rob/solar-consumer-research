@@ -6,134 +6,136 @@ on:
   workflow_dispatch:
 permissions:
   contents: read
+concurrency:
+  group: sterling-guest-recovery
+  cancel-in-progress: true
 jobs:
   recover:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 4
     steps:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
       - run: pip -q install playwright pypdf && python -m playwright install chromium
-      - name: Inspect guest session and recover original
+      - name: Target one known public roof permit
         run: |
           python -u - <<'PY'
-          import asyncio,json,re,io,hashlib,traceback
+          import asyncio, json, re, io, hashlib, traceback
           from pathlib import Path
-          from urllib.parse import urljoin
           from playwright.async_api import async_playwright
           from pypdf import PdfReader
-          B="https://www.permitlinkonline.com/csp/sterlinglive/"
-          O=Path("sterling-guest");O.mkdir(exist_ok=True)
-          pending=[];saved=[];events=[]
-          async def save(body,source):
-            if saved or not body.startswith(b"%PDF-"):return
+          BASE="https://www.permitlinkonline.com/csp/sterlinglive/"
+          TARGET="26-252RB"
+          OUT=Path("sterling-guest");OUT.mkdir(exist_ok=True)
+          (OUT/"status.json").write_text(json.dumps({"target":TARGET,"result":"STARTED"}))
+          saved=[]; tasks=[]; pages=[]
+          async def save(data,source):
+            if saved or not data.startswith(b"%PDF-"):return
             try:
-              n=len(PdfReader(io.BytesIO(body)).pages)
+              n=len(PdfReader(io.BytesIO(data)).pages)
               if not n:return
-              m={"pages":n,"bytes":len(body),"sha256":hashlib.sha256(body).hexdigest(),"source":source}
-              (O/"original.pdf").write_bytes(body);(O/"manifest.json").write_text(json.dumps(m,indent=2));saved.append(m);print("VERIFIED ORIGINAL",m)
-            except Exception as e:print("PDF parse",e)
+              m={"permit":TARGET,"pages":n,"bytes":len(data),"sha256":hashlib.sha256(data).hexdigest(),"source":source}
+              (OUT/"original.pdf").write_bytes(data)
+              (OUT/"manifest.json").write_text(json.dumps(m,indent=2))
+              saved.append(m);print("VERIFIED ORIGINAL",json.dumps(m),flush=True)
+            except Exception as e:print("PDF parse error",repr(e))
           async def response(r):
             try:
               h=r.headers;typ=h.get("content-type","")
               if "pdf" in typ or "octet-stream" in typ or "ImageServer" in r.url:
-                await save(await r.body(),r.url)
-            except:pass
+                await save(await asyncio.wait_for(r.body(),8),r.url)
+            except Exception as e:print("Response capture",str(e)[:120])
           async def download(d):
             try:
-              p=O/"temporary.bin";await d.save_as(p);await save(p.read_bytes(),d.url);p.unlink(missing_ok=True)
-            except:pass
-          async def snapshot(p,label):
+              p=OUT/"download.bin";await asyncio.wait_for(d.save_as(p),10);await save(p.read_bytes(),d.url);p.unlink(missing_ok=True)
+            except Exception as e:print("Download capture",str(e)[:120])
+          async def snap(p,label):
             try:
-              data=await p.evaluate("""() => ({url:location.href,title:document.title,text:document.body.innerText.slice(0,1500),zen:typeof zenPage,zenReady:!!window.zenPage,components:window.zenPage?Object.keys(zenPage).slice(0,100):[],controls:[...document.querySelectorAll('input,button,a,img')].filter(x=>x.getClientRects().length).slice(0,100).map(x=>({tag:x.tagName,id:x.id,value:x.value,title:x.title,alt:x.alt,text:(x.innerText||'').slice(0,80),onclick:x.getAttribute('onclick')})),tables:[...document.querySelectorAll('table')].map(t=>({id:t.id,rows:t.rows.length,head:t.innerText.slice(0,100)}))})""")
-              (O/(label+".json")).write_text(json.dumps(data,indent=2));(O/(label+".html")).write_text(await p.content());print("PAGE",label,json.dumps(data)[:11000])
-              return data
-            except Exception as e:print("snapshot error",e);return {}
+              x=await p.evaluate("""() => ({url:location.href,title:document.title,text:document.body.innerText.slice(0,1200),zen:!!window.zenPage,controls:[...document.querySelectorAll('input,button,a,img')].filter(e=>e.getClientRects().length).slice(0,90).map(e=>({tag:e.tagName,id:e.id,type:e.type,value:e.value,title:e.title,alt:e.alt,onclick:e.getAttribute('onclick'),text:(e.innerText||'').slice(0,70)})),tables:[...document.querySelectorAll('table')].map(t=>({id:t.id,rows:t.rows.length}))})""")
+              (OUT/(label+".json")).write_text(json.dumps(x,indent=2));(OUT/(label+".html")).write_text(await p.content());print("SNAP",label,json.dumps(x)[:12000],flush=True);return x
+            except Exception as e:print("Snap error",e);return {}
+          async def goto(p,url):
+            print("NAV",url,flush=True)
+            r=await p.goto(url,wait_until="domcontentloaded",timeout=18000)
+            print("HTTP",r.status if r else None,"URL",p.url,flush=True)
+            await p.wait_for_timeout(1200)
           async def main():
             async with async_playwright() as pw:
               browser=await pw.chromium.launch(headless=True,args=["--disable-popup-blocking"])
               ctx=await browser.new_context(accept_downloads=True)
-              ctx.on("response",lambda r:pending.append(asyncio.create_task(response(r))))
-              ctx.on("page",lambda p:p.on("download",lambda d:pending.append(asyncio.create_task(download(d)))))
+              ctx.set_default_timeout(4500)
+              ctx.on("response",lambda r: tasks.append(asyncio.create_task(response(r))) if ("pdf" in r.headers.get("content-type","") or "octet-stream" in r.headers.get("content-type","") or "ImageServer" in r.url) else None)
+              def watch(p):
+                pages.append(p);p.on("download",lambda d:tasks.append(asyncio.create_task(download(d))))
+              ctx.on("page",watch)
               p=await ctx.new_page()
               try:
-                await p.goto(B+"DocumentLink.PublicLogin.cls",wait_until="domcontentloaded",timeout=30000)
-                await p.wait_for_timeout(1500);data=await snapshot(p,"login")
-                selectors=['input[value*="Guest" i]','input[value*="View Information" i]','button:has-text("Guest")','a:has-text("Guest")']
-                for sel in selectors:
-                  loc=p.locator(sel).filter(visible=True)
-                  if await loc.count():
-                    print("Guest control",sel);await loc.first.click(timeout=5000);await p.wait_for_timeout(1800);break
-                if len(ctx.pages)>1:p=ctx.pages[-1]
-                if "GuestPermitListCenter" not in p.url:
-                  await p.goto(B+"DocumentLink.GuestPermitListCenter.cls",wait_until="domcontentloaded",timeout=25000)
-                await p.wait_for_timeout(2500);data=await snapshot(p,"guest")
+                await goto(p,BASE+"DocumentLink.PublicLogin.cls")
+                login=await snap(p,"login")
+                for i in login.get("controls",[]):
+                  desc=" ".join(str(i.get(k) or "") for k in ("title","alt","value","text","onclick","id"))
+                  if re.search(r"guest|view information",desc,re.I) and i.get("id"):
+                    loc=p.locator("[id="+json.dumps(i["id"])+"]")
+                    if await loc.count() and await loc.first.is_visible():
+                      print("CLICK GUEST",i["id"],flush=True)
+                      await loc.first.click(timeout=4500);await p.wait_for_timeout(1600);break
+                for q in reversed(pages):
+                  if "GuestPermitListCenter" in q.url:p=q;break
+                if "GuestPermitListCenter" not in p.url:await goto(p,BASE+"DocumentLink.GuestPermitListCenter.cls")
+                data=await snap(p,"index")
                 if re.search(r"captcha|verify you are human",data.get("text",""),re.I):raise RuntimeError("Human verification required")
-                # Inspect rendered ZEN component identifiers, rather than assuming West Boylston's table ID.
-                js="""() => {let z=window.zenPage;if(!z)return [];let ids=[...new Set(['table','permitList','myPermitList',...Array.from(document.querySelectorAll('[id]')).map(x=>x.id)])];let out=[];for(let id of ids){try{let t=z.getComponentById(id);if(!t||typeof t.getRowData!=='function')continue;let n=Number(t.getProperty('rowCount'))||0;let rows=[];for(let i=0;i<Math.min(n,10000);i++){try{let r=t.getRowData(i);if(r)rows.push(r)}catch(e){}}if(rows.length)out.push({id,n,rows})}catch(e){}}return out}"""
-                tables=await p.evaluate(js);print("ZEN tables",[(t["id"],t["n"],list(t["rows"][0])) for t in tables])
-                # Try known public permit using visible controls/filter.
-                selected=False
-                for t in tables:
-                  for i,r in enumerate(t["rows"]):
-                    if re.search(r"roof|shingle|solar|photovoltaic",str(r.get("WorkDescription","")),re.I):
-                      print("Selected candidate",r.get("PermitID"),"table",t["id"])
-                      if r.get("DocumentId") and r.get("Maid"):
-                        # Use only IDs returned by the public permit table.
-                        u=B+"DocumentLink.PublicAttachmentCenter.cls?DocumentId="+str(r["DocumentId"])+"&QueryId="+str(r["DocumentId"])+"&Maid="+str(r["Maid"])
-                        await p.goto(u,wait_until="domcontentloaded",timeout=15000);selected=True;break
-                  if selected:break
-                if not selected:
-                  row=p.locator('tr').filter(has_text=re.compile(r"strip roof shingles|re-roof|reroof|roof replacement|photovoltaic",re.I))
-                  for j in range(await row.count()):
-                    x=row.nth(j)
-                    if await x.locator('td').count()>4 and await x.locator('tr').count()==0:
-                      await x.click();selected=True;break
-                  if not selected:
-                    # Filter by a permit number visible in the public index.
-                    controls=p.locator('input[type=text]:visible')
-                    for j in range(await controls.count()):
-                      x=controls.nth(j);info=await x.evaluate("(e)=>({id:e.id,title:e.title,outer:e.outerHTML})")
-                      if re.search(r"permit.*(id|number|filter)|filter.*permit",str(info),re.I):
-                        await x.fill("26-252RB");await x.press("Enter");await p.wait_for_timeout(1200);break
-                    row=p.get_by_text("26-252RB",exact=True)
-                    if await row.count():await row.first.click();selected=True
-                  if selected:
-                    ctl=p.locator('input[title*="Attachment" i],input[value*="View Attachments" i],img[title*="Attachment" i],button:has-text("View Attachments")').filter(visible=True)
-                    if await ctl.count():
-                      await ctl.first.click();await p.wait_for_timeout(1800)
-                      if len(ctx.pages)>1:p=ctx.pages[-1]
-                await p.wait_for_timeout(1000);await snapshot(p,"attachment")
-                at=await p.evaluate(js)
-                for t in at:
-                  docs=[d for d in t["rows"] if d.get("ImageId")]
-                  print("Attachment metadata",[(d.get("FileName"),d.get("FileDescription"),d.get("FileType")) for d in docs])
-                  docs.sort(key=lambda d:not bool(re.search(r"contract|proposal|estimate|agreement|ppa",str(d),re.I)))
-                  for d in docs:
-                    meta=" ".join(str(d.get(k,"")) for k in ("FileName","FileDescription","FileType"))
-                    if re.search(r"insurance|affidavit|workers.?comp|debris|plans?|drawing|license",meta,re.I):continue
-                    if not re.search(r"pdf|contract|proposal|estimate|agreement|permit|application",meta,re.I):continue
-                    u=B+"TaxLink.ImageServer.cls?ImageID="+str(d["ImageId"])+"&Decrypt=0"
-                    try:r=await ctx.request.get(u,timeout=12000);await save(await r.body(),u)
-                    except Exception as e:print("download error",e)
-                    if saved:break
+                row=p.get_by_text(TARGET,exact=True)
+                if not await row.count():
+                  print("Filtering public permit column",flush=True)
+                  fields=await p.evaluate("""() => [...document.querySelectorAll('input[type=text]')].filter(e=>e.getClientRects().length).map(e=>({id:e.id,name:e.name,title:e.title,outer:e.outerHTML.slice(0,500)}))""")
+                  print("FIELDS",json.dumps(fields),flush=True)
+                  for f in fields:
+                    if re.search(r"permit.*(id|number|num|filter|#)|filter.*permit",str(f),re.I) and f.get("id"):
+                      field=p.locator("[id="+json.dumps(f["id"])+"]")
+                      await field.fill(TARGET);await field.press("Enter");await p.wait_for_timeout(1500);break
+                if not await row.count():
+                  # A visible roofing record is sufficient for the one-file portal test.
+                  row=p.locator("td").filter(has_text=re.compile(r"strip roof shingles|re-roof|reroof|roof replacement|replace roof|asphalt shingles",re.I))
+                if not await row.count():raise RuntimeError("No matching rendered roofing row; see index snapshot")
+                await row.first.click(timeout=4500)
+                ctl=p.locator('input[value*="View Attachments" i],input[title*="View Attachments" i],img[title*="View Attachments" i],img[alt*="View Attachments" i],button:has-text("View Attachments")').filter(visible=True)
+                if not await ctl.count():
+                  for i in data.get("controls",[]):
+                    if re.search(r"attachment",str(i),re.I) and i.get("id"):
+                      ctl=p.locator("[id="+json.dumps(i["id"])+"]").filter(visible=True)
+                      if await ctl.count():break
+                if not await ctl.count():raise RuntimeError("No public attachment control found")
+                await ctl.first.click(timeout=4500);await p.wait_for_timeout(1800)
+                for q in reversed(pages):
+                  if "Attachment" in q.url:p=q;break
+                data=await snap(p,"attachments")
+                js="""() => {let z=window.zenPage;if(!z)return [];let ids=['table',...Array.from(document.querySelectorAll('table[id]')).map(x=>x.id)];let out=[];for(let id of ids){try{let t=z.getComponentById(id);if(!t||typeof t.getRowData!=='function')continue;let n=Number(t.getProperty('rowCount'))||0;for(let i=0;i<Math.min(n,80);i++){try{let r=t.getRowData(i);if(r&&r.ImageId)out.push(r)}catch(e){}}}catch(e){}}return out}"""
+                docs=await p.evaluate(js);print("PUBLIC ATTACHMENTS",[(d.get("FileName"),d.get("FileDescription"),d.get("FileType")) for d in docs],flush=True)
+                docs.sort(key=lambda d:not bool(re.search(r"contract|proposal|estimate|agreement",str(d),re.I)))
+                for d in docs[:12]:
+                  meta=" ".join(str(d.get(k,"")) for k in ("FileName","FileDescription","FileType"))
+                  if re.search(r"insurance|affidavit|workers.?comp|debris|plans?|drawing|license",meta,re.I):continue
+                  if not re.search(r"pdf|contract|proposal|estimate|agreement|permit|application",meta,re.I):continue
+                  u=BASE+"TaxLink.ImageServer.cls?ImageID="+str(d["ImageId"])+"&Decrypt=0"
+                  try:r=await ctx.request.get(u,timeout=8000);await save(await r.body(),u)
+                  except Exception as e:print("Direct original failed",str(e)[:150])
                   if saved:break
                 if not saved:
-                  x=p.get_by_text(re.compile(r"contract|proposal|estimate|agreement",re.I))
-                  for j in range(await x.count()):
-                    if await x.nth(j).is_visible():
-                      await x.nth(j).click(timeout=3000)
-                      ctl=p.locator('input[value*="Open Selected" i],button:has-text("Open Selected"),input[onclick*="getDocument"]').filter(visible=True)
-                      if await ctl.count():await ctl.first.click();await p.wait_for_timeout(3000)
-                      break
-                if pending:await asyncio.gather(*pending,return_exceptions=True)
+                  rows=p.locator("td").filter(has_text=re.compile(r"contract|proposal|estimate|agreement",re.I))
+                  if await rows.count():
+                    await rows.first.click(timeout=4500)
+                    op=p.locator('input[value*="Open Selected" i],input[title*="Open Selected" i],button:has-text("Open Selected"),input[onclick*="getDocument"]').filter(visible=True)
+                    if await op.count():await op.first.click(timeout=4500);await p.wait_for_timeout(2000)
+                if tasks:await asyncio.wait(tasks,timeout=12)
+                if not saved:raise RuntimeError("No original PDF verified")
               except Exception as e:
-                print("ERROR",repr(e));(O/"error.txt").write_text(traceback.format_exc())
+                print("ERROR",repr(e),flush=True);(OUT/"error.txt").write_text(traceback.format_exc())
               finally:
+                (OUT/"status.json").write_text(json.dumps({"target":TARGET,"result":"VERIFIED" if saved else "FAILED"}))
                 await browser.close()
-              if not saved:raise SystemExit("No original PDF verified")
-          asyncio.run(main())
+              if not saved:raise SystemExit(1)
+          asyncio.run(asyncio.wait_for(main(),timeout=95))
           PY
       - uses: actions/upload-artifact@v4
         if: always()
