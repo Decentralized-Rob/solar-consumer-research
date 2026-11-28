@@ -1,0 +1,51 @@
+name: Fitchburg public data routes
+on:
+  push:
+    branches: [research/fitchburg-permit-check-20261128]
+    paths: [.github/workflows/fitchburg-public-data.yml]
+permissions:
+  contents: read
+jobs:
+  public-data:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Check public permit API and GIS sources
+        run: |
+          mkdir -p evidence
+          python - <<'PY'
+          import urllib.request,urllib.error,json,pathlib,concurrent.futures
+          out=pathlib.Path('evidence')
+          urls=[
+            'https://api.viewpointcloud.com/v2/fitchburgma/recordtypes',
+            'https://api.viewpointcloud.com/v2/fitchburgma/records?search=Sunrun',
+            'https://api.viewpointcloud.com/v2/fitchburgma/records?search=Giga',
+            'https://services7.arcgis.com/tx9Uvjgzus1Kx8xQ/arcgis/rest/services/Other_Data/FeatureServer?f=json',
+            'https://services7.arcgis.com/tx9Uvjgzus1Kx8xQ/arcgis/rest/services/WebMap_gdb/FeatureServer?f=json',
+            'https://services7.arcgis.com/tx9Uvjgzus1Kx8xQ/arcgis/rest/services/GIOpps/FeatureServer?f=json'
+          ]
+          def fetch(pair):
+            i,u=pair
+            try:
+              r=urllib.request.urlopen(u,timeout=40);body=r.read().decode();status=r.status
+            except urllib.error.HTTPError as e:
+              status=e.code;body=e.read().decode(errors='replace')
+            except Exception as e:
+              status=None;body=str(e)
+            (out/f'source-{i}.txt').write_text(body)
+            item={'url':u,'status':status,'body_preview':body[:1800]}
+            print(json.dumps(item),flush=True)
+            return item
+          with concurrent.futures.ThreadPoolExecutor(max_workers=6) as pool:
+            results=list(pool.map(fetch,enumerate(urls)))
+          (out/'manifest.json').write_text(json.dumps(results,indent=2))
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: Fitchburg-public-data-routes
+          path: evidence/
+          retention-days: 30
