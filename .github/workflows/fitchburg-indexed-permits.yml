@@ -1,0 +1,54 @@
+name: Fitchburg indexed permit recovery
+on:
+  push:
+    branches: [research/fitchburg-permit-check-20261128]
+    paths: [.github/workflows/fitchburg-indexed-permits.yml]
+permissions:
+  contents: read
+jobs:
+  recover:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Recover public indexed permit records
+        run: |
+          mkdir -p evidence
+          python - <<'PY'
+          import urllib.request,re,json,csv,pathlib
+          out=pathlib.Path('evidence')
+          sources=['https://www.buildzoom.com/contractor/michael-mcphee-construction','https://www.buildzoom.com/contractor/giga-property-solutions-inc','https://www.buildzoom.com/contractor/sunrun-installation-services-ma']
+          rows=[]
+          for i,url in enumerate(sources):
+            try:
+              body=urllib.request.urlopen(url,timeout=40).read().decode()
+              (out/f'source-{i}.html').write_text(body)
+            except Exception as e:
+              print('FETCH_ERROR',url,str(e));continue
+            def walk(x):
+              if isinstance(x,dict):
+                if x.get('@type')=='GovernmentPermit':
+                  a=x.get('validIn',{}).get('address',{})
+                  if a.get('addressLocality','').lower()=='fitchburg':
+                    rows.append({'permit':x.get('identifier'),'date':x.get('validFrom'),'address':a.get('streetAddress'),'description':x.get('description'),'indexed_contractor':x.get('permitAudience',{}).get('name'),'source':url,'verification':'Secondary index only; original permit not recovered; Sunrun/Giga connection not established'})
+                for v in x.values():walk(v)
+              elif isinstance(x,list):
+                for v in x:walk(v)
+            for script in re.findall(r'<script[^>]*type=["\x27]application/ld\+json["\x27][^>]*>(.*?)</script>',body,re.S):
+              try:walk(json.loads(script))
+              except ValueError:pass
+          (out/'fitchburg-indexed-permits.json').write_text(json.dumps(rows,indent=2))
+          if rows:
+            with (out/'fitchburg-indexed-permits.csv').open('w',newline='') as f:
+              w=csv.DictWriter(f,fieldnames=list(rows[0]));w.writeheader();w.writerows(rows)
+          print('RECOVERED_FITCHBURG_RECORDS',len(rows))
+          print(json.dumps([r for r in rows if 'solar' in r['description'].lower()],indent=2))
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: Fitchburg-indexed-permit-records
+          path: evidence/
+          retention-days: 30
