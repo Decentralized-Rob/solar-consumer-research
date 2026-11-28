@@ -3,6 +3,11 @@ import type { Metadata } from "next";
 const baseUrl = "https://solarcomplaint.com";
 const defaultImage = `${baseUrl}/og.png`;
 
+function researchImage(story: ResearchStory) {
+  if (story.slug === "sunrun-complaints-what-to-check") return `${baseUrl}/sunrun/og-complaints.png`;
+  return defaultImage;
+}
+
 export type ResearchStory = {
   id: string;
   slug: string;
@@ -93,7 +98,7 @@ export function buildResearchMetadata({
       authors: [authorUrl],
       section: story.articleSection ?? story.section ?? "Research",
       images: [{
-        url: defaultImage,
+        url: researchImage(story),
         width: 1200,
         height: 630,
         alt: imageAlt ?? `${story.title} research from SolarComplaint.com`,
@@ -103,7 +108,7 @@ export function buildResearchMetadata({
       card: "summary_large_image",
       title: twitterTitle ?? story.twitterTitle ?? story.title,
       description: twitterDescription ?? social,
-      images: [defaultImage],
+      images: [researchImage(story)],
     },
   };
 }
@@ -143,7 +148,7 @@ export function buildResearchStructuredData({
         "@id": `${canonicalUrl}#article`,
         headline: schemaHeadline ?? story.schemaHeadline ?? story.title,
         description: seoDescription ?? story.summary,
-        image: [defaultImage],
+        image: [researchImage(story)],
         datePublished: story.datePublished,
         dateModified: story.dateModified,
         inLanguage: "en-US",

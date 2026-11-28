@@ -27,13 +27,13 @@ export const metadata: Metadata = {
     description,
     url: sunrunHub.href,
     type: "website",
-    images: [{ url: "https://solarcomplaint.com/og.png", width: 1200, height: 630, alt: "Solar Consumer Research" }],
+    images: [{ url: "https://solarcomplaint.com/sunrun/og-lawsuits.png", width: 1200, height: 630, alt: "Solar Consumer Research: Sunrun lawsuits" }],
   },
   twitter: {
     card: "summary_large_image",
     title: sunrunHub.title,
     description,
-    images: ["https://solarcomplaint.com/og.png"],
+    images: ["https://solarcomplaint.com/sunrun/og-lawsuits.png"],
   },
 };
 
@@ -150,6 +150,7 @@ export default function SunrunCompanyPage() {
           <a href="#sunrun-actions-title">Lawsuits &amp; investigations</a>
           <a href="#sunrun-contract">Contracts</a>
           <a href="#sunrun-complaint-help">Complaint help</a>
+          <Link href="/research/sunrun-complaints-what-to-check">Sunrun Complaints</Link>
           <a href="#sunrun-research-title">All Sunrun stories</a>
         </nav>
         <section className="editorial-pinned" aria-label="Connecticut settlement feature">
@@ -214,7 +215,7 @@ export default function SunrunCompanyPage() {
           <h2 id="sunrun-complaint-help">Where to file a Sunrun complaint</h2>
           <p>For an independent complaint, find the consumer protection office for your state. Keep the agreement, the records you’re disputing and any written response.</p>
           <p><Link href="/resources">Find your state’s complaint routes</Link> · <Link href="/guides/massachusetts-sunrun-complaint">Massachusetts Sunrun complaint center</Link> · <Link href="/guides/massachusetts-solar-complaint">General Massachusetts solar complaint guide</Link></p>
-          <p><Link href="/research/sunrun-complaints-what-to-check">Read documented Sunrun complaints and find out where to file</Link></p>
+          <p><Link href="/research/sunrun-complaints-what-to-check">Sunrun complaints: common problems and how to file</Link></p>
         </section>
 
         <SunrunEthicsSpotlight context="Sunrun research" />

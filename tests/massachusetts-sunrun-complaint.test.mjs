@@ -17,7 +17,7 @@ test("Massachusetts Sunrun complaint center serves indexable HTML at its own can
   assert.equal(response.status, 200);
   assert.doesNotMatch(response.headers.get("x-robots-tag") ?? "", /noindex/i);
   const html = await response.text();
-  assert.match(html, /<h1[^>]*>Massachusetts Sunrun Complaint Center<\/h1>/);
+  assert.match(html, /<h1[^>]*>Massachusetts Sunrun Complaints: How to File (?:&amp;|&) What to Check<\/h1>/);
   assert.match(html, /<title>Massachusetts Sunrun Complaints:/);
   assert.ok(html.includes(`rel="canonical" href="https://solarcomplaint.com${path}"`));
   assert.doesNotMatch(html, /<meta[^>]*content="[^"]*noindex/i);

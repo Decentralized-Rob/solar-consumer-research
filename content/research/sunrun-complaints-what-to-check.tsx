@@ -5,11 +5,12 @@ export const story = {
   id: "sunrun-complaints-what-to-check",
   slug: "sunrun-complaints-what-to-check",
   href: "/research/sunrun-complaints-what-to-check",
-  title: "Sunrun Solar Complaints: What Customers Report and Where to File",
+  title: "Sunrun Complaints: Common Problems and How to File",
   deck: "A customer’s panels stopped producing while the bills kept coming. See what to check in your bills and contract, and where to file a complaint.",
   summary: "Read documented Sunrun complaints about solar bills, panels that stopped producing and disputed contracts. Find independent filing routes, including the Massachusetts Attorney General’s complaint form.",
-  seoTitle: "Sunrun Solar Complaints and Where to File",
-  seoDescription: "Read Sunrun complaints about billing, panels not working and disputed contracts. Find the Massachusetts Attorney General’s online complaint form.",
+  seoTitle: "Sunrun Complaints: Common Problems and How to File",
+  seoDescription: "Read documented Sunrun customer complaints about billing, panels not working and disputed contracts. Find official state complaint channels.",
+  socialDescription: "Read documented Sunrun customer complaints about billing, system production and disputed contracts. Find official state complaint channels.",
   lede: "A California Sunrun customer checked their solar app after an unusually high utility bill. The app showed zero production. In a November 4, 2026 complaint to the Better Business Bureau, the customer said the panels had been down since August and the Sunrun bills kept coming.",
   publishedAt: "November 15, 2026",
   datePublished: "2026-11-15",
@@ -40,6 +41,12 @@ export const articleConfig = {
 
 export function SunrunComplaintsBody() {
   return <>
+    <nav className="editorial-shortcuts" aria-label="Related Sunrun resources">
+      <Link href="/companies/sunrun">Sunrun lawsuits and settlements</Link>
+      <Link href="/guides/massachusetts-sunrun-complaint">Massachusetts Sunrun complaints</Link>
+      <Link href="/resources">Solar complaint resources by state</Link>
+      <Link href="/research/sunrun-25-year-solar-contracts">Sunrun contract terms</Link>
+    </nav>
     <p><a href={bbbComplaint}>Read the November 4 BBB complaint</a>.</p>
     <section className="info-section">
       <h2>When the panels stop working and the bills keep coming</h2>

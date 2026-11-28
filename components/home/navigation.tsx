@@ -9,7 +9,8 @@ export function SiteFooter() {
         </div>
         <nav aria-label="Footer navigation">
           <Link href="/stories">Latest Stories</Link>
-          <Link href="/companies/sunrun">Sunrun</Link>
+          <Link href="/companies/sunrun">Sunrun Lawsuits &amp; Settlements</Link>
+          <Link href="/research/sunrun-complaints-what-to-check">Sunrun Complaints</Link>
           <Link href="/lawsuits-settlements">Lawsuits &amp; Settlements</Link>
           <Link href="/search">Search</Link>
           <Link href="/research">Research</Link>
