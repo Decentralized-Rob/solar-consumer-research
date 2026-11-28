@@ -25,13 +25,14 @@ jobs:
           out=pathlib.Path('evidence')
           urls=['https://www.fitchburgma.gov/197/Building-Zoning','https://www.fitchburgma.gov/874/E-Permitting-and-Emergency-Resources','https://www.fitchburgma.gov/885/Permit-Applications']
           ledger=[]
-          targets={}
+          targets={'https://fitchburgma.viewpointcloud.com/':'City Building and Zoning OpenGov link','https://fitchburgma.portal.opengov.com/categories/1083/record-types/6593':'City Building Permit Application link'}
           for i,url in enumerate(urls):
               r=requests.get(url,timeout=60)
               (out/f'city-{i}.html').write_text(r.text)
               soup=BeautifulSoup(r.text,'html.parser')
               links=[{'text':a.get_text(' ',strip=True),'url':a.get('href')} for a in soup.select('a[href]') if any(t in a.get('href','') for t in ['viewpointcloud','portal.opengov'])]
               ledger.append({'city_url':url,'status':r.status_code,'links':links})
+              print(json.dumps(ledger[-1]))
               for link in links:
                   if link['url'].startswith('https://') and ('Building Permit Application' in link['text'] or link['url'].rstrip('/')=='https://fitchburgma.viewpointcloud.com'):
                       targets[link['url']]=link['text']
