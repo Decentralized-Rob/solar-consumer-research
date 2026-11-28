@@ -102,6 +102,7 @@ export default function MassachusettsSolarComplaintGuidePage() {
 
         <section className="info-section">
           <h2>What should you prepare before filing?</h2>
+          <p>If your complaint involves Sunrun, use the <Link href="/guides/massachusetts-sunrun-complaint">Massachusetts Sunrun complaint center</Link> to identify the contract, roof, permit, system design or billing records relevant to your dispute before filing.</p>
           <p>
             Build a short factual timeline first. Note the important dates, company and salesperson names, amounts paid or financed, what was promised in writing, what was installed or not completed, and what remains unresolved. Keep the contract, proposal, financing documents, permits, inspection records, utility bills, production records, service records, and written communications together.
           </p>
@@ -132,7 +133,7 @@ export default function MassachusettsSolarComplaintGuidePage() {
 
         <section className="info-section">
           <h2>Related SolarComplaint.com research</h2>
-          <p>If your dispute involves Sunrun, see our <Link href="/guides/massachusetts-sunrun-complaint">Massachusetts Sunrun complaint center</Link> for company-specific records and complaint preparation, or browse <Link href="/companies/sunrun">Sunrun lawsuits, settlements and consumer resources</Link>.</p>
+          <p><Link href="/companies/sunrun">Sunrun lawsuits, settlements and consumer resources</Link></p>
           <p>
             <Link href="/states/massachusetts">Massachusetts solar complaint and consumer resources</Link>
           </p>
