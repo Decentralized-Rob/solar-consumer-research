@@ -1,0 +1,48 @@
+{
+  "retrieved_at": "2026-11-28",
+  "source": "https://www.buildzoom.com/contractor/michael-mcphee-construction",
+  "retrieval_method": "Successful workspace HTTP GET; GovernmentPermit JSON-LD extracted from HTML. GitHub Actions direct HTTP retrieval returned 403.",
+  "source_type": "Secondary permit index",
+  "indexed_contractor": "Michael McPhee Construction",
+  "sunrun_connection": "Unverified for all listed records",
+  "giga_connection": "Unverified for all listed records",
+  "original_permit_pdfs": "Not recovered",
+  "records": [
+    {
+      "permit": "B-22-189",
+      "date": "2022-02-16",
+      "address": "60 Ellis St",
+      "description": "Install 18 solar panels with enphase microinvertors"
+    },
+    {
+      "permit": "B-21-1430",
+      "date": "2021-09-26",
+      "address": "96 Lawton Av",
+      "description": "Install 34 solar panels. 20 on dwelling. 14 on garage"
+    },
+    {
+      "permit": "B-21-718",
+      "date": "2021-05-20",
+      "address": "78 Hollywood St",
+      "description": "Addition roof reinforcements as prescribed by pe. Addition 18 solar panels. ( no batterie system )"
+    },
+    {
+      "permit": "B-21-1456",
+      "date": "2021-09-29",
+      "address": "1276 Franklin Rd",
+      "description": "Install 18 solar panels on roof of dwelling. No structural upgrades no energy storage"
+    },
+    {
+      "permit": "B-20-740",
+      "date": "2020-08-05",
+      "address": "340 Marshall Rd",
+      "description": "Adding solar to the roof pe report attached. No structural needed for roof. No energy storage systems at this time possible in future permit"
+    },
+    {
+      "permit": "62242",
+      "date": "2019-01-25",
+      "address": "28 Institute St",
+      "description": "Install snap rack rails for roof mount solar - no reinforecements"
+    }
+  ]
+}
