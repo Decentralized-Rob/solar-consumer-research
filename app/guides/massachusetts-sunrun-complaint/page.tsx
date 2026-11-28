@@ -12,14 +12,32 @@ const law = "https://malegislature.gov/Laws/GeneralLaws/PartI/TitleXX/Chapter142
 const consent = "https://malegislature.gov/Laws/GeneralLaws/PartI/TitleXX/Chapter142A/Section17";
 export const metadata: Metadata = {
   title, description, alternates: { canonical: path },
-  openGraph: { title, description, url: path, type: "article", images: [{url:"https://solarcomplaint.com/og.png",width:1200,height:630,alt:"Solar Consumer Research"}] },
-  twitter: { card: "summary_large_image", title, description, images:["https://solarcomplaint.com/og.png"] },
+  openGraph: { title, description, url: path, type: "article", images: [{url:"https://solarcomplaint.com/sunrun/og-ma-complaints.png",width:1200,height:630,alt:"Solar Consumer Research: Massachusetts Sunrun complaints"}] },
+  twitter: { card: "summary_large_image", title, description, images:["https://solarcomplaint.com/sunrun/og-ma-complaints.png"] },
 };
 
 export default function MassachusettsSunrunComplaintPage() {
-  return <InfoPage shareHref={path} eyebrow="Massachusetts · Sunrun consumer research" title="Massachusetts Sunrun Complaint Center" lede="If you are having a problem with Sunrun in Massachusetts, identify the contract or installation issue and gather the records that establish what happened before filing a complaint." showLegalNotice={false}>
-    <nav className="case-question-links" aria-label="Breadcrumb"><Link href="/">Home</Link><Link href="/companies/sunrun">Sunrun</Link><span aria-current="page">Massachusetts complaints</span></nav>
+  const url = `https://solarcomplaint.com${path}`;
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@graph": [
+      { "@type": "Article", "@id": `${url}#article`, headline: title, description, image: ["https://solarcomplaint.com/sunrun/og-ma-complaints.png"], datePublished: "2026-11-24", mainEntityOfPage: { "@id": url }, author: { "@id": "https://solarcomplaint.com/#publisher" }, publisher: { "@id": "https://solarcomplaint.com/#publisher" } },
+      { "@type": "BreadcrumbList", itemListElement: [
+        { "@type": "ListItem", position: 1, name: "Home", item: "https://solarcomplaint.com/" },
+        { "@type": "ListItem", position: 2, name: "Sunrun lawsuits and settlements", item: "https://solarcomplaint.com/companies/sunrun" },
+        { "@type": "ListItem", position: 3, name: "Massachusetts Sunrun complaints", item: url },
+      ] },
+    ],
+  };
+  return <InfoPage shareHref={path} eyebrow="Massachusetts · Sunrun consumer research" title={title} lede="If you are having a problem with Sunrun in Massachusetts, identify the contract or installation issue and gather the records that establish what happened before filing a complaint." showLegalNotice={false}>
+    <nav className="case-question-links" aria-label="Breadcrumb"><Link href="/">Home</Link><Link href="/companies/sunrun">Sunrun lawsuits and settlements</Link><span aria-current="page">Massachusetts complaints</span></nav>
+    <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData).replace(/</g, "\\u003c") }} />
     <p><small>Published November 24, 2026</small></p>
+    <nav className="editorial-shortcuts" aria-label="Related complaint resources">
+      <Link href="/research/sunrun-complaints-what-to-check">Sunrun complaints nationwide</Link>
+      <Link href="/guides/massachusetts-solar-complaint">Massachusetts solar complaint filing guide</Link>
+      <Link href="/states/massachusetts">Massachusetts solar consumer resources</Link>
+    </nav>
     <section className="info-section case-notice">
       <h2>How to file a complaint against Sunrun in Massachusetts</h2>
       <p>Massachusetts homeowners can submit a consumer complaint to the Attorney General&apos;s Consumer Advocacy &amp; Response Division. Identify the business and the specific problem, give the relevant dates, describe attempts to resolve it and explain the outcome you are requesting.</p>

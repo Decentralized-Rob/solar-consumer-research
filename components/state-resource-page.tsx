@@ -31,6 +31,8 @@ export function StateResourcePage({ state }: { state: { code: string; name: stri
     description: `${consumerProtection.summary} ${hasExpandedSources ? "Additional source-reviewed state resources are included." : "This page is a starting directory with one documented solar reference, not a complete state research file."}`,
     url: `https://solarcomplaint.com/states/${stateSlug(state.name)}`,
     dateModified: state.code === "MA" ? "2026-09-18" : state.code === "CT" ? "2026-10-31" : sunrunHubState ? "2026-09-07" : titanBankruptcy ? "2026-08-28" : relatedResearch.length > 0 ? "2026-08-27" : "2026-08-21",
+    publisher: { "@id": "https://solarcomplaint.com/#publisher" },
+    isPartOf: { "@id": "https://solarcomplaint.com/#website" },
     spatialCoverage: { "@type": "AdministrativeArea", name: state.name },
     about: [
       { "@type": "Thing", name: `${state.name} consumer complaint route` },
@@ -106,7 +108,12 @@ export function StateResourcePage({ state }: { state: { code: string; name: stri
       title={consumerProtection.title}
       lede={consumerProtection.summary}
     >
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(pageSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({ "@context": "https://schema.org", "@graph": [pageSchema, { "@type": "BreadcrumbList", itemListElement: [
+        { "@type": "ListItem", position: 1, name: "Home", item: "https://solarcomplaint.com/" },
+        { "@type": "ListItem", position: 2, name: "States", item: "https://solarcomplaint.com/resources" },
+        { "@type": "ListItem", position: 3, name: state.name, item: pageSchema.url },
+      ] }] }).replace(/</g, "\\u003c") }} />
+      <nav className="case-question-links" aria-label="Breadcrumb"><Link href="/">Home</Link><Link href="/resources">States</Link><span aria-current="page">{state.name}</span></nav>
 
       <nav className="state-question-nav" aria-label={`${state.name} solar resource questions`}>
         <a href="#consumer-protection">Official {state.name} complaint route</a>
@@ -122,6 +129,7 @@ export function StateResourcePage({ state }: { state: { code: string; name: stri
         <p>{consumerProtection.summary}</p>
         <p className="state-source-note">For a residential-solar complaint, keep the sales proposal, signed or electronic contract, financing or lease documents, utility bills, production records, permits, inspection records, cancellation attempts, and company correspondence.</p>
         <a href={consumerProtection.url} target="_blank" rel="noreferrer">Open the official {state.name} complaint page ↗</a>
+        {sunrunHubState && <p><Link href="/research/sunrun-complaints-what-to-check">Sunrun complaints: common problems and how to file</Link></p>}
         {state.code === "MA" && <p><Link href="/guides/massachusetts-sunrun-complaint">Massachusetts Sunrun complaint center: filing routes and records to gather →</Link></p>}
       </section>
 

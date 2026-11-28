@@ -6,7 +6,7 @@ import Link from "next/link";
 
 const destinations = [
   { href: "/stories", label: "Latest Stories" },
-  { href: "/companies/sunrun", label: "Sunrun" },
+  { href: "/companies/sunrun", label: "Sunrun Research" },
   { href: "/lawsuits-settlements", label: "Lawsuits & Settlements" },
   { href: "/guides", label: "Consumer Help" },
   { href: "/resources", label: "States" },

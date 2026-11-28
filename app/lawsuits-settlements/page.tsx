@@ -3,14 +3,19 @@ import Link from "next/link";
 import { InfoPage } from "../../components/info-page";
 import { getLawsuitAndSettlementStories } from "../../lib/editorial-directory";
 
+const title = "Solar Lawsuits, Settlements and State Enforcement";
+const description = "Find residential solar lawsuits, court decisions, state enforcement actions and settlements across companies, with links to public records.";
+const path = "/lawsuits-settlements";
 export const metadata: Metadata = {
-  title: "Sunrun Lawsuits, Settlements and Solar Court Reporting",
-  description: "The Connecticut Sunrun settlement, state enforcement, court decisions and SolarComplaint's original reporting.",
-  alternates: { canonical: "/lawsuits-settlements" },
+  title, description, alternates: { canonical: path },
+  openGraph: { title, description, url: path, type: "website", images: [{ url: "/og.png", width: 1200, height: 630 }] },
+  twitter: { card: "summary_large_image", title, description, images: ["/og.png"] },
 };
 export default function LawsuitsAndSettlementsPage() {
   return (
-    <InfoPage eyebrow="Court and enforcement records" title="Lawsuits & settlements" lede="Find solar lawsuits, state enforcement actions, settlements and the records behind our reporting.">
+    <InfoPage eyebrow="Court and enforcement records" title={title} lede="Find solar lawsuits, state enforcement actions, settlements and the records behind our reporting.">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({ "@context": "https://schema.org", "@type": "BreadcrumbList", itemListElement: [{ "@type": "ListItem", position: 1, name: "Home", item: "https://solarcomplaint.com/" }, { "@type": "ListItem", position: 2, name: title, item: `https://solarcomplaint.com${path}` }] }) }} />
+      <nav className="case-question-links" aria-label="Breadcrumb"><Link href="/">Home</Link><span aria-current="page">{title}</span></nav>
       <section className="editorial-pinned">
         <p className="editorial-meta">Connecticut · Sunrun settlement · October 31, 2026</p>
         <h2><Link href="/cases/connecticut-attorney-general-sunrun-lawsuit">Connecticut Sunrun Settlement: The Rejected Lease, the Verification Call and Consumer Relief</Link></h2>
